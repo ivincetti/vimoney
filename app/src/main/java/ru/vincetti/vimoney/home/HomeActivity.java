@@ -1,7 +1,10 @@
 package ru.vincetti.vimoney.home;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -16,6 +19,8 @@ import ru.vincetti.vimoney.add.AddActivity;
 import ru.vincetti.vimoney.utils.bottomNavigationHelper;
 
 public class HomeActivity extends AppCompatActivity {
+    private static String CHANNEL_ID = "15";
+
     private TextView mTextMessage;
 
     public static void start(Context context) {
@@ -28,11 +33,30 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        createNotificationChannel();
+
         mTextMessage = findViewById(R.id.message);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         bottomNavigationHelper.initNavigation(this, navView);
         navView.getMenu().findItem(R.id.navigation_bar_home).setChecked(true);
+    }
+
+    // Notification channel register
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            NotificationChannel channel =
+                    new NotificationChannel(CHANNEL_ID,
+                            getString(R.string.channel_name),
+                            NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(getString(R.string.channel_description));
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
 }

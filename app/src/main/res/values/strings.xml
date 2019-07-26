@@ -28,4 +28,8 @@
     <string name="nav_title_dashboard">Dashboard</string>
     <string name="nav_title_home">Home</string>
     <string name="nav_title_add">Add</string>
+
+    <!--Sys-->
+    <string name="channel_name">reminder</string>
+    <string name="channel_description">don\'t forget to input</string>
 </resources>
