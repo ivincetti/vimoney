@@ -1,4 +1,4 @@
-package ru.vincetti.vimoney.data;
+package ru.vincetti.vimoney.data.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import ru.vincetti.vimoney.R;
+import ru.vincetti.vimoney.data.Account;
 
 public class CardsListViewAdapter extends RecyclerView.Adapter<CardsListViewAdapter.ViewHolder> {
     private ArrayList<Account> data;

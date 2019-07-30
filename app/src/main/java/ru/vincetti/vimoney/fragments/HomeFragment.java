@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,19 +16,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.data.Account;
-import ru.vincetti.vimoney.data.CardsListViewAdapter;
+import ru.vincetti.vimoney.data.adapters.CardsListViewAdapter;
+import ru.vincetti.vimoney.data.adapters.TransactionsRVAdapter;
+import ru.vincetti.vimoney.data.Transaction;
 import ru.vincetti.vimoney.data.sqlite.DbHelper;
 import ru.vincetti.vimoney.data.sqlite.VimonContract;
+import ru.vincetti.vimoney.utils.TransactionsGenerator;
 
 public class HomeFragment extends Fragment {
     private static String LOG_TAG = "MAIN FRAGMENT DEBUG";
 
     private SQLiteDatabase db;
     private ArrayList<Account> accList;
+    private ArrayList<Transaction> trList;
 
     private TextView mUserText;
     private TextView mBalanceText;
@@ -50,22 +52,32 @@ public class HomeFragment extends Fragment {
         db = new DbHelper(getContext()).getReadableDatabase();
 
         accList = new ArrayList<>();
+        trList = TransactionsGenerator.generate();
+        Log.d(LOG_TAG, String.valueOf(trList.size()));
 
         viewInit(view);
-        mAllBalance = userBalanceChange();
+
         // userLoadfromDB();
-
         accountsLoadFromDB();
+        mAllBalance = userBalanceChange();
 
+        // список карт/счетов
         CardsListViewAdapter adapter = new CardsListViewAdapter(accList);
+        RecyclerView cardsListView = view.findViewById(R.id.home_cards_recycle_view);
+        cardsListView.setHasFixedSize(true);
+        LinearLayoutManager cardsLayoutManager = new LinearLayoutManager(getContext(),
+                RecyclerView.HORIZONTAL, false);
+        cardsListView.setLayoutManager(cardsLayoutManager);
+        cardsListView.setAdapter(adapter);
 
-        RecyclerView listView = view.findViewById(R.id.home_cards_recycle_view);
-        listView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager= new LinearLayoutManager(getContext(),
-                LinearLayoutManager.HORIZONTAL, false);
-        listView.setLayoutManager(layoutManager);
-
-        listView.setAdapter(adapter);
+        // список транзакций
+        TransactionsRVAdapter transactionsRVAdapter = new TransactionsRVAdapter(trList);
+        RecyclerView trListView = view.findViewById(R.id.home_transactions_recycle_view);
+        trListView.setHasFixedSize(true);
+        LinearLayoutManager trLayoutManager = new LinearLayoutManager(getContext(),
+                RecyclerView.VERTICAL, false);
+        trListView.setLayoutManager(trLayoutManager);
+        trListView.setAdapter(transactionsRVAdapter);
     }
 
 
@@ -80,7 +92,7 @@ public class HomeFragment extends Fragment {
 
     private int userBalanceChange() {
         int bal = 0;
-        for (Account o: accList) {
+        for (Account o : accList) {
             bal += o.getSum();
         }
         mBalanceText.setText(String.valueOf(bal));
@@ -111,9 +123,7 @@ public class HomeFragment extends Fragment {
                 null, null, null);
         try {
             if (accCurs.getCount() > 0) {
-                Log.d(LOG_TAG, "Accounts get from DB " + accCurs.getCount());
                 while (accCurs.moveToNext()) {
-                    Log.d(LOG_TAG, "Accounts " + accCurs.getPosition());
                     accList.add(new Account(
                             accCurs.getString(
                                     accCurs.getColumnIndex(VimonContract.AccountsEntry.COLUMN_TITLE)

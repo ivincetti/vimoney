@@ -56,7 +56,6 @@ public class SplashActivity extends AppCompatActivity {
         jsonDownloader.loadPreferences("Ru").enqueue(new Callback<ConfigFile>() {
             @Override
             public void onResponse(Call<ConfigFile> call, Response<ConfigFile> response) {
-                Log.d(LOG_TAG, "Json Download complete");
                 // user info to base
                 int userId = response.body().getUser().getId();
                 String userName = response.body().getUser().getName();
@@ -93,15 +92,12 @@ public class SplashActivity extends AppCompatActivity {
                 null, null,
                 null, null);
         try {
-            Log.d(LOG_TAG, "User Cursor init");
             if (userCursor.getCount() > 0) {
-                Log.d(LOG_TAG, "user update");
                 db.update(VimonContract.UserEntry.TABLE_NAME,
                         userCV,
                         VimonContract.UserEntry.COLUMN_USER_ID + " = " + id,
                         null);
             } else {
-                Log.d(LOG_TAG, "user insert");
                 db.insert(VimonContract.UserEntry.TABLE_NAME, null, userCV);
             }
         } finally {
@@ -123,15 +119,12 @@ public class SplashActivity extends AppCompatActivity {
                 null, null,
                 null, null);
         try {
-            Log.d(LOG_TAG, "Account Cursor init " + id);
             if (userCursor.getCount() > 0) {
-                Log.d(LOG_TAG, "Account update " + id);
                 db.update(VimonContract.AccountsEntry.TABLE_NAME,
                         accountCV,
                         VimonContract.AccountsEntry.COLUMN_ACCOUNT_ID + " = " + id,
                         null);
             } else {
-                Log.d(LOG_TAG, "Account insert " + id);
                 db.insert(VimonContract.AccountsEntry.TABLE_NAME, null, accountCV);
             }
         } finally {

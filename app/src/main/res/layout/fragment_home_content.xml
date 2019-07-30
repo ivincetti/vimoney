@@ -5,12 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--Общий баланс-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_horizontal_margin">
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin">
 
         <TextView
             android:id="@+id/home_balance_string"
@@ -30,10 +31,159 @@
             tools:text="10000" />
     </RelativeLayout>
 
+    <!--Список карт-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/home_cards_recycle_view"
-        android:layout_marginStart="@dimen/big_padding"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/big_padding" />
+
+    <!--Заголовок статистики-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/home_fragment_stat_title" />
+
+        <TextView
+            android:id="@id/home_user_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/st_padding"
+            android:paddingEnd="@dimen/st_padding"
+            android:text="@string/home_fragment_stat_month_sample"
+            android:textColor="@color/colorPrimaryDark" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:baselineAligned="false"
+        android:paddingTop="@dimen/st_padding"
+        android:paddingEnd="@dimen/activity_horizontal_margin">
+
+        <!--Статистика доходов-->
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/home_stat_income"
+                android:layout_width="@dimen/icon_st_size"
+                android:layout_height="@dimen/icon_st_size"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/ic_arrow_upward_black" />
+
+            <TextView
+                android:id="@+id/home_stat_income_string"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@id/home_stat_income"
+                android:paddingStart="@dimen/st_padding"
+                android:paddingEnd="@dimen/st_padding"
+                android:text="@string/home_fragment_income_title" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/home_stat_income_string"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@id/home_stat_income"
+                android:paddingStart="@dimen/st_padding"
+                android:paddingEnd="@dimen/st_padding"
+                android:text="@string/home_fragment_income_sample"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <!--Статистика расходов-->
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/home_stat_spending"
+                android:layout_width="@dimen/icon_st_size"
+                android:layout_height="@dimen/icon_st_size"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/ic_arrow_downward_black" />
+
+            <TextView
+                android:id="@+id/home_stat_spending_string"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@id/home_stat_spending"
+                android:paddingStart="@dimen/st_padding"
+                android:paddingEnd="@dimen/st_padding"
+                android:text="@string/home_fragment_spending_title" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/home_stat_spending_string"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@id/home_stat_spending"
+                android:paddingStart="@dimen/st_padding"
+                android:paddingEnd="@dimen/st_padding"
+                android:text="@string/home_fragment_spending_sample"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <!--Заголовок транзакций-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/big_padding"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/home_fragment_transactions_list_title"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_st_numbers"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@id/home_user_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="@dimen/st_padding"
+            android:paddingEnd="@dimen/st_padding"
+            android:text="@string/home_fragment_transactions_link_title" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/home_transactions_recycle_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/big_padding"
+        android:layout_marginEnd="@dimen/big_padding" />
 
 </LinearLayout>

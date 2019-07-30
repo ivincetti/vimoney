@@ -7,9 +7,13 @@
     <dimen name="sm_padding">4dp</dimen>
     <dimen name="bottom_bar_height">56dp</dimen>
 
+    <dimen name="text_st_numbers">24sp</dimen>
     <dimen name="text_big_numbers">34sp</dimen>
 
     <dimen name="card_view_width">240dp</dimen>
     <dimen name="card_view_height">120dp</dimen>
+
+    <dimen name="icon_st_size">64dp</dimen>
+
 
 </resources>
