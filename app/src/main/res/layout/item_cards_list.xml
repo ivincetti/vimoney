@@ -21,9 +21,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:text="@string/home_title_acc_name"
             android:textColor="@color/colorTextWhite"
-            tools:text="Тинькофф"/>
+            tools:text="@string/home_title_acc_name"/>
 
         <TextView
             android:id="@+id/home_acc_type"
@@ -31,9 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:text="@string/home_title_acc_type"
             android:textColor="@color/colorTextWhite"
-            tools:text="debit"/>
+            tools:text="home_title_acc_type"/>
 
         <TextView
             android:id="@+id/home_acc_balance"
@@ -42,11 +40,10 @@
             android:layout_alignParentBottom="true"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:text="@string/home_title_acc_balance"
             android:textColor="@color/colorTextWhite"
             android:textSize="@dimen/text_big_numbers"
             android:textStyle="bold"
-            tools:text="10000" />
+            tools:text="@string/home_title_acc_balance" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
