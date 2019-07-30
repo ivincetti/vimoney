@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +35,7 @@ public class HomeFragment extends Fragment {
     private ArrayList<Transaction> trList;
 
     private TextView mUserText;
+    private TextView mTransactionTextLink;
     private TextView mBalanceText;
     private int mAllBalance;
 
@@ -84,6 +86,13 @@ public class HomeFragment extends Fragment {
     // activity view initialization
     private void viewInit(View view) {
         mBalanceText = view.findViewById(R.id.home_user_balance);
+        mTransactionTextLink = view.findViewById(R.id.home_transactions_link);
+        mTransactionTextLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Ссылка будет", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void userLoad(String name) {

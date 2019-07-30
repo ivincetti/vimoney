@@ -4,13 +4,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--Заголовок транзакций-->
     <TextView
-        android:id="@+id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="@string/history_title_home" />
+        android:layout_marginTop="@dimen/big_padding"
+        android:layout_marginBottom="@dimen/big_padding"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:layout_gravity="center_vertical"
+        android:text="@string/home_fragment_transactions_list_title"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/text_st_numbers"
+        android:textStyle="bold" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/home_transactions_recycle_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/big_padding"
+        android:layout_marginEnd="@dimen/big_padding" />
 
 </LinearLayout>

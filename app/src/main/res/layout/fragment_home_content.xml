@@ -170,7 +170,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@id/home_user_balance"
+            android:id="@+id/home_transactions_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -179,6 +179,7 @@
             android:text="@string/home_fragment_transactions_link_title" />
     </LinearLayout>
 
+    <!--Список транзаций-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/home_transactions_recycle_view"
         android:layout_width="wrap_content"
