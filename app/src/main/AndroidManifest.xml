@@ -22,8 +22,6 @@
         <activity android:name=".login.LoginActivity"/>
         <activity android:name=".home.HomeActivity"/>
         <activity android:name=".add.AddActivity"/>
-        <activity android:name=".history.HistoryActivity" />
-        <activity android:name=".dashboard.DashboardActivity" />
     </application>
 
 </manifest>
