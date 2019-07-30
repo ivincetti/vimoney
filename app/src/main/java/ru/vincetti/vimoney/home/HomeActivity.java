@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,6 +29,7 @@ public class HomeActivity extends AppCompatActivity {
     private BottomAppBar btBar;
     private FloatingActionButton fab;
 
+    private FragmentTransaction fTrans;
     private HomeFragment homeFragment;
     private HistoryFragment historyFragment;
     private DashboardFragment dashboardFragment;
@@ -67,23 +69,20 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        fTrans = getSupportFragmentManager().beginTransaction();
         switch (item.getItemId()) {
             case R.id.navigation_bar_home:
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.main_container, homeFragment)
-                        .commit();
+                fTrans.replace(R.id.main_container, homeFragment);
                 break;
             case R.id.navigation_bar_history:
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.main_container, historyFragment)
-                        .commit();
+                fTrans.replace(R.id.main_container, historyFragment);
                 break;
             case R.id.navigation_bar_dashboard:
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.main_container, dashboardFragment)
-                        .commit();
+                fTrans.replace(R.id.main_container, dashboardFragment);
                 break;
         }
+        fTrans.addToBackStack(null);
+        fTrans.commit();
         return true;
     }
 
