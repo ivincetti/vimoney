@@ -5,6 +5,7 @@
     <color name="colorAccent">#2f3280</color>
 
     <color name="colorTextMain">#163260</color>
+    <color name="colorTextWhite">@color/colorBackground</color>
     <color name="colorTextSecondary">#bac2cc</color>
 
     <color name="colorBackground">#f9f9fa</color>

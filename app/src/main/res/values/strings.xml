@@ -12,8 +12,8 @@
 
     <!--Home Activity-->
     <string name="title_activity_home">HomeActivity</string>
-    <string name="home_title_user">USER NAME#</string>
-    <string name="home_title_balance">-</string>
+    <string name="home_title_balance">Your balance</string>
+    <string name="home_title_balance_sum">-</string>
     <string name="home_title_acc_name">ACC NAME</string>
     <string name="home_title_acc_type">ACC TYPE</string>
     <string name="home_title_acc_balance">-</string>

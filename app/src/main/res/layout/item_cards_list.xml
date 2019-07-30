@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/card_view_width"
+    android:layout_height="@dimen/card_view_height"
+    android:layout_marginEnd="@dimen/big_padding"
+    android:layout_marginTop="@dimen/activity_horizontal_margin"
+    app:cardBackgroundColor="@color/colorPrimary"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="@dimen/sm_padding">
+
+    <RelativeLayout
+        android:id="@+id/home_acc_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:id="@+id/home_acc_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:text="@string/home_title_acc_name"
+            android:textColor="@color/colorTextWhite"
+            tools:text="Тинькофф"/>
+
+        <TextView
+            android:id="@+id/home_acc_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:text="@string/home_title_acc_type"
+            android:textColor="@color/colorTextWhite"
+            tools:text="debit"/>
+
+        <TextView
+            android:id="@+id/home_acc_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:text="@string/home_title_acc_balance"
+            android:textColor="@color/colorTextWhite"
+            android:textSize="@dimen/text_big_numbers"
+            android:textStyle="bold"
+            tools:text="10000" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

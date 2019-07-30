@@ -28,9 +28,9 @@ public class HomeActivity extends AppCompatActivity {
     private BottomAppBar btBar;
     private FloatingActionButton fab;
 
-    HomeFragment homeFragment;
-    HistoryFragment historyFragment;
-    DashboardFragment dashboardFragment;
+    private HomeFragment homeFragment;
+    private HistoryFragment historyFragment;
+    private DashboardFragment dashboardFragment;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
