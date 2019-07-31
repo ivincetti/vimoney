@@ -4,35 +4,53 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+
+import ru.vincetti.vimoney.history.HistoryActivity;
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.add.AddActivity;
-import ru.vincetti.vimoney.fragments.DashboardFragment;
+import ru.vincetti.vimoney.dashboard.DashboardActivity;
+import ru.vincetti.vimoney.data.Account;
+import ru.vincetti.vimoney.data.adapters.CardsListViewAdapter;
+import ru.vincetti.vimoney.data.sqlite.DbHelper;
+import ru.vincetti.vimoney.data.sqlite.VimonContract;
 import ru.vincetti.vimoney.fragments.HistoryFragment;
-import ru.vincetti.vimoney.fragments.HomeFragment;
+import ru.vincetti.vimoney.notifications.NotificationsActivity;
+import ru.vincetti.vimoney.settings.SettingsActivity;
 
 public class HomeActivity extends AppCompatActivity {
     private static String LOG_TAG = "MAIN DEBUG";
+    private static String BUNDLETAG = "ru.vincetti.vimoney.transhistory";
     private static String CHANNEL_ID = "15";
+    private static int TR_MAIN_COUNT = 15;
 
-    private BottomAppBar btBar;
+    private SQLiteDatabase db;
+    private ArrayList<Account> accList;
+
+    private Toolbar toolbar;
     private FloatingActionButton fab;
 
     private FragmentTransaction fTrans;
-    private HomeFragment homeFragment;
     private HistoryFragment historyFragment;
-    private DashboardFragment dashboardFragment;
+
+    private TextView mBalanceText;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
@@ -46,18 +64,46 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         createNotificationChannel();
 
-        btBar = findViewById(R.id.bottom_app_bar);
-        setSupportActionBar(btBar);
+        toolbar = findViewById(R.id.top_toolbar);
+        setSupportActionBar(toolbar);
 
-        fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> AddActivity.start(getApplicationContext()));
+        viewInit();
 
-        homeFragment = new HomeFragment();
+        accList = new ArrayList<>();
+
+        db = new DbHelper(this).getReadableDatabase();
+        accountsLoadFromDB();
+        userBalanceChange();
+
         historyFragment = new HistoryFragment();
-        dashboardFragment = new DashboardFragment();
+        showTransactionsHistory();
+
+        // список карт/счетов
+        CardsListViewAdapter adapter = new CardsListViewAdapter(accList);
+        RecyclerView cardsListView = findViewById(R.id.home_cards_recycle_view);
+        cardsListView.setHasFixedSize(true);
+        LinearLayoutManager cardsLayoutManager = new LinearLayoutManager(this,
+                RecyclerView.HORIZONTAL, false);
+        cardsListView.setLayoutManager(cardsLayoutManager);
+        cardsListView.setAdapter(adapter);
+    }
+
+    public void viewInit(){
+        findViewById(R.id.home_fab)
+                .setOnClickListener(view -> AddActivity.start(this));
+        findViewById(R.id.home_transactions_link)
+                .setOnClickListener(view -> HistoryActivity.start(this));
+        findViewById(R.id.home_user_stat_link)
+                .setOnClickListener(view -> DashboardActivity.start(this));
+    }
+
+    private void showTransactionsHistory(){
+        Bundle args = new Bundle();
+        args.putInt(BUNDLETAG, TR_MAIN_COUNT);
+        historyFragment.setArguments(args);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main_container, homeFragment)
+                .replace(R.id.main_history_container, historyFragment)
                 .commit();
     }
 
@@ -71,19 +117,48 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         fTrans = getSupportFragmentManager().beginTransaction();
         switch (item.getItemId()) {
-            case R.id.navigation_bar_home:
-                fTrans.replace(R.id.main_container, homeFragment);
+            case R.id.navigation_bar_notification:
+                NotificationsActivity.start(this);
                 break;
-            case R.id.navigation_bar_history:
-                fTrans.replace(R.id.main_container, historyFragment);
-                break;
-            case R.id.navigation_bar_dashboard:
-                fTrans.replace(R.id.main_container, dashboardFragment);
+            case R.id.navigation_bar_settings:
+                SettingsActivity.start(this);
                 break;
         }
         fTrans.addToBackStack(null);
         fTrans.commit();
         return true;
+    }
+
+    private void accountsLoadFromDB() {
+        try (Cursor accCurs = db.query(VimonContract.AccountsEntry.TABLE_NAME,
+                null, null, null,
+                null, null, null)) {
+            if (accCurs.getCount() > 0) {
+                while (accCurs.moveToNext()) {
+                    accList.add(new Account(
+                            accCurs.getString(
+                                    accCurs.getColumnIndex(VimonContract.AccountsEntry.COLUMN_TITLE)
+                            ),
+                            accCurs.getString(
+                                    accCurs.getColumnIndex(VimonContract.AccountsEntry.COLUMN_TYPE)
+                            ),
+                            accCurs.getInt(
+                                    accCurs.getColumnIndex(VimonContract.AccountsEntry.COLUMN_BALANCE)
+                            )
+                    ));
+                }
+            }
+        }
+    }
+
+    private int userBalanceChange() {
+        mBalanceText = findViewById(R.id.home_user_balance);
+        int bal = 0;
+        for (Account o : accList) {
+            bal += o.getSum();
+        }
+        mBalanceText.setText(String.valueOf(bal));
+        return bal;
     }
 
     // Notification channel register
