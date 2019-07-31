@@ -39,7 +39,7 @@ public class HomeActivity extends AppCompatActivity {
     private static String LOG_TAG = "MAIN DEBUG";
     private static String BUNDLETAG = "ru.vincetti.vimoney.transhistory";
     private static String CHANNEL_ID = "15";
-    private static int TR_MAIN_COUNT = 15;
+    private static int TR_MAIN_COUNT = 10;
 
     private SQLiteDatabase db;
     private ArrayList<Account> accList;
@@ -75,7 +75,6 @@ public class HomeActivity extends AppCompatActivity {
         accountsLoadFromDB();
         userBalanceChange();
 
-        historyFragment = new HistoryFragment();
         showTransactionsHistory();
 
         // список карт/счетов
@@ -98,6 +97,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showTransactionsHistory(){
+        historyFragment = new HistoryFragment();
+
         Bundle args = new Bundle();
         args.putInt(BUNDLETAG, TR_MAIN_COUNT);
         historyFragment.setArguments(args);

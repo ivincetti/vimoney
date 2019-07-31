@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,14 +17,16 @@ import java.util.ArrayList;
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.data.Transaction;
 import ru.vincetti.vimoney.data.adapters.TransactionsRVAdapter;
-import ru.vincetti.vimoney.data.sqlite.DbHelper;
 import ru.vincetti.vimoney.utils.TransactionsGenerator;
 
 public class HistoryFragment extends Fragment {
     private static String LOG_TAG = "HISTORY FRAGMENT DEBUG";
+    private static String BUNDLETAG = "ru.vincetti.vimoney.transhistory";
+    private static int TRANSACTIONS_COUNT = 25;
 
     private SQLiteDatabase db;
     private ArrayList<Transaction> trList;
+    private int trCount;
 
     @Nullable
     @Override
@@ -36,10 +37,13 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewInit(view);
 
-        db = new DbHelper(getContext()).getReadableDatabase();
-        trList = TransactionsGenerator.generate();
+        if (getArguments() != null) {
+            trCount = getArguments().getInt(BUNDLETAG, TRANSACTIONS_COUNT);
+        }
+
+        //db = new DbHelper(getContext()).getReadableDatabase();
+        trList = TransactionsGenerator.generate(trCount);
 
         // список транзакций
         TransactionsRVAdapter transactionsRVAdapter = new TransactionsRVAdapter(trList);
@@ -49,10 +53,5 @@ public class HistoryFragment extends Fragment {
                 RecyclerView.VERTICAL, false);
         trListView.setLayoutManager(trLayoutManager);
         trListView.setAdapter(transactionsRVAdapter);
-    }
-
-    // view initialization
-    private void viewInit(View view) {
-        //
     }
 }
