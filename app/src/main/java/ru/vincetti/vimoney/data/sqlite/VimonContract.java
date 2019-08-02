@@ -5,7 +5,6 @@ import android.provider.BaseColumns;
 public class VimonContract {
 
     private VimonContract(){
-
     }
 
     public static final class UserEntry implements BaseColumns{
@@ -25,5 +24,14 @@ public class VimonContract {
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_INSTRUMENT = "instrument";
         public static final String COLUMN_BALANCE = "balance";
+    }
+
+    public static final class ConfigEntry implements BaseColumns{
+        public static final String TABLE_NAME = "config";
+
+        public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_CONFIG_KEY_NAME = "key";
+        public static final String CONFIG_KEY_NAME_DATE_EDIT = "date_edit";
+        public static final String COLUMN_CONFIG_KEY_VALUE = "value";
     }
 }

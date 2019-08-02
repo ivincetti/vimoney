@@ -12,11 +12,18 @@ public class ConfigFile {
     @SerializedName("user")
     private User user;
 
+    @SerializedName("date_edit")
+    private long date_edit;
+
     public List<AccountsItem> getAccounts() {
         return accounts;
     }
 
     public User getUser() {
         return user;
+    }
+
+    public long getDateEdit() {
+        return date_edit;
     }
 }

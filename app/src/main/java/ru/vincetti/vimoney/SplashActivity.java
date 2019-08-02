@@ -18,12 +18,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import ru.vincetti.vimoney.models.json.AccountsItem;
-import ru.vincetti.vimoney.models.json.ConfigFile;
 import ru.vincetti.vimoney.data.JsonDownloader;
 import ru.vincetti.vimoney.data.sqlite.DbHelper;
 import ru.vincetti.vimoney.data.sqlite.VimonContract;
 import ru.vincetti.vimoney.home.HomeActivity;
+import ru.vincetti.vimoney.models.json.AccountsItem;
+import ru.vincetti.vimoney.models.json.ConfigFile;
 
 public class SplashActivity extends AppCompatActivity {
     private final String LOG_TAG = "SPLASH_DEBUG";
@@ -56,20 +56,26 @@ public class SplashActivity extends AppCompatActivity {
         jsonDownloader.loadPreferences("Ru").enqueue(new Callback<ConfigFile>() {
             @Override
             public void onResponse(Call<ConfigFile> call, Response<ConfigFile> response) {
-                if (response.body() != null ){
-                    // user info to base
-                    int userId = response.body().getUser().getId();
-                    String userName = response.body().getUser().getName();
-                    userUpdate(userId, userName);
+                if (response.body() != null) {
+                    if (configDbUpdate(response.body().getDateEdit())) {
+                        Log.d("DEBUG", "DB config update");
+                        // user info to base
+                        int userId = response.body().getUser().getId();
+                        String userName = response.body().getUser().getName();
+                        userUpdate(userId, userName);
 
-                    // accounts info to base
-                    List<AccountsItem> accountsItems = response.body().getAccounts();
-                    for (AccountsItem acc : accountsItems) {
-                        accountUpdate(acc.getId(),
-                                acc.getType(),
-                                acc.getTitle(),
-                                acc.getInstrument(),
-                                acc.getBalance());
+                        // accounts info to base
+                        List<AccountsItem> accountsItems = response.body().getAccounts();
+                        for (AccountsItem acc : accountsItems) {
+                            accountUpdate(acc.getId(),
+                                    acc.getType(),
+                                    acc.getTitle(),
+                                    acc.getInstrument(),
+                                    acc.getBalance());
+                        }
+                        configDbDateUpdate(response.body().getDateEdit());
+                    } else {
+                        Log.d("DEBUG", "DB update not needed");
                     }
                     HomeActivity.start(getApplicationContext());
                 }
@@ -81,6 +87,54 @@ public class SplashActivity extends AppCompatActivity {
                 Log.d(LOG_TAG, t.getMessage());
             }
         });
+    }
+
+    public boolean configDbUpdate(long timeMillisLong) {
+        String[] selection = new String[]{VimonContract.ConfigEntry.CONFIG_KEY_NAME_DATE_EDIT};
+        try (Cursor configCursor = db.query(VimonContract.ConfigEntry.TABLE_NAME, null,
+                VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_NAME + " = ?",
+                selection, null, null, null)) {
+            Log.d("DEBUG", "DB query");
+            if (configCursor.getCount() > 0) {
+                Log.d("DEBUG", "DB date_edit exist");
+                configCursor.moveToFirst();
+                Log.d("DEBUG", "DB date edit is "
+                        + configCursor.getLong(configCursor.getColumnIndex(VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_VALUE)));
+                boolean tmp = configCursor.getLong(configCursor.getColumnIndex(VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_VALUE))
+                        < timeMillisLong;
+                Log.d("DEBUG", "DB should update date edit is " + tmp);
+                return (tmp);
+            } else {
+                configDbDateInsert(timeMillisLong);
+                return true;
+            }
+        } catch (Throwable e) {
+            Toast.makeText(this, "config Error", Toast.LENGTH_LONG).show();
+            return false;
+        }
+    }
+
+    // insert new date edit in config DB table
+    private void configDbDateInsert(long timeMillisLong) {
+        Log.d("DEBUG", "DB date edit insert ");
+        ContentValues cv = new ContentValues();
+        cv.put(VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_NAME, VimonContract.ConfigEntry.CONFIG_KEY_NAME_DATE_EDIT);
+        cv.put(VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_VALUE, timeMillisLong);
+
+        db.insert(VimonContract.ConfigEntry.TABLE_NAME, null, cv);
+    }
+
+    // insert new date edit in config DB table
+    private void configDbDateUpdate(long timeMillisLong) {
+        Log.d("DEBUG", "DB date edit update ");
+        ContentValues cv = new ContentValues();
+        cv.put(VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_NAME, VimonContract.ConfigEntry.CONFIG_KEY_NAME_DATE_EDIT);
+        cv.put(VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_VALUE, timeMillisLong);
+
+        String[] selection = new String[]{VimonContract.ConfigEntry.CONFIG_KEY_NAME_DATE_EDIT};
+        db.update(VimonContract.ConfigEntry.TABLE_NAME, cv,
+                VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_NAME + " = ?",
+                selection);
     }
 
     public void userUpdate(int id, String user) {
@@ -102,7 +156,6 @@ public class SplashActivity extends AppCompatActivity {
             }
         }
     }
-
 
     public void accountUpdate(int id, String type, String title, int ins, int balance) {
         ContentValues accountCV = new ContentValues();

@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
     private static String DB_Name = "user.db";
-    private static int DB_VERSION = 1;
+    private static int DB_VERSION = 2;
 
     private static final String USER_CREATE_QUERY = ""
             + "CREATE TABLE " + VimonContract.UserEntry.TABLE_NAME + " ( "
@@ -25,6 +25,13 @@ public class DbHelper extends SQLiteOpenHelper {
             + VimonContract.AccountsEntry.COLUMN_BALANCE + " INTEGER "
             + ");";
 
+    private static final String CONFIG_CREATE_QUERY = ""
+            + "CREATE TABLE " + VimonContract.ConfigEntry.TABLE_NAME + " ( "
+            + VimonContract.ConfigEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_NAME + " TEXT, "
+            + VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_VALUE + " TEXT "
+            + ");";
+
 
     public DbHelper(Context context) {
         super(context, DB_Name, null, DB_VERSION);
@@ -34,10 +41,13 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(USER_CREATE_QUERY);
         sqLiteDatabase.execSQL(ACCOUNTS_CREATE_QUERY);
+        sqLiteDatabase.execSQL(CONFIG_CREATE_QUERY);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        //do nothing
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        if (oldVersion == 1 && newVersion == 2){
+            sqLiteDatabase.execSQL(CONFIG_CREATE_QUERY);
+        }
     }
 }
