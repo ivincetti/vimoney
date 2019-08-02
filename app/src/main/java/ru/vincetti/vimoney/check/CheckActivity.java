@@ -20,12 +20,10 @@ public class CheckActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_check_settings);
+        setContentView(R.layout.activity_check);
 
         findViewById(R.id.setting_navigation_back_btn)
                 .setOnClickListener(view -> finish());
-        findViewById(R.id.check_nav_edit_btn)
-                .setOnClickListener(view -> AddCheckActivity.start(this));
     }
 
     @Override

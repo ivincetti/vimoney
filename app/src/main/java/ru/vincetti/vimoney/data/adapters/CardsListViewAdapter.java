@@ -15,22 +15,32 @@ import ru.vincetti.vimoney.models.Account;
 
 public class CardsListViewAdapter extends RecyclerView.Adapter<CardsListViewAdapter.ViewHolder> {
     private ArrayList<Account> data;
+    private OnCardListener mListener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView accName;
-        TextView accType;
-        TextView accBalance;
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView accName, accType, accBalance;
+        OnCardListener listener;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnCardListener listener) {
             super(itemView);
             accName = itemView.findViewById(R.id.home_acc_name);
             accType = itemView.findViewById(R.id.home_acc_type);
             accBalance = itemView.findViewById(R.id.home_acc_balance);
+
+            this.listener = listener;
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            listener.onCardClick(getAdapterPosition());
         }
     }
 
-    public CardsListViewAdapter(ArrayList<Account> list) {
+    public CardsListViewAdapter(ArrayList<Account> list, OnCardListener listener) {
         this.data = list;
+        this.mListener = listener;
     }
 
     @NonNull
@@ -38,7 +48,7 @@ public class CardsListViewAdapter extends RecyclerView.Adapter<CardsListViewAdap
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cards_list
                 , parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, mListener);
     }
 
     @Override
@@ -52,5 +62,9 @@ public class CardsListViewAdapter extends RecyclerView.Adapter<CardsListViewAdap
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public interface OnCardListener{
+        void onCardClick(int position);
     }
 }

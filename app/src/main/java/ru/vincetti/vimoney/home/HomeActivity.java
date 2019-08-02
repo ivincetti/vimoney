@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 import ru.vincetti.vimoney.R;
+import ru.vincetti.vimoney.check.CheckActivity;
 import ru.vincetti.vimoney.dashboard.DashboardActivity;
 import ru.vincetti.vimoney.models.Account;
 import ru.vincetti.vimoney.data.adapters.CardsListViewAdapter;
@@ -78,7 +80,10 @@ public class HomeActivity extends AppCompatActivity {
         showTransactionsHistory();
 
         // список карт/счетов
-        CardsListViewAdapter adapter = new CardsListViewAdapter(accList);
+        CardsListViewAdapter adapter = new CardsListViewAdapter(accList, position -> {
+            Log.d("DEBUG", "Cards click");
+            CheckActivity.start(getBaseContext());
+        });
         RecyclerView cardsListView = findViewById(R.id.home_cards_recycle_view);
         cardsListView.setHasFixedSize(true);
         LinearLayoutManager cardsLayoutManager = new LinearLayoutManager(this,
