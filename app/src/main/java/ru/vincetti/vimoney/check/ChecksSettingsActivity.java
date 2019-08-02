@@ -10,7 +10,7 @@ import ru.vincetti.vimoney.R;
 
 public class ChecksSettingsActivity extends AppCompatActivity {
 
-    public static void start(Context context){
+    public static void start(Context context) {
         context.startActivity(new Intent(context, ChecksSettingsActivity.class));
     }
 

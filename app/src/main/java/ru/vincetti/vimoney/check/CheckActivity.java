@@ -15,7 +15,7 @@ import ru.vincetti.vimoney.R;
 public class CheckActivity extends AppCompatActivity {
     private Toolbar toolbar;
 
-    public static void start(Context context){
+    public static void start(Context context) {
         context.startActivity(new Intent(context, CheckActivity.class));
     }
 
@@ -39,7 +39,7 @@ public class CheckActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.check_nav_edit_btn){
+        if (item.getItemId() == R.id.check_nav_edit_btn) {
             ChecksSettingsActivity.start(this);
         }
         return true;

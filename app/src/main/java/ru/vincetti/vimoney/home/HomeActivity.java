@@ -16,23 +16,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.check.CheckActivity;
 import ru.vincetti.vimoney.dashboard.DashboardActivity;
-import ru.vincetti.vimoney.models.Account;
 import ru.vincetti.vimoney.data.adapters.CardsListViewAdapter;
 import ru.vincetti.vimoney.data.sqlite.DbHelper;
 import ru.vincetti.vimoney.data.sqlite.VimonContract;
-import ru.vincetti.vimoney.history.HistoryFragment;
 import ru.vincetti.vimoney.history.HistoryActivity;
+import ru.vincetti.vimoney.history.HistoryFragment;
+import ru.vincetti.vimoney.models.Account;
 import ru.vincetti.vimoney.notifications.NotificationsActivity;
 import ru.vincetti.vimoney.settings.SettingsActivity;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
@@ -47,12 +44,9 @@ public class HomeActivity extends AppCompatActivity {
     private ArrayList<Account> accList;
 
     private Toolbar toolbar;
-    private FloatingActionButton fab;
-
-    private FragmentTransaction fTrans;
-    private HistoryFragment historyFragment;
-
     private TextView mBalanceText;
+
+    private HistoryFragment historyFragment;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
@@ -92,7 +86,7 @@ public class HomeActivity extends AppCompatActivity {
         cardsListView.setAdapter(adapter);
     }
 
-    public void viewInit(){
+    public void viewInit() {
         findViewById(R.id.home_fab)
                 .setOnClickListener(view -> TransactionActivity.start(this));
         findViewById(R.id.home_transactions_link)
@@ -101,7 +95,7 @@ public class HomeActivity extends AppCompatActivity {
                 .setOnClickListener(view -> DashboardActivity.start(this));
     }
 
-    private void showTransactionsHistory(){
+    private void showTransactionsHistory() {
         historyFragment = new HistoryFragment();
 
         Bundle args = new Bundle();

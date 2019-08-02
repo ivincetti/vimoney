@@ -58,7 +58,6 @@ public class SplashActivity extends AppCompatActivity {
             public void onResponse(Call<ConfigFile> call, Response<ConfigFile> response) {
                 if (response.body() != null) {
                     if (configDbUpdate(response.body().getDateEdit())) {
-                        Log.d("DEBUG", "DB config update");
                         // user info to base
                         int userId = response.body().getUser().getId();
                         String userName = response.body().getUser().getName();
@@ -74,8 +73,6 @@ public class SplashActivity extends AppCompatActivity {
                                     acc.getBalance());
                         }
                         configDbDateUpdate(response.body().getDateEdit());
-                    } else {
-                        Log.d("DEBUG", "DB update not needed");
                     }
                     HomeActivity.start(getApplicationContext());
                 }
@@ -94,16 +91,11 @@ public class SplashActivity extends AppCompatActivity {
         try (Cursor configCursor = db.query(VimonContract.ConfigEntry.TABLE_NAME, null,
                 VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_NAME + " = ?",
                 selection, null, null, null)) {
-            Log.d("DEBUG", "DB query");
             if (configCursor.getCount() > 0) {
-                Log.d("DEBUG", "DB date_edit exist");
                 configCursor.moveToFirst();
-                Log.d("DEBUG", "DB date edit is "
-                        + configCursor.getLong(configCursor.getColumnIndex(VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_VALUE)));
-                boolean tmp = configCursor.getLong(configCursor.getColumnIndex(VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_VALUE))
+                boolean isUpdateNeed = configCursor.getLong(configCursor.getColumnIndex(VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_VALUE))
                         < timeMillisLong;
-                Log.d("DEBUG", "DB should update date edit is " + tmp);
-                return (tmp);
+                return (isUpdateNeed);
             } else {
                 configDbDateInsert(timeMillisLong);
                 return true;
@@ -116,7 +108,6 @@ public class SplashActivity extends AppCompatActivity {
 
     // insert new date edit in config DB table
     private void configDbDateInsert(long timeMillisLong) {
-        Log.d("DEBUG", "DB date edit insert ");
         ContentValues cv = new ContentValues();
         cv.put(VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_NAME, VimonContract.ConfigEntry.CONFIG_KEY_NAME_DATE_EDIT);
         cv.put(VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_VALUE, timeMillisLong);
@@ -124,9 +115,8 @@ public class SplashActivity extends AppCompatActivity {
         db.insert(VimonContract.ConfigEntry.TABLE_NAME, null, cv);
     }
 
-    // insert new date edit in config DB table
+    // update new date edit in config DB table
     private void configDbDateUpdate(long timeMillisLong) {
-        Log.d("DEBUG", "DB date edit update ");
         ContentValues cv = new ContentValues();
         cv.put(VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_NAME, VimonContract.ConfigEntry.CONFIG_KEY_NAME_DATE_EDIT);
         cv.put(VimonContract.ConfigEntry.COLUMN_CONFIG_KEY_VALUE, timeMillisLong);
