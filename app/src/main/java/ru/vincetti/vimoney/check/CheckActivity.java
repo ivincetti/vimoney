@@ -8,10 +8,12 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import ru.vincetti.vimoney.R;
 
 public class CheckActivity extends AppCompatActivity {
+    private Toolbar toolbar;
 
     public static void start(Context context){
         context.startActivity(new Intent(context, CheckActivity.class));
@@ -21,6 +23,9 @@ public class CheckActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check);
+
+        toolbar = findViewById(R.id.top_toolbar);
+        setSupportActionBar(toolbar);
 
         findViewById(R.id.setting_navigation_back_btn)
                 .setOnClickListener(view -> finish());
