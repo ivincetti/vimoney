@@ -1,4 +1,4 @@
-package ru.vincetti.vimoney.data;
+package ru.vincetti.vimoney.models;
 
 public class Transaction {
     public static int TRANSACTION_TYPE_INCOME = 1;

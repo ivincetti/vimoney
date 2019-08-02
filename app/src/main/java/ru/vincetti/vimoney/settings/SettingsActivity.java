@@ -7,10 +7,11 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ru.vincetti.vimoney.R;
+import ru.vincetti.vimoney.check.ChecksSettingsActivity;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    public static void start(Context context){
+    public static void start(Context context) {
         context.startActivity(new Intent(context, SettingsActivity.class));
     }
 
@@ -22,6 +23,6 @@ public class SettingsActivity extends AppCompatActivity {
         findViewById(R.id.setting_navigation_back_btn).setOnClickListener(view -> finish());
 
         findViewById(R.id.btn_check_settings)
-                .setOnClickListener(view -> SettingsCheckActivity.start(this));
+                .setOnClickListener(view -> ChecksSettingsActivity.start(this));
     }
 }

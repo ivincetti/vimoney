@@ -42,11 +42,15 @@
     <!--Settings Activity-->
     <string name="settings_title_home">Settings</string>
 
-    <!--Settings Check Activity-->
+    <!--Checks Settings Activity-->
     <string name="settings_check_title_home">Settings Check</string>
 
     <!--Add Check Activity-->
     <string name="add_check_title_home">Add check</string>
+
+    <!--Check Activity-->
+    <string name="check_title_home">Check</string>
+    <string name="check_nav_title_edit">Edit Check</string>
 
     <!--Navigation-->
     <string name="nav_title_notification">Notification</string>

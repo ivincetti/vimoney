@@ -1,4 +1,4 @@
-package ru.vincetti.vimoney.settings;
+package ru.vincetti.vimoney.check;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,12 +7,11 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.add.AddCheckActivity;
 
-public class SettingsCheckActivity extends AppCompatActivity {
+public class ChecksSettingsActivity extends AppCompatActivity {
 
     public static void start(Context context){
-        context.startActivity(new Intent(context, SettingsCheckActivity.class));
+        context.startActivity(new Intent(context, ChecksSettingsActivity.class));
     }
 
     @Override

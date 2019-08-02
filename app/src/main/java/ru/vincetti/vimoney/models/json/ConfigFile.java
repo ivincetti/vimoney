@@ -1,4 +1,4 @@
-package ru.vincetti.vimoney.data;
+package ru.vincetti.vimoney.models.json;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -12,16 +12,8 @@ public class ConfigFile {
     @SerializedName("user")
     private User user;
 
-    public void setAccounts(List<AccountsItem> accounts) {
-        this.accounts = accounts;
-    }
-
     public List<AccountsItem> getAccounts() {
         return accounts;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public User getUser() {

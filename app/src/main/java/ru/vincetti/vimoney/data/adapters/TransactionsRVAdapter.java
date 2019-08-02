@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.data.Transaction;
+import ru.vincetti.vimoney.models.Transaction;
 
 public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAdapter.ViewHolder> {
     private ArrayList<Transaction> data;

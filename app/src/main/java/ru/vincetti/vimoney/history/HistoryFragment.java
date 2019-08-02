@@ -1,4 +1,4 @@
-package ru.vincetti.vimoney.fragments;
+package ru.vincetti.vimoney.history;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.data.Transaction;
+import ru.vincetti.vimoney.models.Transaction;
 import ru.vincetti.vimoney.data.adapters.TransactionsRVAdapter;
 import ru.vincetti.vimoney.utils.TransactionsGenerator;
 

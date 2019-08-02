@@ -1,4 +1,4 @@
-package ru.vincetti.vimoney.add;
+package ru.vincetti.vimoney.transaction;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,17 +8,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import ru.vincetti.vimoney.R;
 
-public class AddCheckActivity extends AppCompatActivity {
+public class TransactionActivity extends AppCompatActivity {
 
     public static void start(Context context) {
-        Intent starter = new Intent(context, AddCheckActivity.class);
+        Intent starter = new Intent(context, TransactionActivity.class);
         context.startActivity(starter);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_check);
+        setContentView(R.layout.activity_add);
 
         findViewById(R.id.setting_navigation_back_btn).setOnClickListener(view -> finish());
     }

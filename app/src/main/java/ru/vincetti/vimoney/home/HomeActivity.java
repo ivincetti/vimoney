@@ -23,17 +23,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-import ru.vincetti.vimoney.history.HistoryActivity;
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.add.AddActivity;
 import ru.vincetti.vimoney.dashboard.DashboardActivity;
-import ru.vincetti.vimoney.data.Account;
+import ru.vincetti.vimoney.models.Account;
 import ru.vincetti.vimoney.data.adapters.CardsListViewAdapter;
 import ru.vincetti.vimoney.data.sqlite.DbHelper;
 import ru.vincetti.vimoney.data.sqlite.VimonContract;
-import ru.vincetti.vimoney.fragments.HistoryFragment;
+import ru.vincetti.vimoney.history.HistoryFragment;
+import ru.vincetti.vimoney.history.HistoryActivity;
 import ru.vincetti.vimoney.notifications.NotificationsActivity;
 import ru.vincetti.vimoney.settings.SettingsActivity;
+import ru.vincetti.vimoney.transaction.TransactionActivity;
 
 public class HomeActivity extends AppCompatActivity {
     private static String LOG_TAG = "MAIN DEBUG";
@@ -89,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
 
     public void viewInit(){
         findViewById(R.id.home_fab)
-                .setOnClickListener(view -> AddActivity.start(this));
+                .setOnClickListener(view -> TransactionActivity.start(this));
         findViewById(R.id.home_transactions_link)
                 .setOnClickListener(view -> HistoryActivity.start(this));
         findViewById(R.id.home_user_stat_link)
@@ -116,7 +116,6 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        fTrans = getSupportFragmentManager().beginTransaction();
         switch (item.getItemId()) {
             case R.id.navigation_bar_notification:
                 NotificationsActivity.start(this);
@@ -125,8 +124,6 @@ public class HomeActivity extends AppCompatActivity {
                 SettingsActivity.start(this);
                 break;
         }
-        fTrans.addToBackStack(null);
-        fTrans.commit();
         return true;
     }
 

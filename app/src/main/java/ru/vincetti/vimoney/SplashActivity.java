@@ -18,8 +18,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import ru.vincetti.vimoney.data.AccountsItem;
-import ru.vincetti.vimoney.data.ConfigFile;
+import ru.vincetti.vimoney.models.json.AccountsItem;
+import ru.vincetti.vimoney.models.json.ConfigFile;
 import ru.vincetti.vimoney.data.JsonDownloader;
 import ru.vincetti.vimoney.data.sqlite.DbHelper;
 import ru.vincetti.vimoney.data.sqlite.VimonContract;
@@ -56,22 +56,23 @@ public class SplashActivity extends AppCompatActivity {
         jsonDownloader.loadPreferences("Ru").enqueue(new Callback<ConfigFile>() {
             @Override
             public void onResponse(Call<ConfigFile> call, Response<ConfigFile> response) {
-                // user info to base
-                int userId = response.body().getUser().getId();
-                String userName = response.body().getUser().getName();
-                userUpdate(userId, userName);
+                if (response.body() != null ){
+                    // user info to base
+                    int userId = response.body().getUser().getId();
+                    String userName = response.body().getUser().getName();
+                    userUpdate(userId, userName);
 
-                // accounts info to base
-                List<AccountsItem> accountsItems = response.body().getAccounts();
-                for (AccountsItem acc : accountsItems) {
-                    accountUpdate(acc.getId(),
-                            acc.getType(),
-                            acc.getTitle(),
-                            acc.getInstrument(),
-                            acc.getBalance());
+                    // accounts info to base
+                    List<AccountsItem> accountsItems = response.body().getAccounts();
+                    for (AccountsItem acc : accountsItems) {
+                        accountUpdate(acc.getId(),
+                                acc.getType(),
+                                acc.getTitle(),
+                                acc.getInstrument(),
+                                acc.getBalance());
+                    }
+                    HomeActivity.start(getApplicationContext());
                 }
-
-                HomeActivity.start(getApplicationContext());
             }
 
             @Override
@@ -87,11 +88,10 @@ public class SplashActivity extends AppCompatActivity {
         userCV.put(VimonContract.UserEntry.COLUMN_USER_ID, id);
         userCV.put(VimonContract.UserEntry.COLUMN_NAME, user);
 
-        Cursor userCursor = db.query(VimonContract.UserEntry.TABLE_NAME, null,
+        try (Cursor userCursor = db.query(VimonContract.UserEntry.TABLE_NAME, null,
                 VimonContract.UserEntry.COLUMN_USER_ID + " = " + id,
                 null, null,
-                null, null);
-        try {
+                null, null)) {
             if (userCursor.getCount() > 0) {
                 db.update(VimonContract.UserEntry.TABLE_NAME,
                         userCV,
@@ -100,8 +100,6 @@ public class SplashActivity extends AppCompatActivity {
             } else {
                 db.insert(VimonContract.UserEntry.TABLE_NAME, null, userCV);
             }
-        } finally {
-            userCursor.close();
         }
     }
 
@@ -114,11 +112,10 @@ public class SplashActivity extends AppCompatActivity {
         accountCV.put(VimonContract.AccountsEntry.COLUMN_INSTRUMENT, ins);
         accountCV.put(VimonContract.AccountsEntry.COLUMN_BALANCE, balance);
 
-        Cursor userCursor = db.query(VimonContract.AccountsEntry.TABLE_NAME, null,
+        try (Cursor userCursor = db.query(VimonContract.AccountsEntry.TABLE_NAME, null,
                 VimonContract.AccountsEntry.COLUMN_ACCOUNT_ID + " = " + id,
                 null, null,
-                null, null);
-        try {
+                null, null)) {
             if (userCursor.getCount() > 0) {
                 db.update(VimonContract.AccountsEntry.TABLE_NAME,
                         accountCV,
@@ -127,8 +124,6 @@ public class SplashActivity extends AppCompatActivity {
             } else {
                 db.insert(VimonContract.AccountsEntry.TABLE_NAME, null, accountCV);
             }
-        } finally {
-            userCursor.close();
         }
     }
 }

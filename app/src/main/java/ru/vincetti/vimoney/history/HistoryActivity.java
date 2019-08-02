@@ -7,7 +7,6 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.fragments.HistoryFragment;
 
 public class HistoryActivity extends AppCompatActivity {
     private static String BUNDLETAG = "ru.vincetti.vimoney.transhistory";
