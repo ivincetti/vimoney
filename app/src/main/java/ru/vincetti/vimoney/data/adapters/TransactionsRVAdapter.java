@@ -15,22 +15,32 @@ import ru.vincetti.vimoney.models.Transaction;
 
 public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAdapter.ViewHolder> {
     private ArrayList<Transaction> data;
+    OnTransactionClickListener mListener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView name;
-        TextView date;
-        TextView sum;
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView name, date, sum;
+        OnTransactionClickListener listener;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnTransactionClickListener listener) {
             super(itemView);
             name = itemView.findViewById(R.id.home_transactions_name);
             date = itemView.findViewById(R.id.home_transactions_date);
             sum = itemView.findViewById(R.id.home_transactions_balance);
+
+            this.listener = listener;
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            listener.onTrClick(getAdapterPosition());
         }
     }
 
-    public TransactionsRVAdapter(ArrayList<Transaction> list) {
+    public TransactionsRVAdapter(ArrayList<Transaction> list, OnTransactionClickListener listener) {
         this.data = list;
+        this.mListener = listener;
     }
 
     @NonNull
@@ -38,7 +48,7 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_transactions_list
                 , parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, mListener);
     }
 
     @Override
@@ -57,5 +67,9 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public interface OnTransactionClickListener{
+        void onTrClick(int position);
     }
 }

@@ -15,13 +15,13 @@ import ru.vincetti.vimoney.models.Account;
 
 public class CardsListViewAdapter extends RecyclerView.Adapter<CardsListViewAdapter.ViewHolder> {
     private ArrayList<Account> data;
-    private OnCardListener mListener;
+    private OnCardClickListener mListener;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView accName, accType, accBalance;
-        OnCardListener listener;
+        OnCardClickListener listener;
 
-        public ViewHolder(@NonNull View itemView, OnCardListener listener) {
+        public ViewHolder(@NonNull View itemView, OnCardClickListener listener) {
             super(itemView);
             accName = itemView.findViewById(R.id.home_acc_name);
             accType = itemView.findViewById(R.id.home_acc_type);
@@ -38,7 +38,7 @@ public class CardsListViewAdapter extends RecyclerView.Adapter<CardsListViewAdap
         }
     }
 
-    public CardsListViewAdapter(ArrayList<Account> list, OnCardListener listener) {
+    public CardsListViewAdapter(ArrayList<Account> list, OnCardClickListener listener) {
         this.data = list;
         this.mListener = listener;
     }
@@ -64,7 +64,7 @@ public class CardsListViewAdapter extends RecyclerView.Adapter<CardsListViewAdap
         return data.size();
     }
 
-    public interface OnCardListener{
+    public interface OnCardClickListener{
         void onCardClick(int position);
     }
 }

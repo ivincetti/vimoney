@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.models.Transaction;
 import ru.vincetti.vimoney.data.adapters.TransactionsRVAdapter;
+import ru.vincetti.vimoney.transaction.TransactionActivity;
 import ru.vincetti.vimoney.utils.TransactionsGenerator;
 
 public class HistoryFragment extends Fragment {
@@ -46,7 +47,8 @@ public class HistoryFragment extends Fragment {
         trList = TransactionsGenerator.generate(trCount);
 
         // список транзакций
-        TransactionsRVAdapter transactionsRVAdapter = new TransactionsRVAdapter(trList);
+        TransactionsRVAdapter transactionsRVAdapter = new TransactionsRVAdapter(trList,
+                position -> TransactionActivity.start(getActivity()));
         RecyclerView trListView = view.findViewById(R.id.home_transactions_recycle_view);
         trListView.setHasFixedSize(true);
         LinearLayoutManager trLayoutManager = new LinearLayoutManager(getContext(),
