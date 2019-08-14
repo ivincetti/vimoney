@@ -27,7 +27,6 @@ import ru.vincetti.vimoney.data.sqlite.VimonContract;
 import ru.vincetti.vimoney.home.HomeActivity;
 import ru.vincetti.vimoney.utils.TransactionsGenerator;
 
-import static ru.vincetti.vimoney.data.sqlite.VimonContract.ConfigEntry.CONFIG_KEY_NAME_DATE_EDIT;
 import static ru.vincetti.vimoney.data.sqlite.VimonContract.ConfigEntry.CONFIG_KEY_NAME_USER_NAME;
 
 public class SplashActivity extends AppCompatActivity {
@@ -100,14 +99,7 @@ public class SplashActivity extends AppCompatActivity {
 
                     // accounts info to base
                     Log.d("DEBUG", "Обновление счетов");
-                    List<AccountsItem> accountsItems = response.body().getAccounts();
-                    for (AccountsItem acc : accountsItems) {
-                        accountUpdate(acc.getId(),
-                                acc.getType(),
-                                acc.getTitle(),
-                                acc.getInstrument(),
-                                acc.getBalance());
-                    }
+                    accountsUpdate(response);
                 } else {
                     if(Long.valueOf(config.getValue()) < timeMillisLong){
                         Log.d("DEBUG", "данные есть - требуется обновление, date " + config.getValue());
@@ -119,21 +111,26 @@ public class SplashActivity extends AppCompatActivity {
 
                         // accounts info to base
                         Log.d("DEBUG", "Обновление счетов");
-                        List<AccountsItem> accountsItems = response.body().getAccounts();
-
-                        for (AccountsItem acc : accountsItems) {
-                            accountUpdate(acc.getId(),
-                                    acc.getType(),
-                                    acc.getTitle(),
-                                    acc.getInstrument(),
-                                    acc.getBalance());
-                        }
+                        accountsUpdate(response);
                     } else {
                         Log.d("DEBUG", "данные есть - обновление не требуется");
                     }
                 }
             }
         });
+    }
+
+    private void accountsUpdate(Response<ConfigFile> response){
+        Log.d("DEBUG", "Обновление счетов");
+        List<AccountsItem> accountsItems = response.body().getAccounts();
+
+        for (AccountsItem acc : accountsItems) {
+            accountUpdate(acc.getId(),
+                    acc.getType(),
+                    acc.getTitle(),
+                    acc.getInstrument(),
+                    acc.getBalance());
+        }
     }
 
     // insert new date edit in config DB table
