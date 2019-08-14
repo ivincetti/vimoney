@@ -3,7 +3,6 @@ package ru.vincetti.vimoney.transaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.room.TypeConverters;
 
 import java.util.Date;
 
@@ -93,12 +91,10 @@ public class TransactionActivity extends AppCompatActivity {
                     tmp.setId(mTransId);
                     AppDatabase.getInstance(getApplicationContext())
                             .transactionDao().updateTransaction(tmp);
-                    Log.d("DEBUG", "обновление элемета " + mTransId);
                     finish();
                 } else {
                     AppDatabase.getInstance(getApplicationContext())
                             .transactionDao().insertTransaction(tmp);
-                    Log.d("DEBUG", "новый элемент");
                     finish();
                 }
             }
