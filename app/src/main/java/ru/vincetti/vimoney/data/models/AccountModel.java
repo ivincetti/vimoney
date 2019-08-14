@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "accounts")
 public class AccountModel {
 
-    @PrimaryKey (autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
     private int id;
     @ColumnInfo(name = "acc_id")
     private int accountID;
@@ -17,7 +17,7 @@ public class AccountModel {
     private int sum;
 
     @Ignore
-    public AccountModel(int accountID,String name, String type, int sum) {
+    public AccountModel(int accountID, String name, String type, int sum) {
         this.accountID = accountID;
         this.name = name;
         this.type = type;

@@ -2,19 +2,19 @@ package ru.vincetti.vimoney.data.models.json;
 
 import com.google.gson.annotations.SerializedName;
 
-public class User{
+public class User {
 
-	@SerializedName("name")
-	private String name;
+    @SerializedName("name")
+    private String name;
 
-	@SerializedName("id")
-	private int id;
+    @SerializedName("id")
+    private int id;
 
-	public String getName(){
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public int getId(){
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 }

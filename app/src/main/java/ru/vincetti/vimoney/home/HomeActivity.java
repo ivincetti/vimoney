@@ -55,11 +55,10 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         createNotificationChannel();
-
         toolbar = findViewById(R.id.top_toolbar);
         setSupportActionBar(toolbar);
-
         viewInit();
+
         mDb = AppDatabase.getInstance(this);
 
         // список карт/счетов
@@ -92,7 +91,6 @@ public class HomeActivity extends AppCompatActivity {
         Bundle args = new Bundle();
         args.putInt(HistoryFragment.BUNDLETAG_TRANS_COUNT_NAME, TR_MAIN_COUNT);
         historyFragment.setArguments(args);
-
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_history_container, historyFragment)
                 .commit();
@@ -143,7 +141,6 @@ public class HomeActivity extends AppCompatActivity {
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
             NotificationChannel channel =
                     new NotificationChannel(CHANNEL_ID,
                             getString(R.string.channel_name),

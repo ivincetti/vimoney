@@ -2,7 +2,6 @@ package ru.vincetti.vimoney;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -32,7 +31,6 @@ import static ru.vincetti.vimoney.data.sqlite.VimonContract.ConfigEntry.CONFIG_K
 public class SplashActivity extends AppCompatActivity {
     private final String LOG_TAG = "SPLASH_DEBUG";
 
-    private ProgressBar progress;
     private JsonDownloader jsonDownloader;
     private AppDatabase mDb;
 
@@ -40,8 +38,6 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
-        progress = findViewById(R.id.splash_content_progressbar);
 
         mDb = AppDatabase.getInstance(this);
         retrofitInit();
@@ -77,22 +73,20 @@ public class SplashActivity extends AppCompatActivity {
     public void configDbUpdate(long timeMillisLong, Response<ConfigFile> response) {
         LiveData<ConfigModel> tmpConfig = mDb.configDao()
                 .loadConfigByKey(VimonContract.ConfigEntry.CONFIG_KEY_NAME_DATE_EDIT);
-
         tmpConfig.observe(this, new Observer<ConfigModel>() {
             @Override
             public void onChanged(ConfigModel config) {
                 tmpConfig.removeObserver(this);
                 if (config == null) {
                     configDbDateInsert(timeMillisLong);
+                    //first transactions generation
                     TransactionsGenerator.generate(getApplicationContext());
-
                     // user info to base
                     userUpdate(response.body().getUser().getName());
-
                     // accounts info to base
                     accountsUpdate(response);
                 } else {
-                    if(Long.valueOf(config.getValue()) < timeMillisLong){
+                    if (Long.valueOf(config.getValue()) < timeMillisLong) {
                         configDbDateUpdate(response.body().getDateEdit(), config.getId());
                         // user info to base
                         userUpdate(response.body().getUser().getName());
@@ -104,9 +98,8 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
-    private void accountsUpdate(Response<ConfigFile> response){
+    private void accountsUpdate(Response<ConfigFile> response) {
         List<AccountsItem> accountsItems = response.body().getAccounts();
-
         for (AccountsItem acc : accountsItems) {
             accountUpdate(acc.getId(),
                     acc.getType(),
@@ -120,7 +113,6 @@ public class SplashActivity extends AppCompatActivity {
     private void configDbDateInsert(long timeMillisLong) {
         ConfigModel newConfig = new ConfigModel(VimonContract.ConfigEntry.CONFIG_KEY_NAME_DATE_EDIT,
                 String.valueOf(timeMillisLong));
-
         mDb.configDao().insertConfig(newConfig);
     }
 
@@ -129,7 +121,6 @@ public class SplashActivity extends AppCompatActivity {
         ConfigModel newConfig = new ConfigModel(id,
                 VimonContract.ConfigEntry.CONFIG_KEY_NAME_DATE_EDIT,
                 String.valueOf(timeMillisLong));
-
         mDb.configDao().updateConfig(newConfig);
     }
 
@@ -157,7 +148,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onChanged(AccountModel accountModel) {
                 tmpAcc.removeObserver(this);
-                if(accountModel == null){
+                if (accountModel == null) {
                     mDb.accountDao().insertAccount(newAcc);
                 } else {
                     newAcc.setId(accountModel.getId());

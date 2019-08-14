@@ -45,14 +45,13 @@ public class TransactionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
+        initViews();
 
         mDb = AppDatabase.getInstance(this);
-        initViews();
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_TRANS_ID)) {
             mTransId = intent.getIntExtra(EXTRA_TRANS_ID, DEFAULT_TRANS_ID);
-
             btnSave.setText(getString(R.string.add_btn_update));
             LiveData<TransactionModel> transLD = mDb.transactionDao().loadTransactionById(mTransId);
             transLD.observe(this, new Observer<TransactionModel>() {
@@ -64,7 +63,6 @@ public class TransactionActivity extends AppCompatActivity {
                     txtName.setText(transactionModel.getDescription());
                     transactionModel.getDate();
                     transactionModel.getType();
-
                 }
             });
         }
@@ -99,12 +97,8 @@ public class TransactionActivity extends AppCompatActivity {
                 }
             }
         });
-
         findViewById(R.id.setting_navigation_back_btn).
-
-                setOnClickListener(view ->
-
-                        finish());
+                setOnClickListener(view -> finish());
     }
 
     private int typeEntered() {

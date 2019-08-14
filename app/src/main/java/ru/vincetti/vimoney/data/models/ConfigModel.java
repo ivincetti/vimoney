@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "config")
 public class ConfigModel {
 
-    @PrimaryKey (autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
     private int id;
     @ColumnInfo(name = "key_name")
     private String keyName;
