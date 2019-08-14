@@ -39,7 +39,6 @@ public class HomeActivity extends AppCompatActivity {
     private AppDatabase mDb;
     CardsListRVAdapter mAdapter;
 
-    private Toolbar toolbar;
     private TextView mBalanceText;
 
     private HistoryFragment historyFragment;
@@ -55,23 +54,19 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         createNotificationChannel();
-        toolbar = findViewById(R.id.top_toolbar);
+        Toolbar toolbar = findViewById(R.id.top_toolbar);
         setSupportActionBar(toolbar);
         viewInit();
 
         mDb = AppDatabase.getInstance(this);
-
         // список карт/счетов
-        mAdapter = new CardsListRVAdapter(itemId -> {
-            CheckActivity.start(getBaseContext(), itemId);
-        });
+        mAdapter = new CardsListRVAdapter(itemId -> CheckActivity.start(getBaseContext(), itemId));
         RecyclerView cardsListView = findViewById(R.id.home_cards_recycle_view);
         //cardsListView.setHasFixedSize(true);
         LinearLayoutManager cardsLayoutManager = new LinearLayoutManager(this,
                 RecyclerView.HORIZONTAL, false);
         cardsListView.setLayoutManager(cardsLayoutManager);
         cardsListView.setAdapter(mAdapter);
-
         accountsLoadFromDB();
         showTransactionsHistory();
     }
@@ -117,12 +112,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private void accountsLoadFromDB() {
         LiveData<List<AccountModel>> tmpList = mDb.accountDao().loadAllAccounts();
-        tmpList.observe(this, new Observer<List<AccountModel>>() {
-            @Override
-            public void onChanged(List<AccountModel> accounts) {
-                userBalanceChange(accounts);
-                mAdapter.setList(accounts);
-            }
+        tmpList.observe(this, accounts -> {
+            userBalanceChange(accounts);
+            mAdapter.setList(accounts);
         });
 
     }

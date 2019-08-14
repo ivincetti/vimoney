@@ -46,7 +46,6 @@ public class TransactionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
         initViews();
-
         mDb = AppDatabase.getInstance(this);
 
         Intent intent = getIntent();
@@ -61,8 +60,8 @@ public class TransactionActivity extends AppCompatActivity {
                     txtSum.setText(String.valueOf(transactionModel.getSum()));
                     txtAccount.setText(String.valueOf(transactionModel.getAccountId()));
                     txtName.setText(transactionModel.getDescription());
-                    transactionModel.getDate();
-                    transactionModel.getType();
+//                    transactionModel.getDate();
+//                    transactionModel.getType();
                 }
             });
         }
