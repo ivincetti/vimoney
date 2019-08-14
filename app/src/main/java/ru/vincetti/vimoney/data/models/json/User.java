@@ -1,4 +1,4 @@
-package ru.vincetti.vimoney.models.json;
+package ru.vincetti.vimoney.data.models.json;
 
 import com.google.gson.annotations.SerializedName;
 

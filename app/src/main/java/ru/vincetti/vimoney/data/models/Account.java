@@ -1,4 +1,4 @@
-package ru.vincetti.vimoney.models;
+package ru.vincetti.vimoney.data.models;
 
 public class Account {
     private String name;

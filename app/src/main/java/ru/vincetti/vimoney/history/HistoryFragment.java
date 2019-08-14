@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.models.Transaction;
+import ru.vincetti.vimoney.data.models.Transaction;
 import ru.vincetti.vimoney.data.adapters.TransactionsRVAdapter;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
 import ru.vincetti.vimoney.utils.TransactionsGenerator;

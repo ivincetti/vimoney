@@ -2,7 +2,7 @@ package ru.vincetti.vimoney.utils;
 
 import java.util.ArrayList;
 
-import ru.vincetti.vimoney.models.Transaction;
+import ru.vincetti.vimoney.data.models.Transaction;
 
 public class TransactionsGenerator {
     private static int TRANSACTION_COUNT = 10;

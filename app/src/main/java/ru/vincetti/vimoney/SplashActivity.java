@@ -22,8 +22,8 @@ import ru.vincetti.vimoney.data.JsonDownloader;
 import ru.vincetti.vimoney.data.sqlite.DbHelper;
 import ru.vincetti.vimoney.data.sqlite.VimonContract;
 import ru.vincetti.vimoney.home.HomeActivity;
-import ru.vincetti.vimoney.models.json.AccountsItem;
-import ru.vincetti.vimoney.models.json.ConfigFile;
+import ru.vincetti.vimoney.data.models.json.AccountsItem;
+import ru.vincetti.vimoney.data.models.json.ConfigFile;
 
 public class SplashActivity extends AppCompatActivity {
     private final String LOG_TAG = "SPLASH_DEBUG";

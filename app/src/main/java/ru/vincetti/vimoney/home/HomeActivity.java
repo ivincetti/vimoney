@@ -29,7 +29,7 @@ import ru.vincetti.vimoney.data.sqlite.DbHelper;
 import ru.vincetti.vimoney.data.sqlite.VimonContract;
 import ru.vincetti.vimoney.history.HistoryActivity;
 import ru.vincetti.vimoney.history.HistoryFragment;
-import ru.vincetti.vimoney.models.Account;
+import ru.vincetti.vimoney.data.models.Account;
 import ru.vincetti.vimoney.notifications.NotificationsActivity;
 import ru.vincetti.vimoney.settings.SettingsActivity;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
