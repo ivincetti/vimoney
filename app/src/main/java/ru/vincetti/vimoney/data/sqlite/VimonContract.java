@@ -6,6 +6,7 @@ public class VimonContract {
 
     private VimonContract(){
     }
+    public static String DB_NAME = "vimoney.db";
 
     public static final class UserEntry implements BaseColumns{
         public static final String TABLE_NAME = "user";
@@ -31,7 +32,9 @@ public class VimonContract {
 
         public static final String _ID = BaseColumns._ID;
         public static final String COLUMN_CONFIG_KEY_NAME = "key";
-        public static final String CONFIG_KEY_NAME_DATE_EDIT = "date_edit";
         public static final String COLUMN_CONFIG_KEY_VALUE = "value";
+
+        public static final String CONFIG_KEY_NAME_DATE_EDIT = "date_edit";
+        public static final String CONFIG_KEY_NAME_USER_NAME = "user_name";
     }
 }

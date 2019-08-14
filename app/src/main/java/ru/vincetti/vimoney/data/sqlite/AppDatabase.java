@@ -5,10 +5,16 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
-import ru.vincetti.vimoney.data.models.Transaction;
+import ru.vincetti.vimoney.data.DateConverter;
+import ru.vincetti.vimoney.data.models.AccountModel;
+import ru.vincetti.vimoney.data.models.ConfigModel;
+import ru.vincetti.vimoney.data.models.TransactionModel;
 
-@Database(entities = {Transaction.class}, version = 1, exportSchema = false)
+@Database(entities = {AccountModel.class, TransactionModel.class, ConfigModel.class},
+        version = 1, exportSchema = false)
+@TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
     private static final Object LOCK = new Object();
     private static AppDatabase sInstance;
@@ -17,12 +23,16 @@ public abstract class AppDatabase extends RoomDatabase {
         if (sInstance == null) {
             synchronized (LOCK) {
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
-                        AppDatabase.class, DbHelper.DB_NAME)
+                        AppDatabase.class, VimonContract.DB_NAME)
+                        // TEMP
+                        .allowMainThreadQueries()
                         .build();
             }
         }
         return sInstance;
     }
 
-    public abstract MoneyDao moneyDao();
+    public abstract AccountDao accountDao();
+    public abstract TransactionDao transactionDao();
+    public abstract ConfigDao configDao();
 }

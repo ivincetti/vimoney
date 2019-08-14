@@ -4,8 +4,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,18 +14,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.check.CheckActivity;
 import ru.vincetti.vimoney.dashboard.DashboardActivity;
 import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter;
-import ru.vincetti.vimoney.data.models.Account;
-import ru.vincetti.vimoney.data.sqlite.DbHelper;
-import ru.vincetti.vimoney.data.sqlite.VimonContract;
+import ru.vincetti.vimoney.data.models.AccountModel;
+import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.history.HistoryActivity;
 import ru.vincetti.vimoney.history.HistoryFragment;
 import ru.vincetti.vimoney.notifications.NotificationsActivity;
@@ -35,13 +34,12 @@ import ru.vincetti.vimoney.settings.SettingsActivity;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
 
 public class HomeActivity extends AppCompatActivity {
-    private static String LOG_TAG = "MAIN DEBUG";
     private static String BUNDLETAG = "ru.vincetti.vimoney.transhistory";
     private static String CHANNEL_ID = "15";
     private static int TR_MAIN_COUNT = 10;
 
-    private SQLiteDatabase db;
-    private ArrayList<Account> accList;
+    private AppDatabase mDb;
+    CardsListRVAdapter mAdapter;
 
     private Toolbar toolbar;
     private TextView mBalanceText;
@@ -63,27 +61,24 @@ public class HomeActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.top_toolbar);
         setSupportActionBar(toolbar);
 
+        Log.d("DEBUG", "Home начало инициализации Activity");
         viewInit();
-
-        accList = new ArrayList<>();
-
-        db = new DbHelper(this).getReadableDatabase();
-        accountsLoadFromDB();
-        userBalanceChange();
-
-        showTransactionsHistory();
-
+        Log.d("DEBUG", "Home инициализации БД");
+        mDb = AppDatabase.getInstance(this);
+        Log.d("DEBUG", "Home начало инициализации RV Accounts");
         // список карт/счетов
-        CardsListRVAdapter adapter = new CardsListRVAdapter(accList, position -> {
-            Log.d("DEBUG", "Cards click");
+        mAdapter = new CardsListRVAdapter(position -> {
             CheckActivity.start(getBaseContext());
         });
         RecyclerView cardsListView = findViewById(R.id.home_cards_recycle_view);
-        cardsListView.setHasFixedSize(true);
+        //cardsListView.setHasFixedSize(true);
         LinearLayoutManager cardsLayoutManager = new LinearLayoutManager(this,
                 RecyclerView.HORIZONTAL, false);
         cardsListView.setLayoutManager(cardsLayoutManager);
-        cardsListView.setAdapter(adapter);
+        cardsListView.setAdapter(mAdapter);
+
+        accountsLoadFromDB();
+        showTransactionsHistory();
     }
 
     public void viewInit() {
@@ -127,31 +122,21 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void accountsLoadFromDB() {
-        try (Cursor accCurs = db.query(VimonContract.AccountsEntry.TABLE_NAME,
-                null, null, null,
-                null, null, null)) {
-            if (accCurs.getCount() > 0) {
-                while (accCurs.moveToNext()) {
-                    accList.add(new Account(
-                            accCurs.getString(
-                                    accCurs.getColumnIndex(VimonContract.AccountsEntry.COLUMN_TITLE)
-                            ),
-                            accCurs.getString(
-                                    accCurs.getColumnIndex(VimonContract.AccountsEntry.COLUMN_TYPE)
-                            ),
-                            accCurs.getInt(
-                                    accCurs.getColumnIndex(VimonContract.AccountsEntry.COLUMN_BALANCE)
-                            )
-                    ));
-                }
+        LiveData<List<AccountModel>> tmpList = mDb.accountDao().loadAllAccounts();
+        tmpList.observe(this, new Observer<List<AccountModel>>() {
+            @Override
+            public void onChanged(List<AccountModel> accounts) {
+                userBalanceChange(accounts);
+                mAdapter.setList(accounts);
             }
-        }
+        });
+
     }
 
-    private int userBalanceChange() {
+    private int userBalanceChange(List<AccountModel> accList) {
         mBalanceText = findViewById(R.id.home_user_balance);
         int bal = 0;
-        for (Account o : accList) {
+        for (AccountModel o : accList) {
             bal += o.getSum();
         }
         mBalanceText.setText(String.valueOf(bal));
@@ -174,5 +159,4 @@ public class HomeActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
-
 }

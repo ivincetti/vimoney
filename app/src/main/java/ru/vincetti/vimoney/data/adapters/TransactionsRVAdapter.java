@@ -9,13 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
+import java.util.List;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.data.models.Transaction;
+import ru.vincetti.vimoney.data.models.TransactionModel;
 
 public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAdapter.ViewHolder> {
-    private ArrayList<Transaction> data;
+    private List<TransactionModel> data;
     OnTransactionClickListener mListener;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -39,8 +39,7 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
         }
     }
 
-    public TransactionsRVAdapter(ArrayList<Transaction> list, OnTransactionClickListener listener) {
-        this.data = list;
+    public TransactionsRVAdapter(OnTransactionClickListener listener) {
         this.mListener = listener;
     }
 
@@ -54,11 +53,11 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Transaction tmpTr = data.get(position);
+        TransactionModel tmpTr = data.get(position);
 
         holder.name.setText(tmpTr.getDescription());
         holder.date.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(tmpTr.getDate()));
-        if (tmpTr.getType() == Transaction.TRANSACTION_TYPE_INCOME) {
+        if (tmpTr.getType() == TransactionModel.TRANSACTION_TYPE_INCOME) {
             holder.sum.setText("+" + tmpTr.getSum());
         } else {
             holder.sum.setText("-" + tmpTr.getSum());
@@ -67,10 +66,22 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
 
     @Override
     public int getItemCount() {
+        if (data == null) {
+            return 0;
+        }
         return data.size();
     }
 
-    public interface OnTransactionClickListener{
+    public interface OnTransactionClickListener {
         void onTrClick(int position);
+    }
+
+    /**
+     * When data changes, this method updates the list of taskEntries
+     * and notifies the adapter to use the new values on it
+     */
+    public void setTransaction(List<TransactionModel> transList) {
+        data = transList;
+        notifyDataSetChanged();
     }
 }

@@ -1,6 +1,5 @@
 package ru.vincetti.vimoney.history;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,24 +8,25 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.data.models.Transaction;
 import ru.vincetti.vimoney.data.adapters.TransactionsRVAdapter;
+import ru.vincetti.vimoney.data.models.TransactionModel;
+import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
-import ru.vincetti.vimoney.utils.TransactionsGenerator;
 
 public class HistoryFragment extends Fragment {
     private static String LOG_TAG = "HISTORY FRAGMENT DEBUG";
     private static String BUNDLETAG = "ru.vincetti.vimoney.transhistory";
     private static int TRANSACTIONS_COUNT = 25;
 
-    private SQLiteDatabase db;
-    private ArrayList<Transaction> trList;
+    TransactionsRVAdapter transactionsRVAdapter;
     private int trCount;
 
     @Nullable
@@ -43,17 +43,21 @@ public class HistoryFragment extends Fragment {
             trCount = getArguments().getInt(BUNDLETAG, TRANSACTIONS_COUNT);
         }
 
-        //db = new DbHelper(getContext()).getReadableDatabase();
-        trList = TransactionsGenerator.generate(trCount);
-
         // список транзакций
-        TransactionsRVAdapter transactionsRVAdapter = new TransactionsRVAdapter(trList,
-                position -> TransactionActivity.start(getActivity()));
+        transactionsRVAdapter = new TransactionsRVAdapter(position -> TransactionActivity.start(getActivity()));
         RecyclerView trListView = view.findViewById(R.id.home_transactions_recycle_view);
         trListView.setHasFixedSize(true);
         LinearLayoutManager trLayoutManager = new LinearLayoutManager(getContext(),
                 RecyclerView.VERTICAL, false);
         trListView.setLayoutManager(trLayoutManager);
         trListView.setAdapter(transactionsRVAdapter);
+
+        LiveData<List<TransactionModel>> transList = AppDatabase.getInstance(getContext()).transactionDao().loadAllTransactionsCount(trCount);
+        transList.observe(this, new Observer<List<TransactionModel>>() {
+            @Override
+            public void onChanged(List<TransactionModel> transactions) {
+                transactionsRVAdapter.setTransaction(transactions);
+            }
+        });
     }
 }

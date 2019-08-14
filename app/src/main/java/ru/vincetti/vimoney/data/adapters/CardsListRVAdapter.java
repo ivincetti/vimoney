@@ -8,13 +8,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.data.models.Account;
+import ru.vincetti.vimoney.data.models.AccountModel;
 
 public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.ViewHolder> {
-    private ArrayList<Account> data;
+    private List<AccountModel> data;
     private OnCardClickListener mListener;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -38,8 +38,7 @@ public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.
         }
     }
 
-    public CardsListRVAdapter(ArrayList<Account> list, OnCardClickListener listener) {
-        this.data = list;
+    public CardsListRVAdapter(OnCardClickListener listener) {
         this.mListener = listener;
     }
 
@@ -53,7 +52,7 @@ public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Account tmpAcc = data.get(position);
+        AccountModel tmpAcc = data.get(position);
         holder.accName.setText(tmpAcc.getName());
         holder.accType.setText(tmpAcc.getType());
         holder.accBalance.setText(String.valueOf(tmpAcc.getSum()));
@@ -61,10 +60,18 @@ public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.
 
     @Override
     public int getItemCount() {
+        if (data == null) {
+            return 0;
+        }
         return data.size();
     }
 
-    public interface OnCardClickListener{
+    public void setList(List<AccountModel> accList) {
+        data = accList;
+        notifyDataSetChanged();
+    }
+
+    public interface OnCardClickListener {
         void onCardClick(int position);
     }
 }
