@@ -24,12 +24,12 @@ import java.util.ArrayList;
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.check.CheckActivity;
 import ru.vincetti.vimoney.dashboard.DashboardActivity;
-import ru.vincetti.vimoney.data.adapters.CardsListViewAdapter;
+import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter;
+import ru.vincetti.vimoney.data.models.Account;
 import ru.vincetti.vimoney.data.sqlite.DbHelper;
 import ru.vincetti.vimoney.data.sqlite.VimonContract;
 import ru.vincetti.vimoney.history.HistoryActivity;
 import ru.vincetti.vimoney.history.HistoryFragment;
-import ru.vincetti.vimoney.data.models.Account;
 import ru.vincetti.vimoney.notifications.NotificationsActivity;
 import ru.vincetti.vimoney.settings.SettingsActivity;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
@@ -74,7 +74,7 @@ public class HomeActivity extends AppCompatActivity {
         showTransactionsHistory();
 
         // список карт/счетов
-        CardsListViewAdapter adapter = new CardsListViewAdapter(accList, position -> {
+        CardsListRVAdapter adapter = new CardsListRVAdapter(accList, position -> {
             Log.d("DEBUG", "Cards click");
             CheckActivity.start(getBaseContext());
         });

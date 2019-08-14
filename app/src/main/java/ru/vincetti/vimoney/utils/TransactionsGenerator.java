@@ -1,6 +1,7 @@
 package ru.vincetti.vimoney.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import ru.vincetti.vimoney.data.models.Transaction;
 
@@ -12,11 +13,10 @@ public class TransactionsGenerator {
 
         for (int i = 0; i < count; i++) {
             trList.add(new Transaction(
-                    "2019-02-19",
+                    new Date(),
                     "Кузина",
                     i % 2,
                     150
-
             ));
         }
         return trList;

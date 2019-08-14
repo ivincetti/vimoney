@@ -1,5 +1,7 @@
 package ru.vincetti.vimoney.data.models;
 
+import androidx.core.net.ConnectivityManagerCompat;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -15,6 +17,8 @@ public class Transaction {
     private int id;
     private String description;
     private Date date;
+    @ColumnInfo(name = "updated_at")
+    private Date updatedAt;
     private int type;
     private float sum;
 

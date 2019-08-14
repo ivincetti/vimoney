@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 
 import ru.vincetti.vimoney.R;
@@ -55,8 +56,8 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Transaction tmpTr = data.get(position);
 
-        holder.name.setText(tmpTr.getName());
-        holder.date.setText(tmpTr.getDate());
+        holder.name.setText(tmpTr.getDescription());
+        holder.date.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(tmpTr.getDate()));
         if (tmpTr.getType() == Transaction.TRANSACTION_TYPE_INCOME) {
             holder.sum.setText("+" + tmpTr.getSum());
         } else {

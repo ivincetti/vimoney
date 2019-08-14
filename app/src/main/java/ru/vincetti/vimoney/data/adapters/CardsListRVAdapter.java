@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.data.models.Account;
 
-public class CardsListViewAdapter extends RecyclerView.Adapter<CardsListViewAdapter.ViewHolder> {
+public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.ViewHolder> {
     private ArrayList<Account> data;
     private OnCardClickListener mListener;
 
@@ -38,7 +38,7 @@ public class CardsListViewAdapter extends RecyclerView.Adapter<CardsListViewAdap
         }
     }
 
-    public CardsListViewAdapter(ArrayList<Account> list, OnCardClickListener listener) {
+    public CardsListRVAdapter(ArrayList<Account> list, OnCardClickListener listener) {
         this.data = list;
         this.mListener = listener;
     }
