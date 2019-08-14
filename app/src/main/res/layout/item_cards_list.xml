@@ -31,7 +31,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:textColor="@color/colorTextWhite"
-            tools:text="home_title_acc_type"/>
+            tools:text="@string/home_title_acc_type"/>
 
         <TextView
             android:id="@+id/home_acc_balance"

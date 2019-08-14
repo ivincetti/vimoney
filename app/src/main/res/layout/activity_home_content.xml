@@ -139,7 +139,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/home_fragment_transactions_list_title"
+            android:text="@string/history_title_home"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/text_st_numbers"
             android:textStyle="bold" />

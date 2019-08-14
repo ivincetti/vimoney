@@ -41,6 +41,7 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/text_st_numbers"
                     android:textStyle="bold" />
+
             </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
@@ -52,12 +53,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/check_title_home"
-            android:textAllCaps="true" />
+        <include layout="@layout/activity_check_content"/>
 
     </androidx.core.widget.NestedScrollView>
 

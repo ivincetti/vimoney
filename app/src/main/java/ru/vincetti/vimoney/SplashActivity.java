@@ -43,13 +43,9 @@ public class SplashActivity extends AppCompatActivity {
 
         progress = findViewById(R.id.splash_content_progressbar);
 
-        Log.d("DEBUG", "Перед созданием БД");
         mDb = AppDatabase.getInstance(this);
-        Log.d("DEBUG", "После создания БД");
         retrofitInit();
-        Log.d("DEBUG", "Инициализация retrofit");
         loadJson();
-        Log.d("DEBUG", "Началась загрузка конфига");
     }
 
     private void retrofitInit() {
@@ -64,9 +60,7 @@ public class SplashActivity extends AppCompatActivity {
         jsonDownloader.loadPreferences("Ru").enqueue(new Callback<ConfigFile>() {
             @Override
             public void onResponse(Call<ConfigFile> call, Response<ConfigFile> response) {
-                Log.d("DEBUG", "Получение конфига");
                 if (response.body() != null) {
-                    Log.d("DEBUG", "Начинаем сохранение конфига");
                     configDbUpdate(response.body().getDateEdit(), response);
                     HomeActivity.start(getApplicationContext());
                 }
@@ -89,31 +83,21 @@ public class SplashActivity extends AppCompatActivity {
             public void onChanged(ConfigModel config) {
                 tmpConfig.removeObserver(this);
                 if (config == null) {
-                    Log.d("DEBUG", "данных нет - insert");
                     configDbDateInsert(timeMillisLong);
                     TransactionsGenerator.generate(getApplicationContext());
 
                     // user info to base
-                    Log.d("DEBUG", "Обновление пользователя");
                     userUpdate(response.body().getUser().getName());
 
                     // accounts info to base
-                    Log.d("DEBUG", "Обновление счетов");
                     accountsUpdate(response);
                 } else {
                     if(Long.valueOf(config.getValue()) < timeMillisLong){
-                        Log.d("DEBUG", "данные есть - требуется обновление, date " + config.getValue());
                         configDbDateUpdate(response.body().getDateEdit(), config.getId());
-
                         // user info to base
-                        Log.d("DEBUG", "Обновление пользователя");
                         userUpdate(response.body().getUser().getName());
-
                         // accounts info to base
-                        Log.d("DEBUG", "Обновление счетов");
                         accountsUpdate(response);
-                    } else {
-                        Log.d("DEBUG", "данные есть - обновление не требуется");
                     }
                 }
             }
@@ -121,7 +105,6 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void accountsUpdate(Response<ConfigFile> response){
-        Log.d("DEBUG", "Обновление счетов");
         List<AccountsItem> accountsItems = response.body().getAccounts();
 
         for (AccountsItem acc : accountsItems) {

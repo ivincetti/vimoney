@@ -20,22 +20,18 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView name, date, sum;
-        OnTransactionClickListener listener;
 
         public ViewHolder(@NonNull View itemView, OnTransactionClickListener listener) {
             super(itemView);
             name = itemView.findViewById(R.id.home_transactions_name);
             date = itemView.findViewById(R.id.home_transactions_date);
             sum = itemView.findViewById(R.id.home_transactions_balance);
-
-            this.listener = listener;
-
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            listener.onTrClick(getAdapterPosition());
+            mListener.onTrClick(data.get(getAdapterPosition()).getId());
         }
     }
 
@@ -73,7 +69,7 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
     }
 
     public interface OnTransactionClickListener {
-        void onTrClick(int position);
+        void onTrClick(int itemId);
     }
 
     /**

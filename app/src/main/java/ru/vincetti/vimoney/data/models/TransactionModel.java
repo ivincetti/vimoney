@@ -14,6 +14,8 @@ public class TransactionModel {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
+    @ColumnInfo(name = "account_id")
+    private int accountId;
     private String description;
     private Date date;
     @ColumnInfo(name = "updated_at")
@@ -22,16 +24,28 @@ public class TransactionModel {
     private float sum;
 
     @Ignore
-    public TransactionModel(Date date, String description, int type, float sum) {
+    public TransactionModel(Date date, int accountId, String description, int type, float sum) {
         this.date = date;
+        this.accountId = accountId;
         this.updatedAt = date;
         this.description = description;
         this.type = type;
         this.sum = sum;
     }
 
-    public TransactionModel(int id, String description, Date date, Date updatedAt, int type, float sum) {
+    @Ignore
+    public TransactionModel(int accountId, String description, Date date, Date updatedAt, int type, float sum) {
+        this.accountId = accountId;
+        this.description = description;
+        this.date = date;
+        this.updatedAt = updatedAt;
+        this.type = type;
+        this.sum = sum;
+    }
+
+    public TransactionModel(int id, int accountId, String description, Date date, Date updatedAt, int type, float sum) {
         this.id = id;
+        this.accountId = accountId;
         this.description = description;
         this.date = date;
         this.updatedAt = updatedAt;
@@ -45,6 +59,10 @@ public class TransactionModel {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getAccountId() {
+        return accountId;
     }
 
     public String getDescription() {

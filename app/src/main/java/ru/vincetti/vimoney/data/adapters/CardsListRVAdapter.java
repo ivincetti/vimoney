@@ -13,28 +13,24 @@ import java.util.List;
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.data.models.AccountModel;
 
-public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.ViewHolder> {
+public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.CardsViewHolder> {
     private List<AccountModel> data;
     private OnCardClickListener mListener;
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class CardsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView accName, accType, accBalance;
-        OnCardClickListener listener;
 
-        public ViewHolder(@NonNull View itemView, OnCardClickListener listener) {
+        public CardsViewHolder(@NonNull View itemView, OnCardClickListener listener) {
             super(itemView);
             accName = itemView.findViewById(R.id.home_acc_name);
             accType = itemView.findViewById(R.id.home_acc_type);
             accBalance = itemView.findViewById(R.id.home_acc_balance);
-
-            this.listener = listener;
-
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            listener.onCardClick(getAdapterPosition());
+            mListener.onCardClick(data.get(getAdapterPosition()).getId());
         }
     }
 
@@ -44,14 +40,14 @@ public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CardsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cards_list
                 , parent, false);
-        return new ViewHolder(view, mListener);
+        return new CardsViewHolder(view, mListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CardsViewHolder holder, int position) {
         AccountModel tmpAcc = data.get(position);
         holder.accName.setText(tmpAcc.getName());
         holder.accType.setText(tmpAcc.getType());
@@ -72,6 +68,6 @@ public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.
     }
 
     public interface OnCardClickListener {
-        void onCardClick(int position);
+        void onCardClick(int itemId);
     }
 }

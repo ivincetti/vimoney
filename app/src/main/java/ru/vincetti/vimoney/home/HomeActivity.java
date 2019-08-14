@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -34,9 +33,8 @@ import ru.vincetti.vimoney.settings.SettingsActivity;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
 
 public class HomeActivity extends AppCompatActivity {
-    private static String BUNDLETAG = "ru.vincetti.vimoney.transhistory";
-    private static String CHANNEL_ID = "15";
-    private static int TR_MAIN_COUNT = 10;
+    private final static String CHANNEL_ID = "15";
+    private final static int TR_MAIN_COUNT = 10;
 
     private AppDatabase mDb;
     CardsListRVAdapter mAdapter;
@@ -61,14 +59,12 @@ public class HomeActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.top_toolbar);
         setSupportActionBar(toolbar);
 
-        Log.d("DEBUG", "Home начало инициализации Activity");
         viewInit();
-        Log.d("DEBUG", "Home инициализации БД");
         mDb = AppDatabase.getInstance(this);
-        Log.d("DEBUG", "Home начало инициализации RV Accounts");
+
         // список карт/счетов
-        mAdapter = new CardsListRVAdapter(position -> {
-            CheckActivity.start(getBaseContext());
+        mAdapter = new CardsListRVAdapter(itemId -> {
+            CheckActivity.start(getBaseContext(), itemId);
         });
         RecyclerView cardsListView = findViewById(R.id.home_cards_recycle_view);
         //cardsListView.setHasFixedSize(true);
@@ -94,7 +90,7 @@ public class HomeActivity extends AppCompatActivity {
         historyFragment = new HistoryFragment();
 
         Bundle args = new Bundle();
-        args.putInt(BUNDLETAG, TR_MAIN_COUNT);
+        args.putInt(HistoryFragment.BUNDLETAG_TRANS_COUNT_NAME, TR_MAIN_COUNT);
         historyFragment.setArguments(args);
 
         getSupportFragmentManager().beginTransaction()

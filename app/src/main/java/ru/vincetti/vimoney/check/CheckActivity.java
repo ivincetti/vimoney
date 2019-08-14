@@ -5,18 +5,36 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import ru.vincetti.vimoney.R;
+import ru.vincetti.vimoney.data.models.AccountModel;
+import ru.vincetti.vimoney.data.sqlite.AppDatabase;
+import ru.vincetti.vimoney.history.HistoryFragment;
 
 public class CheckActivity extends AppCompatActivity {
-    private Toolbar toolbar;
+    private final static String EXTRA_CHECK_ID = "Extra_check_id";
+    private final static int DEFAULT_CHECK_ID = -1;
+    private final static int DEFAULT_CHECK_COUNT = 20;
 
-    public static void start(Context context) {
-        context.startActivity(new Intent(context, CheckActivity.class));
+    private AppDatabase mDb;
+
+    private Toolbar toolbar;
+    private int mCheckId = DEFAULT_CHECK_ID;
+    private TextView checkName, checkType, checkBalance;
+
+    private HistoryFragment historyFragment;
+
+    public static void start(Context context, int id) {
+        Intent intent = new Intent(context, CheckActivity.class);
+        intent.putExtra(EXTRA_CHECK_ID, id);
+        context.startActivity(intent);
     }
 
     @Override
@@ -29,6 +47,30 @@ public class CheckActivity extends AppCompatActivity {
 
         findViewById(R.id.setting_navigation_back_btn)
                 .setOnClickListener(view -> finish());
+
+        checkName = findViewById(R.id.check_acc_name);
+        checkType= findViewById(R.id.check_acc_type);
+        checkBalance = findViewById(R.id.check_acc_balance);
+
+        mDb = AppDatabase.getInstance(this);
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(EXTRA_CHECK_ID)) {
+            mCheckId = intent.getIntExtra(EXTRA_CHECK_ID, DEFAULT_CHECK_ID);
+
+            LiveData<AccountModel> data = mDb.accountDao().loadAccountById(mCheckId);
+            data.observe(this, new Observer<AccountModel>() {
+                @Override
+                public void onChanged(AccountModel accountModel) {
+                    data.removeObserver(this);
+                    checkName.setText(accountModel.getName());
+                    checkType.setText(accountModel.getType());
+                    checkBalance.setText(String.valueOf(accountModel.getSum()));
+                }
+            });
+
+            showTransactionsHistory(mCheckId);
+        }
     }
 
     @Override
@@ -43,5 +85,18 @@ public class CheckActivity extends AppCompatActivity {
             ChecksSettingsActivity.start(this);
         }
         return true;
+    }
+
+    private void showTransactionsHistory(int checkId) {
+        historyFragment = new HistoryFragment();
+
+        Bundle args = new Bundle();
+        args.putInt(HistoryFragment.BUNDLETAG_TRANS_COUNT_NAME, DEFAULT_CHECK_COUNT);
+        args.putInt(HistoryFragment.BUNDLETAG_TRANS_CHECK_ID_NAME, checkId);
+        historyFragment.setArguments(args);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.check_history_container, historyFragment)
+                .commit();
     }
 }

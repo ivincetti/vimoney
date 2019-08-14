@@ -21,6 +21,9 @@ public interface TransactionDao {
     @Query("SELECT * FROM transactions ORDER BY updated_at DESC LIMIT :num")
     LiveData<List<TransactionModel>> loadAllTransactionsCount(int num);
 
+    @Query("SELECT * FROM transactions WHERE account_id = :id ORDER BY updated_at DESC LIMIT :num")
+    LiveData<List<TransactionModel>> loadCheckTransactionsCount(int id, int num);
+
     @Query("SELECT * FROM transactions WHERE id = :id")
     LiveData<TransactionModel> loadTransactionById(int id);
 

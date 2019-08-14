@@ -24,11 +24,10 @@
     <string name="home_fragment_income_sample">20000</string>
     <string name="home_fragment_spending_sample">11000</string>
     <string name="home_fragment_spending_title">Расходы</string>
-    <string name="home_fragment_transactions_list_title">Транзакции</string>
     <string name="home_fragment_transactions_link_title">посмотреть все</string>
 
     <!--History Activity-->
-    <string name="history_title_home">History</string>
+    <string name="history_title_home">Транзакции</string>
 
     <!--Dashboard Activity-->
     <string name="dashboard_title_home">Dashboard</string>
@@ -38,6 +37,8 @@
 
     <!--Add Activity-->
     <string name="add_title_home">ADD</string>
+    <string name="add_btn_save">Сохранить</string>
+    <string name="add_btn_update">Обновить</string>
 
     <!--Settings Activity-->
     <string name="settings_title_home">Settings</string>
@@ -65,5 +66,9 @@
     <string name="home_stat_spending_icon">home_stat_spending_icon</string>
     <string name="back_icon_description">back_icon_description</string>
     <string name="settings_check_settings_btn">Check Settings</string>
+    <string name="add_desc_sample">Кузина</string>
+    <string name="add_spent_btn_text">расход</string>
+    <string name="add_income_btn_text">доход</string>
+
 
 </resources>
