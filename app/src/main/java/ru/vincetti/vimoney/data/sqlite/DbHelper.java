@@ -5,8 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
-    private static String DB_Name = "user.db";
-    private static int DB_VERSION = 2;
+    public static String DB_NAME = "vimoney.db";
+    private static int DB_VERSION = 3;
 
     private static final String USER_CREATE_QUERY = ""
             + "CREATE TABLE " + VimonContract.UserEntry.TABLE_NAME + " ( "
@@ -34,7 +34,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
     public DbHelper(Context context) {
-        super(context, DB_Name, null, DB_VERSION);
+        super(context, DB_NAME, null, DB_VERSION);
     }
 
     @Override
