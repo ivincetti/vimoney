@@ -24,6 +24,9 @@ public interface AccountDao {
     @Query("SELECT * FROM accounts WHERE acc_id = :id")
     LiveData<AccountModel> loadAccountByAccId(int id);
 
+    @Query("UPDATE accounts SET sum = :sum WHERE id = :acc_id")
+    int updateSumByAccId(int acc_id, float sum);
+
     @Insert
     void insertAccount(AccountModel acc);
 

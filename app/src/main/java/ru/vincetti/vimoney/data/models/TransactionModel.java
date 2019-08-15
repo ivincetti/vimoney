@@ -9,8 +9,8 @@ import java.util.Date;
 
 @Entity(tableName = "transactions")
 public class TransactionModel {
-    public static int TRANSACTION_TYPE_INCOME = 1;
-    public static int TRANSACTION_TYPE_SPENT = 2;
+    public final static int TRANSACTION_TYPE_INCOME = 1;
+    public final static int TRANSACTION_TYPE_SPENT = 2;
 
     @PrimaryKey(autoGenerate = true)
     private int id;

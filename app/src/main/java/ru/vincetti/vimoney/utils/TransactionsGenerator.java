@@ -18,7 +18,7 @@ public class TransactionsGenerator {
                             new Date(),
                             (new Random().nextInt(3) + 1),
                             "Кузина",
-                            i % 2,
+                            (i % 2 + 1),
                             150
                     );
             AppDatabase.getInstance(context).transactionDao().insertTransaction(tmp);

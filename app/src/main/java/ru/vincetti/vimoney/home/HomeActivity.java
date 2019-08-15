@@ -24,7 +24,6 @@ import ru.vincetti.vimoney.check.CheckActivity;
 import ru.vincetti.vimoney.dashboard.DashboardActivity;
 import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter;
 import ru.vincetti.vimoney.data.models.AccountModel;
-import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.history.HistoryActivity;
 import ru.vincetti.vimoney.history.HistoryFragment;
 import ru.vincetti.vimoney.notifications.NotificationsActivity;
@@ -35,12 +34,9 @@ public class HomeActivity extends AppCompatActivity {
     private final static String CHANNEL_ID = "15";
     private final static int TR_MAIN_COUNT = 10;
 
-    private AppDatabase mDb;
     CardsListRVAdapter mAdapter;
 
     private TextView mBalanceText;
-
-    private HistoryFragment historyFragment;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
@@ -57,7 +53,6 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         viewInit();
 
-        mDb = AppDatabase.getInstance(this);
         // список карт/счетов
         mAdapter = new CardsListRVAdapter(itemId -> CheckActivity.start(getBaseContext(), itemId));
         RecyclerView cardsListView = findViewById(R.id.home_cards_recycle_view);
@@ -71,6 +66,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void viewInit() {
+        mBalanceText = findViewById(R.id.home_user_balance);
         findViewById(R.id.home_fab)
                 .setOnClickListener(view -> TransactionActivity.start(this));
         findViewById(R.id.home_transactions_link)
@@ -80,8 +76,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showTransactionsHistory() {
-        historyFragment = new HistoryFragment();
-
+        HistoryFragment historyFragment = new HistoryFragment();
         Bundle args = new Bundle();
         args.putInt(HistoryFragment.BUNDLETAG_TRANS_COUNT_NAME, TR_MAIN_COUNT);
         historyFragment.setArguments(args);
@@ -118,14 +113,12 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private int userBalanceChange(List<AccountModel> accList) {
-        mBalanceText = findViewById(R.id.home_user_balance);
+    private void userBalanceChange(List<AccountModel> accList) {
         int bal = 0;
         for (AccountModel o : accList) {
             bal += o.getSum();
         }
         mBalanceText.setText(String.valueOf(bal));
-        return bal;
     }
 
     // Notification channel register

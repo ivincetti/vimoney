@@ -12,6 +12,9 @@ import java.util.List;
 
 import ru.vincetti.vimoney.data.models.TransactionModel;
 
+import static ru.vincetti.vimoney.data.models.TransactionModel.TRANSACTION_TYPE_INCOME;
+import static ru.vincetti.vimoney.data.models.TransactionModel.TRANSACTION_TYPE_SPENT;
+
 @Dao
 public interface TransactionDao {
 
@@ -26,6 +29,12 @@ public interface TransactionDao {
 
     @Query("SELECT * FROM transactions WHERE id = :id")
     LiveData<TransactionModel> loadTransactionById(int id);
+
+    @Query("SELECT SUM(sum) FROM transactions WHERE type=" + TRANSACTION_TYPE_INCOME + " AND account_id = :accId")
+    float loadSumIncomeByCheckId(int accId);
+
+    @Query("SELECT SUM(sum) FROM transactions WHERE type=" + TRANSACTION_TYPE_SPENT + " AND  account_id = :accId")
+    float loadSumExpenseByCheckId(int accId);
 
     @Insert
     void insertTransaction(TransactionModel t);
