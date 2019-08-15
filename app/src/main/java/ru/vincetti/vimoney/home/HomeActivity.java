@@ -13,8 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -111,8 +110,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void accountsLoadFromDB() {
-        LiveData<List<AccountModel>> tmpList = mDb.accountDao().loadAllAccounts();
-        tmpList.observe(this, accounts -> {
+        HomeViewModel viewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
+        viewModel.getAccounts().observe(this, accounts -> {
             userBalanceChange(accounts);
             mAdapter.setList(accounts);
         });
