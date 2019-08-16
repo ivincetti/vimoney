@@ -19,7 +19,7 @@ public class HomeViewModel extends AndroidViewModel {
         accList = AppDatabase.getInstance(this.getApplication()).accountDao().loadAllAccounts();
     }
 
-    public LiveData<List<AccountModel>> getAccounts(){
+    public LiveData<List<AccountModel>> getAccounts() {
         return accList;
     }
 }

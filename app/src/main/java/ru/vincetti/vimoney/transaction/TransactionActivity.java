@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer;
 import java.util.Date;
 
 import ru.vincetti.vimoney.R;
+import ru.vincetti.vimoney.data.AppExecutors;
 import ru.vincetti.vimoney.data.models.TransactionModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.utils.TransactionMath;
@@ -100,11 +101,15 @@ public class TransactionActivity extends AppCompatActivity {
         );
         if (mTransId != DEFAULT_TRANS_ID) {
             tmp.setId(mTransId);
-            mDb.transactionDao().updateTransaction(tmp);
+            AppExecutors.getsInstance().diskIO().execute(
+                    () -> mDb.transactionDao().updateTransaction(tmp));
         } else {
-            mDb.transactionDao().insertTransaction(tmp);
+            AppExecutors.getsInstance().diskIO().execute(
+                    () -> mDb.transactionDao().insertTransaction(tmp));
         }
-        TransactionMath.accountUpdate(this, accId);
+        AppExecutors.getsInstance().diskIO().execute(
+                () -> TransactionMath.accountUpdate(getApplicationContext(), accId));
+
         finish();
     }
 }

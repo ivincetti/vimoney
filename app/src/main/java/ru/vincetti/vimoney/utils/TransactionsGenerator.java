@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.Date;
 import java.util.Random;
 
+import ru.vincetti.vimoney.data.AppExecutors;
 import ru.vincetti.vimoney.data.models.TransactionModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 
@@ -21,7 +22,8 @@ public class TransactionsGenerator {
                             (i % 2 + 1),
                             150
                     );
-            AppDatabase.getInstance(context).transactionDao().insertTransaction(tmp);
+            AppExecutors.getsInstance().diskIO().execute(
+                    () -> AppDatabase.getInstance(context).transactionDao().insertTransaction(tmp));
         }
     }
 

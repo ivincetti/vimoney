@@ -2,6 +2,7 @@ package ru.vincetti.vimoney.utils;
 
 import android.content.Context;
 
+import ru.vincetti.vimoney.data.AppExecutors;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 
 public class TransactionMath {
@@ -14,6 +15,7 @@ public class TransactionMath {
                 .transactionDao()
                 .loadSumExpenseByCheckId(accId);
         float sum = sumPlus - sumMinus;
-        AppDatabase.getInstance(context).accountDao().updateSumByAccId(accId, sum);
+        AppExecutors.getsInstance().diskIO().execute(
+                () -> AppDatabase.getInstance(context).accountDao().updateSumByAccId(accId, sum));
     }
 }
