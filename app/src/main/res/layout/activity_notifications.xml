@@ -53,9 +53,12 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <Button
+            android:layout_gravity="center"
             android:id="@+id/notification_notify_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/sm_padding"
+            android:textAllCaps="true"
             android:text="@string/notification_notify_btn_text"/>
 
     </androidx.core.widget.NestedScrollView>

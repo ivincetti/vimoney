@@ -22,6 +22,9 @@ public class NotificationsActivity extends AppCompatActivity {
 
         findViewById(R.id.setting_navigation_back_btn).setOnClickListener(view -> finish());
         findViewById(R.id.notification_notify_btn).setOnClickListener(
-                view -> startService(new Intent(this, NotificationService.class)));
+                view -> startService(
+                        new Intent(this, NotificationService.class)
+                                .setAction(NotificationService.NOTIFICATION_ACTION)
+                ));
     }
 }

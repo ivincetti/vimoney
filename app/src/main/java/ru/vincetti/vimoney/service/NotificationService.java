@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -47,8 +48,8 @@ public class NotificationService extends IntentService {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_notifications_dark)
-                        .setContentTitle("")
-                        .setContentText("")
+                        .setContentTitle(context.getString(R.string.notification_sample_title_text))
+                        .setContentText(context.getString(R.string.notification_sample_body_text))
                         .setAutoCancel(true)
                         .setContentIntent(pendingIntent);
 

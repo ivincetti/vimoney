@@ -35,6 +35,8 @@
     <!--Notification Activity-->
     <string name="notification_title_home">Notification</string>
     <string name="notification_notify_btn_text">Уведомить</string>
+    <string name="notification_sample_title_text">Пора отчитываться!</string>
+    <string name="notification_sample_body_text">Сегодня вы не вносили данные по финансовым транзакциям</string>
 
     <!--Add Activity-->
     <string name="add_title_home">ADD</string>
