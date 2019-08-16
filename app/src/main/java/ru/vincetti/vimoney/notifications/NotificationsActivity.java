@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ru.vincetti.vimoney.R;
+import ru.vincetti.vimoney.service.NotificationService;
 
 public class NotificationsActivity extends AppCompatActivity {
 
@@ -20,5 +21,7 @@ public class NotificationsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notifications);
 
         findViewById(R.id.setting_navigation_back_btn).setOnClickListener(view -> finish());
+        findViewById(R.id.notification_notify_btn).setOnClickListener(
+                view -> startService(new Intent(this, NotificationService.class)));
     }
 }

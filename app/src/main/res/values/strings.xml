@@ -34,11 +34,14 @@
 
     <!--Notification Activity-->
     <string name="notification_title_home">Notification</string>
+    <string name="notification_notify_btn_text">Уведомить</string>
 
     <!--Add Activity-->
     <string name="add_title_home">ADD</string>
     <string name="add_btn_save">Сохранить</string>
     <string name="add_btn_update">Обновить</string>
+    <string name="add_spent_btn_text">расход</string>
+    <string name="add_income_btn_text">доход</string>
 
     <!--Settings Activity-->
     <string name="settings_title_home">Settings</string>
@@ -67,8 +70,5 @@
     <string name="back_icon_description">back_icon_description</string>
     <string name="settings_check_settings_btn">Check Settings</string>
     <string name="add_desc_sample">Кузина</string>
-    <string name="add_spent_btn_text">расход</string>
-    <string name="add_income_btn_text">доход</string>
-
 
 </resources>
