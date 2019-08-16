@@ -54,7 +54,7 @@ public class HomeActivity extends AppCompatActivity {
         viewInit();
 
         // список карт/счетов
-        mAdapter = new CardsListRVAdapter(itemId -> CheckActivity.start(getBaseContext(), itemId));
+        mAdapter = new CardsListRVAdapter(itemId -> CheckActivity.start(this, itemId));
         RecyclerView cardsListView = findViewById(R.id.home_cards_recycle_view);
         //cardsListView.setHasFixedSize(true);
         LinearLayoutManager cardsLayoutManager = new LinearLayoutManager(this,
