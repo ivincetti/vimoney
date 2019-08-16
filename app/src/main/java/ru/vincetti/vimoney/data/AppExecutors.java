@@ -20,7 +20,7 @@ public class AppExecutors {
         this.mainThreadIO = mainThreadIO;
     }
 
-    public AppExecutors getsInstance() {
+    public static AppExecutors getsInstance() {
         if (sInstance == null) {
             synchronized (LOCK) {
                 sInstance = new AppExecutors(
@@ -44,7 +44,7 @@ public class AppExecutors {
         return mainThreadIO;
     }
 
-    private class MainThreadExecutor implements Executor {
+    private static class MainThreadExecutor implements Executor {
         private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
         @Override

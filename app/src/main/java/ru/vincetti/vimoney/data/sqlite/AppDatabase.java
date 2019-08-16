@@ -24,8 +24,6 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (LOCK) {
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
                         AppDatabase.class, VimonContract.DB_NAME)
-                        // TEMP
-                        .allowMainThreadQueries()
                         .build();
             }
         }

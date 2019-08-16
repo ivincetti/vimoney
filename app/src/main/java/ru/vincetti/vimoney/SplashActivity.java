@@ -16,6 +16,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import ru.vincetti.vimoney.data.AppExecutors;
 import ru.vincetti.vimoney.data.JsonDownloader;
 import ru.vincetti.vimoney.data.models.AccountModel;
 import ru.vincetti.vimoney.data.models.ConfigModel;
@@ -113,7 +114,8 @@ public class SplashActivity extends AppCompatActivity {
     private void configDbDateInsert(long timeMillisLong) {
         ConfigModel newConfig = new ConfigModel(VimonContract.ConfigEntry.CONFIG_KEY_NAME_DATE_EDIT,
                 String.valueOf(timeMillisLong));
-        mDb.configDao().insertConfig(newConfig);
+        AppExecutors.getsInstance().diskIO().execute(
+                () -> mDb.configDao().insertConfig(newConfig));
     }
 
     // update new date edit in config DB table
@@ -121,7 +123,8 @@ public class SplashActivity extends AppCompatActivity {
         ConfigModel newConfig = new ConfigModel(id,
                 VimonContract.ConfigEntry.CONFIG_KEY_NAME_DATE_EDIT,
                 String.valueOf(timeMillisLong));
-        mDb.configDao().updateConfig(newConfig);
+        AppExecutors.getsInstance().diskIO().execute(
+                () -> mDb.configDao().updateConfig(newConfig));
     }
 
     public void userUpdate(String user) {
@@ -132,10 +135,12 @@ public class SplashActivity extends AppCompatActivity {
                 ConfigModel newUser = new ConfigModel(CONFIG_KEY_NAME_USER_NAME, user);
                 mUser.removeObserver(this);
                 if (configModel == null) {
-                    mDb.configDao().insertConfig(newUser);
+                    AppExecutors.getsInstance().diskIO().execute(
+                            () -> mDb.configDao().insertConfig(newUser));
                 } else {
                     newUser.setId(configModel.getId());
-                    mDb.configDao().updateConfig(newUser);
+                    AppExecutors.getsInstance().diskIO().execute(
+                            () -> mDb.configDao().updateConfig(newUser));
                 }
             }
         });
@@ -149,10 +154,12 @@ public class SplashActivity extends AppCompatActivity {
             public void onChanged(AccountModel accountModel) {
                 tmpAcc.removeObserver(this);
                 if (accountModel == null) {
-                    mDb.accountDao().insertAccount(newAcc);
+                    AppExecutors.getsInstance().diskIO().execute(
+                            () -> mDb.accountDao().insertAccount(newAcc));
                 } else {
                     newAcc.setId(accountModel.getId());
-                    mDb.accountDao().updateAccount(newAcc);
+                    AppExecutors.getsInstance().diskIO().execute(
+                            () -> mDb.accountDao().updateAccount(newAcc));
                 }
             }
         });
