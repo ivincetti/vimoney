@@ -38,12 +38,15 @@
     <string name="notification_sample_title_text">Пора отчитываться!</string>
     <string name="notification_sample_body_text">Сегодня вы не вносили данные по финансовым транзакциям</string>
 
-    <!--Add Activity-->
+    <!--Add/Transaction Activity-->
     <string name="add_title_home">ADD</string>
     <string name="add_btn_save">Сохранить</string>
     <string name="add_btn_update">Обновить</string>
     <string name="add_spent_btn_text">расход</string>
     <string name="add_income_btn_text">доход</string>
+    <string name="transaction_alert_question">Закрыть окно без сохранения?</string>
+    <string name="transaction_alert_negative">Не сохранять</string>
+    <string name="transaction_alert_positive">Продолжить</string>
 
     <!--Settings Activity-->
     <string name="settings_title_home">Settings</string>

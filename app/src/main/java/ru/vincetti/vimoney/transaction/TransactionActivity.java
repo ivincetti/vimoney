@@ -8,6 +8,7 @@ import android.widget.CalendarView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -48,6 +49,9 @@ public class TransactionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add);
         initViews();
         mDb = AppDatabase.getInstance(this);
+
+        findViewById(R.id.setting_navigation_back_btn).setOnClickListener(
+                view -> showUnsavedDialog());
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_TRANS_ID)) {
@@ -111,5 +115,23 @@ public class TransactionActivity extends AppCompatActivity {
                 () -> TransactionMath.accountUpdate(getApplicationContext(), accId));
 
         finish();
+    }
+
+    private void showUnsavedDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setMessage(R.string.transaction_alert_question)
+                .setNegativeButton(R.string.transaction_alert_negative,
+                        (dialogInterface, i) -> finish())
+                .setPositiveButton(R.string.transaction_alert_positive,
+                        (dialogInterface, i) -> {
+                            if (dialogInterface != null) dialogInterface.dismiss();
+                        });
+
+        builder.create().show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        showUnsavedDialog();
     }
 }
