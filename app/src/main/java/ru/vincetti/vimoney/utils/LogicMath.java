@@ -2,12 +2,16 @@ package ru.vincetti.vimoney.utils;
 
 import android.content.Context;
 
+import java.util.List;
+
 import ru.vincetti.vimoney.data.AppExecutors;
+import ru.vincetti.vimoney.data.models.AccountModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 
-public class TransactionMath {
+public class LogicMath {
 
-    public static void accountUpdate(Context context, int accId) {
+    // set correct account (accID) balance
+    public static void accountBalanceUpdateById(Context context, int accId) {
         Float sumPlus = AppDatabase.getInstance(context)
                 .transactionDao()
                 .loadSumIncomeByCheckId(accId);
@@ -17,5 +21,14 @@ public class TransactionMath {
         float sum = sumPlus - sumMinus;
         AppExecutors.getsInstance().diskIO().execute(
                 () -> AppDatabase.getInstance(context).accountDao().updateSumByAccId(accId, sum));
+    }
+
+    // Math allUser balance
+    public static int userBalanceChange(List<AccountModel> accList) {
+        int bal = 0;
+        for (AccountModel o : accList) {
+            bal += o.getSum();
+        }
+        return bal;
     }
 }

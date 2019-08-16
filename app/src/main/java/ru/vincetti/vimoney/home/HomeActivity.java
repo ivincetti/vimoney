@@ -17,18 +17,16 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.check.CheckActivity;
 import ru.vincetti.vimoney.dashboard.DashboardActivity;
 import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter;
-import ru.vincetti.vimoney.data.models.AccountModel;
 import ru.vincetti.vimoney.history.HistoryActivity;
 import ru.vincetti.vimoney.history.HistoryFragment;
 import ru.vincetti.vimoney.notifications.NotificationsActivity;
 import ru.vincetti.vimoney.settings.SettingsActivity;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
+import ru.vincetti.vimoney.utils.LogicMath;
 
 public class HomeActivity extends AppCompatActivity {
     private final static String CHANNEL_ID = "15";
@@ -75,10 +73,12 @@ public class HomeActivity extends AppCompatActivity {
                 .setOnClickListener(view -> DashboardActivity.start(this));
     }
 
+    // Show historyFragment
     private void showTransactionsHistory() {
         HistoryFragment historyFragment = new HistoryFragment();
         Bundle args = new Bundle();
-        args.putInt(HistoryFragment.BUNDLETAG_TRANS_COUNT_NAME, TR_MAIN_COUNT);
+        // set transactions count to show
+        args.putInt(HistoryFragment.BUNDLE_TRANS_COUNT_NAME, TR_MAIN_COUNT);
         historyFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_history_container, historyFragment)
@@ -104,21 +104,13 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
+    // load accounts info from ViewModel (SQLite)
     private void accountsLoadFromDB() {
         HomeViewModel viewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         viewModel.getAccounts().observe(this, accounts -> {
-            userBalanceChange(accounts);
+            mBalanceText.setText(String.valueOf(LogicMath.userBalanceChange(accounts)));
             mAdapter.setList(accounts);
         });
-
-    }
-
-    private void userBalanceChange(List<AccountModel> accList) {
-        int bal = 0;
-        for (AccountModel o : accList) {
-            bal += o.getSum();
-        }
-        mBalanceText.setText(String.valueOf(bal));
     }
 
     // Notification channel register

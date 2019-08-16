@@ -21,7 +21,6 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         findViewById(R.id.setting_navigation_back_btn).setOnClickListener(view -> finish());
-
         findViewById(R.id.btn_check_settings)
                 .setOnClickListener(view -> ChecksSettingsActivity.start(this));
     }

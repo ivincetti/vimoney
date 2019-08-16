@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -26,20 +25,23 @@ public class NotificationService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (NOTIFICATION_ACTION.equals(intent.getAction())) {
-            showNotofication(this);
+            showNotification(this);
         }
     }
 
-    private static void showNotofication(Context context) {
+
+    private static void showNotification(Context context) {
         NotificationManager nManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        // createNotificationChannel only for O= Android Versions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
                     "DEFAULT", NotificationManager.IMPORTANCE_DEFAULT);
             nManager.createNotificationChannel(notificationChannel);
         }
 
+        // open HomeActivity onClick
         Intent intent = new Intent(context, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,

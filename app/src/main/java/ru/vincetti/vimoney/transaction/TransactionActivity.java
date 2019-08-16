@@ -19,7 +19,7 @@ import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.data.AppExecutors;
 import ru.vincetti.vimoney.data.models.TransactionModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
-import ru.vincetti.vimoney.utils.TransactionMath;
+import ru.vincetti.vimoney.utils.LogicMath;
 
 public class TransactionActivity extends AppCompatActivity {
     private final static String EXTRA_TRANS_ID = "Extra_transaction_id";
@@ -82,6 +82,7 @@ public class TransactionActivity extends AppCompatActivity {
                 setOnClickListener(view -> finish());
     }
 
+    // radioButton clicked option selected
     private int typeEntered() {
         int checkedId = ((RadioGroup) findViewById(R.id.radioGroup)).getCheckedRadioButtonId();
         switch (checkedId) {
@@ -93,6 +94,7 @@ public class TransactionActivity extends AppCompatActivity {
         return TransactionModel.TRANSACTION_TYPE_INCOME;
     }
 
+    // save transaction logic
     private void Save() {
         int accId = Integer.valueOf(String.valueOf(txtAccount.getText()));
         TransactionModel tmp = new TransactionModel(
@@ -103,20 +105,25 @@ public class TransactionActivity extends AppCompatActivity {
                 typeEntered(),
                 Float.valueOf(txtSum.getText().toString())
         );
+
         if (mTransId != DEFAULT_TRANS_ID) {
+            // update logic
             tmp.setId(mTransId);
             AppExecutors.getsInstance().diskIO().execute(
                     () -> mDb.transactionDao().updateTransaction(tmp));
         } else {
+            // new transaction
             AppExecutors.getsInstance().diskIO().execute(
                     () -> mDb.transactionDao().insertTransaction(tmp));
         }
+        // update balance for current (accId) account
         AppExecutors.getsInstance().diskIO().execute(
-                () -> TransactionMath.accountUpdate(getApplicationContext(), accId));
+                () -> LogicMath.accountBalanceUpdateById(getApplicationContext(), accId));
 
         finish();
     }
 
+    // not saved transaction cancel dialog
     private void showUnsavedDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setMessage(R.string.transaction_alert_question)

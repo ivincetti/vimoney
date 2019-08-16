@@ -21,15 +21,12 @@ import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
 
 public class HistoryFragment extends Fragment {
-    public final static String BUNDLETAG_TRANS_COUNT_NAME = "ru.vincetti.vimoney.transhistory_count";
-    public final static String BUNDLETAG_TRANS_CHECK_ID_NAME = "ru.vincetti.vimoney.transhistory_check_id";
+    public final static String BUNDLE_TRANS_COUNT_NAME = "ru.vincetti.vimoney.transhistory_count";
+    public final static String BUNDLE_TRANS_CHECK_ID_NAME = "ru.vincetti.vimoney.transhistory_check_id";
 
     private final static int DEFAULT_TRANSACTIONS_COUNT = 25;
-    private final static int DEFAULT_CHECK_ID = -1;
 
-    TransactionsRVAdapter transactionsRVAdapter;
     private int trCount = DEFAULT_TRANSACTIONS_COUNT;
-    private int trCheckId = DEFAULT_CHECK_ID;
 
     @Nullable
     @Override
@@ -41,11 +38,11 @@ public class HistoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // количество элементов
-        if (getArguments() != null && getArguments().containsKey(BUNDLETAG_TRANS_COUNT_NAME)) {
-            trCount = getArguments().getInt(BUNDLETAG_TRANS_COUNT_NAME, DEFAULT_TRANSACTIONS_COUNT);
+        if (getArguments() != null && getArguments().containsKey(BUNDLE_TRANS_COUNT_NAME)) {
+            trCount = getArguments().getInt(BUNDLE_TRANS_COUNT_NAME, DEFAULT_TRANSACTIONS_COUNT);
         }
         // список транзакций
-        transactionsRVAdapter = new TransactionsRVAdapter(
+        TransactionsRVAdapter transactionsRVAdapter = new TransactionsRVAdapter(
                 itemId -> TransactionActivity.start(getActivity(), itemId));
         RecyclerView trListView = view.findViewById(R.id.home_transactions_recycle_view);
         trListView.setHasFixedSize(true);
@@ -53,9 +50,10 @@ public class HistoryFragment extends Fragment {
                 RecyclerView.VERTICAL, false);
         trListView.setLayoutManager(trLayoutManager);
         trListView.setAdapter(transactionsRVAdapter);
+
         // уточнение счета
-        if (getArguments() != null && getArguments().containsKey(BUNDLETAG_TRANS_CHECK_ID_NAME)) {
-            trCheckId = getArguments().getInt(BUNDLETAG_TRANS_CHECK_ID_NAME);
+        if (getArguments() != null && getArguments().containsKey(BUNDLE_TRANS_CHECK_ID_NAME)) {
+            int trCheckId = getArguments().getInt(BUNDLE_TRANS_CHECK_ID_NAME);
             LiveData<List<TransactionModel>> transList = AppDatabase.getInstance(getContext())
                     .transactionDao().loadCheckTransactionsCount(trCheckId, trCount);
             transList.observe(this,

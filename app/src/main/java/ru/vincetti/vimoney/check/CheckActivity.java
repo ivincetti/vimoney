@@ -45,7 +45,7 @@ public class CheckActivity extends AppCompatActivity {
             mCheckId = intent.getIntExtra(EXTRA_CHECK_ID, DEFAULT_CHECK_ID);
 
             LiveData<AccountModel> data = mDb.accountDao().loadAccountById(mCheckId);
-            data.observe(this, accountModel -> loadTransaction(accountModel));
+            data.observe(this, accountModel -> loadAccount(accountModel));
             showTransactionsHistory(mCheckId);
         }
     }
@@ -75,12 +75,13 @@ public class CheckActivity extends AppCompatActivity {
         return true;
     }
 
+    // show transaction for this account
     private void showTransactionsHistory(int checkId) {
         HistoryFragment historyFragment = new HistoryFragment();
 
         Bundle args = new Bundle();
-        args.putInt(HistoryFragment.BUNDLETAG_TRANS_COUNT_NAME, DEFAULT_CHECK_COUNT);
-        args.putInt(HistoryFragment.BUNDLETAG_TRANS_CHECK_ID_NAME, checkId);
+        args.putInt(HistoryFragment.BUNDLE_TRANS_COUNT_NAME, DEFAULT_CHECK_COUNT);
+        args.putInt(HistoryFragment.BUNDLE_TRANS_CHECK_ID_NAME, checkId);
         historyFragment.setArguments(args);
 
         getSupportFragmentManager().beginTransaction()
@@ -88,7 +89,8 @@ public class CheckActivity extends AppCompatActivity {
                 .commit();
     }
 
-    private void loadTransaction(AccountModel accountModel) {
+    // account data to UI
+    private void loadAccount(AccountModel accountModel) {
         checkName.setText(accountModel.getName());
         checkType.setText(accountModel.getType());
         checkBalance.setText(String.valueOf(accountModel.getSum()));
