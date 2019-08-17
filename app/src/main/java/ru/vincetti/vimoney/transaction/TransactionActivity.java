@@ -110,15 +110,16 @@ public class TransactionActivity extends AppCompatActivity {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(mDate);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                GregorianCalendar calendar = new GregorianCalendar(year, month, day);
-                mDate = calendar.getTime();
-                txtDate.setText(DateFormat
-                        .getDateInstance(DateFormat.MEDIUM).format(mDate));
-            }
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                (datePicker, year, month, day) -> {
+            GregorianCalendar tmpCal = new GregorianCalendar(year, month, day);
+            mDate = tmpCal.getTime();
+            txtDate.setText(DateFormat
+                    .getDateInstance(DateFormat.MEDIUM).format(mDate));
+        },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 
