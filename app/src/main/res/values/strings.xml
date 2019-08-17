@@ -78,5 +78,6 @@
     <string name="transaction_delete_alert_question">Точно удалить запись?</string>
     <string name="transaction_delete_alert_negative">Остаться</string>
     <string name="transaction_delete_alert_positive">Удалить</string>
+    <string name="add_date_sample_txt">12/11/2018</string>
 
 </resources>

@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 import ru.vincetti.vimoney.R;
@@ -30,7 +31,7 @@ public class TransactionActivity extends AppCompatActivity {
     private int mTransId = DEFAULT_TRANS_ID;
     private AppDatabase mDb;
 
-    TextView txtName, txtAccount, txtSum;
+    TextView txtName, txtAccount, txtSum, txtDate;
     CalendarView calView;
     Button btnSave;
     RadioGroup typeRadioGroup;
@@ -70,6 +71,8 @@ public class TransactionActivity extends AppCompatActivity {
                     txtSum.setText(String.valueOf(transactionModel.getSum()));
                     txtAccount.setText(String.valueOf(transactionModel.getAccountId()));
                     txtName.setText(transactionModel.getDescription());
+                    txtDate.setText(DateFormat
+                            .getDateInstance(DateFormat.MEDIUM).format(transactionModel.getDate()));
                     typeLoad(transactionModel.getType());
                 }
             });
@@ -80,6 +83,7 @@ public class TransactionActivity extends AppCompatActivity {
         txtSum = findViewById(R.id.add_sum);
         txtAccount = findViewById(R.id.add_acc_name);
         txtName = findViewById(R.id.add_desc);
+        txtDate = findViewById(R.id.add_date_txt);
         btnSave = findViewById(R.id.add_btn);
         calView = findViewById(R.id.add_calendar);
         btnSave.setOnClickListener(view -> save());

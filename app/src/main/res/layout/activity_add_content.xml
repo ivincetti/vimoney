@@ -36,12 +36,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:inputType="text"
         android:paddingStart="@dimen/activity_horizontal_margin"
         android:paddingEnd="@dimen/activity_horizontal_margin"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/text_st_numbers"
-        tools:text="@string/add_desc_sample"
-        android:inputType="text" />
+        tools:text="@string/add_desc_sample" />
 
     <RadioGroup
         android:id="@+id/radioGroup"
@@ -51,39 +51,43 @@
         android:weightSum="2">
 
         <RadioButton
+            android:id="@+id/add_spent_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/add_spent_button"
-            android:text="@string/add_spent_btn_text"
             android:checked="true"
-            />
+            android:text="@string/add_spent_btn_text" />
 
         <RadioButton
+            android:id="@+id/add_income_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/add_income_button"
-            android:text="@string/add_income_btn_text"
-            />
+            android:text="@string/add_income_btn_text" />
 
     </RadioGroup>
 
-    <CalendarView
-        android:id="@+id/add_calendar"
+    <TextView
+        android:id="@+id/add_date_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingBottom="@dimen/st_padding"
-        android:paddingTop="@dimen/st_padding"
-        />
+        android:padding="@dimen/big_padding"
+        tools:text="@string/add_date_sample_txt" />
 
     <Button
         android:id="@+id/add_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/add_btn_save"
-        />
+        android:text="@string/add_btn_save" />
+
+    <CalendarView
+        android:id="@+id/add_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="@dimen/st_padding"
+        android:paddingBottom="@dimen/st_padding"
+        android:visibility="invisible" />
 
 </LinearLayout>
