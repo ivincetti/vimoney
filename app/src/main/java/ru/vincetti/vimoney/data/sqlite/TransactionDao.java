@@ -18,13 +18,13 @@ import static ru.vincetti.vimoney.data.models.TransactionModel.TRANSACTION_TYPE_
 @Dao
 public interface TransactionDao {
 
-    @Query("SELECT * FROM transactions ORDER BY updated_at DESC")
+    @Query("SELECT * FROM transactions ORDER BY date DESC")
     LiveData<List<TransactionModel>> loadAllTransactions();
 
-    @Query("SELECT * FROM transactions ORDER BY updated_at DESC LIMIT :num")
+    @Query("SELECT * FROM transactions ORDER BY date DESC LIMIT :num")
     LiveData<List<TransactionModel>> loadAllTransactionsCount(int num);
 
-    @Query("SELECT * FROM transactions WHERE account_id = :id ORDER BY updated_at DESC LIMIT :num")
+    @Query("SELECT * FROM transactions WHERE account_id = :id ORDER BY date DESC LIMIT :num")
     LiveData<List<TransactionModel>> loadCheckTransactionsCount(int id, int num);
 
     @Query("SELECT * FROM transactions WHERE id = :id")

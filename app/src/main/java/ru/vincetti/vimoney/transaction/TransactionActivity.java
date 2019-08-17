@@ -1,5 +1,6 @@
 package ru.vincetti.vimoney.transaction;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -16,7 +18,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.data.AppExecutors;
@@ -35,6 +39,7 @@ public class TransactionActivity extends AppCompatActivity {
     CalendarView calView;
     Button btnSave;
     RadioGroup typeRadioGroup;
+    Date mDate;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, TransactionActivity.class);
@@ -54,8 +59,7 @@ public class TransactionActivity extends AppCompatActivity {
         initViews();
         mDb = AppDatabase.getInstance(this);
 
-        findViewById(R.id.setting_navigation_back_btn).setOnClickListener(
-                view -> showUnsavedDialog());
+        mDate = new Date();
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_TRANS_ID)) {
@@ -71,6 +75,7 @@ public class TransactionActivity extends AppCompatActivity {
                     txtSum.setText(String.valueOf(transactionModel.getSum()));
                     txtAccount.setText(String.valueOf(transactionModel.getAccountId()));
                     txtName.setText(transactionModel.getDescription());
+                    mDate = transactionModel.getDate();
                     txtDate.setText(DateFormat
                             .getDateInstance(DateFormat.MEDIUM).format(transactionModel.getDate()));
                     typeLoad(transactionModel.getType());
@@ -84,6 +89,7 @@ public class TransactionActivity extends AppCompatActivity {
         txtAccount = findViewById(R.id.add_acc_name);
         txtName = findViewById(R.id.add_desc);
         txtDate = findViewById(R.id.add_date_txt);
+        txtDate.setOnClickListener(view -> showDateDialog());
         btnSave = findViewById(R.id.add_btn);
         calView = findViewById(R.id.add_calendar);
         btnSave.setOnClickListener(view -> save());
@@ -95,6 +101,25 @@ public class TransactionActivity extends AppCompatActivity {
                 .setOnClickListener(view -> save());
         findViewById(R.id.transaction_navigation_delete_btn)
                 .setOnClickListener(view -> delete());
+
+        findViewById(R.id.setting_navigation_back_btn).setOnClickListener(
+                view -> showUnsavedDialog());
+    }
+
+    private void showDateDialog(){
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(mDate);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                GregorianCalendar calendar = new GregorianCalendar(year, month, day);
+                mDate = calendar.getTime();
+                txtDate.setText(DateFormat
+                        .getDateInstance(DateFormat.MEDIUM).format(mDate));
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
     }
 
     // radioButton clicked option selected
@@ -124,7 +149,7 @@ public class TransactionActivity extends AppCompatActivity {
         TransactionModel tmp = new TransactionModel(
                 accId,
                 String.valueOf(txtName.getText()),
-                new Date(calView.getDate()),
+                mDate,
                 new Date(),
                 typeEntered(),
                 Float.valueOf(txtSum.getText().toString())
