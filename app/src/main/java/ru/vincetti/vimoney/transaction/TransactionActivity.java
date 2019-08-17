@@ -1,8 +1,10 @@
 package ru.vincetti.vimoney.transaction;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.RadioGroup;
@@ -31,6 +33,7 @@ public class TransactionActivity extends AppCompatActivity {
     TextView txtName, txtAccount, txtSum;
     CalendarView calView;
     Button btnSave;
+    RadioGroup typeRadioGroup;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, TransactionActivity.class);
@@ -57,6 +60,7 @@ public class TransactionActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra(EXTRA_TRANS_ID)) {
             mTransId = intent.getIntExtra(EXTRA_TRANS_ID, DEFAULT_TRANS_ID);
             btnSave.setText(getString(R.string.add_btn_update));
+            findViewById(R.id.transaction_navigation_delete_btn).setVisibility(View.VISIBLE);
 
             LiveData<TransactionModel> transLD = mDb.transactionDao().loadTransactionById(mTransId);
             transLD.observe(this, new Observer<TransactionModel>() {
@@ -66,6 +70,7 @@ public class TransactionActivity extends AppCompatActivity {
                     txtSum.setText(String.valueOf(transactionModel.getSum()));
                     txtAccount.setText(String.valueOf(transactionModel.getAccountId()));
                     txtName.setText(transactionModel.getDescription());
+                    typeLoad(transactionModel.getType());
                 }
             });
         }
@@ -77,14 +82,20 @@ public class TransactionActivity extends AppCompatActivity {
         txtName = findViewById(R.id.add_desc);
         btnSave = findViewById(R.id.add_btn);
         calView = findViewById(R.id.add_calendar);
-        btnSave.setOnClickListener(view -> Save());
+        btnSave.setOnClickListener(view -> save());
+        typeRadioGroup = findViewById(R.id.radioGroup);
+
         findViewById(R.id.setting_navigation_back_btn).
                 setOnClickListener(view -> finish());
+        findViewById(R.id.transaction_navigation_add_btn)
+                .setOnClickListener(view -> save());
+        findViewById(R.id.transaction_navigation_delete_btn)
+                .setOnClickListener(view -> delete());
     }
 
     // radioButton clicked option selected
     private int typeEntered() {
-        int checkedId = ((RadioGroup) findViewById(R.id.radioGroup)).getCheckedRadioButtonId();
+        int checkedId = typeRadioGroup.getCheckedRadioButtonId();
         switch (checkedId) {
             case R.id.add_spent_button:
                 return TransactionModel.TRANSACTION_TYPE_SPENT;
@@ -94,8 +105,17 @@ public class TransactionActivity extends AppCompatActivity {
         return TransactionModel.TRANSACTION_TYPE_INCOME;
     }
 
+    // radioButton option load
+    private void typeLoad(int type) {
+        if (type == TransactionModel.TRANSACTION_TYPE_INCOME) {
+            typeRadioGroup.check(R.id.add_income_button);
+        } else if (type == TransactionModel.TRANSACTION_TYPE_SPENT) {
+            typeRadioGroup.check(R.id.add_spent_button);
+        }
+    }
+
     // save transaction logic
-    private void Save() {
+    private void save() {
         int accId = Integer.valueOf(String.valueOf(txtAccount.getText()));
         TransactionModel tmp = new TransactionModel(
                 accId,
@@ -123,13 +143,40 @@ public class TransactionActivity extends AppCompatActivity {
         finish();
     }
 
+    // delete transaction logic
+    private void delete() {
+        int accId = Integer.valueOf(String.valueOf(txtAccount.getText()));
+
+        if (mTransId != DEFAULT_TRANS_ID) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setMessage(R.string.transaction_delete_alert_question)
+                    .setNegativeButton(R.string.transaction_delete_alert_negative,
+                            (dialogInterface, i) -> {
+                                if (dialogInterface != null) dialogInterface.dismiss();
+                            })
+                    .setPositiveButton(R.string.transaction_delete_alert_positive,
+                            (dialogInterface, i) -> {
+                                // delete query
+                                AppExecutors.getsInstance().diskIO().execute(
+                                        () -> mDb.transactionDao().deleteTransactionById(mTransId));
+                                // update balance for current (accId) account
+                                AppExecutors.getsInstance().diskIO().execute(
+                                        () -> LogicMath.accountBalanceUpdateById(getApplicationContext(), accId));
+                                finish();
+
+                            });
+
+            builder.create().show();
+        }
+    }
+
     // not saved transaction cancel dialog
     private void showUnsavedDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setMessage(R.string.transaction_alert_question)
-                .setNegativeButton(R.string.transaction_alert_negative,
+                .setMessage(R.string.transaction_add_alert_question)
+                .setNegativeButton(R.string.transaction_add_alert_negative,
                         (dialogInterface, i) -> finish())
-                .setPositiveButton(R.string.transaction_alert_positive,
+                .setPositiveButton(R.string.transaction_add_alert_positive,
                         (dialogInterface, i) -> {
                             if (dialogInterface != null) dialogInterface.dismiss();
                         });

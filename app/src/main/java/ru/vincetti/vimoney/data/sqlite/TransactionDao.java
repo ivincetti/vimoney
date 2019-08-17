@@ -36,6 +36,9 @@ public interface TransactionDao {
     @Query("SELECT SUM(sum) FROM transactions WHERE type=" + TRANSACTION_TYPE_SPENT + " AND  account_id = :accId")
     float loadSumExpenseByCheckId(int accId);
 
+    @Query("DELETE FROM transactions WHERE id = :transId")
+    void deleteTransactionById(int transId);
+
     @Insert
     void insertTransaction(TransactionModel t);
 
