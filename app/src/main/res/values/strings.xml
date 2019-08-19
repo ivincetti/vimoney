@@ -72,6 +72,7 @@
     <string name="check_add_alert_negative">Не сохранять</string>
     <string name="check_add_alert_positive">Продолжить</string>
     <string name="settings_check_title_home">Список счетов</string>
+    <string name="ruble_symbol">\u20BD</string>
 
 
     <!--Check Activity-->

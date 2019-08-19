@@ -5,21 +5,40 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!--Заголовок транзакции-->
-    <EditText
-        android:id="@+id/add_sum"
+    <!--Блок суммы-->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_gravity="center_vertical"
-        android:gravity="end"
+        android:paddingStart="@dimen/big_padding"
         android:layout_marginTop="@dimen/big_padding"
-        android:inputType="numberDecimal"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="@dimen/text_big_numbers"
-        android:textStyle="bold"
-        tools:text="@string/home_title_acc_balance" />
+        android:paddingEnd="@dimen/big_padding">
+
+        <EditText
+            android:id="@+id/add_sum"
+            android:layout_width="0dp"
+            android:layout_weight="9"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:inputType="numberDecimal"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_big_numbers"
+            android:textStyle="bold"
+            tools:text="@string/home_title_acc_balance" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_big_numbers"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            android:text="@string/ruble_symbol" />
+
+    </LinearLayout>
 
     <!--блок счета-->
     <LinearLayout
