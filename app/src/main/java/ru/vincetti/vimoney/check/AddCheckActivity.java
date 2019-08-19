@@ -28,7 +28,7 @@ public class AddCheckActivity extends AppCompatActivity {
     private AppDatabase mDb;
     private EditText checkName;
     private Button btnSave;
-    private ImageView btnDelete;
+    private ImageView btnDelete, btnFromArhive;
     private RadioGroup typeRadioGroup;
 
     public static void start(Context context) {
@@ -56,7 +56,6 @@ public class AddCheckActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra(EXTRA_CHECK_ID)) {
             mCheckId = intent.getIntExtra(EXTRA_CHECK_ID, DEFAULT_CHECK_ID);
             btnSave.setText(getString(R.string.add_btn_update));
-            btnDelete.setVisibility(View.VISIBLE);
 
             LiveData<AccountModel> checkLD = mDb.accountDao().loadAccountById(mCheckId);
             checkLD.observe(this, new Observer<AccountModel>() {
@@ -66,6 +65,12 @@ public class AddCheckActivity extends AppCompatActivity {
                     checkName.setText(String.valueOf(accModel.getName()));
                     mSum = accModel.getSum();
                     typeLoad(accModel.getType());
+
+                    if(accModel.isArhive()){
+                        btnFromArhive.setVisibility(View.VISIBLE);
+                    } else {
+                        btnDelete.setVisibility(View.VISIBLE);
+                    }
                 }
             });
         }
@@ -74,8 +79,17 @@ public class AddCheckActivity extends AppCompatActivity {
     private void initView() {
         checkName = findViewById(R.id.add_check_name);
         btnSave = findViewById(R.id.add_check_save_btn);
+        btnSave.setOnClickListener(view -> save());
         btnDelete = findViewById(R.id.add_check_navigation_delete_btn);
+        btnDelete.setOnClickListener(view -> delete());
+        btnFromArhive = findViewById(R.id.add_check_navigation_from_archive_btn);
+        btnFromArhive.setOnClickListener(view -> restore());
         typeRadioGroup = findViewById(R.id.radioGroup);
+
+        findViewById(R.id.add_check_navigation_add_btn)
+                .setOnClickListener(view -> save());
+        findViewById(R.id.setting_navigation_back_btn)
+                .setOnClickListener(view -> showUnsavedDialog());
     }
 
     // radioButton clicked option selected
@@ -110,7 +124,7 @@ public class AddCheckActivity extends AppCompatActivity {
         }
     }
 
-    // save transaction logic
+    // save account logic
     private void save() {
         AccountModel tmp = new AccountModel(
                 String.valueOf(checkName.getText()),
@@ -131,7 +145,16 @@ public class AddCheckActivity extends AppCompatActivity {
         finish();
     }
 
-    // delete transaction logic
+    // restore from archive account logic
+    private void restore() {
+        if (mCheckId != DEFAULT_CHECK_ID) {
+            AppExecutors.getsInstance().diskIO().execute(
+                    () -> mDb.accountDao().fromArchiveAccountById(mCheckId));
+            finish();
+        }
+    }
+
+    // archive account logic
     private void delete() {
         if (mCheckId != DEFAULT_CHECK_ID) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
@@ -144,7 +167,7 @@ public class AddCheckActivity extends AppCompatActivity {
                             (dialogInterface, i) -> {
                                 // delete query
                                 AppExecutors.getsInstance().diskIO().execute(
-                                        () -> mDb.accountDao().deleteAccountById(mCheckId));
+                                        () -> mDb.accountDao().archiveAccountById(mCheckId));
                                 finish();
 
                             });

@@ -78,6 +78,7 @@
     <!--Check Activity-->
     <string name="check_title_home">Check</string>
     <string name="check_nav_title_edit">Edit Check</string>
+    <string name="check_arсhive_txt">архивный</string>
 
     <!--Navigation-->
     <string name="nav_title_notification">Notification</string>
@@ -89,5 +90,6 @@
     <string name="channel_description">don\'t forget to input</string>
     <string name="back_icon_description">back_icon_description</string>
     <string name="settings_check_settings_btn">Check Settings</string>
+
 
 </resources>

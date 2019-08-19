@@ -1,5 +1,6 @@
 package ru.vincetti.vimoney.data.models;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -15,6 +16,9 @@ public class AccountModel {
     private String name;
     private String type;
     private int sum;
+
+    @ColumnInfo(name = "archive")
+    private boolean isArhive;
 
     @Ignore
     public AccountModel(String name, String type, int sum) {
@@ -48,5 +52,13 @@ public class AccountModel {
 
     public int getSum() {
         return sum;
+    }
+
+    public boolean isArhive() {
+        return isArhive;
+    }
+
+    public void setArhive(boolean arhive) {
+        isArhive = arhive;
     }
 }

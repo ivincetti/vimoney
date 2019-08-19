@@ -24,8 +24,11 @@ public interface AccountDao {
     @Query("UPDATE accounts SET sum = :sum WHERE id = :accId")
     int updateSumByAccId(int accId, float sum);
 
-    @Query("DELETE FROM accounts WHERE id = :accId")
-    void deleteAccountById(int accId);
+    @Query("UPDATE accounts SET archive = 1 WHERE id = :accId")
+    void archiveAccountById(int accId);
+
+    @Query("UPDATE accounts SET archive = 0 WHERE id = :accId")
+    void fromArchiveAccountById(int accId);
 
     @Insert
     void insertAccount(AccountModel acc);

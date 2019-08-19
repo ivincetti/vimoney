@@ -15,7 +15,7 @@ import ru.vincetti.vimoney.data.models.ConfigModel;
 import ru.vincetti.vimoney.data.models.TransactionModel;
 
 @Database(entities = {AccountModel.class, TransactionModel.class, ConfigModel.class},
-        version = 2, exportSchema = false)
+        version = 3, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
     private static final Object LOCK = new Object();
@@ -26,7 +26,7 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (LOCK) {
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
                         AppDatabase.class, VimonContract.DB_NAME)
-                        .addMigrations(AppDatabase.MIGRATION_1_2)
+                        .addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_2_3)
                         .build();
             }
         }
@@ -49,6 +49,14 @@ public abstract class AppDatabase extends RoomDatabase {
             db.execSQL("DROP TABLE accounts");
             db.execSQL("ALTER TABLE acc_backup RENAME TO accounts");
             db.execSQL("COMMIT");
+        }
+    };
+
+    // delete acc_id column
+    private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(final SupportSQLiteDatabase db) {
+            db.execSQL("ALTER TABLE accounts ADD COLUMN archive INTEGER DEFAULT 0 NOT NULL");
         }
     };
 }

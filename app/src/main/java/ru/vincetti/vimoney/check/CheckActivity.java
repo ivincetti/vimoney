@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,7 +25,7 @@ public class CheckActivity extends AppCompatActivity {
 
     private int mCheckId = DEFAULT_CHECK_ID;
     private AppDatabase mDb;
-    private TextView checkName, checkType, checkBalance;
+    private TextView checkName, checkType, checkBalance, isArchive;
 
     public static void start(Context context, int id) {
         Intent intent = new Intent(context, CheckActivity.class);
@@ -59,6 +60,7 @@ public class CheckActivity extends AppCompatActivity {
         checkName = findViewById(R.id.check_acc_name);
         checkType = findViewById(R.id.check_acc_type);
         checkBalance = findViewById(R.id.check_acc_balance);
+        isArchive = findViewById(R.id.check_acc_archive);
     }
 
     @Override
@@ -94,5 +96,11 @@ public class CheckActivity extends AppCompatActivity {
         checkName.setText(accountModel.getName());
         checkType.setText(accountModel.getType());
         checkBalance.setText(String.valueOf(accountModel.getSum()));
+        if(accountModel.isArhive()){
+            isArchive.setVisibility(View.VISIBLE);
+            isArchive.setText(R.string.check_arсhive_txt);
+        } else {
+            isArchive.setVisibility(View.INVISIBLE);
+        }
     }
 }

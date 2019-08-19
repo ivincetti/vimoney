@@ -93,13 +93,10 @@ public class TransactionActivity extends AppCompatActivity {
         btnSave.setOnClickListener(view -> save());
         typeRadioGroup = findViewById(R.id.radioGroup);
 
-        findViewById(R.id.setting_navigation_back_btn).
-                setOnClickListener(view -> finish());
         findViewById(R.id.transaction_navigation_add_btn)
                 .setOnClickListener(view -> save());
         findViewById(R.id.transaction_navigation_delete_btn)
                 .setOnClickListener(view -> delete());
-
         findViewById(R.id.setting_navigation_back_btn).setOnClickListener(
                 view -> showUnsavedDialog());
     }
