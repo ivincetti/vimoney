@@ -19,9 +19,9 @@ QRcode check reader
 
 Settings
 
-AddTransaction UI
+~~AddTransaction UI~~
 
-AddCheck logic & UI
+~~AddCheck logic & UI~~ addcheck account picker
 
 Dashboard Logic & UI
 
