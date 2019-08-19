@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/big_padding"
+    android:layout_marginTop="@dimen/sm_padding"
+    android:layout_marginEnd="@dimen/st_padding"
+    android:minHeight="@dimen/icon_st_size"
+    app:cardCornerRadius="@dimen/sm_padding"
+    app:cardElevation="@dimen/sm_padding">
+
+    <RelativeLayout
+        android:id="@+id/acc_list_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:paddingStart="@dimen/big_padding"
+        android:paddingEnd="@dimen/big_padding">
+
+        <TextView
+            android:id="@+id/acc_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/colorTextMain"
+            android:textSize="@dimen/text_st_numbers"
+            tools:text="@string/home_title_acc_name" />
+
+        <TextView
+            android:id="@+id/acc_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/acc_name"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/colorTextMain"
+            tools:text="@string/home_title_acc_type" />
+
+        <TextView
+            android:id="@+id/acc_archive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/acc_name"
+            android:paddingStart="@dimen/big_padding"
+            android:paddingEnd="@dimen/sm_padding"
+            android:text="@string/check_arсhive_txt"
+            android:textColor="@color/colorTextMain" />
+
+        <TextView
+            android:id="@+id/acc_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:textColor="@color/colorTextMain"
+            android:textSize="@dimen/text_big_numbers"
+            android:textStyle="bold"
+            tools:text="@string/home_title_acc_balance" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

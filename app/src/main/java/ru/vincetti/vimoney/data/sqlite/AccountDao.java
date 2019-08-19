@@ -15,10 +15,10 @@ import ru.vincetti.vimoney.data.models.AccountModel;
 @Dao
 public interface AccountDao {
 
-    @Query("SELECT * FROM accounts ORDER BY archive ASC")
+    @Query("SELECT * FROM accounts ORDER BY archive ASC, name ASC")
     LiveData<List<AccountModel>> loadAllAccounts();
 
-    @Query("SELECT * FROM accounts WHERE archive = 0")
+    @Query("SELECT * FROM accounts WHERE archive = 0 ORDER BY name ASC")
     LiveData<List<AccountModel>> loadNotArhiveAccounts();
 
     @Query("SELECT * FROM accounts WHERE id = :accId")

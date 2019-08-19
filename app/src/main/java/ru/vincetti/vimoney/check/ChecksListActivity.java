@@ -10,12 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter;
-import ru.vincetti.vimoney.home.HomeViewModel;
-import ru.vincetti.vimoney.utils.LogicMath;
+import ru.vincetti.vimoney.data.adapters.AllCardsListRVAdapter;
 
 public class ChecksListActivity extends AppCompatActivity {
-    private CardsListRVAdapter mAdapter;
+    private AllCardsListRVAdapter mAdapter;
 
     public static void start(Context context) {
         context.startActivity(new Intent(context, ChecksListActivity.class));
@@ -31,7 +29,7 @@ public class ChecksListActivity extends AppCompatActivity {
                 .setOnClickListener(view -> AddCheckActivity.start(this));
 
         // список карт/счетов
-        mAdapter = new CardsListRVAdapter(itemId -> CheckActivity.start(this, itemId));
+        mAdapter = new AllCardsListRVAdapter(itemId -> CheckActivity.start(this, itemId));
         RecyclerView cardsListView = findViewById(R.id.check_list_recycle_view);
         //cardsListView.setHasFixedSize(true);
         LinearLayoutManager cardsLayoutManager = new LinearLayoutManager(this,
