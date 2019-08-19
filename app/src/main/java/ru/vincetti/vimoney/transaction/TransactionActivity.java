@@ -58,8 +58,6 @@ public class TransactionActivity extends AppCompatActivity {
         initViews();
         mDb = AppDatabase.getInstance(this);
 
-        mDate = new Date();
-
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_TRANS_ID)) {
             mTransId = intent.getIntExtra(EXTRA_TRANS_ID, DEFAULT_TRANS_ID);
@@ -87,8 +85,12 @@ public class TransactionActivity extends AppCompatActivity {
         txtSum = findViewById(R.id.add_sum);
         txtAccount = findViewById(R.id.add_acc_name);
         txtName = findViewById(R.id.add_desc);
+        mDate = new Date();
         txtDate = findViewById(R.id.add_date_txt);
-        txtDate.setOnClickListener(view -> showDateDialog());
+        txtDate.setText(DateFormat
+                .getDateInstance(DateFormat.MEDIUM).format(mDate));
+        findViewById(R.id.add_date_block)
+                .setOnClickListener(view -> showDateDialog());
         btnSave = findViewById(R.id.add_btn);
         btnSave.setOnClickListener(view -> save());
         typeRadioGroup = findViewById(R.id.radioGroup);

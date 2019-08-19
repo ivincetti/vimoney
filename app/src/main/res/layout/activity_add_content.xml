@@ -20,34 +20,90 @@
         android:textStyle="bold"
         tools:text="@string/home_title_acc_balance" />
 
-    <EditText
-        android:id="@+id/add_acc_name"
+    <!--блок счета-->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="@dimen/text_st_numbers"
-        tools:text="@string/home_title_acc_name" />
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/big_padding"
+        android:paddingEnd="@dimen/big_padding">
 
-    <EditText
-        android:id="@+id/add_desc"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_comment_dark" />
+
+        <EditText
+            android:id="@+id/add_acc_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_st_numbers"
+            tools:text="@string/home_title_acc_name" />
+
+    </LinearLayout>
+
+    <!--блок комментария-->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:inputType="text"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="@dimen/text_st_numbers"
-        tools:text="@string/add_desc_sample" />
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/big_padding"
+        android:paddingEnd="@dimen/big_padding">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_comment_dark" />
+
+        <EditText
+            android:id="@+id/add_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:inputType="text"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_st_numbers"
+            tools:text="@string/add_desc_sample" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/add_date_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/big_padding"
+        android:paddingEnd="@dimen/big_padding">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_calendar_dark" />
+
+        <TextView
+            android:id="@+id/add_date_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/big_padding"
+            tools:text="@string/add_date_sample_txt" />
+    </LinearLayout>
 
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingStart="@dimen/big_padding"
+        android:paddingEnd="@dimen/big_padding"
         android:weightSum="2">
 
         <RadioButton
@@ -66,13 +122,6 @@
             android:text="@string/add_income_btn_text" />
 
     </RadioGroup>
-
-    <TextView
-        android:id="@+id/add_date_txt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/big_padding"
-        tools:text="@string/add_date_sample_txt" />
 
     <Button
         android:id="@+id/add_btn"
