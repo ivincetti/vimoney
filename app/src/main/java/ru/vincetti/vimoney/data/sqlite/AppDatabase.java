@@ -52,7 +52,7 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-    // delete acc_id column
+    // add archive account column
     private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(final SupportSQLiteDatabase db) {
