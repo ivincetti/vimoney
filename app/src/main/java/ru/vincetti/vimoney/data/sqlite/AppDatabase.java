@@ -43,9 +43,10 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void migrate(final SupportSQLiteDatabase db) {
             db.execSQL("BEGIN TRANSACTION");
-            db.execSQL("CREATE TABLE acc_backup(id INTEGER PRIMARY KEY NOT NULL, name TEXT, type TEXT, sum DECIMAL NOT NULL)");
+            db.execSQL("CREATE TABLE acc_backup(id INTEGER PRIMARY KEY NOT NULL, name TEXT, type TEXT, sum INTEGER NOT NULL)");
             db.execSQL("INSERT INTO acc_backup (id, name, type, sum) SELECT id, name, type, sum FROM accounts");
             db.execSQL("DROP TABLE accounts");
+            db.execSQL("ALTER TABLE acc_backup RENAME TO accounts");
             db.execSQL("COMMIT");
         }
     };
