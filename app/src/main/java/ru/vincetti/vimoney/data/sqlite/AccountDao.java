@@ -18,14 +18,14 @@ public interface AccountDao {
     @Query("SELECT * FROM accounts")
     LiveData<List<AccountModel>> loadAllAccounts();
 
-    @Query("SELECT * FROM accounts WHERE id = :id")
-    LiveData<AccountModel> loadAccountById(int id);
+    @Query("SELECT * FROM accounts WHERE id = :accId")
+    LiveData<AccountModel> loadAccountById(int accId);
 
-    @Query("SELECT * FROM accounts WHERE acc_id = :id")
-    LiveData<AccountModel> loadAccountByAccId(int id);
+    @Query("UPDATE accounts SET sum = :sum WHERE id = :accId")
+    int updateSumByAccId(int accId, float sum);
 
-    @Query("UPDATE accounts SET sum = :sum WHERE id = :acc_id")
-    int updateSumByAccId(int acc_id, float sum);
+    @Query("DELETE FROM accounts WHERE id = :accId")
+    void deleteAccountById(int accId);
 
     @Insert
     void insertAccount(AccountModel acc);

@@ -70,7 +70,7 @@ public class CheckActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.check_nav_edit_btn) {
-            ChecksSettingsActivity.start(this);
+            AddCheckActivity.start(this, mCheckId);
         }
         return true;
     }

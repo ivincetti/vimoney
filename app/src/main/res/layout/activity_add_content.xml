@@ -81,13 +81,4 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/add_btn_save" />
 
-    <CalendarView
-        android:id="@+id/add_calendar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="@dimen/st_padding"
-        android:paddingBottom="@dimen/st_padding"
-        android:visibility="invisible" />
-
 </LinearLayout>

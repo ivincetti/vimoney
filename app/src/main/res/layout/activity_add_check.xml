@@ -41,6 +41,29 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/text_st_numbers"
                     android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/add_check_navigation_delete_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/add_check_navigation_add_btn"
+                    android:contentDescription="@string/add_transaction_button_desc"
+                    android:paddingStart="@dimen/big_padding"
+                    android:paddingEnd="@dimen/big_padding"
+                    android:src="@drawable/ic_delete_dark"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/add_check_navigation_add_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/add_transaction_button_desc"
+                    android:paddingStart="@dimen/big_padding"
+                    android:paddingEnd="@dimen/big_padding"
+                    android:src="@drawable/ic_done_dark" />
             </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
@@ -52,12 +75,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/add_check_title_home"
-            android:textAllCaps="true" />
+       <include layout="@layout/activity_add_check_content"/>
 
     </androidx.core.widget.NestedScrollView>
 

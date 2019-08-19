@@ -13,7 +13,6 @@ public class VimonContract {
         public static final String TABLE_NAME = "accounts";
 
         public static final String _ID = BaseColumns._ID;
-        public static final String COLUMN_ACCOUNT_ID = "acc_id";
         public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_INSTRUMENT = "instrument";

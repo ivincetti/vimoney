@@ -36,7 +36,6 @@ public class TransactionActivity extends AppCompatActivity {
     private AppDatabase mDb;
 
     TextView txtName, txtAccount, txtSum, txtDate;
-    CalendarView calView;
     Button btnSave;
     RadioGroup typeRadioGroup;
     Date mDate;
@@ -91,7 +90,6 @@ public class TransactionActivity extends AppCompatActivity {
         txtDate = findViewById(R.id.add_date_txt);
         txtDate.setOnClickListener(view -> showDateDialog());
         btnSave = findViewById(R.id.add_btn);
-        calView = findViewById(R.id.add_calendar);
         btnSave.setOnClickListener(view -> save());
         typeRadioGroup = findViewById(R.id.radioGroup);
 
