@@ -4,6 +4,34 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--Заголовок Счетов-->
+    <LinearLayout
+        android:id="@+id/home_accounts_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/big_padding"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/home_accounts_title"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_st_numbers"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="@dimen/st_padding"
+            android:paddingEnd="@dimen/st_padding"
+            android:text="@string/home_fragment_transactions_link_title" />
+    </LinearLayout>
+
     <!--Список карт-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/home_cards_recycle_view"
@@ -128,6 +156,7 @@
 
     <!--Заголовок транзакций-->
     <LinearLayout
+        android:id="@+id/home_transactions_link"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/big_padding"
@@ -145,7 +174,6 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/home_transactions_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

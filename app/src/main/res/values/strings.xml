@@ -20,6 +20,7 @@
     <string name="home_stat_income_icon">home_stat_income_icon</string>
     <string name="home_stat_spending_icon">home_stat_spending_icon</string>
     <string name="home_fragment_stat_title">Статистика за</string>
+    <string name="home_accounts_title">Счета</string>
     <string name="home_fragment_stat_month_sample">Август</string>
     <string name="home_fragment_income_title">Доходы</string>
     <string name="home_fragment_income_sample">20000</string>
@@ -59,9 +60,6 @@
     <!--Settings Activity-->
     <string name="settings_title_home">Settings</string>
 
-    <!--Checks Settings Activity-->
-    <string name="settings_check_title_home">Settings Check</string>
-
     <!--Add Check Activity-->
     <string name="add_check_title_home">Add check</string>
     <string name="add_check_type_cash_txt">cash</string>
@@ -73,6 +71,7 @@
     <string name="check_add_alert_question">Закрыть окно без сохранения?</string>
     <string name="check_add_alert_negative">Не сохранять</string>
     <string name="check_add_alert_positive">Продолжить</string>
+    <string name="settings_check_title_home">Список счетов</string>
 
 
     <!--Check Activity-->

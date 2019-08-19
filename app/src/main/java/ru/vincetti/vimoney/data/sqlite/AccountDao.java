@@ -15,7 +15,7 @@ import ru.vincetti.vimoney.data.models.AccountModel;
 @Dao
 public interface AccountDao {
 
-    @Query("SELECT * FROM accounts")
+    @Query("SELECT * FROM accounts ORDER BY archive ASC")
     LiveData<List<AccountModel>> loadAllAccounts();
 
     @Query("SELECT * FROM accounts WHERE archive = 0")

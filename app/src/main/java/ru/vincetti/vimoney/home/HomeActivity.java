@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.check.CheckActivity;
+import ru.vincetti.vimoney.check.ChecksListActivity;
 import ru.vincetti.vimoney.dashboard.DashboardActivity;
 import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter;
 import ru.vincetti.vimoney.history.HistoryActivity;
@@ -67,6 +68,8 @@ public class HomeActivity extends AppCompatActivity {
         mBalanceText = findViewById(R.id.home_user_balance);
         findViewById(R.id.home_fab)
                 .setOnClickListener(view -> TransactionActivity.start(this));
+        findViewById(R.id.home_accounts_link)
+                .setOnClickListener(view -> ChecksListActivity.start(this));
         findViewById(R.id.home_transactions_link)
                 .setOnClickListener(view -> HistoryActivity.start(this));
         findViewById(R.id.home_user_stat_link)
