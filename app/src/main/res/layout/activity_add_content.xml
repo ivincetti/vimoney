@@ -9,34 +9,34 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_gravity="center_vertical"
-        android:paddingStart="@dimen/big_padding"
         android:layout_marginTop="@dimen/big_padding"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/big_padding"
         android:paddingEnd="@dimen/big_padding">
 
         <EditText
             android:id="@+id/add_sum"
             android:layout_width="0dp"
-            android:layout_weight="9"
             android:layout_height="wrap_content"
+            android:layout_weight="9"
             android:gravity="end"
+            android:hint="@string/add_sum_sample"
             android:inputType="numberDecimal"
             android:paddingStart="@dimen/activity_horizontal_margin"
             android:paddingEnd="@dimen/activity_horizontal_margin"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/text_big_numbers"
-            android:textStyle="bold"
-            tools:text="@string/home_title_acc_balance" />
+            android:textStyle="bold" />
 
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="@dimen/text_big_numbers"
+            android:text="@string/ruble_symbol"
             android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
-            android:text="@string/ruble_symbol" />
+            android:textSize="@dimen/text_big_numbers"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -86,15 +86,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:hint="@string/add_desc_sample"
             android:inputType="text"
             android:paddingStart="@dimen/activity_horizontal_margin"
             android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/text_st_numbers"
-            tools:text="@string/add_desc_sample" />
+            android:textColor="@color/colorPrimaryDark" />
 
     </LinearLayout>
 
+    <!--блок календаря-->
     <LinearLayout
         android:id="@+id/add_date_block"
         android:layout_width="match_parent"

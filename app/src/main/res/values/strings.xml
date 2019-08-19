@@ -53,8 +53,9 @@
     <string name="transaction_delete_alert_question">Точно удалить запись?</string>
     <string name="transaction_delete_alert_negative">Остаться</string>
     <string name="transaction_delete_alert_positive">Удалить</string>
-    <string name="add_desc_sample">Кузина</string>
     <string name="add_transaction_button_desc">add transaction button</string>
+    <string name="add_desc_sample">комментарий</string>
+    <string name="add_sum_sample">0.0</string>
     <string name="add_date_sample_txt">12/11/2018</string>
 
     <!--Settings Activity-->

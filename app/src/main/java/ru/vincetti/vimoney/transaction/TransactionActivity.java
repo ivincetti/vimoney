@@ -2,13 +2,10 @@ package ru.vincetti.vimoney.transaction;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CalendarView;
-import android.widget.DatePicker;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -83,6 +80,8 @@ public class TransactionActivity extends AppCompatActivity {
 
     private void initViews() {
         txtSum = findViewById(R.id.add_sum);
+        txtSum.requestFocus();
+
         txtAccount = findViewById(R.id.add_acc_name);
         txtName = findViewById(R.id.add_desc);
         mDate = new Date();
@@ -103,17 +102,17 @@ public class TransactionActivity extends AppCompatActivity {
                 view -> showUnsavedDialog());
     }
 
-    private void showDateDialog(){
+    private void showDateDialog() {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(mDate);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (datePicker, year, month, day) -> {
-            GregorianCalendar tmpCal = new GregorianCalendar(year, month, day);
-            mDate = tmpCal.getTime();
-            txtDate.setText(DateFormat
-                    .getDateInstance(DateFormat.MEDIUM).format(mDate));
-        },
+                    GregorianCalendar tmpCal = new GregorianCalendar(year, month, day);
+                    mDate = tmpCal.getTime();
+                    txtDate.setText(DateFormat
+                            .getDateInstance(DateFormat.MEDIUM).format(mDate));
+                },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
