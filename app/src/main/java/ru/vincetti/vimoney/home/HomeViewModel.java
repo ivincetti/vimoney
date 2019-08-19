@@ -16,7 +16,7 @@ public class HomeViewModel extends AndroidViewModel {
 
     public HomeViewModel(@NonNull Application application) {
         super(application);
-        accList = AppDatabase.getInstance(this.getApplication()).accountDao().loadAllAccounts();
+        accList = AppDatabase.getInstance(this.getApplication()).accountDao().loadNotArhiveAccounts();
     }
 
     public LiveData<List<AccountModel>> getAccounts() {

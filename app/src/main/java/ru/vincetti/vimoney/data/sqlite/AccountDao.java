@@ -18,6 +18,9 @@ public interface AccountDao {
     @Query("SELECT * FROM accounts")
     LiveData<List<AccountModel>> loadAllAccounts();
 
+    @Query("SELECT * FROM accounts WHERE archive = 0")
+    LiveData<List<AccountModel>> loadNotArhiveAccounts();
+
     @Query("SELECT * FROM accounts WHERE id = :accId")
     LiveData<AccountModel> loadAccountById(int accId);
 
