@@ -39,7 +39,8 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ConfigDao configDao();
 
-    public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+    // delete acc_id column
+    private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(final SupportSQLiteDatabase db) {
             db.execSQL("BEGIN TRANSACTION");
