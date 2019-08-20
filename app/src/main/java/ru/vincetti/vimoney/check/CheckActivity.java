@@ -17,6 +17,7 @@ import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.data.models.AccountModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.history.HistoryFragment;
+import ru.vincetti.vimoney.transaction.TransactionActivity;
 
 public class CheckActivity extends AppCompatActivity {
     private final static String EXTRA_CHECK_ID = "Extra_check_id";
@@ -52,7 +53,6 @@ public class CheckActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        mCheckId = DEFAULT_CHECK_ID;
         mDb = AppDatabase.getInstance(this);
         findViewById(R.id.setting_navigation_back_btn)
                 .setOnClickListener(view -> finish());
@@ -61,6 +61,12 @@ public class CheckActivity extends AppCompatActivity {
         checkType = findViewById(R.id.check_acc_type);
         checkBalance = findViewById(R.id.check_acc_balance);
         isArchive = findViewById(R.id.check_acc_archive);
+
+        findViewById(R.id.check_fab).setOnClickListener(view -> {
+            Intent starter = new Intent(getBaseContext(), TransactionActivity.class);
+            starter.putExtra(TransactionActivity.EXTRA_ACCOUNT_ID, mCheckId);
+            startActivity(starter);
+        });
     }
 
     @Override

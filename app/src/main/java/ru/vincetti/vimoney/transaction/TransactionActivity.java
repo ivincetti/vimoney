@@ -26,7 +26,8 @@ import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.utils.LogicMath;
 
 public class TransactionActivity extends AppCompatActivity {
-    private final static String EXTRA_TRANS_ID = "Extra_transaction_id";
+    public final static String EXTRA_TRANS_ID = "Extra_transaction_id";
+    public final static String EXTRA_ACCOUNT_ID = "Extra_account_id";
     private final static int DEFAULT_TRANS_ID = -1;
 
     private int mTransId = DEFAULT_TRANS_ID;
@@ -56,26 +57,35 @@ public class TransactionActivity extends AppCompatActivity {
         mDb = AppDatabase.getInstance(this);
 
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(EXTRA_TRANS_ID)) {
-            mTransId = intent.getIntExtra(EXTRA_TRANS_ID, DEFAULT_TRANS_ID);
-            btnSave.setText(getString(R.string.add_btn_update));
-            findViewById(R.id.transaction_navigation_delete_btn).setVisibility(View.VISIBLE);
+        if (intent != null) {
+            if (intent.hasExtra(EXTRA_TRANS_ID)) {
+                mTransId = intent.getIntExtra(EXTRA_TRANS_ID, DEFAULT_TRANS_ID);
+                btnSave.setText(getString(R.string.add_btn_update));
+                findViewById(R.id.transaction_navigation_delete_btn).setVisibility(View.VISIBLE);
 
-            LiveData<TransactionModel> transLD = mDb.transactionDao().loadTransactionById(mTransId);
-            transLD.observe(this, new Observer<TransactionModel>() {
-                @Override
-                public void onChanged(TransactionModel transactionModel) {
-                    transLD.removeObserver(this);
-                    txtSum.setText(String.valueOf(transactionModel.getSum()));
-                    txtAccount.setText(String.valueOf(transactionModel.getAccountId()));
-                    txtName.setText(transactionModel.getDescription());
-                    mDate = transactionModel.getDate();
-                    txtDate.setText(DateFormat
-                            .getDateInstance(DateFormat.MEDIUM).format(transactionModel.getDate()));
-                    typeLoad(transactionModel.getType());
-                }
-            });
+                LiveData<TransactionModel> transLD = mDb.transactionDao().loadTransactionById(mTransId);
+                transLD.observe(this, new Observer<TransactionModel>() {
+                    @Override
+                    public void onChanged(TransactionModel transactionModel) {
+                        transLD.removeObserver(this);
+                        txtSum.setText(String.valueOf(transactionModel.getSum()));
+                        txtAccount.setText(String.valueOf(transactionModel.getAccountId()));
+                        txtName.setText(transactionModel.getDescription());
+                        mDate = transactionModel.getDate();
+                        txtDate.setText(DateFormat
+                                .getDateInstance(
+                                        DateFormat.MEDIUM).format(transactionModel.getDate()
+                                ));
+                        typeLoad(transactionModel.getType());
+                    }
+                });
+            } else if (intent.hasExtra(EXTRA_ACCOUNT_ID)) {
+                txtAccount.setText(
+                        String.valueOf(intent.getIntExtra(EXTRA_ACCOUNT_ID, 1))
+                );
+            }
         }
+
     }
 
     private void initViews() {
