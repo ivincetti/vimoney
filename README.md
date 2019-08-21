@@ -21,9 +21,9 @@ Settings
 
 ~~AddTransaction UI~~
 
-~~AddCheck logic & UI~~ addcheck account picker
+AddCheck ~~logic~~ & UI
 
-Dashboard Logic & UI
+Dashboard ~~init~~ & Logic & UI
 
 Dashboard Charts
 
