@@ -54,8 +54,8 @@
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_account_dark" />
 
-        <EditText
-            android:id="@+id/add_acc_name"
+        <Spinner
+            android:id="@+id/add_acc_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -63,7 +63,7 @@
             android:paddingEnd="@dimen/activity_horizontal_margin"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/text_st_numbers"
-            tools:text="@string/home_title_acc_name" />
+            tools:text="@string/home_title_acc_name"/>
 
     </LinearLayout>
 

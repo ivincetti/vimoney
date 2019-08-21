@@ -91,6 +91,7 @@
     <string name="channel_description">don\'t forget to input</string>
     <string name="back_icon_description">back_icon_description</string>
     <string name="settings_check_settings_btn">Check Settings</string>
+    <string name="add_check_no_account_warning">Please, select the account</string>
 
 
 </resources>

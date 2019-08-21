@@ -5,14 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -20,7 +25,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import ru.vincetti.vimoney.R;
+import ru.vincetti.vimoney.check.CheckViewModel;
 import ru.vincetti.vimoney.data.AppExecutors;
+import ru.vincetti.vimoney.data.models.AccountModel;
 import ru.vincetti.vimoney.data.models.TransactionModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.utils.LogicMath;
@@ -28,12 +35,15 @@ import ru.vincetti.vimoney.utils.LogicMath;
 public class TransactionActivity extends AppCompatActivity {
     public final static String EXTRA_TRANS_ID = "Extra_transaction_id";
     public final static String EXTRA_ACCOUNT_ID = "Extra_account_id";
-    private final static int DEFAULT_TRANS_ID = -1;
+    private final static int DEFAULT_ID = -1;
 
-    private int mTransId = DEFAULT_TRANS_ID;
+    private int mTransId = DEFAULT_ID;
+    private int mAccID = DEFAULT_ID;
     private AppDatabase mDb;
 
-    TextView txtName, txtAccount, txtSum, txtDate;
+    Context mContext;
+    TextView txtName, txtSum, txtDate;
+    Spinner accSpinner;
     Button btnSave;
     RadioGroup typeRadioGroup;
     Date mDate;
@@ -54,12 +64,11 @@ public class TransactionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
         initViews();
-        mDb = AppDatabase.getInstance(this);
 
         Intent intent = getIntent();
         if (intent != null) {
             if (intent.hasExtra(EXTRA_TRANS_ID)) {
-                mTransId = intent.getIntExtra(EXTRA_TRANS_ID, DEFAULT_TRANS_ID);
+                mTransId = intent.getIntExtra(EXTRA_TRANS_ID, DEFAULT_ID);
                 btnSave.setText(getString(R.string.add_btn_update));
                 findViewById(R.id.transaction_navigation_delete_btn).setVisibility(View.VISIBLE);
 
@@ -69,7 +78,7 @@ public class TransactionActivity extends AppCompatActivity {
                     public void onChanged(TransactionModel transactionModel) {
                         transLD.removeObserver(this);
                         txtSum.setText(String.valueOf(transactionModel.getSum()));
-                        txtAccount.setText(String.valueOf(transactionModel.getAccountId()));
+                        mAccID = transactionModel.getAccountId();
                         txtName.setText(transactionModel.getDescription());
                         mDate = transactionModel.getDate();
                         txtDate.setText(DateFormat
@@ -80,19 +89,17 @@ public class TransactionActivity extends AppCompatActivity {
                     }
                 });
             } else if (intent.hasExtra(EXTRA_ACCOUNT_ID)) {
-                txtAccount.setText(
-                        String.valueOf(intent.getIntExtra(EXTRA_ACCOUNT_ID, 1))
-                );
+                mAccID = intent.getIntExtra(EXTRA_ACCOUNT_ID, DEFAULT_ID);
             }
         }
-
+        spinnerInit();
     }
 
     private void initViews() {
+        mContext = this;
+        mDb = AppDatabase.getInstance(this);
         txtSum = findViewById(R.id.add_sum);
         txtSum.requestFocus();
-
-        txtAccount = findViewById(R.id.add_acc_name);
         txtName = findViewById(R.id.add_desc);
         mDate = new Date();
         txtDate = findViewById(R.id.add_date_txt);
@@ -110,6 +117,37 @@ public class TransactionActivity extends AppCompatActivity {
                 .setOnClickListener(view -> delete());
         findViewById(R.id.setting_navigation_back_btn).setOnClickListener(
                 view -> showUnsavedDialog());
+    }
+
+    private void spinnerInit() {
+        accSpinner = findViewById(R.id.add_acc_list);
+        CheckViewModel accViewModel = ViewModelProviders.of(this).get(CheckViewModel.class);
+        accViewModel.getAccounts().observe(this, accountModels -> {
+            // Создаем адаптер ArrayAdapter с помощью массива строк и стандартной разметки элемета spinner
+            ArrayAdapter<AccountModel> adapter =
+                    new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, accountModels);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            // Применяем адаптер к элементу spinner
+            accSpinner.setAdapter(adapter);
+            accountEntered();
+        });
+
+        accSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                mAccID = ((AccountModel) adapterView.getSelectedItem()).getId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // do nothing
+            }
+        });
+
+    }
+
+    private void showToast(String string) {
+        Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
     }
 
     private void showDateDialog() {
@@ -141,6 +179,31 @@ public class TransactionActivity extends AppCompatActivity {
         return TransactionModel.TRANSACTION_TYPE_INCOME;
     }
 
+    // radioButton clicked option selected
+    private void accountEntered() {
+        if (mAccID != DEFAULT_ID) {
+            LiveData<AccountModel> lAcc = mDb.accountDao().loadAccountById(mAccID);
+            lAcc.observe(this, new Observer<AccountModel>() {
+                @Override
+                public void onChanged(AccountModel accountModel) {
+                    lAcc.removeObserver(this);
+                    int pos = getIndex(accountModel);
+                    accSpinner.setSelection(pos);
+                }
+            });
+        }
+    }
+
+    // get index in spinner
+    private int getIndex(AccountModel tmpAcc) {
+        for (int i = 0; i < accSpinner.getCount(); i++) {
+            if (accSpinner.getItemAtPosition(i).toString().equals(tmpAcc.getName())) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
     // radioButton option load
     private void typeLoad(int type) {
         if (type == TransactionModel.TRANSACTION_TYPE_INCOME) {
@@ -152,38 +215,39 @@ public class TransactionActivity extends AppCompatActivity {
 
     // save transaction logic
     private void save() {
-        int accId = Integer.valueOf(String.valueOf(txtAccount.getText()));
-        TransactionModel tmp = new TransactionModel(
-                accId,
-                String.valueOf(txtName.getText()),
-                mDate,
-                new Date(),
-                typeEntered(),
-                Float.valueOf(txtSum.getText().toString())
-        );
+        if (mAccID != DEFAULT_ID) {
+            TransactionModel tmp = new TransactionModel(
+                    mAccID,
+                    String.valueOf(txtName.getText()),
+                    mDate,
+                    new Date(),
+                    typeEntered(),
+                    Float.valueOf(txtSum.getText().toString())
+            );
 
-        if (mTransId != DEFAULT_TRANS_ID) {
-            // update logic
-            tmp.setId(mTransId);
+            if (mTransId != DEFAULT_ID) {
+                // update logic
+                tmp.setId(mTransId);
+                AppExecutors.getsInstance().diskIO().execute(
+                        () -> mDb.transactionDao().updateTransaction(tmp));
+            } else {
+                // new transaction
+                AppExecutors.getsInstance().diskIO().execute(
+                        () -> mDb.transactionDao().insertTransaction(tmp));
+            }
+            // update balance for current (accId) account
             AppExecutors.getsInstance().diskIO().execute(
-                    () -> mDb.transactionDao().updateTransaction(tmp));
+                    () -> LogicMath.accountBalanceUpdateById(getApplicationContext(), mAccID));
+
+            finish();
         } else {
-            // new transaction
-            AppExecutors.getsInstance().diskIO().execute(
-                    () -> mDb.transactionDao().insertTransaction(tmp));
+            showToast(getResources().getString(R.string.add_check_no_account_warning));
         }
-        // update balance for current (accId) account
-        AppExecutors.getsInstance().diskIO().execute(
-                () -> LogicMath.accountBalanceUpdateById(getApplicationContext(), accId));
-
-        finish();
     }
 
     // delete transaction logic
     private void delete() {
-        int accId = Integer.valueOf(String.valueOf(txtAccount.getText()));
-
-        if (mTransId != DEFAULT_TRANS_ID) {
+        if (mTransId != DEFAULT_ID) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
                     .setMessage(R.string.transaction_delete_alert_question)
                     .setNegativeButton(R.string.transaction_delete_alert_negative,
@@ -197,7 +261,7 @@ public class TransactionActivity extends AppCompatActivity {
                                         () -> mDb.transactionDao().deleteTransactionById(mTransId));
                                 // update balance for current (accId) account
                                 AppExecutors.getsInstance().diskIO().execute(
-                                        () -> LogicMath.accountBalanceUpdateById(getApplicationContext(), accId));
+                                        () -> LogicMath.accountBalanceUpdateById(getApplicationContext(), mAccID));
                                 finish();
 
                             });

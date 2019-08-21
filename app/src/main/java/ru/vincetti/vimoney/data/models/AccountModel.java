@@ -61,4 +61,17 @@ public class AccountModel {
     public void setArhive(boolean arhive) {
         isArhive = arhive;
     }
+
+    public AccountModel copyAccount(AccountModel old){
+        AccountModel newAcc = null;
+        if (old != null){
+            newAcc = new AccountModel(old.getName(), old.getType(), old.getSum());
+        }
+        return newAcc;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
