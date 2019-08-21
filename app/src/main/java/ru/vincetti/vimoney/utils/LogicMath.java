@@ -12,15 +12,36 @@ public class LogicMath {
 
     // set correct account (accID) balance
     public static void accountBalanceUpdateById(Context context, int accId) {
-        Float sumPlus = AppDatabase.getInstance(context)
-                .transactionDao()
-                .loadSumIncomeByCheckId(accId);
-        Float sumMinus = AppDatabase.getInstance(context)
-                .transactionDao()
-                .loadSumExpenseByCheckId(accId);
-        float sum = sumPlus - sumMinus;
+        AppDatabase mDb = AppDatabase.getInstance(context);
+
+        class Sum {
+            private float sumPlus, sumMinus;
+
+            private Sum() {
+                this.sumPlus = 0f;
+                this.sumMinus = 0f;
+            }
+
+            private void setSumPlus(float sumPlus) {
+                this.sumPlus = sumPlus;
+            }
+
+            private void setSumMinus(float sumMinus) {
+                this.sumMinus = sumMinus;
+            }
+
+            public float getSum() {
+                return sumPlus - sumMinus;
+            }
+        }
+        Sum mSum = new Sum();
+
         AppExecutors.getsInstance().diskIO().execute(
-                () -> AppDatabase.getInstance(context).accountDao().updateSumByAccId(accId, sum));
+                () -> mSum.setSumMinus(mDb.transactionDao().loadSumIncomeByCheckId(accId)));
+        AppExecutors.getsInstance().diskIO().execute(
+                () -> mSum.setSumPlus(mDb.transactionDao().loadSumExpenseByCheckId(accId)));
+        AppExecutors.getsInstance().diskIO().execute(
+                () -> mDb.accountDao().updateSumByAccId(accId, mSum.getSum()));
     }
 
     // Math allUser balance

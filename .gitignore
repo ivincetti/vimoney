@@ -1,4 +1,5 @@
 *.iml
+*.json
 .externalNativeBuild
 .gradle
 .DS_Store

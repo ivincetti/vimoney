@@ -1,5 +1,6 @@
 package ru.vincetti.vimoney;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -28,17 +29,20 @@ import ru.vincetti.vimoney.home.HomeActivity;
 import ru.vincetti.vimoney.utils.TransactionsGenerator;
 
 import static ru.vincetti.vimoney.data.sqlite.VimonContract.ConfigEntry.CONFIG_KEY_NAME_USER_NAME;
+import static ru.vincetti.vimoney.utils.LogicMath.accountBalanceUpdateById;
 
 public class SplashActivity extends AppCompatActivity {
     private final String LOG_TAG = "SPLASH_DEBUG";
 
     private JsonDownloader jsonDownloader;
     private AppDatabase mDb;
+    private Context mContext;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        mContext = this;
 
         mDb = AppDatabase.getInstance(this);
         retrofitInit();
@@ -161,6 +165,7 @@ public class SplashActivity extends AppCompatActivity {
                     AppExecutors.getsInstance().diskIO().execute(
                             () -> mDb.accountDao().updateAccount(newAcc));
                 }
+                accountBalanceUpdateById(mContext, accId);
             }
         });
     }

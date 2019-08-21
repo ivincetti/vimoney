@@ -10,7 +10,7 @@ import ru.vincetti.vimoney.data.models.TransactionModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 
 public class TransactionsGenerator {
-    private static final int TRANSACTION_COUNT = 30;
+    private static final int TRANSACTION_COUNT = 5;
 
     // sample accounts transactions generate
     public static void generate(Context context, int count) {
@@ -19,7 +19,7 @@ public class TransactionsGenerator {
                     new TransactionModel(
                             new Date(),
                             (new Random().nextInt(3) + 1),
-                            "Кузина",
+                            "Sample",
                             (i % 2 + 1),
                             150
                     );

@@ -1,18 +1,31 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            def credsFilePath = file("../credentials.json").toString()
+            def credsFile = new File(credsFilePath, "").getText('UTF-8')
+            def json = new groovy.json.JsonSlurper().parseText(credsFile)
+            storeFile file(json.android.storeFile)
+            storePassword = json.android.storePassword
+            keyAlias = json.android.keyAlias
+            keyPassword = json.android.keyPassword
+        }
+    }
     compileSdkVersion 29
     defaultConfig {
         applicationId "ru.vincetti.vimoney"
-        minSdkVersion 22
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
