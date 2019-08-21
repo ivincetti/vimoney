@@ -11,6 +11,8 @@ import java.util.Date;
 public class TransactionModel {
     public final static int TRANSACTION_TYPE_INCOME = 1;
     public final static int TRANSACTION_TYPE_SPENT = 2;
+    public final static int TRANSACTION_TYPE_TRANSFER = 3;
+    public final static int TRANSACTION_TYPE_DEBT = 4;
 
     @PrimaryKey(autoGenerate = true)
     private int id;

@@ -1,5 +1,6 @@
 package ru.vincetti.vimoney.data.models;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -16,22 +17,35 @@ public class AccountModel {
     private String name;
     private String type;
     private int sum;
+    private int currency;
+    @ColumnInfo(name = "extra_key")
+    @NonNull
+    private String extraKey;
+    @ColumnInfo(name = "extra_value")
+    @NonNull
+    private String extraValue;
 
     @ColumnInfo(name = "archive")
     private boolean isArhive;
 
     @Ignore
-    public AccountModel(String name, String type, int sum) {
+    public AccountModel(String name, String type, int sum, int currency) {
         this.name = name;
         this.type = type;
         this.sum = sum;
+        this.currency = currency;
+        this.extraKey = "";
+        this.extraValue = "";
     }
 
-    public AccountModel(int id, String name, String type, int sum) {
+    public AccountModel(int id, String name, String type, int sum, int currency) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.sum = sum;
+        this.currency = currency;
+        this.extraKey = "";
+        this.extraValue = "";
     }
 
     public int getId() {
@@ -62,12 +76,28 @@ public class AccountModel {
         isArhive = arhive;
     }
 
-    public AccountModel copyAccount(AccountModel old){
-        AccountModel newAcc = null;
-        if (old != null){
-            newAcc = new AccountModel(old.getName(), old.getType(), old.getSum());
-        }
-        return newAcc;
+    public int getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(int currency) {
+        this.currency = currency;
+    }
+
+    public String getExtraKey() {
+        return extraKey;
+    }
+
+    public void setExtraKey(String extraKey) {
+        this.extraKey = extraKey;
+    }
+
+    public String getExtraValue() {
+        return extraValue;
+    }
+
+    public void setExtraValue(String extraValue) {
+        this.extraValue = extraValue;
     }
 
     @Override

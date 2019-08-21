@@ -151,7 +151,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void accountUpdate(int accId, String type, String title, int ins, int balance) {
-        AccountModel newAcc = new AccountModel(accId, title, type, balance);
+        AccountModel newAcc = new AccountModel(accId, title, type, balance, 810);
         LiveData<AccountModel> tmpAcc = mDb.accountDao().loadAccountById(accId);
         tmpAcc.observe(this, new Observer<AccountModel>() {
             @Override

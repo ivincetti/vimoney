@@ -129,7 +129,8 @@ public class AddCheckActivity extends AppCompatActivity {
         AccountModel tmp = new AccountModel(
                 String.valueOf(checkName.getText()),
                 typeEntered(),
-                mSum
+                mSum,
+                810
         );
 
         if (mCheckId != DEFAULT_CHECK_ID) {

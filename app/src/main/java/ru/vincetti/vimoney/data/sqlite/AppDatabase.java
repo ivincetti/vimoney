@@ -12,10 +12,15 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import ru.vincetti.vimoney.data.DateConverter;
 import ru.vincetti.vimoney.data.models.AccountModel;
 import ru.vincetti.vimoney.data.models.ConfigModel;
+import ru.vincetti.vimoney.data.models.CurrencyModel;
 import ru.vincetti.vimoney.data.models.TransactionModel;
 
-@Database(entities = {AccountModel.class, TransactionModel.class, ConfigModel.class},
-        version = 3, exportSchema = false)
+@Database(entities = {
+        AccountModel.class,
+        TransactionModel.class,
+        ConfigModel.class,
+        CurrencyModel.class},
+        version = 4, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
     private static final Object LOCK = new Object();
@@ -26,7 +31,9 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (LOCK) {
                 sInstance = Room.databaseBuilder(context.getApplicationContext(),
                         AppDatabase.class, VimonContract.DB_NAME)
-                        .addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_2_3)
+                        .addMigrations(AppDatabase.MIGRATION_1_2,
+                                AppDatabase.MIGRATION_2_3,
+                                AppDatabase.MIGRATION_3_4)
                         .build();
             }
         }
@@ -57,6 +64,18 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void migrate(final SupportSQLiteDatabase db) {
             db.execSQL("ALTER TABLE accounts ADD COLUMN archive INTEGER DEFAULT 0 NOT NULL");
+        }
+    };
+
+    // add account columns: extrakey and extravalue, currency
+    private static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(final SupportSQLiteDatabase db) {
+            db.execSQL("ALTER TABLE accounts ADD COLUMN currency INTEGER DEFAULT 0 NOT NULL");
+            db.execSQL("ALTER TABLE accounts ADD COLUMN extra_key TEXT DEFAULT '' NOT NULL");
+            db.execSQL("ALTER TABLE accounts ADD COLUMN extra_value TEXT DEFAULT '' NOT NULL");
+            db.execSQL("UPDATE accounts SET currency = 810");
+            db.execSQL("CREATE TABLE currency(id INTEGER PRIMARY KEY NOT NULL, code INTEGER NOT NULL, name TEXT)");
         }
     };
 }
