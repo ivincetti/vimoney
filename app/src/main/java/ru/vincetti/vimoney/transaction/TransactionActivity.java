@@ -86,6 +86,7 @@ public class TransactionActivity extends AppCompatActivity {
                                         DateFormat.MEDIUM).format(transactionModel.getDate()
                                 ));
                         typeLoad(transactionModel.getType());
+                        accountEntered();
                     }
                 });
             } else if (intent.hasExtra(EXTRA_ACCOUNT_ID)) {
