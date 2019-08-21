@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,8 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.check.CheckActivity;
 import ru.vincetti.vimoney.check.ChecksListActivity;
-import ru.vincetti.vimoney.dashboard.DashboardActivity;
 import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter;
+import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.history.HistoryActivity;
 import ru.vincetti.vimoney.history.HistoryFragment;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
@@ -30,7 +32,7 @@ public class HomeActivity extends AppCompatActivity {
 
     CardsListRVAdapter mAdapter;
 
-    private TextView mBalanceText;
+    private TextView mBalanceText, mStatExpense, mStatIncome;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
@@ -61,14 +63,19 @@ public class HomeActivity extends AppCompatActivity {
 
     public void viewInit() {
         mBalanceText = findViewById(R.id.home_user_balance);
+        mStatExpense = findViewById(R.id.home_stat_expense_txt);
+        mStatExpense.setText(String.valueOf(0));
+        mStatIncome = findViewById(R.id.home_stat_income_txt);
+        mStatIncome.setText(String.valueOf(0));
         findViewById(R.id.home_fab)
                 .setOnClickListener(view -> TransactionActivity.start(this));
         findViewById(R.id.home_accounts_link)
                 .setOnClickListener(view -> ChecksListActivity.start(this));
         findViewById(R.id.home_transactions_link)
                 .setOnClickListener(view -> HistoryActivity.start(this));
-        findViewById(R.id.home_user_stat_link)
-                .setOnClickListener(view -> DashboardActivity.start(this));
+        // not implemented
+        //findViewById(R.id.home_user_stat_link)
+        //        .setOnClickListener(view -> DashboardActivity.start(this));
     }
 
     // Show historyFragment
@@ -112,6 +119,14 @@ public class HomeActivity extends AppCompatActivity {
             mBalanceText.setText(String.valueOf(LogicMath.userBalanceChange(accounts)));
             mAdapter.setList(accounts);
         });
+
+        // get stat
+        AppDatabase mDb = AppDatabase.getInstance(this);
+        LiveData<Integer> lSum1 = mDb.transactionDao().loadSumTransactionIncomeMonth("08","2019");
+        lSum1.observe(this, integer -> mStatIncome.setText(String.valueOf(integer)));
+        LiveData<Integer> lSum2 = mDb.transactionDao().loadSumTransactionExpenseMonth("08","2019");
+        lSum2.observe(this, integer -> mStatExpense.setText(String.valueOf(integer)));
+
     }
 
     // Notification channel register

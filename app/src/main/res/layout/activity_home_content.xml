@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <!--Заголовок Счетов-->
@@ -98,6 +99,7 @@
                 android:text="@string/home_fragment_income_title" />
 
             <TextView
+                android:id="@+id/home_stat_income_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/home_stat_income_string"
@@ -105,7 +107,7 @@
                 android:layout_toEndOf="@id/home_stat_income"
                 android:paddingStart="@dimen/st_padding"
                 android:paddingEnd="@dimen/st_padding"
-                android:text="@string/home_fragment_income_sample"
+                tools:text="@string/home_fragment_income_sample"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -137,6 +139,7 @@
                 android:text="@string/home_fragment_spending_title" />
 
             <TextView
+                android:id="@+id/home_stat_expense_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/home_stat_spending_string"
@@ -144,7 +147,7 @@
                 android:layout_toEndOf="@id/home_stat_spending"
                 android:paddingStart="@dimen/st_padding"
                 android:paddingEnd="@dimen/st_padding"
-                android:text="@string/home_fragment_spending_sample"
+                tools:text="@string/home_fragment_spending_sample"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="24sp"
                 android:textStyle="bold" />

@@ -30,6 +30,16 @@ public interface TransactionDao {
     @Query("SELECT * FROM transactions WHERE id = :id")
     LiveData<TransactionModel> loadTransactionById(int id);
 
+    @Query("SELECT SUM(sum) FROM transactions WHERE type = 1 "
+            + "AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month "
+            + "AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year")
+    LiveData<Integer> loadSumTransactionIncomeMonth(String month, String year);
+
+    @Query("SELECT SUM(sum) FROM transactions WHERE type = 2 "
+            + "AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month "
+            + "AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year")
+    LiveData<Integer> loadSumTransactionExpenseMonth(String month, String year);
+
     @Query("SELECT SUM(sum) FROM transactions WHERE type=" + TRANSACTION_TYPE_INCOME + " AND account_id = :accId")
     float loadSumIncomeByCheckId(int accId);
 
