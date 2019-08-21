@@ -15,6 +15,12 @@ public class ConfigFile {
     @SerializedName("date_edit")
     private long date_edit;
 
+    @SerializedName("currency")
+    private List<CurrencyItem> currency;
+
+    @SerializedName("transactions")
+    private List<TransactionsItem> transactions;
+
     public List<AccountsItem> getAccounts() {
         return accounts;
     }
@@ -25,5 +31,13 @@ public class ConfigFile {
 
     public long getDateEdit() {
         return date_edit;
+    }
+
+    public List<CurrencyItem> getCurrency(){
+        return currency;
+    }
+
+    public List<TransactionsItem> getTransactions(){
+        return transactions;
     }
 }
