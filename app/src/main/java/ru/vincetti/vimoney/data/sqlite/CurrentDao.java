@@ -18,6 +18,9 @@ public interface CurrentDao {
     @Query("Select * from currency ORDER BY id ASC")
     LiveData<List<CurrencyModel>> loadAllCurrency();
 
+    @Query("Select * from currency WHERE code = :code LIMIT 1")
+    LiveData<CurrencyModel> loadCurrencyByCode(int code);
+
     @Insert
     void insertCurrency(CurrencyModel cur);
 

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
+import java.sql.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -21,12 +22,15 @@ import ru.vincetti.vimoney.data.AppExecutors;
 import ru.vincetti.vimoney.data.JsonDownloader;
 import ru.vincetti.vimoney.data.models.AccountModel;
 import ru.vincetti.vimoney.data.models.ConfigModel;
+import ru.vincetti.vimoney.data.models.CurrencyModel;
+import ru.vincetti.vimoney.data.models.TransactionModel;
 import ru.vincetti.vimoney.data.models.json.AccountsItem;
 import ru.vincetti.vimoney.data.models.json.ConfigFile;
+import ru.vincetti.vimoney.data.models.json.CurrencyItem;
+import ru.vincetti.vimoney.data.models.json.TransactionsItem;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.data.sqlite.VimonContract;
 import ru.vincetti.vimoney.home.HomeActivity;
-import ru.vincetti.vimoney.utils.TransactionsGenerator;
 
 import static ru.vincetti.vimoney.data.sqlite.VimonContract.ConfigEntry.CONFIG_KEY_NAME_USER_NAME;
 import static ru.vincetti.vimoney.utils.LogicMath.accountBalanceUpdateById;
@@ -84,33 +88,49 @@ public class SplashActivity extends AppCompatActivity {
                 tmpConfig.removeObserver(this);
                 if (config == null) {
                     configDbDateInsert(timeMillisLong);
-                    //first transactions generation
-                    TransactionsGenerator.generate(getApplicationContext());
                     // user info to base
                     userUpdate(response.body().getUser().getName());
                     // accounts info to base
-                    accountsUpdate(response);
+                    accountsUpdate(response.body().getAccounts());
+                    currencyImport(response.body().getCurrency());
+                    transactionsImport(response.body().getTransactions());
                 } else {
                     if (Long.valueOf(config.getValue()) < timeMillisLong) {
                         configDbDateUpdate(response.body().getDateEdit(), config.getId());
                         // user info to base
                         userUpdate(response.body().getUser().getName());
-                        // accounts info to base
-                        accountsUpdate(response);
                     }
                 }
             }
         });
     }
 
-    private void accountsUpdate(Response<ConfigFile> response) {
-        List<AccountsItem> accountsItems = response.body().getAccounts();
+    private void accountsUpdate(List<AccountsItem> accountsItems) {
         for (AccountsItem acc : accountsItems) {
             accountUpdate(acc.getId(),
                     acc.getType(),
                     acc.getTitle(),
                     acc.getInstrument(),
                     acc.getBalance());
+        }
+    }
+
+    // import currency from config
+    private void currencyImport(List<CurrencyItem> currencyItems) {
+        for (CurrencyItem cur : currencyItems) {
+            currencyUpdate(cur.getName(),
+                    cur.getCode());
+        }
+    }
+
+    // import sample transactions from config
+    private void transactionsImport(List<TransactionsItem> transactionItems) {
+        for (TransactionsItem tr : transactionItems) {
+            transactionImport(tr.getDate(),
+                    tr.getAccountId(),
+                    tr.getDescription(),
+                    tr.getType(),
+                    tr.getSum());
         }
     }
 
@@ -168,5 +188,17 @@ public class SplashActivity extends AppCompatActivity {
                 accountBalanceUpdateById(mContext, accId);
             }
         });
+    }
+
+    public void currencyUpdate(String currencyName, int currencyCode) {
+        CurrencyModel newCurrency = new CurrencyModel(currencyCode, currencyName);
+        AppExecutors.getsInstance().diskIO().execute(
+                () -> mDb.currentDao().insertCurrency(newCurrency));
+    }
+
+    public void transactionImport(long date, int accId, String desc, int trType, float sum) {
+        TransactionModel newTr = new TransactionModel(new Date(date), accId, desc, trType, sum);
+        AppExecutors.getsInstance().diskIO().execute(
+                () -> mDb.transactionDao().insertTransaction(newTr));
     }
 }

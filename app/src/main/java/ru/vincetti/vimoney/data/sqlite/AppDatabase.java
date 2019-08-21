@@ -46,6 +46,8 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ConfigDao configDao();
 
+    public abstract CurrentDao currentDao();
+
     // delete acc_id column
     private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
