@@ -12,10 +12,11 @@ import java.text.DateFormat;
 import java.util.List;
 
 import ru.vincetti.vimoney.R;
+import ru.vincetti.vimoney.data.models.TransactionListModel;
 import ru.vincetti.vimoney.data.models.TransactionModel;
 
 public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAdapter.ViewHolder> {
-    private List<TransactionModel> data;
+    private List<TransactionListModel> data;
     OnTransactionClickListener mListener;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -51,7 +52,7 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        TransactionModel tmpTr = data.get(position);
+        TransactionListModel tmpTr = data.get(position);
 
         holder.name.setText(tmpTr.getDescription());
         holder.date.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(tmpTr.getDate()));
@@ -60,8 +61,8 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
         } else {
             holder.sum.setText("-" + tmpTr.getSum());
         }
-        //holder.cur.setText(tmpTr.get);
-        //holder.acc.setText(tmpTr.get);
+        holder.acc.setText(tmpTr.getAccountName());
+        holder.cur.setText(tmpTr.getCurSymbol());
     }
 
     @Override
@@ -80,7 +81,7 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
      * When data changes, this method updates the list of taskEntries
      * and notifies the adapter to use the new values on it
      */
-    public void setTransaction(List<TransactionModel> transList) {
+    public void setTransaction(List<TransactionListModel> transList) {
         data = transList;
         notifyDataSetChanged();
     }

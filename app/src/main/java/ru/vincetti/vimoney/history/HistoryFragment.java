@@ -9,18 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.HashMap;
 import java.util.List;
 
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.data.adapters.TransactionsRVAdapter;
-import ru.vincetti.vimoney.data.models.TransactionModel;
+import ru.vincetti.vimoney.data.models.TransactionListModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
-import ru.vincetti.vimoney.home.HomeViewModel;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
 
 public class HistoryFragment extends Fragment {
@@ -57,13 +54,13 @@ public class HistoryFragment extends Fragment {
         // уточнение счета
         if (getArguments() != null && getArguments().containsKey(BUNDLE_TRANS_CHECK_ID_NAME)) {
             int trCheckId = getArguments().getInt(BUNDLE_TRANS_CHECK_ID_NAME);
-            LiveData<List<TransactionModel>> transList = AppDatabase.getInstance(getContext())
-                    .transactionDao().loadCheckTransactionsCount(trCheckId, trCount);
+            LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
+                    .transactionDao().loadCheckTransactionsCountFull(trCheckId, trCount);
             transList.observe(this,
                     transactions -> transactionsRVAdapter.setTransaction(transactions));
         } else {
-            LiveData<List<TransactionModel>> transList = AppDatabase.getInstance(getContext())
-                    .transactionDao().loadAllTransactionsCount(trCount);
+            LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
+                    .transactionDao().loadAllTransactionsCountFull(trCount);
             transList.observe(this,
                     transactions -> transactionsRVAdapter.setTransaction(transactions));
         }
