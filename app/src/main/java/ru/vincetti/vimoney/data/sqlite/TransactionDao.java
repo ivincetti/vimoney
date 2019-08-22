@@ -22,18 +22,36 @@ public interface TransactionDao {
     @Query("SELECT * FROM transactions ORDER BY date DESC")
     LiveData<List<TransactionModel>> loadAllTransactions();
 
-//    @Query("SELECT transactions.id " +
-//            "FROM transactions, accounts, currency " +
-//            "WHERE transactions.account_id == accounts.id " +
-//            "AND accounts.currency == currency.code " +
-//            "ORDER BY date DESC")
-//    LiveData<List<TransactionListModel>> loadAllTransactionsFull();
+    @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol, " +
+            "transactions.sum, transactions.type, transactions.date, transactions.description " +
+            "FROM transactions, accounts, currency " +
+            "WHERE transactions.account_id == accounts.id " +
+            "AND accounts.currency == currency.code " +
+            "ORDER BY transactions.date DESC")
+    LiveData<List<TransactionListModel>> loadAllTransactionsFull();
 
     @Query("SELECT * FROM transactions ORDER BY date DESC LIMIT :num")
     LiveData<List<TransactionModel>> loadAllTransactionsCount(int num);
 
+    @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol, " +
+            "transactions.sum, transactions.type, transactions.date, transactions.description " +
+            "FROM transactions, accounts, currency " +
+            "WHERE transactions.account_id == accounts.id " +
+            "AND accounts.currency == currency.code " +
+            "ORDER BY transactions.date DESC LIMIT :num")
+    LiveData<List<TransactionListModel>> loadAllTransactionsCountFull(int num);
+
     @Query("SELECT * FROM transactions WHERE account_id = :id ORDER BY date DESC LIMIT :num")
     LiveData<List<TransactionModel>> loadCheckTransactionsCount(int id, int num);
+
+    @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol," +
+            "transactions.sum, transactions.type, transactions.date, transactions.description " +
+            "FROM transactions, accounts, currency " +
+            "WHERE transactions.account_id == accounts.id " +
+            "AND accounts.currency == currency.code " +
+            "AND transactions.account_id == :id " +
+            "ORDER BY transactions.date DESC LIMIT :num")
+    LiveData<List<TransactionListModel>> loadCheckTransactionsCountFull(int id, int num);
 
     @Query("SELECT * FROM transactions WHERE id = :id")
     LiveData<TransactionModel> loadTransactionById(int id);
