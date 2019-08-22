@@ -9,15 +9,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.HashMap;
 import java.util.List;
 
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.data.adapters.TransactionsRVAdapter;
 import ru.vincetti.vimoney.data.models.TransactionModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
+import ru.vincetti.vimoney.home.HomeViewModel;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
 
 public class HistoryFragment extends Fragment {

@@ -1,5 +1,6 @@
 package ru.vincetti.vimoney.data.models;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -11,17 +12,21 @@ public class CurrencyModel {
     private int id;
     private int code;
     private String name;
+    @NonNull
+    private String symbol;
 
     @Ignore
-    public CurrencyModel(int code, String name) {
+    public CurrencyModel(int code, String name, String symbol) {
         this.code = code;
         this.name = name;
+        this.symbol = symbol;
     }
 
-    public CurrencyModel(int id, int code, String name) {
+    public CurrencyModel(int id, int code, String name, String symbol) {
         this.id = id;
         this.code = code;
         this.name = name;
+        this.symbol = symbol;
     }
 
     public int getId() {
@@ -42,5 +47,9 @@ public class CurrencyModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSymbol() {
+        return symbol;
     }
 }

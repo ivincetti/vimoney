@@ -20,7 +20,7 @@ import ru.vincetti.vimoney.data.models.TransactionModel;
         TransactionModel.class,
         ConfigModel.class,
         CurrencyModel.class},
-        version = 4, exportSchema = false)
+        version = 5, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
     private static final Object LOCK = new Object();
@@ -33,7 +33,9 @@ public abstract class AppDatabase extends RoomDatabase {
                         AppDatabase.class, VimonContract.DB_NAME)
                         .addMigrations(AppDatabase.MIGRATION_1_2,
                                 AppDatabase.MIGRATION_2_3,
-                                AppDatabase.MIGRATION_3_4)
+                                AppDatabase.MIGRATION_3_4,
+                                AppDatabase.MIGRATION_4_5
+                        )
                         .build();
             }
         }
@@ -78,6 +80,14 @@ public abstract class AppDatabase extends RoomDatabase {
             db.execSQL("ALTER TABLE accounts ADD COLUMN extra_value TEXT DEFAULT '' NOT NULL");
             db.execSQL("UPDATE accounts SET currency = 810");
             db.execSQL("CREATE TABLE currency(id INTEGER PRIMARY KEY NOT NULL, code INTEGER NOT NULL, name TEXT)");
+        }
+    };
+
+    // add currency symbol column
+    private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(final SupportSQLiteDatabase db) {
+            db.execSQL("ALTER TABLE currency ADD COLUMN symbol TEXT DEFAULT '' NOT NULL");
         }
     };
 }

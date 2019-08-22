@@ -10,19 +10,17 @@ public class CurrencyItem{
 	@SerializedName("name")
 	private String name;
 
-	public void setCode(int code){
-		this.code = code;
-	}
+	private String symbol;
 
 	public int getCode(){
 		return code;
 	}
 
-	public void setName(String name){
-		this.name = name;
-	}
-
 	public String getName(){
 		return name;
+	}
+
+	public String getSymbol() {
+		return symbol;
 	}
 }

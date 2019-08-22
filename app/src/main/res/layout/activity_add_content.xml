@@ -30,10 +30,11 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/add_acc_cur"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/ruble_symbol"
+            tools:text="@string/currency_ruble_symbol"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/text_big_numbers"
             android:textStyle="bold" />

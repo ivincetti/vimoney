@@ -119,7 +119,8 @@ public class SplashActivity extends AppCompatActivity {
     private void currencyImport(List<CurrencyItem> currencyItems) {
         for (CurrencyItem cur : currencyItems) {
             currencyUpdate(cur.getName(),
-                    cur.getCode());
+                    cur.getCode(),
+                    cur.getSymbol());
         }
     }
 
@@ -190,8 +191,8 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
-    public void currencyUpdate(String currencyName, int currencyCode) {
-        CurrencyModel newCurrency = new CurrencyModel(currencyCode, currencyName);
+    public void currencyUpdate(String currencyName, int currencyCode, String symbol) {
+        CurrencyModel newCurrency = new CurrencyModel(currencyCode, currencyName, symbol);
         AppExecutors.getsInstance().diskIO().execute(
                 () -> mDb.currentDao().insertCurrency(newCurrency));
     }

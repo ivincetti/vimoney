@@ -73,25 +73,29 @@
     <string name="check_add_alert_negative">Не сохранять</string>
     <string name="check_add_alert_positive">Продолжить</string>
     <string name="settings_check_title_home">Список счетов</string>
-    <string name="ruble_symbol">\u20BD</string>
+
 
 
     <!--Check Activity-->
-    <string name="check_title_home">Check</string>
-    <string name="check_nav_title_edit">Edit Check</string>
+    <string name="check_title_home">счет</string>
+    <string name="check_nav_title_edit">изм счета</string>
     <string name="check_arсhive_txt">архивный</string>
 
     <!--Navigation-->
-    <string name="nav_title_notification">Notification</string>
-    <string name="nav_title_settings">Settings</string>
-    <string name="nav_title_add">Add</string>
+    <string name="nav_title_notification">уведомления</string>
+    <string name="nav_title_settings">настройки</string>
+    <string name="nav_title_add">добавить запись</string>
 
     <!--Sys-->
-    <string name="channel_name">reminder</string>
-    <string name="channel_description">don\'t forget to input</string>
-    <string name="back_icon_description">back_icon_description</string>
-    <string name="settings_check_settings_btn">Check Settings</string>
-    <string name="add_check_no_account_warning">Please, select the account</string>
-
-
+    <string name="channel_name" translatable="false">reminder</string>
+    <string name="channel_description">не забудьте внести</string>
+    <string name="back_icon_description">кнопка назад</string>
+    <string name="settings_check_settings_btn">настройки счетов</string>
+    <string name="add_check_no_account_warning">пожалуйста, выберите счет</string>
+    <!--Currency-->
+    <string name="currency_name_ruble">рубль</string>
+    <string name="currency_ruble_symbol" translatable="false">\u20BD</string>
+    <string name="currency_name_dollar">доллар</string>
+    <string name="currency_name_euro">евро</string>
+    <string name="currency_name_yuan">юань</string>
 </resources>

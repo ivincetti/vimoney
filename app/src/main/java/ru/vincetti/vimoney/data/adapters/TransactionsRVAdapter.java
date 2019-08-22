@@ -19,12 +19,14 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
     OnTransactionClickListener mListener;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView name, date, sum;
+        TextView name, date, acc, sum, cur;
 
         public ViewHolder(@NonNull View itemView, OnTransactionClickListener listener) {
             super(itemView);
             name = itemView.findViewById(R.id.home_transactions_name);
             date = itemView.findViewById(R.id.home_transactions_date);
+            acc = itemView.findViewById(R.id.home_transactions_account);
+            cur = itemView.findViewById(R.id.home_transactions_currency);
             sum = itemView.findViewById(R.id.home_transactions_balance);
             itemView.setOnClickListener(this);
         }
@@ -58,6 +60,8 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
         } else {
             holder.sum.setText("-" + tmpTr.getSum());
         }
+        //holder.cur.setText(tmpTr.get);
+        //holder.acc.setText(tmpTr.get);
     }
 
     @Override

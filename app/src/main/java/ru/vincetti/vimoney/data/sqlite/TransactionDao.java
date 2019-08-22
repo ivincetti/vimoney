@@ -10,6 +10,7 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import ru.vincetti.vimoney.data.models.TransactionListModel;
 import ru.vincetti.vimoney.data.models.TransactionModel;
 
 import static ru.vincetti.vimoney.data.models.TransactionModel.TRANSACTION_TYPE_INCOME;
@@ -20,6 +21,13 @@ public interface TransactionDao {
 
     @Query("SELECT * FROM transactions ORDER BY date DESC")
     LiveData<List<TransactionModel>> loadAllTransactions();
+
+//    @Query("SELECT transactions.id " +
+//            "FROM transactions, accounts, currency " +
+//            "WHERE transactions.account_id == accounts.id " +
+//            "AND accounts.currency == currency.code " +
+//            "ORDER BY date DESC")
+//    LiveData<List<TransactionListModel>> loadAllTransactionsFull();
 
     @Query("SELECT * FROM transactions ORDER BY date DESC LIMIT :num")
     LiveData<List<TransactionModel>> loadAllTransactionsCount(int num);

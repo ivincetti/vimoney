@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="currencyCodes">
+        <item>810</item>
+        <item>840</item>
+        <item>978</item>
+        <item>156</item>
+    </integer-array>
+
+    <string-array name="currencyNames">
+        <item>@string/currency_name_ruble</item>
+        <item>@string/currency_name_dollar</item>
+        <item>@string/currency_name_euro</item>
+        <item>@string/currency_name_yuan</item>
+    </string-array>
+</resources>
