@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <Button
+        android:id="@+id/add_check_save_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/sm_padding"
+        android:text="@string/add_btn_save"
+        android:textAllCaps="true" />
 
     <EditText
         android:id="@+id/add_check_name"
@@ -11,13 +19,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/big_padding"
+        android:hint="@string/add_check_name_hint"
         android:inputType="text"
         android:paddingStart="@dimen/activity_horizontal_margin"
         android:paddingEnd="@dimen/activity_horizontal_margin"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/text_big_numbers"
-        android:textStyle="bold"
-        tools:text="@string/home_title_acc_name" />
+        android:textStyle="bold" />
 
     <RadioGroup
         android:id="@+id/radioGroup"
@@ -49,13 +57,4 @@
             android:text="@string/add_check_type_credit_txt" />
 
     </RadioGroup>
-
-    <Button
-        android:id="@+id/add_check_save_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/sm_padding"
-        android:text="@string/add_btn_save"
-        android:textAllCaps="true" />
 </LinearLayout>

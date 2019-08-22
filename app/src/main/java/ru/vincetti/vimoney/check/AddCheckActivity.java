@@ -66,7 +66,7 @@ public class AddCheckActivity extends AppCompatActivity {
                     mSum = accModel.getSum();
                     typeLoad(accModel.getType());
 
-                    if(accModel.isArhive()){
+                    if (accModel.isArhive()) {
                         btnFromArhive.setVisibility(View.VISIBLE);
                     } else {
                         btnDelete.setVisibility(View.VISIBLE);
@@ -172,7 +172,6 @@ public class AddCheckActivity extends AppCompatActivity {
                                 finish();
 
                             });
-
             builder.create().show();
         }
     }
@@ -187,7 +186,6 @@ public class AddCheckActivity extends AppCompatActivity {
                         (dialogInterface, i) -> {
                             if (dialogInterface != null) dialogInterface.dismiss();
                         });
-
         builder.create().show();
     }
 

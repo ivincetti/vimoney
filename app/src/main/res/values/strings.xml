@@ -66,6 +66,7 @@
     <string name="add_check_type_cash_txt">cash</string>
     <string name="add_check_type_debit_txt">debit</string>
     <string name="add_check_type_credit_txt">credit</string>
+    <string name="add_check_name_hint">название</string>
     <string name="check_delete_alert_question">Точно удалить счет?</string>
     <string name="check_delete_alert_negative">Остаться</string>
     <string name="check_delete_alert_positive">Удалить</string>
