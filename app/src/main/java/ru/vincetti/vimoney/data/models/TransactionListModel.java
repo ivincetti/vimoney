@@ -43,4 +43,19 @@ public class TransactionListModel {
     public String getCurSymbol() {
         return curSymbol;
     }
+
+    public String getTypeString(){
+        switch (type){
+            case TransactionModel.TRANSACTION_TYPE_INCOME:{
+                return "+";
+            }
+            case TransactionModel.TRANSACTION_TYPE_TRANSFER:{
+                return "=";
+            }
+            case TransactionModel.TRANSACTION_TYPE_DEBT:{
+                return "|";
+            }
+        }
+        return "-";
+    }
 }

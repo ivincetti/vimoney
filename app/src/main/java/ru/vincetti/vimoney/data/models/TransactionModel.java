@@ -83,10 +83,6 @@ public class TransactionModel {
         return sum;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public Date getUpdatedAt() {
         return updatedAt;
     }

@@ -13,7 +13,6 @@ import java.util.List;
 
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.data.models.TransactionListModel;
-import ru.vincetti.vimoney.data.models.TransactionModel;
 
 public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAdapter.ViewHolder> {
     private List<TransactionListModel> data;
@@ -56,11 +55,7 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
 
         holder.name.setText(tmpTr.getDescription());
         holder.date.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(tmpTr.getDate()));
-        if (tmpTr.getType() == TransactionModel.TRANSACTION_TYPE_INCOME) {
-            holder.sum.setText("+" + tmpTr.getSum());
-        } else {
-            holder.sum.setText("-" + tmpTr.getSum());
-        }
+        holder.sum.setText(tmpTr.getTypeString() + " " + tmpTr.getSum());
         holder.acc.setText(tmpTr.getAccountName());
         holder.cur.setText(tmpTr.getCurSymbol());
     }
