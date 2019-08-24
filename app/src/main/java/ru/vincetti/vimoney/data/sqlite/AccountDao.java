@@ -43,7 +43,7 @@ public interface AccountDao {
             "accounts.sum, accounts.type, accounts.archive " +
             "FROM accounts, currency " +
             "WHERE accounts.currency == currency.code " +
-            "AND  accounts.archive = 0 AND accounts.id = :accId " +
+            "AND  accounts.id = :accId " +
             "ORDER BY accounts.name ASC")
     LiveData<AccountListModel> loadAccountByIdFull(int accId);
 
