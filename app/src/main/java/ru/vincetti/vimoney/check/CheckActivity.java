@@ -3,17 +3,17 @@ package ru.vincetti.vimoney.check;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LiveData;
 
 import ru.vincetti.vimoney.R;
+import ru.vincetti.vimoney.data.AppExecutors;
 import ru.vincetti.vimoney.data.models.AccountListModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.history.HistoryFragment;
@@ -27,6 +27,7 @@ public class CheckActivity extends AppCompatActivity {
     private int mCheckId = DEFAULT_CHECK_ID;
     private AppDatabase mDb;
     private TextView checkName, checkType, checkBalance, isArchive, checkSymbol;
+    private ImageView btnDelete, btnFromArhive;
 
     public static void start(Context context, int id) {
         Intent intent = new Intent(context, CheckActivity.class);
@@ -40,6 +41,7 @@ public class CheckActivity extends AppCompatActivity {
         setContentView(R.layout.activity_check);
         Toolbar toolbar = findViewById(R.id.top_toolbar);
         setSupportActionBar(toolbar);
+        mDb = AppDatabase.getInstance(this);
         initViews();
 
         Intent intent = getIntent();
@@ -53,35 +55,26 @@ public class CheckActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        mDb = AppDatabase.getInstance(this);
-        findViewById(R.id.setting_navigation_back_btn)
-                .setOnClickListener(view -> finish());
-
         checkName = findViewById(R.id.check_acc_name);
         checkType = findViewById(R.id.check_acc_type);
         checkBalance = findViewById(R.id.check_acc_balance);
         checkSymbol = findViewById(R.id.check_acc_symbol);
         isArchive = findViewById(R.id.check_acc_archive);
 
+        btnDelete = findViewById(R.id.check_navigation_delete_btn);
+        btnDelete.setOnClickListener(view -> delete());
+        btnFromArhive = findViewById(R.id.check_navigation_from_archive_btn);
+        btnFromArhive.setOnClickListener(view -> restore());
+
+        findViewById(R.id.check_navigation_edit_btn).setOnClickListener(
+                view -> AddCheckActivity.start(CheckActivity.this, mCheckId));
+        findViewById(R.id.setting_navigation_back_btn)
+                .setOnClickListener(view -> finish());
         findViewById(R.id.check_fab).setOnClickListener(view -> {
             Intent starter = new Intent(getBaseContext(), TransactionActivity.class);
             starter.putExtra(TransactionActivity.EXTRA_ACCOUNT_ID, mCheckId);
             startActivity(starter);
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.check_nav_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.check_nav_edit_btn) {
-            AddCheckActivity.start(this, mCheckId);
-        }
-        return true;
     }
 
     // show transaction for this account
@@ -103,12 +96,45 @@ public class CheckActivity extends AppCompatActivity {
         checkName.setText(accountModel.getName());
         checkType.setText(accountModel.getType());
         checkBalance.setText(String.valueOf(accountModel.getSum()));
+
         if (accountModel.isArhive()) {
             isArchive.setVisibility(View.VISIBLE);
             isArchive.setText(R.string.check_arсhive_txt);
+            btnFromArhive.setVisibility(View.VISIBLE);
+            btnDelete.setVisibility(View.GONE);
         } else {
             isArchive.setVisibility(View.INVISIBLE);
+            btnDelete.setVisibility(View.VISIBLE);
+            btnFromArhive.setVisibility(View.GONE);
         }
         checkSymbol.setText(accountModel.getSymbol());
+    }
+
+    // restore from archive account logic
+    private void restore() {
+        if (mCheckId != DEFAULT_CHECK_ID) {
+            AppExecutors.getsInstance().diskIO().execute(
+                    () -> mDb.accountDao().fromArchiveAccountById(mCheckId));
+        }
+    }
+
+    // archive account logic
+    private void delete() {
+        if (mCheckId != DEFAULT_CHECK_ID) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setMessage(R.string.check_delete_alert_question)
+                    .setNegativeButton(R.string.check_delete_alert_negative,
+                            (dialogInterface, i) -> {
+                                if (dialogInterface != null) dialogInterface.dismiss();
+                            })
+                    .setPositiveButton(R.string.check_delete_alert_positive,
+                            (dialogInterface, i) -> {
+                                // delete query
+                                AppExecutors.getsInstance().diskIO().execute(
+                                        () -> mDb.accountDao().archiveAccountById(mCheckId));
+
+                            });
+            builder.create().show();
+        }
     }
 }
