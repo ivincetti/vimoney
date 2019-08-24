@@ -4,19 +4,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
+import java.util.List;
+
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.data.AppExecutors;
 import ru.vincetti.vimoney.data.models.AccountModel;
+import ru.vincetti.vimoney.data.models.CurrencyModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 
 public class AddCheckActivity extends AppCompatActivity {
@@ -25,11 +31,14 @@ public class AddCheckActivity extends AppCompatActivity {
 
     private int mCheckId = DEFAULT_CHECK_ID;
     private int mSum = 0;
+    private String currencySymbols;
+    private int checkCurrency;
     private AppDatabase mDb;
     private EditText checkName;
     private Button btnSave;
     private ImageView btnDelete, btnFromArhive;
     private RadioGroup typeRadioGroup;
+    Spinner curSpinner;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, AddCheckActivity.class);
@@ -64,6 +73,7 @@ public class AddCheckActivity extends AppCompatActivity {
                     checkLD.removeObserver(this);
                     checkName.setText(String.valueOf(accModel.getName()));
                     mSum = accModel.getSum();
+                    checkCurrency = accModel.getCurrency();
                     typeLoad(accModel.getType());
 
                     if (accModel.isArhive()) {
@@ -71,9 +81,11 @@ public class AddCheckActivity extends AppCompatActivity {
                     } else {
                         btnDelete.setVisibility(View.VISIBLE);
                     }
+                    currencyEntered();
                 }
             });
         }
+        spinnerInit();
     }
 
     private void initView() {
@@ -124,13 +136,62 @@ public class AddCheckActivity extends AppCompatActivity {
         }
     }
 
+    private void spinnerInit() {
+        curSpinner = findViewById(R.id.add_check_currency_spinner);
+        LiveData<List<CurrencyModel>> ldCurrencyList = mDb.currentDao().loadAllCurrency();
+        ldCurrencyList.observe(this, currencyModels -> {
+            // adapter init
+            ArrayAdapter<CurrencyModel> adapter =
+                    new ArrayAdapter<>(AddCheckActivity.this, R.layout.spinner_item, currencyModels);
+            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+            curSpinner.setAdapter(adapter);
+            currencyEntered();
+        });
+
+        curSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                checkCurrency = ((CurrencyModel) adapterView.getSelectedItem()).getCode();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // do nothing
+            }
+        });
+
+    }
+
+    // spinner load option selected
+    private void currencyEntered() {
+        LiveData<CurrencyModel> ldCurrency = mDb.currentDao().loadCurrencyByCode(checkCurrency);
+        ldCurrency.observe(this, new Observer<CurrencyModel>() {
+            @Override
+            public void onChanged(CurrencyModel currencyModel) {
+                ldCurrency.removeObserver(this);
+                int pos = getIndex(currencyModel);
+                curSpinner.setSelection(pos);
+            }
+        });
+    }
+
+    // get index in spinner
+    private int getIndex(CurrencyModel tmpAcc) {
+        for (int i = 0; i < curSpinner.getCount(); i++) {
+            if (curSpinner.getItemAtPosition(i).toString().equals(tmpAcc.getSymbol())) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
     // save account logic
     private void save() {
         AccountModel tmp = new AccountModel(
                 String.valueOf(checkName.getText()),
                 typeEntered(),
                 mSum,
-                810
+                checkCurrency
         );
 
         if (mCheckId != DEFAULT_CHECK_ID) {

@@ -52,4 +52,9 @@ public class CurrencyModel {
     public String getSymbol() {
         return symbol;
     }
+
+    @Override
+    public String toString() {
+        return symbol;
+    }
 }

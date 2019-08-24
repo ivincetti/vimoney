@@ -180,7 +180,7 @@ public class TransactionActivity extends AppCompatActivity {
         return TransactionModel.TRANSACTION_TYPE_INCOME;
     }
 
-    // radioButton clicked option selected
+    // spinner load option selected
     private void accountEntered() {
         if (mAccID != DEFAULT_ID) {
             LiveData<AccountModel> lAcc = mDb.accountDao().loadAccountById(mAccID);

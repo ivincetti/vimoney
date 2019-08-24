@@ -2,7 +2,77 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
     android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/add_check_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/big_padding"
+        android:hint="@string/add_check_name_hint"
+        android:inputType="text"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/text_big_numbers"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sm_padding"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/currency_name"
+            android:textSize="@dimen/text_big_numbers" />
+
+        <Spinner
+            android:id="@+id/add_check_currency_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="end"
+            />
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sm_padding"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <RadioButton
+            android:id="@+id/add_check_type_cash"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:gravity="center"
+            android:text="@string/add_check_type_cash_txt" />
+
+        <RadioButton
+            android:id="@+id/add_check_type_debit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:text="@string/add_check_type_debit_txt" />
+
+        <RadioButton
+            android:id="@+id/add_check_type_credit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:text="@string/add_check_type_credit_txt" />
+
+    </RadioGroup>
 
     <Button
         android:id="@+id/add_check_save_btn"
@@ -13,48 +83,4 @@
         android:text="@string/add_btn_save"
         android:textAllCaps="true" />
 
-    <EditText
-        android:id="@+id/add_check_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/big_padding"
-        android:hint="@string/add_check_name_hint"
-        android:inputType="text"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="@dimen/text_big_numbers"
-        android:textStyle="bold" />
-
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3">
-
-        <RadioButton
-            android:id="@+id/add_check_type_cash"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:checked="true"
-            android:text="@string/add_check_type_cash_txt" />
-
-        <RadioButton
-            android:id="@+id/add_check_type_debit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/add_check_type_debit_txt" />
-
-        <RadioButton
-            android:id="@+id/add_check_type_credit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/add_check_type_credit_txt" />
-
-    </RadioGroup>
 </LinearLayout>
