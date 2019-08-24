@@ -11,20 +11,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.data.models.AccountModel;
+import ru.vincetti.vimoney.data.models.AccountListModel;
 
 public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.CardsViewHolder> {
-    private List<AccountModel> data;
+    private List<AccountListModel> data;
     private OnCardClickListener mListener;
 
     class CardsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView accName, accType, accBalance;
+        TextView accName, accType, accBalance, accSymbol;
 
         public CardsViewHolder(@NonNull View itemView, OnCardClickListener listener) {
             super(itemView);
             accName = itemView.findViewById(R.id.home_acc_name);
             accType = itemView.findViewById(R.id.home_acc_type);
             accBalance = itemView.findViewById(R.id.home_acc_balance);
+            accSymbol = itemView.findViewById(R.id.home_acc_symbol);
             itemView.setOnClickListener(this);
         }
 
@@ -48,10 +49,11 @@ public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull CardsViewHolder holder, int position) {
-        AccountModel tmpAcc = data.get(position);
+        AccountListModel tmpAcc = data.get(position);
         holder.accName.setText(tmpAcc.getName());
         holder.accType.setText(tmpAcc.getType());
         holder.accBalance.setText(String.valueOf(tmpAcc.getSum()));
+        holder.accSymbol.setText(tmpAcc.getSymbol());
     }
 
     @Override
@@ -62,7 +64,7 @@ public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.
         return data.size();
     }
 
-    public void setList(List<AccountModel> accList) {
+    public void setList(List<AccountListModel> accList) {
         data = accList;
         notifyDataSetChanged();
     }

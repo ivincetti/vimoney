@@ -52,13 +52,22 @@
             android:id="@+id/acc_balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_toStartOf="@id/acc_symbol"
             android:textColor="@color/colorTextMain"
             android:textSize="@dimen/text_big_numbers"
             android:textStyle="bold"
             tools:text="@string/home_title_acc_balance" />
+        <TextView
+            android:id="@+id/acc_symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/sm_padding"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:textColor="@color/colorTextMain"
+            android:textSize="@dimen/text_big_numbers"
+            android:textStyle="bold"
+            tools:text="@string/currency_ruble_symbol" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

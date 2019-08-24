@@ -11,14 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.data.models.AccountModel;
+import ru.vincetti.vimoney.data.models.AccountListModel;
 
 public class AllCardsListRVAdapter extends RecyclerView.Adapter<AllCardsListRVAdapter.CardsViewHolder> {
-    private List<AccountModel> data;
+    private List<AccountListModel> data;
     private OnCardClickListener mListener;
 
     class CardsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView accName, accType, accBalance, isArchive;
+        TextView accName, accType, accBalance, isArchive, accSymbol;
 
         public CardsViewHolder(@NonNull View itemView, OnCardClickListener listener) {
             super(itemView);
@@ -26,6 +26,7 @@ public class AllCardsListRVAdapter extends RecyclerView.Adapter<AllCardsListRVAd
             accType = itemView.findViewById(R.id.acc_type);
             accBalance = itemView.findViewById(R.id.acc_balance);
             isArchive = itemView.findViewById(R.id.acc_archive);
+            accSymbol = itemView.findViewById(R.id.acc_symbol);
             itemView.setOnClickListener(this);
         }
 
@@ -49,10 +50,11 @@ public class AllCardsListRVAdapter extends RecyclerView.Adapter<AllCardsListRVAd
 
     @Override
     public void onBindViewHolder(@NonNull CardsViewHolder holder, int position) {
-        AccountModel tmpAcc = data.get(position);
+        AccountListModel tmpAcc = data.get(position);
         holder.accName.setText(tmpAcc.getName());
         holder.accType.setText(tmpAcc.getType());
         holder.accBalance.setText(String.valueOf(tmpAcc.getSum()));
+        holder.accSymbol.setText(tmpAcc.getSymbol());
         if(!tmpAcc.isArhive()){
             holder.isArchive.setVisibility(View.INVISIBLE);
         } else {
@@ -68,7 +70,7 @@ public class AllCardsListRVAdapter extends RecyclerView.Adapter<AllCardsListRVAd
         return data.size();
     }
 
-    public void setList(List<AccountModel> accList) {
+    public void setList(List<AccountListModel> accList) {
         data = accList;
         notifyDataSetChanged();
     }

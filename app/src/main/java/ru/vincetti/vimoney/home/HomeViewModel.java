@@ -6,28 +6,21 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import java.util.HashMap;
 import java.util.List;
 
-import ru.vincetti.vimoney.data.models.AccountModel;
+import ru.vincetti.vimoney.data.models.AccountListModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 
 public class HomeViewModel extends AndroidViewModel {
-    private LiveData<List<AccountModel>> accList;
+    private LiveData<List<AccountListModel>> accList;
 
     public HomeViewModel(@NonNull Application application) {
         super(application);
         accList = AppDatabase.getInstance(
-                this.getApplication()).accountDao().loadNotArhiveAccounts();
+                this.getApplication()).accountDao().loadNotArhiveAccountsFull();
     }
 
-    public LiveData<List<AccountModel>> getAccounts() {
+    public LiveData<List<AccountListModel>> getAccounts() {
         return accList;
-    }
-
-    private void getHash(HashMap<Integer, String> hash, int[] intArray, String[] stringArray) {
-        for (int i = 0; i < intArray.length; i++) {
-            hash.put(intArray[i], stringArray[i]);
-        }
     }
 }

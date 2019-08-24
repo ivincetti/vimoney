@@ -177,9 +177,11 @@ public class AddCheckActivity extends AppCompatActivity {
 
     // get index in spinner
     private int getIndex(CurrencyModel tmpAcc) {
-        for (int i = 0; i < curSpinner.getCount(); i++) {
-            if (curSpinner.getItemAtPosition(i).toString().equals(tmpAcc.getSymbol())) {
-                return i;
+        if(tmpAcc != null){
+            for (int i = 0; i < curSpinner.getCount(); i++) {
+                if (curSpinner.getItemAtPosition(i).toString().equals(tmpAcc.getSymbol())) {
+                    return i;
+                }
             }
         }
         return 0;

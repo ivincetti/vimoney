@@ -14,7 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LiveData;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.data.models.AccountModel;
+import ru.vincetti.vimoney.data.models.AccountListModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.history.HistoryFragment;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
@@ -26,7 +26,7 @@ public class CheckActivity extends AppCompatActivity {
 
     private int mCheckId = DEFAULT_CHECK_ID;
     private AppDatabase mDb;
-    private TextView checkName, checkType, checkBalance, isArchive;
+    private TextView checkName, checkType, checkBalance, isArchive, checkSymbol;
 
     public static void start(Context context, int id) {
         Intent intent = new Intent(context, CheckActivity.class);
@@ -46,7 +46,7 @@ public class CheckActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra(EXTRA_CHECK_ID)) {
             mCheckId = intent.getIntExtra(EXTRA_CHECK_ID, DEFAULT_CHECK_ID);
 
-            LiveData<AccountModel> data = mDb.accountDao().loadAccountById(mCheckId);
+            LiveData<AccountListModel> data = mDb.accountDao().loadAccountByIdFull(mCheckId);
             data.observe(this, accountModel -> loadAccount(accountModel));
             showTransactionsHistory(mCheckId);
         }
@@ -60,6 +60,7 @@ public class CheckActivity extends AppCompatActivity {
         checkName = findViewById(R.id.check_acc_name);
         checkType = findViewById(R.id.check_acc_type);
         checkBalance = findViewById(R.id.check_acc_balance);
+        checkSymbol = findViewById(R.id.check_acc_symbol);
         isArchive = findViewById(R.id.check_acc_archive);
 
         findViewById(R.id.check_fab).setOnClickListener(view -> {
@@ -98,15 +99,16 @@ public class CheckActivity extends AppCompatActivity {
     }
 
     // account data to UI
-    private void loadAccount(AccountModel accountModel) {
+    private void loadAccount(AccountListModel accountModel) {
         checkName.setText(accountModel.getName());
         checkType.setText(accountModel.getType());
         checkBalance.setText(String.valueOf(accountModel.getSum()));
-        if(accountModel.isArhive()){
+        if (accountModel.isArhive()) {
             isArchive.setVisibility(View.VISIBLE);
             isArchive.setText(R.string.check_arсhive_txt);
         } else {
             isArchive.setVisibility(View.INVISIBLE);
         }
+        checkSymbol.setText(accountModel.getSymbol());
     }
 }

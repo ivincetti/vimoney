@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.List;
 
 import ru.vincetti.vimoney.data.AppExecutors;
+import ru.vincetti.vimoney.data.models.AccountListModel;
 import ru.vincetti.vimoney.data.models.AccountModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 
@@ -45,9 +46,9 @@ public class LogicMath {
     }
 
     // Math allUser balance
-    public static int userBalanceChange(List<AccountModel> accList) {
+    public static int userBalanceChange(List<AccountListModel> accList) {
         int bal = 0;
-        for (AccountModel o : accList) {
+        for (AccountListModel o : accList) {
             bal += o.getSum();
         }
         return bal;
