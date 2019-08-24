@@ -20,7 +20,7 @@ import ru.vincetti.vimoney.data.models.TransactionModel;
         TransactionModel.class,
         ConfigModel.class,
         CurrencyModel.class},
-        version = 5, exportSchema = false)
+        version = 6, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
     private static final Object LOCK = new Object();
@@ -34,7 +34,8 @@ public abstract class AppDatabase extends RoomDatabase {
                         .addMigrations(AppDatabase.MIGRATION_1_2,
                                 AppDatabase.MIGRATION_2_3,
                                 AppDatabase.MIGRATION_3_4,
-                                AppDatabase.MIGRATION_4_5
+                                AppDatabase.MIGRATION_4_5,
+                                AppDatabase.MIGRATION_5_6
                         )
                         .build();
             }
@@ -88,6 +89,15 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void migrate(final SupportSQLiteDatabase db) {
             db.execSQL("ALTER TABLE currency ADD COLUMN symbol TEXT DEFAULT '' NOT NULL");
+        }
+    };
+
+    // add transaction columns: extrakey and extravalue, currency
+    private static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(final SupportSQLiteDatabase db) {
+            db.execSQL("ALTER TABLE transactions ADD COLUMN extra_key TEXT DEFAULT '' NOT NULL");
+            db.execSQL("ALTER TABLE transactions ADD COLUMN extra_value TEXT DEFAULT '' NOT NULL");
         }
     };
 }

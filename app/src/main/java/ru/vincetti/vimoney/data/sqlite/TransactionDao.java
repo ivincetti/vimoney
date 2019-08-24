@@ -23,7 +23,8 @@ public interface TransactionDao {
     LiveData<List<TransactionModel>> loadAllTransactions();
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol, " +
-            "transactions.sum, transactions.type, transactions.date, transactions.description " +
+            "transactions.sum, transactions.type, transactions.date, transactions.description, " +
+            "transactions.extra_key, transactions.extra_value " +
             "FROM transactions, accounts, currency " +
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +
@@ -34,7 +35,8 @@ public interface TransactionDao {
     LiveData<List<TransactionModel>> loadAllTransactionsCount(int num);
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol, " +
-            "transactions.sum, transactions.type, transactions.date, transactions.description " +
+            "transactions.sum, transactions.type, transactions.date, transactions.description, " +
+            "transactions.extra_key, transactions.extra_value " +
             "FROM transactions, accounts, currency " +
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +
@@ -45,7 +47,8 @@ public interface TransactionDao {
     LiveData<List<TransactionModel>> loadCheckTransactionsCount(int id, int num);
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol," +
-            "transactions.sum, transactions.type, transactions.date, transactions.description " +
+            "transactions.sum, transactions.type, transactions.date, transactions.description, " +
+            "transactions.extra_key, transactions.extra_value " +
             "FROM transactions, accounts, currency " +
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +

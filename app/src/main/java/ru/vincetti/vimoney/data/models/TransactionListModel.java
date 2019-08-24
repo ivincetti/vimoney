@@ -15,6 +15,10 @@ public class TransactionListModel {
     public float sum;
     @ColumnInfo(name = "account_symbol")
     public String curSymbol;
+    @ColumnInfo(name = "extra_key")
+    public String extraKey;
+    @ColumnInfo(name = "extra_value")
+    public String extraValue;
 
     public int getId() {
         return id;
@@ -57,5 +61,13 @@ public class TransactionListModel {
             }
         }
         return "-";
+    }
+
+    public String getExtraKey() {
+        return extraKey;
+    }
+
+    public String getExtraValue() {
+        return extraValue;
     }
 }
