@@ -14,6 +14,7 @@ public class TransactionModel {
     public final static int TRANSACTION_TYPE_SPENT = 2;
     public final static int TRANSACTION_TYPE_TRANSFER = 3;
     public final static int TRANSACTION_TYPE_DEBT = 4;
+    public final static int DEFAULT_ID = 0;
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -31,6 +32,19 @@ public class TransactionModel {
     @ColumnInfo(name = "extra_value")
     @NonNull
     private String extraValue;
+
+    @Ignore
+    public TransactionModel() {
+        this.id = DEFAULT_ID;
+        this.date = new Date();
+        this.accountId = DEFAULT_ID;
+        this.updatedAt = new Date();
+        this.description = "";
+        this.type = 0;
+        this.sum = DEFAULT_ID;
+        this.extraKey = "";
+        this.extraValue = "";
+    }
 
     @Ignore
     public TransactionModel(Date date, int accountId, String description, int type, float sum) {
@@ -78,20 +92,40 @@ public class TransactionModel {
         return accountId;
     }
 
+    public void setAccountId(int accountId) {
+        this.accountId = accountId;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getDate() {
         return date;
     }
 
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     public int getType() {
         return type;
     }
 
+    public void setType(int type) {
+        this.type = type;
+    }
+
     public float getSum() {
         return sum;
+    }
+
+    public void setSum(float sum) {
+        this.sum = sum;
     }
 
     public Date getUpdatedAt() {
@@ -114,5 +148,30 @@ public class TransactionModel {
 
     public void setExtraValue(@NonNull String extraValue) {
         this.extraValue = extraValue;
+    }
+
+    public void copyFrom(TransactionModel tmp) {
+        this.id = tmp.getId();
+        this.accountId = tmp.getAccountId();
+        this.description = tmp.getDescription();
+        this.date = tmp.getDate();
+        this.updatedAt = tmp.getUpdatedAt();
+        this.type = tmp.getType();
+        this.sum = tmp.getSum();
+        this.extraKey = tmp.getExtraKey();
+        this.extraValue = tmp.getExtraValue();
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionModel{" +
+                "id=" + id +
+                ", accountId=" + accountId +
+                ", description='" + description + '\'' +
+                ", date=" + date +
+                ", updatedAt=" + updatedAt +
+                ", type=" + type +
+                ", sum=" + sum +
+                '}';
     }
 }

@@ -38,9 +38,9 @@ public class LogicMath {
         Sum mSum = new Sum();
 
         AppExecutors.getsInstance().diskIO().execute(
-                () -> mSum.setSumMinus(mDb.transactionDao().loadSumIncomeByCheckId(accId)));
+                () -> mSum.setSumPlus(mDb.transactionDao().loadSumIncomeByCheckId(accId)));
         AppExecutors.getsInstance().diskIO().execute(
-                () -> mSum.setSumPlus(mDb.transactionDao().loadSumExpenseByCheckId(accId)));
+                () -> mSum.setSumMinus(mDb.transactionDao().loadSumExpenseByCheckId(accId)));
         AppExecutors.getsInstance().diskIO().execute(
                 () -> mDb.accountDao().updateSumByAccId(accId, mSum.getSum()));
     }

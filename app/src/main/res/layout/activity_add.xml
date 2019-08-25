@@ -9,13 +9,13 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
+        android:background="@color/colorBackground"
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/top_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorBackground">
+            android:layout_height="?attr/actionBarSize">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -30,6 +30,29 @@
                     android:contentDescription="@string/back_icon_description"
                     android:src="@drawable/ic_arrow_back_dark" />
 
+                <ImageView
+                    android:id="@+id/transaction_navigation_delete_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/transaction_navigation_add_btn"
+                    android:contentDescription="@string/add_transaction_button_desc"
+                    android:paddingStart="@dimen/big_padding"
+                    android:paddingEnd="@dimen/big_padding"
+                    android:src="@drawable/ic_delete_dark"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/transaction_navigation_add_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/add_transaction_button_desc"
+                    android:paddingStart="@dimen/big_padding"
+                    android:paddingEnd="@dimen/big_padding"
+                    android:src="@drawable/ic_done_dark" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -42,42 +65,23 @@
                     android:textSize="@dimen/text_st_numbers"
                     android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/transaction_navigation_delete_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toStartOf="@id/transaction_navigation_add_btn"
-                    android:contentDescription="@string/add_transaction_button_desc"
-                    android:paddingEnd="@dimen/big_padding"
-                    android:paddingStart="@dimen/big_padding"
-                    android:visibility="invisible"
-                    android:src="@drawable/ic_delete_dark" />
-
-                <ImageView
-                    android:id="@+id/transaction_navigation_add_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:contentDescription="@string/add_transaction_button_desc"
-                    android:paddingEnd="@dimen/big_padding"
-                    android:paddingStart="@dimen/big_padding"
-                    android:src="@drawable/ic_done_dark" />
-
             </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
 
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/sliding_tabs"
+            android:background="@color/colorBackground"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="horizontal" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <include layout="@layout/activity_add_content"/>
-
-    </androidx.core.widget.NestedScrollView>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
