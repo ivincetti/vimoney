@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,6 +75,15 @@ public class TransactionActivity extends AppCompatActivity {
             }
         }
         viewModel.setTransaction(mTransaction);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(
+                INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
     }
 
     private void initViews() {

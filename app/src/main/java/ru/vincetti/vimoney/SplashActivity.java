@@ -56,14 +56,13 @@ public class SplashActivity extends AppCompatActivity {
         retrofitInit();
         loadJson();
 
+        // setting in viewmodel Utils hashes
         final TransactionViewModel viewModel =
                 ViewModelProviders.of(this).get(TransactionViewModel.class);
         mDb.currentDao().loadAllCurrency().observe(this,
                 currencyModels -> viewModel.setCurrency(genCurrencyHash(currencyModels)));
-
         mDb.accountDao().loadAllAccounts().observe(this,
                 accountModels -> viewModel.setAccountNames(genAccountsHash(accountModels)));
-
         mDb.accountDao().loadNotArhiveAccounts().observe(this,
                 accountModels -> viewModel.setNotArchiveAccountNames(genAccountsHash(accountModels)));
     }

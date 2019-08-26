@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -102,9 +103,25 @@ public class TransactionSpentFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        txtSum.setFocusableInTouchMode(true);
+        txtSum.requestFocus();
+
+        // Show Keyboard
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                getActivity().INPUT_METHOD_SERVICE);
+//        imm.showSoftInput(txtSum, InputMethodManager.SHOW_IMPLICIT);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
+
     private void initViews(View view) {
         txtSum = view.findViewById(R.id.add_sum);
-        txtSum.requestFocus();
+//        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+//        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
         txtName = view.findViewById(R.id.add_desc);
         mDate = new Date();
         txtCurrency = view.findViewById(R.id.add_acc_cur);
