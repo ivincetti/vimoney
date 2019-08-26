@@ -1,6 +1,7 @@
 package ru.vincetti.vimoney.transaction;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,8 +18,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import java.text.DateFormat;
@@ -42,7 +41,8 @@ public class TransactionSpentFragment extends Fragment {
     private HashMap<Integer, String> accountNames;
     private HashMap<Integer, String> notArchiveAccountNames;
 
-    private TextView txtName, txtSum, txtDate, txtCurrency;
+    private TransactionViewModel viewModel;
+    private TextView txtName, txtSum, txtDate, txtCurrency, txtAccount;
     private Spinner accSpinner;
     private Button btnSave;
     private Date mDate;
@@ -64,29 +64,7 @@ public class TransactionSpentFragment extends Fragment {
         mTrans = new TransactionModel();
         curSymbols = new HashMap<>();
         accountNames = new HashMap<>();
-        spinnerInit(view);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        final TransactionViewModel viewModel =
-                ViewModelProviders.of(getActivity()).get(TransactionViewModel.class);
-        viewModel.getTransaction().observe(getViewLifecycleOwner(), transactionModel -> {
-            mTrans.copyFrom(transactionModel);
-            if (transactionModel.getId() != TransactionModel.DEFAULT_ID) {
-                btnSave.setText(getString(R.string.add_btn_update));
-                txtSum.setText(String.valueOf(transactionModel.getSum()));
-                txtName.setText(transactionModel.getDescription());
-                mDate = transactionModel.getDate();
-                txtDate.setText(DateFormat
-                        .getDateInstance(
-                                DateFormat.MEDIUM).format(transactionModel.getDate()
-                        ));
-                accountEntered();
-            }
-        });
+        viewModel = ViewModelProviders.of(getActivity()).get(TransactionViewModel.class);
         viewModel.getCurrencySymbols().observe(getViewLifecycleOwner(), integerStringHashMap -> {
             curSymbols = integerStringHashMap;
             Log.d("DEBUG", "init " + curSymbols.toString());
@@ -101,6 +79,35 @@ public class TransactionSpentFragment extends Fragment {
             notArchiveAccountNames = integerStringHashMap;
             Log.d("DEBUG", "active acc " + notArchiveAccountNames.toString());
         });
+
+        spinnerInit(view);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        viewModel.getTransaction().observe(getViewLifecycleOwner(), transactionModel -> {
+            mTrans.copyFrom(transactionModel);
+            Log.d("DEBUG", "acc id in Fragment " + transactionModel.getAccountId());
+            if (transactionModel.getId() != TransactionModel.DEFAULT_ID) {
+                btnSave.setText(getString(R.string.add_btn_update));
+                txtSum.setText(String.valueOf(transactionModel.getSum()));
+                txtName.setText(transactionModel.getDescription());
+                mDate = transactionModel.getDate();
+                Log.d("DEBUG", "acc id " + transactionModel.getAccountId());
+                txtAccount.setText(notArchiveAccountNames.get(transactionModel.getAccountId()));
+                Log.d("DEBUG", "acc from hash " + notArchiveAccountNames.get(transactionModel.getAccountId()));
+                txtDate.setText(DateFormat
+                        .getDateInstance(
+                                DateFormat.MEDIUM).format(transactionModel.getDate()
+                        ));
+            } else if (transactionModel.getAccountId() != TransactionModel.DEFAULT_ID) {
+                Log.d("DEBUG", "acc id " + transactionModel.getAccountId());
+                txtAccount.setText(notArchiveAccountNames.get(transactionModel.getAccountId()));
+                Log.d("DEBUG", "acc from hash " + notArchiveAccountNames.get(transactionModel.getAccountId()));
+            }
+        });
     }
 
     @Override
@@ -111,17 +118,14 @@ public class TransactionSpentFragment extends Fragment {
         txtSum.requestFocus();
 
         // Show Keyboard
+        getActivity();
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-                getActivity().INPUT_METHOD_SERVICE);
-//        imm.showSoftInput(txtSum, InputMethodManager.SHOW_IMPLICIT);
+                Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     private void initViews(View view) {
         txtSum = view.findViewById(R.id.add_sum);
-//        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
-//        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-
         txtName = view.findViewById(R.id.add_desc);
         mDate = new Date();
         txtCurrency = view.findViewById(R.id.add_acc_cur);
@@ -133,6 +137,11 @@ public class TransactionSpentFragment extends Fragment {
                 .setOnClickListener(view12 -> showDateDialog());
         btnSave = view.findViewById(R.id.add_btn);
         btnSave.setOnClickListener(view1 -> save());
+        txtAccount = view.findViewById(R.id.add_acc_name);
+        txtAccount.setOnClickListener(view13 -> {
+            accSpinner.setVisibility(View.VISIBLE);
+            accSpinner.performClick();
+        });
     }
 
     private void spinnerInit(View view) {
@@ -145,52 +154,26 @@ public class TransactionSpentFragment extends Fragment {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             // Применяем адаптер к элементу spinner
             accSpinner.setAdapter(adapter);
-            accountEntered();
-        });
 
-        accSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                int id = ((AccountModel) adapterView.getSelectedItem()).getId();
-                int code = ((AccountModel) adapterView.getSelectedItem()).getCurrency();
-                mTrans.setAccountId(id);
-                txtCurrency.setText(curSymbols.get(code));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                // do nothing
-            }
-        });
-
-    }
-
-    // spinner load option selected
-    private void accountEntered() {
-        int mAccID = mTrans.getAccountId();
-        if (mAccID != TransactionModel.DEFAULT_ID) {
-            LiveData<AccountModel> lAcc = mDb.accountDao().loadAccountById(mAccID);
-            lAcc.observe(this, new Observer<AccountModel>() {
+            accSpinner.setSelected(false);  // must
+            accSpinner.setSelection(0, true);  //must
+            accSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onChanged(AccountModel accountModel) {
-                    lAcc.removeObserver(this);
-                    int pos = getIndex(accountModel);
-                    accSpinner.setSelection(pos);
+                public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                    int id = ((AccountModel) adapterView.getSelectedItem()).getId();
+                    int code = ((AccountModel) adapterView.getSelectedItem()).getCurrency();
+                    mTrans.setAccountId(id);
+                    txtCurrency.setText(curSymbols.get(code));
+                    txtAccount.setText(notArchiveAccountNames.get(id));
+                    accSpinner.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                    accSpinner.setVisibility(View.INVISIBLE);
                 }
             });
-        }
-    }
-
-    // get index in spinner
-    private int getIndex(AccountModel tmpAcc) {
-        if (tmpAcc != null) {
-            for (int i = 0; i < accSpinner.getCount(); i++) {
-                if (accSpinner.getItemAtPosition(i).toString().equals(tmpAcc.getName())) {
-                    return i;
-                }
-            }
-        }
-        return 0;
+        });
     }
 
     // save transaction logic

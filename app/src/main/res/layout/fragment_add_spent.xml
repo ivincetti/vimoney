@@ -42,7 +42,7 @@
     </LinearLayout>
 
     <!--блок счета-->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -50,23 +50,35 @@
         android:paddingEnd="@dimen/big_padding">
 
         <ImageView
+            android:id="@+id/add_acc_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_account_dark" />
 
+        <TextView
+            android:id="@+id/add_acc_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/add_acc_image"
+            android:textSize="@dimen/text_sm_numbers"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_centerVertical="true"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:textColor="@color/colorPrimaryDark"
+            tools:text="@string/home_title_acc_name"/>
+
         <Spinner
             android:id="@+id/add_acc_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/add_acc_image"
             android:layout_gravity="center"
             android:paddingStart="@dimen/activity_horizontal_margin"
             android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/text_st_numbers"
-            tools:text="@string/home_title_acc_name"/>
+            android:visibility="invisible"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <!--блок комментария-->
     <LinearLayout

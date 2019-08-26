@@ -3,6 +3,7 @@ package ru.vincetti.vimoney.transaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -71,6 +72,7 @@ public class TransactionActivity extends AppCompatActivity {
                 });
             } else if (intent.hasExtra(EXTRA_ACCOUNT_ID)) {
                 int mAccID = intent.getIntExtra(EXTRA_ACCOUNT_ID, TransactionModel.DEFAULT_ID);
+                Log.d("DEBUG", "acc id in Activity " + mAccID);
                 mTransaction.setAccountId(mAccID);
             }
         }
