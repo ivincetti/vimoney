@@ -24,7 +24,6 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.check.CheckViewModel;
@@ -34,14 +33,11 @@ import ru.vincetti.vimoney.data.models.TransactionModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.utils.LogicMath;
 
-public class TransactionSpentFragment extends Fragment {
+public class TransactionIncomeFragment extends Fragment {
     private AppDatabase mDb;
     private TransactionModel mTrans;
-    private HashMap<Integer, String> curSymbols;
-    private HashMap<Integer, String> accountNames;
-    private HashMap<Integer, String> notArchiveAccountNames;
 
-    private TextView txtName, txtSum, txtDate, txtCurrency;
+    private TextView txtName, txtSum, txtDate;
     private Spinner accSpinner;
     private Button btnSave;
     private Date mDate;
@@ -61,8 +57,6 @@ public class TransactionSpentFragment extends Fragment {
 
         initViews(view);
         mTrans = new TransactionModel();
-        curSymbols = new HashMap<>();
-        accountNames = new HashMap<>();
         spinnerInit(view);
     }
 
@@ -86,20 +80,6 @@ public class TransactionSpentFragment extends Fragment {
                 accountEntered();
             }
         });
-        viewModel.getCurrencySymbols().observe(getViewLifecycleOwner(), integerStringHashMap -> {
-            curSymbols = integerStringHashMap;
-            Log.d("DEBUG", "init " + curSymbols.toString());
-        });
-
-        viewModel.getAccountNames().observe(getViewLifecycleOwner(), integerStringHashMap -> {
-            accountNames = integerStringHashMap;
-            Log.d("DEBUG", "All acc " + accountNames.toString());
-        });
-
-        viewModel.getNotArchiveAccountNames().observe(getViewLifecycleOwner(), integerStringHashMap -> {
-            notArchiveAccountNames = integerStringHashMap;
-            Log.d("DEBUG", "active acc " + notArchiveAccountNames.toString());
-        });
     }
 
     private void initViews(View view) {
@@ -107,8 +87,6 @@ public class TransactionSpentFragment extends Fragment {
         txtSum.requestFocus();
         txtName = view.findViewById(R.id.add_desc);
         mDate = new Date();
-        txtCurrency = view.findViewById(R.id.add_acc_cur);
-
         txtDate = view.findViewById(R.id.add_date_txt);
         txtDate.setText(DateFormat
                 .getDateInstance(DateFormat.MEDIUM).format(mDate));
@@ -134,10 +112,7 @@ public class TransactionSpentFragment extends Fragment {
         accSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                int id = ((AccountModel) adapterView.getSelectedItem()).getId();
-                int code = ((AccountModel) adapterView.getSelectedItem()).getCurrency();
-                mTrans.setAccountId(id);
-                txtCurrency.setText(curSymbols.get(code));
+                mTrans.setAccountId(((AccountModel) adapterView.getSelectedItem()).getId());
             }
 
             @Override
@@ -182,7 +157,7 @@ public class TransactionSpentFragment extends Fragment {
         if (mTrans.getAccountId() != TransactionModel.DEFAULT_ID) {
             mTrans.setDescription(String.valueOf(txtName.getText()));
             mTrans.setDate(mDate);
-            mTrans.setType(TransactionModel.TRANSACTION_TYPE_SPENT);
+            mTrans.setType(TransactionModel.TRANSACTION_TYPE_INCOME);
             mTrans.setSum(Float.valueOf(txtSum.getText().toString()));
 
             if (mTrans.getId() != TransactionModel.DEFAULT_ID) {

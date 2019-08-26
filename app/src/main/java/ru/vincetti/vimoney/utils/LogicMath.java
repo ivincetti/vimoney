@@ -6,7 +6,6 @@ import java.util.List;
 
 import ru.vincetti.vimoney.data.AppExecutors;
 import ru.vincetti.vimoney.data.models.AccountListModel;
-import ru.vincetti.vimoney.data.models.AccountModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 
 public class LogicMath {

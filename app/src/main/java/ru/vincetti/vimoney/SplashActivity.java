@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import java.sql.Date;
 import java.util.List;
@@ -31,9 +32,12 @@ import ru.vincetti.vimoney.data.models.json.TransactionsItem;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.data.sqlite.VimonContract;
 import ru.vincetti.vimoney.home.HomeActivity;
+import ru.vincetti.vimoney.transaction.TransactionViewModel;
 
 import static ru.vincetti.vimoney.data.sqlite.VimonContract.ConfigEntry.CONFIG_KEY_NAME_USER_NAME;
 import static ru.vincetti.vimoney.utils.LogicMath.accountBalanceUpdateById;
+import static ru.vincetti.vimoney.utils.Utils.genAccountsHash;
+import static ru.vincetti.vimoney.utils.Utils.genCurrencyHash;
 
 public class SplashActivity extends AppCompatActivity {
     private final String LOG_TAG = "SPLASH_DEBUG";
@@ -51,6 +55,17 @@ public class SplashActivity extends AppCompatActivity {
         mDb = AppDatabase.getInstance(this);
         retrofitInit();
         loadJson();
+
+        final TransactionViewModel viewModel =
+                ViewModelProviders.of(this).get(TransactionViewModel.class);
+        mDb.currentDao().loadAllCurrency().observe(this,
+                currencyModels -> viewModel.setCurrency(genCurrencyHash(currencyModels)));
+
+        mDb.accountDao().loadAllAccounts().observe(this,
+                accountModels -> viewModel.setAccountNames(genAccountsHash(accountModels)));
+
+        mDb.accountDao().loadNotArhiveAccounts().observe(this,
+                accountModels -> viewModel.setNotArchiveAccountNames(genAccountsHash(accountModels)));
     }
 
     private void retrofitInit() {
