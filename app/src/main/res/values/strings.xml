@@ -93,6 +93,7 @@
     <string name="back_icon_description">кнопка назад</string>
     <string name="settings_check_settings_btn">настройки счетов</string>
     <string name="add_check_no_account_warning">пожалуйста, выберите счет</string>
+    <string name="add_check_no_sum_warning">пожалуйста, введите сумму</string>
     <!--Currency-->
     <string name="currency_name">валюта</string>
     <string name="currency_name_ruble">рубль</string>

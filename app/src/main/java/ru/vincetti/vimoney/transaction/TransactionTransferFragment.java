@@ -96,7 +96,7 @@ public class TransactionTransferFragment extends TransactionFragment implements 
     @Override
         // save transaction logic
     void save(int typeAction) {
-        if (mTrans.getAccountId() != TransactionModel.DEFAULT_ID) {
+        if (mTrans.getAccountId() != TransactionModel.DEFAULT_ID && accIdTo != TransactionModel.DEFAULT_ID && !txtSumTo.getText().toString().equals("")) {
             mTrans.setDescription(String.valueOf(txtName.getText()));
             mTrans.setDate(mDate);
             mTrans.setType(typeAction);
@@ -137,7 +137,7 @@ public class TransactionTransferFragment extends TransactionFragment implements 
         AppExecutors.getsInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                Log.d("DEBUG","работаем с записью " + nestedTrans.getId());
+                Log.d("DEBUG", "работаем с записью " + nestedTrans.getId());
                 //mDb.transactionDao().updateTransaction(nestedTrans);
             }
         });
