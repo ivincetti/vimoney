@@ -105,6 +105,7 @@ public class TransactionTransferFragment extends TransactionFragment implements 
                 // new transaction
                 transferInsert();
             }
+            // TODO update balance for 3 account (was in nested)
             // update balance for current (accId) account
             AppExecutors.getsInstance().diskIO().execute(
                     () -> LogicMath.accountBalanceUpdateById(getActivity(), mTrans.getAccountId()));
@@ -132,10 +133,8 @@ public class TransactionTransferFragment extends TransactionFragment implements 
 
         AppExecutors.getsInstance().diskIO().execute(
                 () -> mDb.transactionDao().updateTransaction(nestedTrans));
-        AppExecutors.getsInstance().diskIO().execute(() -> {
-            Log.d("DEBUG", "before save " + mTrans.toString());
-            mDb.transactionDao().updateTransaction(mTrans);
-        });
+        AppExecutors.getsInstance().diskIO().execute(
+                () -> mDb.transactionDao().updateTransaction(mTrans));
     }
 
     private void transferInsert() {

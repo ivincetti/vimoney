@@ -130,12 +130,8 @@ public class TransactionActivity extends AppCompatActivity {
                             })
                     .setPositiveButton(R.string.transaction_delete_alert_positive,
                             (dialogInterface, i) -> {
-                                Log.d("DEBUG", "extraKey is " + mTransaction.getExtraKey());
-                                if (mTransaction.getExtraKey().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)) {
-//                                        && Integer.valueOf(mTransaction.getExtraValue()) > 0) {
-                                    Log.d("DEBUG", "tr id is " + mTransaction.getId());
-                                    Log.d("DEBUG", "extraValue value string is " + mTransaction.getExtraValue());
-                                    Log.d("DEBUG", "extraValue value int is " + Integer.valueOf(mTransaction.getExtraValue()));
+                                if (mTransaction.getExtraKey().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)
+                                        && Integer.valueOf(mTransaction.getExtraValue()) > 0) {
                                     // delete nested
                                     AppExecutors.getsInstance().diskIO().execute(
                                             () -> mDb.transactionDao().deleteTransactionById(Integer.valueOf(mTransaction.getExtraValue())));
