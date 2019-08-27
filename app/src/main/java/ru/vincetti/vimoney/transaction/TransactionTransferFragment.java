@@ -1,7 +1,6 @@
 package ru.vincetti.vimoney.transaction;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import ru.vincetti.vimoney.R;
@@ -21,6 +21,7 @@ import ru.vincetti.vimoney.check.CheckViewModel;
 import ru.vincetti.vimoney.data.AppExecutors;
 import ru.vincetti.vimoney.data.models.AccountModel;
 import ru.vincetti.vimoney.data.models.TransactionModel;
+import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.utils.LogicMath;
 
 public class TransactionTransferFragment extends TransactionFragment implements TransactionFragmentInterface {
@@ -29,6 +30,8 @@ public class TransactionTransferFragment extends TransactionFragment implements 
     private Spinner accSpinnerTo;
     private int accIdTo = TransactionModel.DEFAULT_ID;
     private long idTo = TransactionModel.DEFAULT_ID;
+    private int accOld, accNew;
+    private TransactionModel nestedTrans;
 
     @Nullable
     @Override
@@ -46,11 +49,28 @@ public class TransactionTransferFragment extends TransactionFragment implements 
             accSpinnerTo.performClick();
         });
 
+        nestedTrans = new TransactionModel();
         spinnerToInit(view);
     }
 
     @Override
     public void initFragmentLogic() {
+        accOld = mTrans.getAccountId();
+        if (mTrans.getExtraKey().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)
+                && Integer.valueOf(mTrans.getExtraValue()) != TransactionModel.DEFAULT_ID) {
+            LiveData<TransactionModel> trTransfer = AppDatabase.getInstance(getActivity()).transactionDao()
+                    .loadTransactionById(Integer.valueOf(mTrans.getExtraValue()));
+            trTransfer.observe(getActivity(),
+                    transactionModel -> {
+                        if (transactionModel != null) {
+                            nestedTrans.copyFrom(transactionModel);
+                            accNew = nestedTrans.getAccountId();
+                            txtSumTo.setText(String.valueOf(transactionModel.getSum()));
+                            txtAccountTo.setText(notArchiveAccountNames.get(transactionModel.getAccountId()));
+                            txtCurrencyTo.setText(curSymbolsId.get(transactionModel.getAccountId()));
+                        }
+                    });
+        }
     }
 
     @Override
@@ -98,6 +118,15 @@ public class TransactionTransferFragment extends TransactionFragment implements 
             mTrans.setType(typeAction);
             mTrans.setSum(Float.valueOf(txtSum.getText().toString()));
 
+            mTrans.setExtraKey("transfer_transaction_id");
+            nestedTrans.setSum(Float.valueOf(txtSumTo.getText().toString()));
+            nestedTrans.setAccountId(accIdTo);
+            nestedTrans.setExtraKey(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY);
+            nestedTrans.setExtraValue(String.valueOf(mTrans.getId()));
+            nestedTrans.setDate(mDate);
+            nestedTrans.setType(TransactionModel.TRANSACTION_TYPE_INCOME);
+            nestedTrans.setSystem(true);
+
             if (mTrans.getId() != TransactionModel.DEFAULT_ID) {
                 // update logic
                 transferUpdate();
@@ -105,12 +134,20 @@ public class TransactionTransferFragment extends TransactionFragment implements 
                 // new transaction
                 transferInsert();
             }
-            // TODO update balance for 3 account (was in nested)
             // update balance for current (accId) account
             AppExecutors.getsInstance().diskIO().execute(
                     () -> LogicMath.accountBalanceUpdateById(getActivity(), mTrans.getAccountId()));
             AppExecutors.getsInstance().diskIO().execute(
                     () -> LogicMath.accountBalanceUpdateById(getActivity(), accIdTo));
+            // update balance for account updated
+            if (mTrans.getAccountId() != accOld) {
+                AppExecutors.getsInstance().diskIO().execute(
+                        () -> LogicMath.accountBalanceUpdateById(getActivity(), accOld));
+            }
+            if (accIdTo != accNew) {
+                AppExecutors.getsInstance().diskIO().execute(
+                        () -> LogicMath.accountBalanceUpdateById(getActivity(), accNew));
+            }
 
             getActivity().finish();
         } else {
@@ -119,18 +156,7 @@ public class TransactionTransferFragment extends TransactionFragment implements 
     }
 
     private void transferUpdate() {
-        mTrans.setExtraKey("transfer_transaction_id");
-
-        TransactionModel nestedTrans = new TransactionModel();
         nestedTrans.setId(Integer.valueOf(mTrans.getExtraValue()));
-        nestedTrans.setSum(Float.valueOf(txtSumTo.getText().toString()));
-        nestedTrans.setAccountId(accIdTo);
-        nestedTrans.setExtraKey(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY);
-        nestedTrans.setExtraValue(String.valueOf(mTrans.getId()));
-        nestedTrans.setDate(mDate);
-        nestedTrans.setType(TransactionModel.TRANSACTION_TYPE_INCOME);
-        nestedTrans.setSystem(true);
-
         AppExecutors.getsInstance().diskIO().execute(
                 () -> mDb.transactionDao().updateTransaction(nestedTrans));
         AppExecutors.getsInstance().diskIO().execute(
@@ -138,18 +164,6 @@ public class TransactionTransferFragment extends TransactionFragment implements 
     }
 
     private void transferInsert() {
-        mTrans.setExtraKey("transfer_transaction_id");
-
-        TransactionModel nestedTrans = new TransactionModel();
-        nestedTrans.setSum(Float.valueOf(txtSumTo.getText().toString()));
-
-        nestedTrans.setAccountId(accIdTo);
-        nestedTrans.setExtraKey(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY);
-        nestedTrans.setType(TransactionModel.TRANSACTION_TYPE_INCOME);
-        nestedTrans.setDate(mDate);
-        nestedTrans.setExtraValue(String.valueOf(mTrans.getId()));
-        nestedTrans.setSystem(true);
-
         AppExecutors.getsInstance().diskIO().execute(
                 () -> idTo = mDb.transactionDao().insertTransaction(nestedTrans));
 

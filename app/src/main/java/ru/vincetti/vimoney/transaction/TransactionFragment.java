@@ -55,8 +55,6 @@ public class TransactionFragment extends Fragment {
 
         initViews(view);
         mTrans = new TransactionModel();
-        curSymbolsId = new HashMap<>();
-        accountNames = new HashMap<>();
         viewModel = ViewModelProviders.of(getActivity()).get(TransactionViewModel.class);
         viewModel.getCurrencyIdSymbols().observe(getViewLifecycleOwner(), integerStringHashMap -> {
             curSymbolsId = integerStringHashMap;

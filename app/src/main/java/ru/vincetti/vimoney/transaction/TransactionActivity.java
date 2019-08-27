@@ -30,6 +30,7 @@ public class TransactionActivity extends AppCompatActivity {
     private AppDatabase mDb;
     private int mAccID = TransactionModel.DEFAULT_ID;
     private int mTransId = TransactionModel.DEFAULT_ID;
+    private int accTransferTo = TransactionModel.DEFAULT_ID;
 
     ViewPager vPager;
     TransactionModel mTransaction;
@@ -68,6 +69,9 @@ public class TransactionActivity extends AppCompatActivity {
                         typeLoad(transactionModel.getType());
                         mAccID = transactionModel.getAccountId();
                         mTransaction.copyFrom(transactionModel);
+                        if(transactionModel.getExtraValue().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)){
+                            accTransferTo = Integer.valueOf(transactionModel.getExtraValue());
+                        }
                     }
                 });
             } else if (intent.hasExtra(EXTRA_ACCOUNT_ID)) {
@@ -135,7 +139,11 @@ public class TransactionActivity extends AppCompatActivity {
                                     // delete nested
                                     AppExecutors.getsInstance().diskIO().execute(
                                             () -> mDb.transactionDao().deleteTransactionById(Integer.valueOf(mTransaction.getExtraValue())));
-                                    // TODO update balance for nested account
+                                    if(accTransferTo != TransactionModel.DEFAULT_ID){
+                                        // update balance for nested transfer account
+                                        AppExecutors.getsInstance().diskIO().execute(
+                                                () -> LogicMath.accountBalanceUpdateById(getApplicationContext(), accTransferTo));
+                                    }
                                 }
                                 // delete query
                                 AppExecutors.getsInstance().diskIO().execute(
