@@ -96,20 +96,10 @@ public class TransactionActivity extends AppCompatActivity {
         vPager.setAdapter(new TabsFragmentPagerAdapter(getSupportFragmentManager()));
         tabLayout.setupWithViewPager(vPager);
 
-        findViewById(R.id.transaction_navigation_add_btn)
-                .setOnClickListener(view -> typeEntered());
-//        findViewById(R.id.transaction_navigation_add_btn)
-//                .setOnClickListener(view -> save());
         findViewById(R.id.transaction_navigation_delete_btn)
                 .setOnClickListener(view -> delete());
         findViewById(R.id.setting_navigation_back_btn).setOnClickListener(
                 view -> showUnsavedDialog());
-    }
-
-    // radioButton clicked option selected
-    private int typeEntered() {
-        vPager.getCurrentItem();
-        return TransactionModel.TRANSACTION_TYPE_INCOME;
     }
 
     // radioButton option load
@@ -121,41 +111,14 @@ public class TransactionActivity extends AppCompatActivity {
             case TransactionModel.TRANSACTION_TYPE_INCOME:
                 vPager.setCurrentItem(1, true);
                 break;
+            case TransactionModel.TRANSACTION_TYPE_TRANSFER:
+                vPager.setCurrentItem(2, true);
+                break;
+            case TransactionModel.TRANSACTION_TYPE_DEBT:
+                vPager.setCurrentItem(3, true);
+                break;
         }
     }
-
-//    // save transaction logic
-//    private void save() {
-//        Log.d("DEBUG", "before save " + mTransaction.toString());
-//        if (mTransaction.getAccountId() != TransactionModel.DEFAULT_ID) {
-//            TransactionModel tmp = new TransactionModel(
-//                    mAccID,
-//                    String.valueOf(txtName.getText()),
-//                    mDate,
-//                    new Date(),
-//                    typeEntered(),
-//                    Float.valueOf(txtSum.getText().toString())
-//            );
-//
-//            if (mTransId != DEFAULT_ID) {
-//                // update logic
-//                tmp.setId(mTransId);
-//                AppExecutors.getsInstance().diskIO().execute(
-//                        () -> mDb.transactionDao().updateTransaction(tmp));
-//            } else {
-//                // new transaction
-//                AppExecutors.getsInstance().diskIO().execute(
-//                        () -> mDb.transactionDao().insertTransaction(tmp));
-//            }
-//            // update balance for current (accId) account
-//            AppExecutors.getsInstance().diskIO().execute(
-//                    () -> LogicMath.accountBalanceUpdateById(getApplicationContext(), mAccID));
-//
-//            finish();
-//        } else {
-//            Toast.makeText(this, getResources().getString(R.string.add_check_no_account_warning), Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
     // delete transaction logic
     private void delete() {
