@@ -130,18 +130,11 @@ public class TransactionTransferFragment extends TransactionFragment implements 
         nestedTrans.setType(TransactionModel.TRANSACTION_TYPE_INCOME);
         nestedTrans.setSystem(true);
 
-        AppExecutors.getsInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                mDb.transactionDao().updateTransaction(nestedTrans);
-            }
-        });
-        AppExecutors.getsInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("DEBUG", "before save " + mTrans.toString());
-                mDb.transactionDao().updateTransaction(mTrans);
-            }
+        AppExecutors.getsInstance().diskIO().execute(
+                () -> mDb.transactionDao().updateTransaction(nestedTrans));
+        AppExecutors.getsInstance().diskIO().execute(() -> {
+            Log.d("DEBUG", "before save " + mTrans.toString());
+            mDb.transactionDao().updateTransaction(mTrans);
         });
     }
 
