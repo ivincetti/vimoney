@@ -12,6 +12,7 @@ interface TransactionFragmentInterface {
     View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState);
     // views initialization
     void initFragmentViews(View view);
+    void initFragmentLogic();
     // save transaction logic
     void setTypeAction();
 }

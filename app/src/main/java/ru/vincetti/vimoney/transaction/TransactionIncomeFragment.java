@@ -25,6 +25,11 @@ public class TransactionIncomeFragment extends TransactionFragment implements Tr
     }
 
     @Override
+    public void initFragmentLogic() {
+
+    }
+
+    @Override
     public void setTypeAction() {
         typeAction = TransactionModel.TRANSACTION_TYPE_INCOME;
     }

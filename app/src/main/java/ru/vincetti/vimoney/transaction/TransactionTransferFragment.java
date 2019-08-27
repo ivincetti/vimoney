@@ -38,21 +38,6 @@ public class TransactionTransferFragment extends TransactionFragment implements 
 
     @Override
     public void initFragmentViews(View view) {
-        initViewTransfer(view);
-        spinnerToInit(view);
-        if (mTrans.getId() != TransactionModel.DEFAULT_ID) {
-            Log.d("DEBUG", "LOAD date transfer "
-                    + mTrans.getExtraKey() + " "
-                    + mTrans.getExtraValue());
-        }
-    }
-
-    @Override
-    public void setTypeAction() {
-        typeAction = TransactionModel.TRANSACTION_TYPE_TRANSFER;
-    }
-
-    private void initViewTransfer(View view) {
         txtSumTo = view.findViewById(R.id.add_sum_to);
         txtCurrencyTo = view.findViewById(R.id.add_acc_cur_to);
         txtAccountTo = view.findViewById(R.id.add_acc_name_to);
@@ -60,6 +45,17 @@ public class TransactionTransferFragment extends TransactionFragment implements 
             accSpinnerTo.setVisibility(View.VISIBLE);
             accSpinnerTo.performClick();
         });
+
+        spinnerToInit(view);
+    }
+
+    @Override
+    public void initFragmentLogic() {
+    }
+
+    @Override
+    public void setTypeAction() {
+        typeAction = TransactionModel.TRANSACTION_TYPE_TRANSFER;
     }
 
     private void spinnerToInit(View view) {
@@ -137,8 +133,7 @@ public class TransactionTransferFragment extends TransactionFragment implements 
         AppExecutors.getsInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                Log.d("DEBUG", "работаем с записью " + nestedTrans.getId());
-                //mDb.transactionDao().updateTransaction(nestedTrans);
+                mDb.transactionDao().updateTransaction(nestedTrans);
             }
         });
         AppExecutors.getsInstance().diskIO().execute(new Runnable() {

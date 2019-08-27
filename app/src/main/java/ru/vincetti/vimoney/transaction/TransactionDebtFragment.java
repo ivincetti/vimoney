@@ -25,6 +25,11 @@ public class TransactionDebtFragment extends TransactionFragment implements Tran
     }
 
     @Override
+    public void initFragmentLogic() {
+
+    }
+
+    @Override
     public void setTypeAction() {
         typeAction = TransactionModel.TRANSACTION_TYPE_DEBT;
     }

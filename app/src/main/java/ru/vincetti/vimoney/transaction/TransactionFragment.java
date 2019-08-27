@@ -69,7 +69,6 @@ public class TransactionFragment extends Fragment {
         viewModel.getNotArchiveAccountNames().observe(getViewLifecycleOwner(), integerStringHashMap -> {
             notArchiveAccountNames = integerStringHashMap;
         });
-
         spinnerInit(view);
         initFragmentViews(view);
     }
@@ -92,9 +91,13 @@ public class TransactionFragment extends Fragment {
                         .getDateInstance(
                                 DateFormat.MEDIUM).format(transactionModel.getDate()
                         ));
+                initFragmentLogic();
             } else if (transactionModel.getAccountId() != TransactionModel.DEFAULT_ID) {
                 txtAccount.setText(notArchiveAccountNames.get(transactionModel.getAccountId()));
                 txtCurrency.setText(curSymbolsId.get(transactionModel.getAccountId()));
+                initFragmentLogic();
+            } else {
+                initFragmentLogic();
             }
         });
     }
@@ -135,6 +138,10 @@ public class TransactionFragment extends Fragment {
 
     void initFragmentViews(View view) {
     }
+
+    void initFragmentLogic() {
+    }
+
     void setTypeAction() {}
 
     void spinnerInit(View view) {

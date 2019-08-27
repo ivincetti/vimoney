@@ -25,6 +25,10 @@ public class TransactionSpentFragment extends TransactionFragment implements Tra
     }
 
     @Override
+    public void initFragmentLogic() {
+    }
+
+    @Override
     public void setTypeAction() {
         typeAction = TransactionModel.TRANSACTION_TYPE_SPENT;
     }
