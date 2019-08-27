@@ -175,6 +175,7 @@ public class TransactionTransferFragment extends TransactionFragment implements 
         AppExecutors.getsInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
+                mTrans.setExtraValue(String.valueOf(idTo));
                 Log.d("DEBUG", "before save " + mTrans.toString());
                 mDb.transactionDao().insertTransaction(mTrans);
             }
