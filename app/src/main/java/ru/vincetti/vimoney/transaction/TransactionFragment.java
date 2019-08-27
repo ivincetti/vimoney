@@ -36,7 +36,7 @@ public class TransactionFragment extends Fragment {
     int typeAction;
     AppDatabase mDb;
     TransactionModel mTrans;
-    HashMap<Integer, String> curSymbols;
+    HashMap<Integer, String> curSymbolsId;
     HashMap<Integer, String> accountNames;
     HashMap<Integer, String> notArchiveAccountNames;
 
@@ -54,13 +54,12 @@ public class TransactionFragment extends Fragment {
         mDb = AppDatabase.getInstance(getActivity());
 
         initViews(view);
-        initFragmentViews(view);
         mTrans = new TransactionModel();
-        curSymbols = new HashMap<>();
+        curSymbolsId = new HashMap<>();
         accountNames = new HashMap<>();
         viewModel = ViewModelProviders.of(getActivity()).get(TransactionViewModel.class);
-        viewModel.getCurrencySymbols().observe(getViewLifecycleOwner(), integerStringHashMap -> {
-            curSymbols = integerStringHashMap;
+        viewModel.getCurrencyIdSymbols().observe(getViewLifecycleOwner(), integerStringHashMap -> {
+            curSymbolsId = integerStringHashMap;
         });
 
         viewModel.getAccountNames().observe(getViewLifecycleOwner(), integerStringHashMap -> {
@@ -72,6 +71,7 @@ public class TransactionFragment extends Fragment {
         });
 
         spinnerInit(view);
+        initFragmentViews(view);
     }
 
     @Override
@@ -87,12 +87,14 @@ public class TransactionFragment extends Fragment {
                 txtName.setText(transactionModel.getDescription());
                 mDate = transactionModel.getDate();
                 txtAccount.setText(notArchiveAccountNames.get(transactionModel.getAccountId()));
+                txtCurrency.setText(curSymbolsId.get(transactionModel.getAccountId()));
                 txtDate.setText(DateFormat
                         .getDateInstance(
                                 DateFormat.MEDIUM).format(transactionModel.getDate()
                         ));
             } else if (transactionModel.getAccountId() != TransactionModel.DEFAULT_ID) {
                 txtAccount.setText(notArchiveAccountNames.get(transactionModel.getAccountId()));
+                txtCurrency.setText(curSymbolsId.get(transactionModel.getAccountId()));
             }
         });
     }
@@ -152,9 +154,8 @@ public class TransactionFragment extends Fragment {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                     int id = ((AccountModel) adapterView.getSelectedItem()).getId();
-                    int code = ((AccountModel) adapterView.getSelectedItem()).getCurrency();
                     mTrans.setAccountId(id);
-                    txtCurrency.setText(curSymbols.get(code));
+                    txtCurrency.setText(curSymbolsId.get(id));
                     txtAccount.setText(notArchiveAccountNames.get(id));
                     accSpinner.setVisibility(View.INVISIBLE);
                 }

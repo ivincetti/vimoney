@@ -10,7 +10,7 @@ import ru.vincetti.vimoney.data.models.TransactionModel;
 
 public class TransactionViewModel extends ViewModel {
     private static MutableLiveData<TransactionModel> mTrans;
-    private static MutableLiveData<HashMap<Integer, String>> curSymbols;
+    private static MutableLiveData<HashMap<Integer, String>> curSymbolsId;
     private static MutableLiveData<HashMap<Integer, String>> accountNames;
     private static MutableLiveData<HashMap<Integer, String>> accountNotArchiveNames;
 
@@ -25,15 +25,15 @@ public class TransactionViewModel extends ViewModel {
         return mTrans;
     }
 
-    public void setCurrency(HashMap<Integer, String> tmp) {
-        if (curSymbols == null) {
-            curSymbols = new MutableLiveData<>();
+    public void setCurrencyIdSymbols(HashMap<Integer, String> tmp) {
+        if (curSymbolsId == null) {
+            curSymbolsId = new MutableLiveData<>();
         }
-        curSymbols.setValue(tmp);
+        curSymbolsId.setValue(tmp);
     }
 
-    public LiveData<HashMap<Integer, String>> getCurrencySymbols() {
-        return curSymbols;
+    public LiveData<HashMap<Integer, String>> getCurrencyIdSymbols() {
+        return curSymbolsId;
     }
 
     public void setAccountNames(HashMap<Integer, String> tmp) {

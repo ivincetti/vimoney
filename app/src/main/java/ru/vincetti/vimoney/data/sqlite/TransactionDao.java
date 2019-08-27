@@ -15,6 +15,7 @@ import ru.vincetti.vimoney.data.models.TransactionModel;
 
 import static ru.vincetti.vimoney.data.models.TransactionModel.TRANSACTION_TYPE_INCOME;
 import static ru.vincetti.vimoney.data.models.TransactionModel.TRANSACTION_TYPE_SPENT;
+import static ru.vincetti.vimoney.data.models.TransactionModel.TRANSACTION_TYPE_TRANSFER;
 
 @Dao
 public interface TransactionDao {
@@ -28,10 +29,11 @@ public interface TransactionDao {
             "FROM transactions, accounts, currency " +
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +
+            "AND transactions.system == 0 " +
             "ORDER BY transactions.date DESC")
     LiveData<List<TransactionListModel>> loadAllTransactionsFull();
 
-    @Query("SELECT * FROM transactions ORDER BY date DESC LIMIT :num")
+    @Query("SELECT * FROM transactions WHERE transactions.system == 0 ORDER BY date DESC LIMIT :num")
     LiveData<List<TransactionModel>> loadAllTransactionsCount(int num);
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol, " +
@@ -40,10 +42,11 @@ public interface TransactionDao {
             "FROM transactions, accounts, currency " +
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +
+            "AND transactions.system == 0 " +
             "ORDER BY transactions.date DESC LIMIT :num")
     LiveData<List<TransactionListModel>> loadAllTransactionsCountFull(int num);
 
-    @Query("SELECT * FROM transactions WHERE account_id = :id ORDER BY date DESC LIMIT :num")
+    @Query("SELECT * FROM transactions WHERE account_id = :id AND transactions.system == 0 ORDER BY date DESC LIMIT :num")
     LiveData<List<TransactionModel>> loadCheckTransactionsCount(int id, int num);
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol," +
@@ -52,34 +55,38 @@ public interface TransactionDao {
             "FROM transactions, accounts, currency " +
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +
-            "AND transactions.account_id == :id " +
+            "AND ((transactions.account_id == :id" +" AND transactions.system == 0) " +
+            "OR transactions.id IN (SELECT id from transactions WHERE extra_value IN(SELECT id from transactions WHERE account_id = :id AND system=1))) " +
             "ORDER BY transactions.date DESC LIMIT :num")
     LiveData<List<TransactionListModel>> loadCheckTransactionsCountFull(int id, int num);
 
     @Query("SELECT * FROM transactions WHERE id = :id")
     LiveData<TransactionModel> loadTransactionById(int id);
 
-    @Query("SELECT SUM(sum) FROM transactions WHERE type = 1 "
-            + "AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month "
-            + "AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year")
+    @Query("SELECT SUM(sum) FROM transactions WHERE type =" + TRANSACTION_TYPE_INCOME
+            + " AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month"
+            + " AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year"
+            + " AND system=0")
     LiveData<Integer> loadSumTransactionIncomeMonth(String month, String year);
 
-    @Query("SELECT SUM(sum) FROM transactions WHERE type = 2 "
-            + "AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month "
-            + "AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year")
+    @Query("SELECT SUM(sum) FROM transactions WHERE type =" + TRANSACTION_TYPE_SPENT
+            + " AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month"
+            + " AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year")
     LiveData<Integer> loadSumTransactionExpenseMonth(String month, String year);
 
     @Query("SELECT SUM(sum) FROM transactions WHERE type=" + TRANSACTION_TYPE_INCOME + " AND account_id = :accId")
     float loadSumIncomeByCheckId(int accId);
 
-    @Query("SELECT SUM(sum) FROM transactions WHERE type=" + TRANSACTION_TYPE_SPENT + " AND  account_id = :accId")
+    @Query("SELECT SUM(sum) FROM transactions WHERE (type=" + TRANSACTION_TYPE_SPENT
+            + " OR type=" + TRANSACTION_TYPE_TRANSFER + ")"
+            + " AND  account_id = :accId")
     float loadSumExpenseByCheckId(int accId);
 
     @Query("DELETE FROM transactions WHERE id = :transId")
     void deleteTransactionById(int transId);
 
     @Insert
-    void insertTransaction(TransactionModel t);
+    long insertTransaction(TransactionModel t);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateTransaction(TransactionModel t);

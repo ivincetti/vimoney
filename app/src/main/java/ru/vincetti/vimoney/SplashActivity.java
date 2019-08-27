@@ -37,7 +37,7 @@ import ru.vincetti.vimoney.transaction.TransactionViewModel;
 import static ru.vincetti.vimoney.data.sqlite.VimonContract.ConfigEntry.CONFIG_KEY_NAME_USER_NAME;
 import static ru.vincetti.vimoney.utils.LogicMath.accountBalanceUpdateById;
 import static ru.vincetti.vimoney.utils.Utils.genAccountsHash;
-import static ru.vincetti.vimoney.utils.Utils.genCurrencyHash;
+import static ru.vincetti.vimoney.utils.Utils.genCurrencyIdHash;
 
 public class SplashActivity extends AppCompatActivity {
     private final String LOG_TAG = "SPLASH_DEBUG";
@@ -59,8 +59,8 @@ public class SplashActivity extends AppCompatActivity {
         // setting in viewmodel Utils hashes
         final TransactionViewModel viewModel =
                 ViewModelProviders.of(this).get(TransactionViewModel.class);
-        mDb.currentDao().loadAllCurrency().observe(this,
-                currencyModels -> viewModel.setCurrency(genCurrencyHash(currencyModels)));
+        mDb.accountDao().loadAllAccountsFull().observe(this,
+                accountListModels -> viewModel.setCurrencyIdSymbols(genCurrencyIdHash(accountListModels)));
         mDb.accountDao().loadAllAccounts().observe(this,
                 accountModels -> viewModel.setAccountNames(genAccountsHash(accountModels)));
         mDb.accountDao().loadNotArhiveAccounts().observe(this,
@@ -212,7 +212,9 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void transactionImport(long date, int accId, String desc, int trType, float sum) {
+        Log.d("DEBUG", "before insert ");
         TransactionModel newTr = new TransactionModel(new Date(date), accId, desc, trType, sum);
+        Log.d("DEBUG", "before insert  model extra " + newTr.getExtraValue() + " " + newTr.getExtraKey() );
         AppExecutors.getsInstance().diskIO().execute(
                 () -> mDb.transactionDao().insertTransaction(newTr));
     }

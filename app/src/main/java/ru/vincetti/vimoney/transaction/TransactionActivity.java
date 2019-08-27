@@ -72,7 +72,6 @@ public class TransactionActivity extends AppCompatActivity {
                 });
             } else if (intent.hasExtra(EXTRA_ACCOUNT_ID)) {
                 int mAccID = intent.getIntExtra(EXTRA_ACCOUNT_ID, TransactionModel.DEFAULT_ID);
-                Log.d("DEBUG", "acc id in Activity " + mAccID);
                 mTransaction.setAccountId(mAccID);
             }
         }
@@ -131,6 +130,17 @@ public class TransactionActivity extends AppCompatActivity {
                             })
                     .setPositiveButton(R.string.transaction_delete_alert_positive,
                             (dialogInterface, i) -> {
+                                Log.d("DEBUG", "extraKey is " + mTransaction.getExtraKey());
+                                if (mTransaction.getExtraKey().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)) {
+//                                        && Integer.valueOf(mTransaction.getExtraValue()) > 0) {
+                                    Log.d("DEBUG", "tr id is " + mTransaction.getId());
+                                    Log.d("DEBUG", "extraValue value string is " + mTransaction.getExtraValue());
+                                    Log.d("DEBUG", "extraValue value int is " + Integer.valueOf(mTransaction.getExtraValue()));
+                                    // delete nested
+                                    AppExecutors.getsInstance().diskIO().execute(
+                                            () -> mDb.transactionDao().deleteTransactionById(Integer.valueOf(mTransaction.getExtraValue())));
+                                    // TODO update balance for nested account
+                                }
                                 // delete query
                                 AppExecutors.getsInstance().diskIO().execute(
                                         () -> mDb.transactionDao().deleteTransactionById(mTransId));
@@ -138,7 +148,6 @@ public class TransactionActivity extends AppCompatActivity {
                                 AppExecutors.getsInstance().diskIO().execute(
                                         () -> LogicMath.accountBalanceUpdateById(getApplicationContext(), mAccID));
                                 finish();
-
                             });
 
             builder.create().show();

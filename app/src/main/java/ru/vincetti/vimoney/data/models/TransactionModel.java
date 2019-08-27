@@ -13,6 +13,7 @@ public class TransactionModel {
     public final static int TRANSACTION_TYPE_INCOME = 1;
     public final static int TRANSACTION_TYPE_SPENT = 2;
     public final static int TRANSACTION_TYPE_TRANSFER = 3;
+    public final static String TRANSACTION_TYPE_TRANSFER_KEY = "transfer_transaction_id";
     public final static int TRANSACTION_TYPE_DEBT = 4;
     public final static int DEFAULT_ID = 0;
 
@@ -32,6 +33,8 @@ public class TransactionModel {
     @ColumnInfo(name = "extra_value")
     @NonNull
     private String extraValue;
+    private boolean system;
+    private boolean deleted;
 
     @Ignore
     public TransactionModel() {
@@ -44,33 +47,34 @@ public class TransactionModel {
         this.sum = DEFAULT_ID;
         this.extraKey = "";
         this.extraValue = "";
+        this.system = false;
+        this.deleted = false;
     }
 
     @Ignore
     public TransactionModel(Date date, int accountId, String description, int type, float sum) {
+        this();
         this.date = date;
         this.accountId = accountId;
         this.updatedAt = date;
         this.description = description;
         this.type = type;
         this.sum = sum;
-        this.extraKey = "";
-        this.extraValue = "";
     }
 
     @Ignore
     public TransactionModel(int accountId, String description, Date date, Date updatedAt, int type, float sum) {
+        this();
         this.accountId = accountId;
         this.description = description;
         this.date = date;
         this.updatedAt = updatedAt;
         this.type = type;
         this.sum = sum;
-        this.extraKey = "";
-        this.extraValue = "";
     }
 
     public TransactionModel(int id, int accountId, String description, Date date, Date updatedAt, int type, float sum) {
+        this();
         this.id = id;
         this.accountId = accountId;
         this.description = description;
@@ -162,6 +166,22 @@ public class TransactionModel {
         this.extraValue = tmp.getExtraValue();
     }
 
+    public boolean isSystem() {
+        return system;
+    }
+
+    public void setSystem(boolean system) {
+        this.system = system;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @Override
     public String toString() {
         return "TransactionModel{" +
@@ -172,6 +192,10 @@ public class TransactionModel {
                 ", updatedAt=" + updatedAt +
                 ", type=" + type +
                 ", sum=" + sum +
+                ", extraKey='" + extraKey + '\'' +
+                ", extraValue='" + extraValue + '\'' +
+                ", system=" + system +
+                ", deleted=" + deleted +
                 '}';
     }
 }
