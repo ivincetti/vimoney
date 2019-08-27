@@ -163,22 +163,12 @@ public class TransactionTransferFragment extends TransactionFragment implements 
         nestedTrans.setExtraValue(String.valueOf(mTrans.getId()));
         nestedTrans.setSystem(true);
 
-        AppExecutors.getsInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                idTo = mDb.transactionDao().insertTransaction(nestedTrans);
-                Log.d("DEBUG","добавляем записью " + idTo
-                + " на счет " + accIdTo);
-            }
-        });
+        AppExecutors.getsInstance().diskIO().execute(
+                () -> idTo = mDb.transactionDao().insertTransaction(nestedTrans));
 
-        AppExecutors.getsInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                mTrans.setExtraValue(String.valueOf(idTo));
-                Log.d("DEBUG", "before save " + mTrans.toString());
-                mDb.transactionDao().insertTransaction(mTrans);
-            }
+        AppExecutors.getsInstance().diskIO().execute(() -> {
+            mTrans.setExtraValue(String.valueOf(idTo));
+            mDb.transactionDao().insertTransaction(mTrans);
         });
     }
 }
