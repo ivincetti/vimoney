@@ -144,25 +144,23 @@ public class TransactionActivity extends AppCompatActivity {
                             })
                     .setPositiveButton(R.string.transaction_delete_alert_positive,
                             (dialogInterface, i) -> {
-                                if (mTransaction.getExtraKey().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)
-                                        && accNestedId > 0) {
-                                    // delete nested
-                                    AppExecutors.getsInstance().diskIO().execute(
-                                            () -> mDb.transactionDao().deleteTransactionById(accNestedId));
-                                    // TODO accTransferTo must be write (now id of transaction)
-                                    // update balance for nested transfer account
-//                                    AppExecutors.getsInstance().diskIO().execute(
-//                                            () -> LogicMath.accountBalanceUpdateById(getApplicationContext(), accTransferTo));
-                                }
                                 // delete query
                                 AppExecutors.getsInstance().diskIO().execute(
-                                        () -> mDb.transactionDao().deleteTransactionById(mTransId));
-                                // update balance for current (accId) account
-                                AppExecutors.getsInstance().diskIO().execute(
-                                        () -> LogicMath.accountBalanceUpdateById(getApplicationContext(), mAccID));
+                                        () -> {
+                                            if (mTransaction.getExtraKey().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)
+                                                    && accNestedId > 0) {
+                                                // delete nested
+                                                mDb.transactionDao().deleteTransactionById(accNestedId);
+                                                // TODO accTransferTo must be write (now id of transaction)
+                                                // update balance for nested transfer account
+                                                // LogicMath.accountBalanceUpdateById(getApplicationContext(), accTransferTo);
+                                            }
+                                            mDb.transactionDao().deleteTransactionById(mTransId);
+                                            // update balance for current (accId) account
+                                            LogicMath.accountBalanceUpdateById(getApplicationContext(), mAccID);
+                                        });
                                 finish();
                             });
-
             builder.create().show();
         }
     }
