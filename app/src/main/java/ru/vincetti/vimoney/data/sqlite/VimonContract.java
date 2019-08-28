@@ -40,5 +40,18 @@ public class VimonContract {
         public static final String COLUMN_TRANSACTIONS_UPDATEAT = "updated_at";
         public static final String COLUMN_TRANSACTIONS_TYPE = "type";
         public static final String COLUMN_TRANSACTIONS_SUM = "sum";
+        public static final String COLUMN_TRANSACTIONS_EXTRA_KEY = "extra_key";
+        public static final String COLUMN_TRANSACTIONS_EXTRA_VALUE = "extra_value";
+        public static final String COLUMN_TRANSACTIONS_EXTRA_SYSTEM = "system";
+        public static final String COLUMN_TRANSACTIONS_EXTRA_DELETED = "deleted";
+    }
+
+    public static final class CurrencyEntry implements BaseColumns {
+        public static final String TABLE_NAME = "currency";
+
+        public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_CURRENCY_CODE = "code";
+        public static final String COLUMN_CURRENCY_NAME = "name";
+        public static final String COLUMN_CURRENCY_SYMBOL = "symbol";
     }
 }

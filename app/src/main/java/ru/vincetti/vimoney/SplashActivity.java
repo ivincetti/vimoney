@@ -105,9 +105,9 @@ public class SplashActivity extends AppCompatActivity {
                     // user info to base
                     userUpdate(response.body().getUser().getName());
                     // accounts info to base
-                    accountsUpdate(response.body().getAccounts());
-                    currencyImport(response.body().getCurrency());
                     transactionsImport(response.body().getTransactions());
+                    currencyImport(response.body().getCurrency());
+                    accountsUpdate(response.body().getAccounts());
                 } else {
                     if (Long.valueOf(config.getValue()) < timeMillisLong) {
                         configDbDateUpdate(response.body().getDateEdit(), config.getId());
@@ -120,33 +120,49 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void accountsUpdate(List<AccountsItem> accountsItems) {
-        for (AccountsItem acc : accountsItems) {
-            accountUpdate(acc.getId(),
-                    acc.getType(),
-                    acc.getTitle(),
-                    acc.getInstrument(),
-                    acc.getBalance());
-        }
+        AppExecutors.getsInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                for (AccountsItem acc : accountsItems) {
+                    accountUpdate(acc.getId(),
+                            acc.getType(),
+                            acc.getTitle(),
+                            acc.getInstrument(),
+                            acc.getBalance());
+                }
+            }
+        });
     }
 
     // import currency from config
     private void currencyImport(List<CurrencyItem> currencyItems) {
-        for (CurrencyItem cur : currencyItems) {
-            currencyUpdate(cur.getName(),
-                    cur.getCode(),
-                    cur.getSymbol());
-        }
+        AppExecutors.getsInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                for (CurrencyItem cur : currencyItems) {
+                    currencyUpdate(cur.getName(),
+                            cur.getCode(),
+                            cur.getSymbol());
+                }
+            }
+        });
+
     }
 
     // import sample transactions from config
     private void transactionsImport(List<TransactionsItem> transactionItems) {
-        for (TransactionsItem tr : transactionItems) {
-            transactionImport(tr.getDate(),
-                    tr.getAccountId(),
-                    tr.getDescription(),
-                    tr.getType(),
-                    tr.getSum());
-        }
+        AppExecutors.getsInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                for (TransactionsItem tr : transactionItems) {
+                    transactionImport(tr.getDate(),
+                            tr.getAccountId(),
+                            tr.getDescription(),
+                            tr.getType(),
+                            tr.getSum());
+                }
+            }
+        });
     }
 
     // insert new date edit in config DB table
@@ -187,35 +203,17 @@ public class SplashActivity extends AppCompatActivity {
 
     public void accountUpdate(int accId, String type, String title, int ins, int balance) {
         AccountModel newAcc = new AccountModel(accId, title, type, balance, 810);
-        LiveData<AccountModel> tmpAcc = mDb.accountDao().loadAccountById(accId);
-        tmpAcc.observe(this, new Observer<AccountModel>() {
-            @Override
-            public void onChanged(AccountModel accountModel) {
-                tmpAcc.removeObserver(this);
-                if (accountModel == null) {
-                    AppExecutors.getsInstance().diskIO().execute(
-                            () -> mDb.accountDao().insertAccount(newAcc));
-                } else {
-                    newAcc.setId(accountModel.getId());
-                    AppExecutors.getsInstance().diskIO().execute(
-                            () -> mDb.accountDao().updateAccount(newAcc));
-                }
-                accountBalanceUpdateById(mContext, accId);
-            }
-        });
+        mDb.accountDao().insertAccount(newAcc);
+        accountBalanceUpdateById(mContext, accId);
     }
 
     public void currencyUpdate(String currencyName, int currencyCode, String symbol) {
         CurrencyModel newCurrency = new CurrencyModel(currencyCode, currencyName, symbol);
-        AppExecutors.getsInstance().diskIO().execute(
-                () -> mDb.currentDao().insertCurrency(newCurrency));
+        mDb.currentDao().insertCurrency(newCurrency);
     }
 
     public void transactionImport(long date, int accId, String desc, int trType, float sum) {
-        Log.d("DEBUG", "before insert ");
         TransactionModel newTr = new TransactionModel(new Date(date), accId, desc, trType, sum);
-        Log.d("DEBUG", "before insert  model extra " + newTr.getExtraValue() + " " + newTr.getExtraKey() );
-        AppExecutors.getsInstance().diskIO().execute(
-                () -> mDb.transactionDao().insertTransaction(newTr));
+        mDb.transactionDao().insertTransaction(newTr);
     }
 }

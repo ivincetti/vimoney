@@ -13,8 +13,8 @@ public class LogicMath {
     public static void accountBalanceUpdateById(Context context, int accId) {
         AppDatabase mDb = AppDatabase.getInstance(context);
         AppExecutors.getsInstance().diskIO().execute(() -> {
-            float Sum = mDb.transactionDao().loadSumByCheckId(accId);
-            mDb.accountDao().updateSumByAccId(accId, Sum);
+            float sum = mDb.transactionDao().loadSumByCheckId(accId);
+            mDb.accountDao().updateSumByAccId(accId, sum);
         });
     }
 
