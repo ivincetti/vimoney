@@ -28,7 +28,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:text="@string/home_title_balance_sum"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/text_big_numbers"
                     android:textStyle="bold"

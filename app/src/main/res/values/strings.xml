@@ -11,9 +11,6 @@
     <string name="login_failed">"Login failed"</string>
 
     <!--Home Activity-->
-    <string name="title_activity_home">HomeActivity</string>
-    <string name="home_title_balance_sum">-</string>
-
     <string name="home_title_acc_name">Тинькофф</string>
     <string name="home_title_acc_type">debit</string>
     <string name="home_title_acc_balance">10000</string>
@@ -30,19 +27,21 @@
 
     <!--History Activity-->
     <string name="history_title_home">Транзакции</string>
-    <string name="title_activity_history">HistoryActivity</string>
 
     <!--Dashboard Activity-->
-    <string name="dashboard_title_home">Dashboard</string>
+    <string name="dashboard_title_home">Статистика</string>
 
     <!--Notification Activity-->
-    <string name="notification_title_home">Notification</string>
+    <string name="notification_title_home">Уведомления</string>
     <string name="notification_notify_btn_text">Уведомить</string>
     <string name="notification_sample_title_text">Пора отчитываться!</string>
     <string name="notification_sample_body_text">Сегодня вы не вносили данные по финансовым транзакциям</string>
 
     <!--Add/Transaction Activity-->
-    <string name="add_title_home">ADD</string>
+    <string name="add_title_home_spent">Расход</string>
+    <string name="add_title_home_income">Доход</string>
+    <string name="add_title_home_transfer">Перевод</string>
+    <string name="add_title_home_debt">Долг</string>
     <string name="add_btn_save">Сохранить</string>
     <string name="add_btn_update">Обновить</string>
     <string name="add_spent_btn_text">расход</string>
@@ -59,10 +58,10 @@
     <string name="add_date_sample_txt">12/11/2018</string>
 
     <!--Settings Activity-->
-    <string name="settings_title_home">Settings</string>
+    <string name="settings_title_home">Настройки</string>
 
     <!--Add Check Activity-->
-    <string name="add_check_title_home">Add check</string>
+    <string name="add_check_title_home">Добавить счет</string>
     <string name="add_check_type_cash_txt">cash</string>
     <string name="add_check_type_debit_txt">debit</string>
     <string name="add_check_type_credit_txt">credit</string>

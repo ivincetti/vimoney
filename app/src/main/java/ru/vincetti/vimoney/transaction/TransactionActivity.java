@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,7 @@ public class TransactionActivity extends AppCompatActivity {
     public final static String EXTRA_ACCOUNT_ID = "Extra_account_id";
 
     private AppDatabase mDb;
+    private TextView titleTxt;
     private int mAccID = TransactionModel.DEFAULT_ID;
     private int mTransId = TransactionModel.DEFAULT_ID;
     private int accTransferTo = TransactionModel.DEFAULT_ID;
@@ -91,6 +93,22 @@ public class TransactionActivity extends AppCompatActivity {
         }
         TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         vPager.setAdapter(new TabsFragmentPagerAdapter(getSupportFragmentManager(), fragmentBundle));
+        vPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                //setActivityTitle(position);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                setActivityTitle(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                //do nothing
+            }
+        });
         tabLayout.setupWithViewPager(vPager);
 
         viewModel.setTransaction(mTransaction);
@@ -107,6 +125,7 @@ public class TransactionActivity extends AppCompatActivity {
 
     private void initViews() {
         mDb = AppDatabase.getInstance(this);
+        titleTxt = findViewById(R.id.transaction_navigation_txt);
         vPager = findViewById(R.id.view_pager);
 
         findViewById(R.id.transaction_navigation_delete_btn)
@@ -115,21 +134,42 @@ public class TransactionActivity extends AppCompatActivity {
                 view -> showUnsavedDialog());
     }
 
+    void setActivityTitle(int position) {
+        switch (position) {
+            case TransactionModel.TRANSACTION_TYPE_SPENT_TAB:
+                titleTxt.setText(getResources().getString(R.string.add_title_home_spent));
+                break;
+            case TransactionModel.TRANSACTION_TYPE_INCOME_TAB:
+                titleTxt.setText(getResources().getString(R.string.add_title_home_income));
+                break;
+            case TransactionModel.TRANSACTION_TYPE_TRANSFER:
+                titleTxt.setText(getResources().getString(R.string.add_title_home_transfer));
+                break;
+//            case TransactionModel.TRANSACTION_TYPE_DEBT:
+//                titleTxt.setText(getResources().getString(R.string.add_title_home_debt));
+//                break;
+        }
+    }
+
     // radioButton option load
     private void typeLoad(int type) {
         switch (type) {
             case TransactionModel.TRANSACTION_TYPE_SPENT:
-                vPager.setCurrentItem(0, true);
+                vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_SPENT_TAB, true);
+                setActivityTitle(TransactionModel.TRANSACTION_TYPE_SPENT_TAB);
                 break;
             case TransactionModel.TRANSACTION_TYPE_INCOME:
-                vPager.setCurrentItem(1, true);
+                vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_INCOME_TAB, true);
+                setActivityTitle(TransactionModel.TRANSACTION_TYPE_INCOME_TAB);
                 break;
             case TransactionModel.TRANSACTION_TYPE_TRANSFER:
-                vPager.setCurrentItem(2, true);
+                vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_TRANSFER_TAB, true);
+                setActivityTitle(TransactionModel.TRANSACTION_TYPE_TRANSFER_TAB);
                 break;
-            case TransactionModel.TRANSACTION_TYPE_DEBT:
-                vPager.setCurrentItem(3, true);
-                break;
+//            case TransactionModel.TRANSACTION_TYPE_DEBT:
+//                vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_DEBT_TAB, true);
+//                setActivityTitle(TransactionModel.TRANSACTION_TYPE_DEBT_TAB);
+//                break;
         }
     }
 

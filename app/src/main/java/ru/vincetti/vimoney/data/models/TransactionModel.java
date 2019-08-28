@@ -13,8 +13,12 @@ public class TransactionModel {
     public final static int TRANSACTION_TYPE_INCOME = 1;
     public final static int TRANSACTION_TYPE_SPENT = 2;
     public final static int TRANSACTION_TYPE_TRANSFER = 3;
-    public final static String TRANSACTION_TYPE_TRANSFER_KEY = "transfer_transaction_id";
     public final static int TRANSACTION_TYPE_DEBT = 4;
+    public final static int TRANSACTION_TYPE_SPENT_TAB = 0;
+    public final static int TRANSACTION_TYPE_INCOME_TAB = 1;
+    public final static int TRANSACTION_TYPE_TRANSFER_TAB = 2;
+    public final static int TRANSACTION_TYPE_DEBT_TAB = 3;
+    public final static String TRANSACTION_TYPE_TRANSFER_KEY = "transfer_transaction_id";
     public final static int DEFAULT_ID = 0;
 
     @PrimaryKey(autoGenerate = true)
