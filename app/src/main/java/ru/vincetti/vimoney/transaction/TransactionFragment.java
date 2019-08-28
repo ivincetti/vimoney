@@ -72,9 +72,8 @@ public class TransactionFragment extends Fragment {
         viewModel.getNotArchiveAccountNames().observe(getViewLifecycleOwner(), integerStringHashMap -> {
             notArchiveAccountNames = integerStringHashMap;
         });
-        args = getArguments();
-        if (args != null && args.getInt(TransactionActivity.EXTRA_TRANS_ID) > 0) {
-            final boolean t = true;
+
+        if (getArguments() != null && getArguments().getInt(TransactionActivity.EXTRA_TRANS_ID) > 0) {
             container.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.VISIBLE);
         }
