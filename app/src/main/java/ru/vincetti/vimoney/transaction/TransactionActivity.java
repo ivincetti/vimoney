@@ -40,9 +40,15 @@ public class TransactionActivity extends AppCompatActivity {
         context.startActivity(starter);
     }
 
-    public static void start(Context context, int id) {
+    public static void startId(Context context, int id) {
         Intent starter = new Intent(context, TransactionActivity.class);
         starter.putExtra(EXTRA_TRANS_ID, id);
+        context.startActivity(starter);
+    }
+
+    public static void startCheckId(Context context, int id) {
+        Intent starter = new Intent(context, TransactionActivity.class);
+        starter.putExtra(EXTRA_ACCOUNT_ID, id);
         context.startActivity(starter);
     }
 

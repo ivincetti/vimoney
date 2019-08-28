@@ -23,6 +23,9 @@ public interface TransactionDao {
     @Query("SELECT * FROM transactions ORDER BY date DESC")
     LiveData<List<TransactionModel>> loadAllTransactions();
 
+    @Query("SELECT * FROM transactions WHERE transactions.system == 0 ORDER BY date DESC LIMIT :num")
+    LiveData<List<TransactionModel>> loadAllTransactionsCount(int num);
+
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol, " +
             "transactions.sum, transactions.type, transactions.date, transactions.description, " +
             "transactions.extra_key, transactions.extra_value " +
@@ -32,9 +35,6 @@ public interface TransactionDao {
             "AND transactions.system == 0 " +
             "ORDER BY transactions.date DESC")
     LiveData<List<TransactionListModel>> loadAllTransactionsFull();
-
-    @Query("SELECT * FROM transactions WHERE transactions.system == 0 ORDER BY date DESC LIMIT :num")
-    LiveData<List<TransactionModel>> loadAllTransactionsCount(int num);
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol, " +
             "transactions.sum, transactions.type, transactions.date, transactions.description, " +
@@ -48,6 +48,17 @@ public interface TransactionDao {
 
     @Query("SELECT * FROM transactions WHERE account_id = :id AND transactions.system == 0 ORDER BY date DESC LIMIT :num")
     LiveData<List<TransactionModel>> loadCheckTransactionsCount(int id, int num);
+
+    @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol," +
+            "transactions.sum, transactions.type, transactions.date, transactions.description, " +
+            "transactions.extra_key, transactions.extra_value " +
+            "FROM transactions, accounts, currency " +
+            "WHERE transactions.account_id == accounts.id " +
+            "AND accounts.currency == currency.code " +
+            "AND ((transactions.account_id == :id" +" AND transactions.system == 0) " +
+            "OR transactions.id IN (SELECT id from transactions WHERE extra_value IN(SELECT id from transactions WHERE account_id = :id AND system=1))) " +
+            "ORDER BY transactions.date DESC")
+    LiveData<List<TransactionListModel>> loadCheckTransactionsFull(int id);
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol," +
             "transactions.sum, transactions.type, transactions.date, transactions.description, " +

@@ -23,10 +23,9 @@ import ru.vincetti.vimoney.transaction.TransactionActivity;
 public class HistoryFragment extends Fragment {
     public final static String BUNDLE_TRANS_COUNT_NAME = "ru.vincetti.vimoney.transhistory_count";
     public final static String BUNDLE_TRANS_CHECK_ID_NAME = "ru.vincetti.vimoney.transhistory_check_id";
+    private final static int DEFAULT_TRANSACTIONS = 0;
 
-    private final static int DEFAULT_TRANSACTIONS_COUNT = 25;
-
-    private int trCount = DEFAULT_TRANSACTIONS_COUNT;
+    private int trCount = DEFAULT_TRANSACTIONS;
 
     @Nullable
     @Override
@@ -39,11 +38,11 @@ public class HistoryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // количество элементов
         if (getArguments() != null && getArguments().containsKey(BUNDLE_TRANS_COUNT_NAME)) {
-            trCount = getArguments().getInt(BUNDLE_TRANS_COUNT_NAME, DEFAULT_TRANSACTIONS_COUNT);
+            trCount = getArguments().getInt(BUNDLE_TRANS_COUNT_NAME, DEFAULT_TRANSACTIONS);
         }
         // список транзакций
         TransactionsRVAdapter transactionsRVAdapter = new TransactionsRVAdapter(
-                itemId -> TransactionActivity.start(getActivity(), itemId));
+                itemId -> TransactionActivity.startId(getActivity(), itemId));
         RecyclerView trListView = view.findViewById(R.id.home_transactions_recycle_view);
         trListView.setHasFixedSize(true);
         LinearLayoutManager trLayoutManager = new LinearLayoutManager(getContext(),
@@ -54,15 +53,29 @@ public class HistoryFragment extends Fragment {
         // уточнение счета
         if (getArguments() != null && getArguments().containsKey(BUNDLE_TRANS_CHECK_ID_NAME)) {
             int trCheckId = getArguments().getInt(BUNDLE_TRANS_CHECK_ID_NAME);
-            LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
-                    .transactionDao().loadCheckTransactionsCountFull(trCheckId, trCount);
-            transList.observe(this,
-                    transactions -> transactionsRVAdapter.setTransaction(transactions));
+            if (trCount == DEFAULT_TRANSACTIONS) {
+                LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
+                        .transactionDao().loadCheckTransactionsFull(trCheckId);
+                transList.observe(this,
+                        transactions -> transactionsRVAdapter.setTransaction(transactions));
+            } else {
+                LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
+                        .transactionDao().loadCheckTransactionsCountFull(trCheckId, trCount);
+                transList.observe(this,
+                        transactions -> transactionsRVAdapter.setTransaction(transactions));
+            }
         } else {
-            LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
-                    .transactionDao().loadAllTransactionsCountFull(trCount);
-            transList.observe(this,
-                    transactions -> transactionsRVAdapter.setTransaction(transactions));
+            if (trCount == DEFAULT_TRANSACTIONS) {
+                LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
+                        .transactionDao().loadAllTransactionsFull();
+                transList.observe(this,
+                        transactions -> transactionsRVAdapter.setTransaction(transactions));
+            } else {
+                LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
+                        .transactionDao().loadAllTransactionsCountFull(trCount);
+                transList.observe(this,
+                        transactions -> transactionsRVAdapter.setTransaction(transactions));
+            }
         }
     }
 }

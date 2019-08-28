@@ -1,7 +1,6 @@
 package ru.vincetti.vimoney.utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.List;
 
@@ -10,7 +9,6 @@ import ru.vincetti.vimoney.data.models.AccountListModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 
 public class LogicMath {
-
     // set correct account (accID) balance
     public static void accountBalanceUpdateById(Context context, int accId) {
         AppDatabase mDb = AppDatabase.getInstance(context);

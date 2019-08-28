@@ -71,9 +71,7 @@ public class CheckActivity extends AppCompatActivity {
         findViewById(R.id.setting_navigation_back_btn)
                 .setOnClickListener(view -> finish());
         findViewById(R.id.check_fab).setOnClickListener(view -> {
-            Intent starter = new Intent(getBaseContext(), TransactionActivity.class);
-            starter.putExtra(TransactionActivity.EXTRA_ACCOUNT_ID, mCheckId);
-            startActivity(starter);
+            TransactionActivity.startCheckId(this, mCheckId);
         });
     }
 
