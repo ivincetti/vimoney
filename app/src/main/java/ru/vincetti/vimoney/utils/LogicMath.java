@@ -1,6 +1,7 @@
 package ru.vincetti.vimoney.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.List;
 
@@ -13,35 +14,10 @@ public class LogicMath {
     // set correct account (accID) balance
     public static void accountBalanceUpdateById(Context context, int accId) {
         AppDatabase mDb = AppDatabase.getInstance(context);
-
-        class Sum {
-            private float sumPlus, sumMinus;
-
-            private Sum() {
-                this.sumPlus = 0f;
-                this.sumMinus = 0f;
-            }
-
-            private void setSumPlus(float sumPlus) {
-                this.sumPlus = sumPlus;
-            }
-
-            private void setSumMinus(float sumMinus) {
-                this.sumMinus = sumMinus;
-            }
-
-            public float getSum() {
-                return sumPlus - sumMinus;
-            }
-        }
-        Sum mSum = new Sum();
-
-        AppExecutors.getsInstance().diskIO().execute(
-                () -> mSum.setSumPlus(mDb.transactionDao().loadSumIncomeByCheckId(accId)));
-        AppExecutors.getsInstance().diskIO().execute(
-                () -> mSum.setSumMinus(mDb.transactionDao().loadSumExpenseByCheckId(accId)));
-        AppExecutors.getsInstance().diskIO().execute(
-                () -> mDb.accountDao().updateSumByAccId(accId, mSum.getSum()));
+        AppExecutors.getsInstance().diskIO().execute(() -> {
+            float Sum = mDb.transactionDao().loadSumByCheckId(accId);
+            mDb.accountDao().updateSumByAccId(accId, Sum);
+        });
     }
 
     // Math allUser balance

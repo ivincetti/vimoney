@@ -74,6 +74,10 @@ public interface TransactionDao {
             + " AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year")
     LiveData<Integer> loadSumTransactionExpenseMonth(String month, String year);
 
+    @Query("SELECT (Select SUM(sum) FROM transactions WHERE type=" + TRANSACTION_TYPE_INCOME + " AND account_id = :accId) - "
+            + "(SELECT SUM(sum) FROM transactions WHERE (type=" + TRANSACTION_TYPE_SPENT + " OR type=" + TRANSACTION_TYPE_TRANSFER + ") AND  account_id = :accId)")
+    float loadSumByCheckId(int accId);
+
     @Query("SELECT SUM(sum) FROM transactions WHERE type=" + TRANSACTION_TYPE_INCOME + " AND account_id = :accId")
     float loadSumIncomeByCheckId(int accId);
 
