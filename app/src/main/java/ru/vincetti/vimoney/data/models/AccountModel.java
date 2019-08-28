@@ -99,9 +99,4 @@ public class AccountModel {
     public void setExtraValue(String extraValue) {
         this.extraValue = extraValue;
     }
-
-    @Override
-    public String toString() {
-        return name;
-    }
 }

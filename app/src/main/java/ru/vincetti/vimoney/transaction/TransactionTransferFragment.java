@@ -14,12 +14,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProviders;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.check.CheckViewModel;
 import ru.vincetti.vimoney.data.AppExecutors;
-import ru.vincetti.vimoney.data.models.AccountModel;
 import ru.vincetti.vimoney.data.models.TransactionModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.utils.LogicMath;
@@ -45,19 +45,17 @@ public class TransactionTransferFragment extends TransactionFragment implements 
         txtCurrencyTo = view.findViewById(R.id.add_acc_cur_to);
         txtAccountTo = view.findViewById(R.id.add_acc_name_to);
         txtAccountTo.setOnClickListener(view13 -> {
-            accSpinnerTo.setVisibility(View.VISIBLE);
             accSpinnerTo.performClick();
         });
 
         nestedTrans = new TransactionModel();
-        spinnerToInit(view);
     }
 
     @Override
     public void initFragmentLogic() {
         accOld = mTrans.getAccountId();
         if (mTrans.getExtraKey().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)
-                && Integer.valueOf(mTrans.getExtraValue()) != TransactionModel.DEFAULT_ID) {
+                && Integer.valueOf(mTrans.getExtraValue()) > 0) {
             LiveData<TransactionModel> trTransfer = AppDatabase.getInstance(getActivity()).transactionDao()
                     .loadTransactionById(Integer.valueOf(mTrans.getExtraValue()));
             trTransfer.observe(getActivity(),
@@ -65,6 +63,7 @@ public class TransactionTransferFragment extends TransactionFragment implements 
                         if (transactionModel != null) {
                             nestedTrans.copyFrom(transactionModel);
                             accNew = nestedTrans.getAccountId();
+                            accIdTo = nestedTrans.getAccountId();
                             txtSumTo.setText(String.valueOf(transactionModel.getSum()));
                             txtAccountTo.setText(notArchiveAccountNames.get(transactionModel.getAccountId()));
                             txtCurrencyTo.setText(curSymbolsId.get(transactionModel.getAccountId()));
@@ -78,34 +77,46 @@ public class TransactionTransferFragment extends TransactionFragment implements 
         typeAction = TransactionModel.TRANSACTION_TYPE_TRANSFER;
     }
 
-    private void spinnerToInit(View view) {
+    @Override
+    void spinner2Init(View view) {
         accSpinnerTo = view.findViewById(R.id.add_acc_list_to);
-        CheckViewModel accViewModel = ViewModelProviders.of(getActivity()).get(CheckViewModel.class);
-        accViewModel.getAccounts().observe(this, accountModels -> {
-            // Создаем адаптер ArrayAdapter с помощью массива строк и стандартной разметки элемета spinner
-            ArrayAdapter<AccountModel> adapter =
-                    new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, accountModels);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Применяем адаптер к элементу spinner
-            accSpinnerTo.setAdapter(adapter);
-
-            accSpinnerTo.setSelected(false);  // must
-            accSpinnerTo.setSelection(0, true);  //must
-            accSpinnerTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                    accIdTo = ((AccountModel) adapterView.getSelectedItem()).getId();
-                    txtCurrencyTo.setText(curSymbolsId.get(accIdTo));
-                    txtAccountTo.setText(notArchiveAccountNames.get(accIdTo));
-                    accSpinnerTo.setVisibility(View.INVISIBLE);
+        ArrayList<String> accounts2Array = new ArrayList<>();
+        accounts2Array.add("Выберите счет");
+        for (Map.Entry<Integer, String> entry : accountNames.entrySet()) {
+            accounts2Array.add(entry.getValue());
+        }
+        // Создаем адаптер ArrayAdapter с помощью массива строк и стандартной разметки элемета spinner
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, accounts2Array);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Применяем адаптер к элементу spinner
+        accSpinnerTo.setAdapter(adapter);
+        accSpinnerTo.setSelected(false);
+        accSpinnerTo.setSelection(TransactionModel.DEFAULT_ID, false);
+        accSpinnerTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (position != TransactionModel.DEFAULT_ID) {
+                    int id = TransactionModel.DEFAULT_ID;
+                    for (Map.Entry<Integer, String> entry : accountNames.entrySet()) {
+                        if (adapter.getItem(position).equals(entry.getValue())) {
+                            id = entry.getKey();
+                        }
+                    }
+                    if (id != TransactionModel.DEFAULT_ID) {
+                        txtCurrencyTo.setText(curSymbolsId.get(id));
+                        txtAccountTo.setText(notArchiveAccountNames.get(id));
+                        accIdTo = id;
+                    }
                 }
+            }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-                    accSpinnerTo.setVisibility(View.INVISIBLE);
-                }
-            });
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                //
+            }
         });
+
 
     }
 

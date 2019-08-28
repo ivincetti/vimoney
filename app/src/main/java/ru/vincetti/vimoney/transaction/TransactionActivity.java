@@ -3,7 +3,6 @@ package ru.vincetti.vimoney.transaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -31,6 +30,7 @@ public class TransactionActivity extends AppCompatActivity {
     private int mAccID = TransactionModel.DEFAULT_ID;
     private int mTransId = TransactionModel.DEFAULT_ID;
     private int accTransferTo = TransactionModel.DEFAULT_ID;
+    private int accNestedId = TransactionModel.DEFAULT_ID;
 
     ViewPager vPager;
     TransactionModel mTransaction;
@@ -69,7 +69,8 @@ public class TransactionActivity extends AppCompatActivity {
                         typeLoad(transactionModel.getType());
                         mAccID = transactionModel.getAccountId();
                         mTransaction.copyFrom(transactionModel);
-                        if(transactionModel.getExtraValue().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)){
+                        if (transactionModel.getExtraValue().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)) {
+                            accNestedId = Integer.valueOf(transactionModel.getExtraValue());
                             accTransferTo = Integer.valueOf(transactionModel.getExtraValue());
                         }
                     }
@@ -135,15 +136,14 @@ public class TransactionActivity extends AppCompatActivity {
                     .setPositiveButton(R.string.transaction_delete_alert_positive,
                             (dialogInterface, i) -> {
                                 if (mTransaction.getExtraKey().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)
-                                        && Integer.valueOf(mTransaction.getExtraValue()) > 0) {
+                                        && accNestedId > 0) {
                                     // delete nested
                                     AppExecutors.getsInstance().diskIO().execute(
-                                            () -> mDb.transactionDao().deleteTransactionById(Integer.valueOf(mTransaction.getExtraValue())));
-                                    if(accTransferTo != TransactionModel.DEFAULT_ID){
-                                        // update balance for nested transfer account
-                                        AppExecutors.getsInstance().diskIO().execute(
-                                                () -> LogicMath.accountBalanceUpdateById(getApplicationContext(), accTransferTo));
-                                    }
+                                            () -> mDb.transactionDao().deleteTransactionById(accNestedId));
+                                    // TODO accTransferTo must be write (now id of transaction)
+                                    // update balance for nested transfer account
+//                                    AppExecutors.getsInstance().diskIO().execute(
+//                                            () -> LogicMath.accountBalanceUpdateById(getApplicationContext(), accTransferTo));
                                 }
                                 // delete query
                                 AppExecutors.getsInstance().diskIO().execute(

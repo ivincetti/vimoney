@@ -3,7 +3,6 @@ package ru.vincetti.vimoney.transaction;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -19,15 +18,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Map;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.check.CheckViewModel;
 import ru.vincetti.vimoney.data.AppExecutors;
-import ru.vincetti.vimoney.data.models.AccountModel;
 import ru.vincetti.vimoney.data.models.TransactionModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.utils.LogicMath;
@@ -62,12 +61,13 @@ public class TransactionFragment extends Fragment {
 
         viewModel.getAccountNames().observe(getViewLifecycleOwner(), integerStringHashMap -> {
             accountNames = integerStringHashMap;
+            spinnerInit(view);
+            spinner2Init(view);
         });
 
         viewModel.getNotArchiveAccountNames().observe(getViewLifecycleOwner(), integerStringHashMap -> {
             notArchiveAccountNames = integerStringHashMap;
         });
-        spinnerInit(view);
         initFragmentViews(view);
     }
 
@@ -129,7 +129,6 @@ public class TransactionFragment extends Fragment {
         btnSave.setOnClickListener(view1 -> save(typeAction));
         txtAccount = view.findViewById(R.id.add_acc_name);
         txtAccount.setOnClickListener(view13 -> {
-            accSpinner.setVisibility(View.VISIBLE);
             accSpinner.performClick();
         });
     }
@@ -140,43 +139,55 @@ public class TransactionFragment extends Fragment {
     void initFragmentLogic() {
     }
 
-    void setTypeAction() {}
+    void setTypeAction() {
+    }
 
     void spinnerInit(View view) {
         accSpinner = view.findViewById(R.id.add_acc_list);
-        CheckViewModel accViewModel = ViewModelProviders.of(getActivity()).get(CheckViewModel.class);
-        accViewModel.getAccounts().observe(this, accountModels -> {
-            // Создаем адаптер ArrayAdapter с помощью массива строк и стандартной разметки элемета spinner
-            ArrayAdapter<AccountModel> adapter =
-                    new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, accountModels);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Применяем адаптер к элементу spinner
-            accSpinner.setAdapter(adapter);
-
-            accSpinner.setSelected(false);  // must
-            accSpinner.setSelection(0, true);  //must
-            accSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                    int id = ((AccountModel) adapterView.getSelectedItem()).getId();
-                    mTrans.setAccountId(id);
-                    txtCurrency.setText(curSymbolsId.get(id));
-                    txtAccount.setText(notArchiveAccountNames.get(id));
-                    accSpinner.setVisibility(View.INVISIBLE);
+        ArrayList<String> accountsArray = new ArrayList<>();
+        accountsArray.add("Выберите счет");
+        for (Map.Entry<Integer, String> entry : accountNames.entrySet()) {
+            accountsArray.add(entry.getValue());
+        }
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, accountsArray);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //Применяем адаптер к элементу spinner
+        accSpinner.setAdapter(adapter);
+        accSpinner.setSelected(false);
+        accSpinner.setSelection(TransactionModel.DEFAULT_ID, false);
+        accSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (position != TransactionModel.DEFAULT_ID) {
+                    int id = TransactionModel.DEFAULT_ID;
+                    for (Map.Entry<Integer, String> entry : accountNames.entrySet()) {
+                        if (adapter.getItem(position).equals(entry.getValue())) {
+                            id = entry.getKey();
+                        }
+                    }
+                    if (id != TransactionModel.DEFAULT_ID) {
+                        mTrans.setAccountId(id);
+                        txtCurrency.setText(curSymbolsId.get(id));
+                        txtAccount.setText(accountNames.get(id));
+                        accSpinner.setTag(position);
+                    }
                 }
+            }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-                    accSpinner.setVisibility(View.INVISIBLE);
-                }
-            });
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                //
+            }
         });
+    }
+
+    void spinner2Init(View view) {
 
     }
 
     // save transaction logic
     void save(int typeAction) {
-        Log.d("DEBUG", "before save " + mTrans.toString());
         if (mTrans.getAccountId() != TransactionModel.DEFAULT_ID) {
             mTrans.setDescription(String.valueOf(txtName.getText()));
             mTrans.setDate(mDate);

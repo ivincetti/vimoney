@@ -23,8 +23,8 @@ public class TabsFragmentPagerAdapter extends FragmentPagerAdapter {
                 return "+";
             case 2:
                 return "=";
-            case 3:
-                return "|";
+//            case 3:
+//                return "|";
             default:
                 return null;
         }
@@ -39,8 +39,8 @@ public class TabsFragmentPagerAdapter extends FragmentPagerAdapter {
                 return new TransactionIncomeFragment();
             case 2:
                 return new TransactionTransferFragment();
-            case 3:
-                return new TransactionDebtFragment();
+//            case 3:
+//                return new TransactionDebtFragment();
             default:
                 return null;
         }
@@ -48,6 +48,6 @@ public class TabsFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return 3;
     }
 }
