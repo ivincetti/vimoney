@@ -1,5 +1,7 @@
 package ru.vincetti.vimoney.data.adapters;
 
+import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -10,8 +12,11 @@ import ru.vincetti.vimoney.transaction.TransactionSpentFragment;
 import ru.vincetti.vimoney.transaction.TransactionTransferFragment;
 
 public class TabsFragmentPagerAdapter extends FragmentPagerAdapter {
-    public TabsFragmentPagerAdapter(FragmentManager fm) {
+    private final Bundle fragmentBundle;
+
+    public TabsFragmentPagerAdapter(FragmentManager fm, Bundle data) {
         super(fm);
+        fragmentBundle = data;
     }
 
     @Override
@@ -34,11 +39,17 @@ public class TabsFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int i) {
         switch (i) {
             case 0:
-                return new TransactionSpentFragment();
+                final TransactionSpentFragment spentFragment = new TransactionSpentFragment();
+                spentFragment.setArguments(this.fragmentBundle);
+                return spentFragment;
             case 1:
-                return new TransactionIncomeFragment();
+                final TransactionIncomeFragment incomeFragment = new TransactionIncomeFragment();
+                incomeFragment.setArguments(this.fragmentBundle);
+                return incomeFragment;
             case 2:
-                return new TransactionTransferFragment();
+                final TransactionTransferFragment transferFragment = new TransactionTransferFragment();
+                transferFragment.setArguments(this.fragmentBundle);
+                return transferFragment;
 //            case 3:
 //                return new TransactionDebtFragment();
             default:

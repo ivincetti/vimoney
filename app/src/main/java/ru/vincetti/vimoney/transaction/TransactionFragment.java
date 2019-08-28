@@ -8,6 +8,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,17 +36,19 @@ import ru.vincetti.vimoney.utils.LogicMath;
 public class TransactionFragment extends Fragment {
     int typeAction;
     AppDatabase mDb;
+    Bundle args;
     TransactionModel mTrans;
     HashMap<Integer, String> curSymbolsId;
     HashMap<Integer, String> accountNames;
     HashMap<Integer, String> notArchiveAccountNames;
 
+    LinearLayout container;
+    ProgressBar progressBar;
     TransactionViewModel viewModel;
     TextView txtName, txtSum, txtDate, txtCurrency, txtAccount;
     Spinner accSpinner;
     Button btnSave;
     Date mDate;
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -68,6 +72,12 @@ public class TransactionFragment extends Fragment {
         viewModel.getNotArchiveAccountNames().observe(getViewLifecycleOwner(), integerStringHashMap -> {
             notArchiveAccountNames = integerStringHashMap;
         });
+        args = getArguments();
+        if (args != null && args.getInt(TransactionActivity.EXTRA_TRANS_ID) > 0) {
+            final boolean t = true;
+            container.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+        }
         initFragmentViews(view);
     }
 
@@ -90,6 +100,8 @@ public class TransactionFragment extends Fragment {
                                 DateFormat.MEDIUM).format(transactionModel.getDate()
                         ));
                 initFragmentLogic();
+                container.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             } else if (transactionModel.getAccountId() != TransactionModel.DEFAULT_ID) {
                 txtAccount.setText(notArchiveAccountNames.get(transactionModel.getAccountId()));
                 txtCurrency.setText(curSymbolsId.get(transactionModel.getAccountId()));
@@ -131,6 +143,9 @@ public class TransactionFragment extends Fragment {
         txtAccount.setOnClickListener(view13 -> {
             accSpinner.performClick();
         });
+
+        container = view.findViewById(R.id.fragment_container);
+        progressBar = view.findViewById(R.id.fragment_progress_bar);
     }
 
     void initFragmentViews(View view) {

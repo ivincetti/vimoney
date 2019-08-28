@@ -1,85 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <!--Блок суммы-->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ProgressBar
+        android:id="@+id/fragment_progress_bar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="@dimen/big_padding"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/big_padding"
-        android:paddingEnd="@dimen/big_padding">
+        android:layout_gravity="center"
+        android:visibility="gone"
+        />
 
-        <EditText
-            android:id="@+id/add_sum"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="9"
-            android:gravity="end"
-            android:hint="@string/add_sum_sample"
-            android:inputType="numberDecimal"
-            android:paddingStart="@dimen/activity_horizontal_margin"
-            android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/text_big_numbers"
-            android:textStyle="bold" />
+    <LinearLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/add_acc_cur"
-            android:layout_width="0dp"
+        <!--Блок суммы-->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            tools:text="@string/currency_ruble_symbol"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/text_big_numbers"
-            android:textStyle="bold" />
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="@dimen/big_padding"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/big_padding"
+            android:paddingEnd="@dimen/big_padding">
+
+            <EditText
+                android:id="@+id/add_sum"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="9"
+                android:gravity="end"
+                android:hint="@string/add_sum_sample"
+                android:inputType="numberDecimal"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_big_numbers"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/add_acc_cur"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:text="@string/currency_ruble_symbol"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_big_numbers"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!--блок счета-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/big_padding"
+            android:paddingEnd="@dimen/big_padding">
+
+            <ImageView
+                android:id="@+id/add_acc_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_account_dark" />
+
+            <TextView
+                android:id="@+id/add_acc_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/add_acc_image"
+                android:textSize="@dimen/text_sm_numbers"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_centerVertical="true"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+                android:textColor="@color/colorPrimaryDark"
+                tools:text="@string/home_title_acc_name"/>
+
+            <Spinner
+                android:id="@+id/add_acc_list"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_toEndOf="@id/add_acc_image"
+                android:layout_below="@id/add_acc_name"
+                android:layout_gravity="center"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/activity_horizontal_margin" />
+
+        </RelativeLayout>
+
+        <include layout="@layout/fragment_add_all"/>
 
     </LinearLayout>
 
-    <!--блок счета-->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/big_padding"
-        android:paddingEnd="@dimen/big_padding">
+</FrameLayout>
 
-        <ImageView
-            android:id="@+id/add_acc_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_account_dark" />
-
-        <TextView
-            android:id="@+id/add_acc_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/add_acc_image"
-            android:textSize="@dimen/text_sm_numbers"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_centerVertical="true"
-            android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:textColor="@color/colorPrimaryDark"
-            tools:text="@string/home_title_acc_name"/>
-
-        <Spinner
-            android:id="@+id/add_acc_list"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_toEndOf="@id/add_acc_image"
-            android:layout_below="@id/add_acc_name"
-            android:layout_gravity="center"
-            android:paddingStart="@dimen/activity_horizontal_margin"
-            android:paddingEnd="@dimen/activity_horizontal_margin" />
-
-    </RelativeLayout>
-
-    <include layout="@layout/fragment_add_all"/>
-
-</LinearLayout>

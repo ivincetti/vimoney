@@ -31,6 +31,7 @@ public class TransactionActivity extends AppCompatActivity {
     private int mTransId = TransactionModel.DEFAULT_ID;
     private int accTransferTo = TransactionModel.DEFAULT_ID;
     private int accNestedId = TransactionModel.DEFAULT_ID;
+    Bundle fragmentBundle;
 
     ViewPager vPager;
     TransactionModel mTransaction;
@@ -61,11 +62,13 @@ public class TransactionActivity extends AppCompatActivity {
         final TransactionViewModel viewModel =
                 ViewModelProviders.of(this).get(TransactionViewModel.class);
         mTransaction = new TransactionModel();
+        fragmentBundle = new Bundle();
 
         Intent intent = getIntent();
         if (intent != null) {
             if (intent.hasExtra(EXTRA_TRANS_ID)) {
                 mTransId = intent.getIntExtra(EXTRA_TRANS_ID, TransactionModel.DEFAULT_ID);
+                fragmentBundle.putInt(EXTRA_TRANS_ID, mTransId);
                 findViewById(R.id.transaction_navigation_delete_btn).setVisibility(View.VISIBLE);
                 LiveData<TransactionModel> transLD = mDb.transactionDao().loadTransactionById(mTransId);
                 transLD.observe(this, new Observer<TransactionModel>() {
@@ -86,6 +89,10 @@ public class TransactionActivity extends AppCompatActivity {
                 mTransaction.setAccountId(mAccID);
             }
         }
+        TabLayout tabLayout = findViewById(R.id.sliding_tabs);
+        vPager.setAdapter(new TabsFragmentPagerAdapter(getSupportFragmentManager(), fragmentBundle));
+        tabLayout.setupWithViewPager(vPager);
+
         viewModel.setTransaction(mTransaction);
     }
 
@@ -100,11 +107,7 @@ public class TransactionActivity extends AppCompatActivity {
 
     private void initViews() {
         mDb = AppDatabase.getInstance(this);
-
         vPager = findViewById(R.id.view_pager);
-        TabLayout tabLayout = findViewById(R.id.sliding_tabs);
-        vPager.setAdapter(new TabsFragmentPagerAdapter(getSupportFragmentManager()));
-        tabLayout.setupWithViewPager(vPager);
 
         findViewById(R.id.transaction_navigation_delete_btn)
                 .setOnClickListener(view -> delete());
