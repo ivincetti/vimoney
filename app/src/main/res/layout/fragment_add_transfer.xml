@@ -46,11 +46,12 @@
 
                     <TextView
                         android:id="@+id/add_acc_cur"
-                        android:layout_width="24dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorPrimaryDark"
+                        android:paddingEnd="@dimen/sm_padding"
                         android:textSize="@dimen/text_big_numbers"
                         android:textStyle="bold"
                         tools:text="@string/currency_ruble_symbol" />
@@ -124,11 +125,12 @@
 
                     <TextView
                         android:id="@+id/add_acc_cur_to"
-                        android:layout_width="24dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:textColor="@color/colorPrimaryDark"
+                        android:paddingEnd="@dimen/sm_padding"
                         android:textSize="@dimen/text_big_numbers"
                         android:textStyle="bold"
                         tools:text="@string/currency_ruble_symbol" />
