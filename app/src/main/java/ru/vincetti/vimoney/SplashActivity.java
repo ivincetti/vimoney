@@ -44,13 +44,11 @@ public class SplashActivity extends AppCompatActivity {
 
     private JsonDownloader jsonDownloader;
     private AppDatabase mDb;
-    private Context mContext;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        mContext = this;
 
         mDb = AppDatabase.getInstance(this);
         retrofitInit();
@@ -204,7 +202,7 @@ public class SplashActivity extends AppCompatActivity {
     public void accountUpdate(int accId, String type, String title, int ins, int balance) {
         AccountModel newAcc = new AccountModel(accId, title, type, balance, 810);
         mDb.accountDao().insertAccount(newAcc);
-        accountBalanceUpdateById(mContext, accId);
+        accountBalanceUpdateById(mDb, accId);
     }
 
     public void currencyUpdate(String currencyName, int currencyCode, String symbol) {

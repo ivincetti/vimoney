@@ -30,7 +30,7 @@ public class TransactionTransferFragment extends TransactionFragment implements 
     private Spinner accSpinnerTo;
     private int accIdTo = TransactionModel.DEFAULT_ID;
     private long idTo = TransactionModel.DEFAULT_ID;
-    private int accOld, accNew;
+    private int accNew;
     private TransactionModel nestedTrans;
 
     @Nullable
@@ -53,7 +53,6 @@ public class TransactionTransferFragment extends TransactionFragment implements 
 
     @Override
     public void initFragmentLogic() {
-        accOld = mTrans.getAccountId();
         if (mTrans.getExtraKey().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)
                 && Integer.valueOf(mTrans.getExtraValue()) > 0) {
             LiveData<TransactionModel> trTransfer = AppDatabase.getInstance(getActivity()).transactionDao()
@@ -146,18 +145,14 @@ public class TransactionTransferFragment extends TransactionFragment implements 
                 transferInsert();
             }
             // update balance for current (accId) account
-            AppExecutors.getsInstance().diskIO().execute(
-                    () -> LogicMath.accountBalanceUpdateById(getActivity(), mTrans.getAccountId()));
-            AppExecutors.getsInstance().diskIO().execute(
-                    () -> LogicMath.accountBalanceUpdateById(getActivity(), accIdTo));
+            LogicMath.accountBalanceUpdateById(mDb, mTrans.getAccountId());
+            LogicMath.accountBalanceUpdateById(mDb, accIdTo);
             // update balance for account updated
             if (mTrans.getAccountId() != accOld) {
-                AppExecutors.getsInstance().diskIO().execute(
-                        () -> LogicMath.accountBalanceUpdateById(getActivity(), accOld));
+                LogicMath.accountBalanceUpdateById(mDb, accOld);
             }
             if (accIdTo != accNew) {
-                AppExecutors.getsInstance().diskIO().execute(
-                        () -> LogicMath.accountBalanceUpdateById(getActivity(), accNew));
+                LogicMath.accountBalanceUpdateById(mDb, accNew);
             }
 
             getActivity().finish();

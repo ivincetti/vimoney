@@ -36,11 +36,11 @@ import ru.vincetti.vimoney.utils.LogicMath;
 public class TransactionFragment extends Fragment {
     int typeAction;
     AppDatabase mDb;
-    Bundle args;
     TransactionModel mTrans;
     HashMap<Integer, String> curSymbolsId;
     HashMap<Integer, String> accountNames;
     HashMap<Integer, String> notArchiveAccountNames;
+    int accOld;
 
     LinearLayout container;
     ProgressBar progressBar;
@@ -87,6 +87,7 @@ public class TransactionFragment extends Fragment {
         setTypeAction();
         viewModel.getTransaction().observe(getViewLifecycleOwner(), transactionModel -> {
             mTrans.copyFrom(transactionModel);
+            accOld = transactionModel.getAccountId();
             if (transactionModel.getId() != TransactionModel.DEFAULT_ID) {
                 btnSave.setText(getString(R.string.add_btn_update));
                 txtSum.setText(String.valueOf(transactionModel.getSum()));
@@ -211,16 +212,17 @@ public class TransactionFragment extends Fragment {
             if (mTrans.getId() != TransactionModel.DEFAULT_ID) {
                 // update logic
                 AppExecutors.getsInstance().diskIO().execute(
-                        () -> mDb.transactionDao().updateTransaction(mTrans));
+                        () -> {
+                            mDb.transactionDao().updateTransaction(mTrans);
+                            LogicMath.accountBalanceUpdateById(mDb, accOld);
+                        });
             } else {
                 // new transaction
                 AppExecutors.getsInstance().diskIO().execute(
                         () -> mDb.transactionDao().insertTransaction(mTrans));
             }
             // update balance for current (accId) account
-            AppExecutors.getsInstance().diskIO().execute(
-                    () -> LogicMath.accountBalanceUpdateById(getActivity(), mTrans.getAccountId()));
-
+            LogicMath.accountBalanceUpdateById(mDb, mTrans.getAccountId());
             getActivity().finish();
         } else {
             Toast.makeText(getActivity(), getResources().getString(R.string.add_check_no_account_warning), Toast.LENGTH_SHORT).show();

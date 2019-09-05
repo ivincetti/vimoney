@@ -96,7 +96,7 @@ public class TransactionActivity extends AppCompatActivity {
         vPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                //setActivityTitle(position);
+                //do nothing
             }
 
             @Override
@@ -197,7 +197,7 @@ public class TransactionActivity extends AppCompatActivity {
                                             }
                                             mDb.transactionDao().deleteTransactionById(mTransId);
                                             // update balance for current (accId) account
-                                            LogicMath.accountBalanceUpdateById(getApplicationContext(), mAccID);
+                                            LogicMath.accountBalanceUpdateById(mDb, mAccID);
                                         });
                                 finish();
                             });
