@@ -1,6 +1,8 @@
 package ru.vincetti.vimoney.transaction;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,22 @@ public class TransactionTransferFragment extends TransactionFragment implements 
         txtAccountTo = view.findViewById(R.id.add_acc_name_to);
         txtAccountTo.setOnClickListener(view13 -> {
             accSpinnerTo.performClick();
+        });
+        txtSum.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                //do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                txtSumTo.setText(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                //do nothing
+            }
         });
 
         nestedTrans = new TransactionModel();
