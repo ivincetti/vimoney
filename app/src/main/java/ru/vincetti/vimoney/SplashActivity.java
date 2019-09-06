@@ -5,7 +5,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -65,17 +64,7 @@ public class SplashActivity extends AppCompatActivity {
                     ConnectivityManager cManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
                     NetworkInfo nInfo = cManager.getActiveNetworkInfo();
                     if (nInfo == null || !nInfo.isConnected()) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this)
-                                .setMessage(getResources().getString(R.string.splash_nonetwork_string))
-                                .setPositiveButton(getResources().getString(R.string.splash_nonetwork_positive),
-                                        (dialogInterface, i) -> {
-                                            Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(intent);
-                                        })
-                                .setNegativeButton(getResources().getString(R.string.splash_nonetwork_negative),
-                                        (dialogInterface, i) -> finish());
-                        builder.create().show();
+                        alertDialogShow();
                     } else {
                         retrofitInit();
                         loadJson();
@@ -117,7 +106,7 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ConfigFile> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                alertDialogShow();
                 Log.d(LOG_TAG, t.getMessage());
             }
         });
@@ -182,15 +171,6 @@ public class SplashActivity extends AppCompatActivity {
                 () -> mDb.configDao().insertConfig(newConfig));
     }
 
-    // update new date edit in config DB table
-    private void configDbDateUpdate(long timeMillisLong, int id) {
-        ConfigModel newConfig = new ConfigModel(id,
-                VimonContract.ConfigEntry.CONFIG_KEY_NAME_DATE_EDIT,
-                String.valueOf(timeMillisLong));
-        AppExecutors.getsInstance().diskIO().execute(
-                () -> mDb.configDao().updateConfig(newConfig));
-    }
-
     public void userUpdate(String user) {
         LiveData<ConfigModel> mUser = mDb.configDao().loadConfigByKey(CONFIG_KEY_NAME_USER_NAME);
         mUser.observe(this, new Observer<ConfigModel>() {
@@ -214,5 +194,19 @@ public class SplashActivity extends AppCompatActivity {
         AccountModel newAcc = new AccountModel(accId, title, type, balance, 810);
         mDb.accountDao().insertAccount(newAcc);
         accountBalanceUpdateById(mDb, accId);
+    }
+
+    private void alertDialogShow() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setMessage(getResources().getString(R.string.splash_nonetwork_string))
+                .setPositiveButton(getResources().getString(R.string.splash_nonetwork_positive),
+                        (dialogInterface, i) -> {
+                            Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        })
+                .setNegativeButton(getResources().getString(R.string.splash_nonetwork_negative),
+                        (dialogInterface, i) -> finish());
+        builder.create().show();
     }
 }
