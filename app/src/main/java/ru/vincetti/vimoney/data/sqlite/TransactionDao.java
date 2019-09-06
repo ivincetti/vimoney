@@ -97,6 +97,9 @@ public interface TransactionDao {
             + " AND  account_id = :accId")
     float loadSumExpenseByCheckId(int accId);
 
+    @Query("SELECT account_id FROM transactions WHERE id = :id")
+    int getAccountTransactionById(int id);
+
     @Query("DELETE FROM transactions WHERE id = :transId")
     void deleteTransactionById(int transId);
 

@@ -79,8 +79,8 @@ public class TransactionTransferFragment extends TransactionFragment implements 
                     transactionModel -> {
                         if (transactionModel != null) {
                             nestedTrans.copyFrom(transactionModel);
-                            accNew = nestedTrans.getAccountId();
-                            accIdTo = nestedTrans.getAccountId();
+                            accNew = transactionModel.getAccountId();
+                            accIdTo = transactionModel.getAccountId();
                             txtSumTo.setText(String.valueOf(transactionModel.getSum()));
                             txtAccountTo.setText(notArchiveAccountNames.get(transactionModel.getAccountId()));
                             txtCurrencyTo.setText(curSymbolsId.get(transactionModel.getAccountId()));

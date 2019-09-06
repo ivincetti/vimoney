@@ -31,7 +31,6 @@ public class TransactionActivity extends AppCompatActivity {
     private TextView titleTxt;
     private int mAccID = TransactionModel.DEFAULT_ID;
     private int mTransId = TransactionModel.DEFAULT_ID;
-    private int accTransferTo = TransactionModel.DEFAULT_ID;
     private int accNestedId = TransactionModel.DEFAULT_ID;
     Bundle fragmentBundle;
 
@@ -82,7 +81,6 @@ public class TransactionActivity extends AppCompatActivity {
                         mTransaction.copyFrom(transactionModel);
                         if (transactionModel.getExtraValue().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)) {
                             accNestedId = Integer.valueOf(transactionModel.getExtraValue());
-                            accTransferTo = Integer.valueOf(transactionModel.getExtraValue());
                         }
                     }
                 });
@@ -189,11 +187,10 @@ public class TransactionActivity extends AppCompatActivity {
                                         () -> {
                                             if (mTransaction.getExtraKey().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)
                                                     && accNestedId > 0) {
+                                                // update balance for nested transfer account
+                                                LogicMath.accountBalanceUpdateById(mDb, mDb.transactionDao().getAccountTransactionById(accNestedId));
                                                 // delete nested
                                                 mDb.transactionDao().deleteTransactionById(accNestedId);
-                                                // TODO accTransferTo must be write (now id of transaction)
-                                                // update balance for nested transfer account
-                                                // LogicMath.accountBalanceUpdateById(getApplicationContext(), accTransferTo);
                                             }
                                             mDb.transactionDao().deleteTransactionById(mTransId);
                                             // update balance for current (accId) account
