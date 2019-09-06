@@ -24,7 +24,7 @@
     <string name="home_stat_spending_icon">home_stat_spending_icon</string>
     <string name="home_fragment_stat_title">Статистика за</string>
     <string name="home_accounts_title">Счета</string>
-    <string name="home_fragment_stat_month_sample">Август</string>
+    <string name="home_fragment_stat_month_sample">Сентябрь</string>
     <string name="home_fragment_income_title">Доходы</string>
     <string name="home_fragment_income_sample">20000</string>
     <string name="home_fragment_spending_sample">11000</string>

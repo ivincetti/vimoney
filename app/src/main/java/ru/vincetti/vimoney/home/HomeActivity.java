@@ -122,9 +122,9 @@ public class HomeActivity extends AppCompatActivity {
 
         // get stat
         AppDatabase mDb = AppDatabase.getInstance(this);
-        LiveData<Integer> lSum1 = mDb.transactionDao().loadSumTransactionIncomeMonth("08","2019");
+        LiveData<Integer> lSum1 = mDb.transactionDao().loadSumTransactionIncomeMonth("09","2019");
         lSum1.observe(this, integer -> mStatIncome.setText(String.valueOf(integer)));
-        LiveData<Integer> lSum2 = mDb.transactionDao().loadSumTransactionExpenseMonth("08","2019");
+        LiveData<Integer> lSum2 = mDb.transactionDao().loadSumTransactionExpenseMonth("09","2019");
         lSum2.observe(this, integer -> mStatExpense.setText(String.valueOf(integer)));
 
     }
