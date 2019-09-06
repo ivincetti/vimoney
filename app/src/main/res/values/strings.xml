@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">ViMoney</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -9,6 +10,11 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+    <!--Splash-->
+    <string name="splash_nonetwork_string">нет подключения к сети.\nневозможно загрузить справочники</string>
+    <string name="splash_nonetwork_negative">Выход</string>
+    <string name="splash_nonetwork_positive">ПОВТОР</string>
 
     <!--Home Activity-->
     <string name="home_title_acc_name">Тинькофф</string>
@@ -74,8 +80,6 @@
     <string name="check_add_alert_positive">Продолжить</string>
     <string name="settings_check_title_home">Список счетов</string>
 
-
-
     <!--Check Activity-->
     <string name="check_title_home">счет</string>
     <string name="check_nav_title_edit">изм счета</string>
@@ -93,6 +97,7 @@
     <string name="settings_check_settings_btn">настройки счетов</string>
     <string name="add_check_no_account_warning">пожалуйста, выберите счет</string>
     <string name="add_check_no_sum_warning">пожалуйста, введите сумму</string>
+
     <!--Currency-->
     <string name="currency_name">валюта</string>
     <string name="currency_name_ruble">рубль</string>
@@ -100,4 +105,5 @@
     <string name="currency_name_dollar">доллар</string>
     <string name="currency_name_euro">евро</string>
     <string name="currency_name_yuan">юань</string>
+
 </resources>

@@ -1,11 +1,14 @@
 package ru.vincetti.vimoney;
 
-import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -51,8 +54,38 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         mDb = AppDatabase.getInstance(this);
-        retrofitInit();
-        loadJson();
+
+        LiveData<ConfigModel> tmpConfig = mDb.configDao()
+                .loadConfigByKey(VimonContract.ConfigEntry.CONFIG_KEY_NAME_DATE_EDIT);
+        tmpConfig.observe(this, new Observer<ConfigModel>() {
+            @Override
+            public void onChanged(ConfigModel config) {
+                tmpConfig.removeObserver(this);
+                if (config == null) {
+                    ConnectivityManager cManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+                    NetworkInfo nInfo = cManager.getActiveNetworkInfo();
+                    if (nInfo == null || !nInfo.isConnected()) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this)
+                                .setMessage(getResources().getString(R.string.splash_nonetwork_string))
+                                .setPositiveButton(getResources().getString(R.string.splash_nonetwork_positive),
+                                        (dialogInterface, i) -> {
+                                            Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                        })
+                                .setNegativeButton(getResources().getString(R.string.splash_nonetwork_negative),
+                                        (dialogInterface, i) -> finish());
+                        builder.create().show();
+                    } else {
+                        retrofitInit();
+                        loadJson();
+                        HomeActivity.start(getApplicationContext());
+                    }
+                } else {
+                    HomeActivity.start(getApplicationContext());
+                }
+            }
+        });
 
         // setting in viewmodel Utils hashes
         final TransactionViewModel viewModel =
@@ -79,7 +112,6 @@ public class SplashActivity extends AppCompatActivity {
             public void onResponse(Call<ConfigFile> call, Response<ConfigFile> response) {
                 if (response.body() != null) {
                     configDbUpdate(response.body().getDateEdit(), response);
-                    HomeActivity.start(getApplicationContext());
                 }
             }
 
@@ -92,56 +124,33 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void configDbUpdate(long timeMillisLong, Response<ConfigFile> response) {
-        LiveData<ConfigModel> tmpConfig = mDb.configDao()
-                .loadConfigByKey(VimonContract.ConfigEntry.CONFIG_KEY_NAME_DATE_EDIT);
-        tmpConfig.observe(this, new Observer<ConfigModel>() {
-            @Override
-            public void onChanged(ConfigModel config) {
-                tmpConfig.removeObserver(this);
-                if (config == null) {
-                    configDbDateInsert(timeMillisLong);
-                    // user info to base
-                    userUpdate(response.body().getUser().getName());
-                    // accounts info to base
-                    transactionsImport(response.body().getTransactions());
-                    currencyImport(response.body().getCurrency());
-                    accountsUpdate(response.body().getAccounts());
-                } else {
-                    if (Long.valueOf(config.getValue()) < timeMillisLong) {
-                        configDbDateUpdate(response.body().getDateEdit(), config.getId());
-                        // user info to base
-                        userUpdate(response.body().getUser().getName());
-                    }
-                }
-            }
-        });
+        configDbDateInsert(timeMillisLong);
+        // user info to base
+        userUpdate(response.body().getUser().getName());
+        // accounts info to base
+        transactionsImport(response.body().getTransactions());
+        currencyImport(response.body().getCurrency());
+        accountsUpdate(response.body().getAccounts());
     }
 
     private void accountsUpdate(List<AccountsItem> accountsItems) {
-        AppExecutors.getsInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                for (AccountsItem acc : accountsItems) {
-                    accountUpdate(acc.getId(),
-                            acc.getType(),
-                            acc.getTitle(),
-                            acc.getInstrument(),
-                            acc.getBalance());
-                }
+        AppExecutors.getsInstance().diskIO().execute(() -> {
+            for (AccountsItem acc : accountsItems) {
+                accountUpdate(acc.getId(),
+                        acc.getType(),
+                        acc.getTitle(),
+                        acc.getInstrument(),
+                        acc.getBalance());
             }
         });
     }
 
     // import currency from config
     private void currencyImport(List<CurrencyItem> currencyItems) {
-        AppExecutors.getsInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                for (CurrencyItem cur : currencyItems) {
-                    currencyUpdate(cur.getName(),
-                            cur.getCode(),
-                            cur.getSymbol());
-                }
+        AppExecutors.getsInstance().diskIO().execute(() -> {
+            for (CurrencyItem cur : currencyItems) {
+                mDb.currentDao().insertCurrency(
+                        new CurrencyModel(cur.getCode(), cur.getName(), cur.getSymbol()));
             }
         });
 
@@ -153,11 +162,13 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 for (TransactionsItem tr : transactionItems) {
-                    transactionImport(tr.getDate(),
-                            tr.getAccountId(),
-                            tr.getDescription(),
-                            tr.getType(),
-                            tr.getSum());
+                    mDb.transactionDao().insertTransaction(
+                            new TransactionModel(
+                                    new Date(tr.getDate()),
+                                    tr.getAccountId(),
+                                    tr.getDescription(),
+                                    tr.getType(),
+                                    tr.getSum()));
                 }
             }
         });
@@ -203,15 +214,5 @@ public class SplashActivity extends AppCompatActivity {
         AccountModel newAcc = new AccountModel(accId, title, type, balance, 810);
         mDb.accountDao().insertAccount(newAcc);
         accountBalanceUpdateById(mDb, accId);
-    }
-
-    public void currencyUpdate(String currencyName, int currencyCode, String symbol) {
-        CurrencyModel newCurrency = new CurrencyModel(currencyCode, currencyName, symbol);
-        mDb.currentDao().insertCurrency(newCurrency);
-    }
-
-    public void transactionImport(long date, int accId, String desc, int trType, float sum) {
-        TransactionModel newTr = new TransactionModel(new Date(date), accId, desc, trType, sum);
-        mDb.transactionDao().insertTransaction(newTr);
     }
 }
