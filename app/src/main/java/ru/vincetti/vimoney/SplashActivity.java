@@ -64,7 +64,7 @@ public class SplashActivity extends AppCompatActivity {
                     ConnectivityManager cManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
                     NetworkInfo nInfo = cManager.getActiveNetworkInfo();
                     if (nInfo == null || !nInfo.isConnected()) {
-                        alertDialogShow();
+                        alertNetworkDialogShow();
                     } else {
                         retrofitInit();
                         loadJson();
@@ -106,7 +106,7 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ConfigFile> call, Throwable t) {
-                alertDialogShow();
+                alertNetworkDialogShow();
                 Log.d(LOG_TAG, t.getMessage());
             }
         });
@@ -155,7 +155,7 @@ public class SplashActivity extends AppCompatActivity {
                             new TransactionModel(
                                     new Date(tr.getDate()),
                                     tr.getAccountId(),
-                                    tr.getDescription(),
+                                    getResources().getString(R.string.transaction_import_sample_desc),
                                     tr.getType(),
                                     tr.getSum()));
                 }
@@ -196,7 +196,7 @@ public class SplashActivity extends AppCompatActivity {
         accountBalanceUpdateById(mDb, accId);
     }
 
-    private void alertDialogShow() {
+    private void alertNetworkDialogShow() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setMessage(getResources().getString(R.string.splash_nonetwork_string))
                 .setPositiveButton(getResources().getString(R.string.splash_nonetwork_positive),

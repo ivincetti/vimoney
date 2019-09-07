@@ -140,10 +140,10 @@ public class TransactionActivity extends AppCompatActivity {
             case TransactionModel.TRANSACTION_TYPE_INCOME_TAB:
                 titleTxt.setText(getResources().getString(R.string.add_title_home_income));
                 break;
-            case TransactionModel.TRANSACTION_TYPE_TRANSFER:
+            case TransactionModel.TRANSACTION_TYPE_TRANSFER_TAB:
                 titleTxt.setText(getResources().getString(R.string.add_title_home_transfer));
                 break;
-//            case TransactionModel.TRANSACTION_TYPE_DEBT:
+//            case TransactionModel.TRANSACTION_TYPE_DEBT_TAB:
 //                titleTxt.setText(getResources().getString(R.string.add_title_home_debt));
 //                break;
         }

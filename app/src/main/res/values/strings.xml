@@ -1,16 +1,6 @@
 <resources>
     <string name="app_name">ViMoney</string>
 
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
-
     <!--Splash-->
     <string name="splash_nonetwork_string">нет подключения к сети.\nневозможно загрузить справочники</string>
     <string name="splash_nonetwork_negative">Выход</string>
@@ -60,6 +50,7 @@
     <string name="transaction_delete_alert_negative">Остаться</string>
     <string name="transaction_delete_alert_positive">Удалить</string>
     <string name="add_transaction_button_desc">add transaction button</string>
+    <string name="transaction_import_sample_desc">пример</string>
     <string name="add_desc_sample">комментарий</string>
     <string name="add_sum_sample">0.0</string>
     <string name="add_date_sample_txt">12/11/2018</string>

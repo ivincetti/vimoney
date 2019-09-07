@@ -2,7 +2,10 @@
 <resources>
     <color name="colorPrimary">#164fc6</color>
     <color name="colorPrimaryDark">#15315f</color>
-    <color name="colorAccent">#2f3280</color>
+    <color name="colorAccent">#d81b60</color>
+
+    <color name="colorIncome">#06DF58</color>
+    <color name="colorSpent">#F82020</color>
 
     <color name="colorTextMain">#163260</color>
     <color name="colorTextWhite">@color/colorBackground</color>
