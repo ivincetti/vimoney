@@ -33,6 +33,7 @@
 
     <!--History Activity-->
     <string name="history_title_home">Транзакции</string>
+    <string name="history_category_image_desc">иконка категории</string>
 
     <!--Dashboard Activity-->
     <string name="dashboard_title_home">Статистика</string>

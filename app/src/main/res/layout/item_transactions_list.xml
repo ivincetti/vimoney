@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/st_padding"
+    android:layout_marginBottom="@dimen/st_padding"
+    android:layout_marginStart="@dimen/big_padding"
+    android:layout_marginEnd="@dimen/big_padding"
     android:minHeight="@dimen/icon_st_size"
     app:cardCornerRadius="@dimen/sm_padding"
     app:cardElevation="@dimen/sm_padding">
@@ -14,11 +16,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <!--Category-->
         <ImageView
             android:id="@+id/card_transactions_image"
             android:layout_width="@dimen/icon_st_size"
             android:layout_height="@dimen/icon_st_size"
             android:src="@drawable/ic_monetization_black"
+            android:contentDescription="@string/history_category_image_desc"
             android:textColor="@color/colorTextWhite" />
 
         <RelativeLayout
@@ -60,7 +64,6 @@
                     tools:text="@string/add_desc_sample" />
 
             </LinearLayout>
-
 
             <TextView
                 android:id="@+id/home_transactions_balance"
