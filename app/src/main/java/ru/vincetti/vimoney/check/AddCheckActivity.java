@@ -63,7 +63,6 @@ public class AddCheckActivity extends AppCompatActivity {
         findViewById(R.id.setting_navigation_back_btn).setOnClickListener(view -> finish());
 
         mDb = AppDatabase.getInstance(this);
-        // setting in viewmodel Utils hashes
         viewModel = ViewModelProviders.of(this).get(TransactionViewModel.class);
         initView();
 
@@ -208,14 +207,14 @@ public class AddCheckActivity extends AppCompatActivity {
             AppExecutors.getsInstance().diskIO().execute(
                     () -> {
                         mDb.accountDao().updateAccount(tmp);
-                        viewModelUpdate(mDb, viewModel, this);
+                        viewModelUpdate(mDb, viewModel);
                     });
         } else {
             // new transaction
             AppExecutors.getsInstance().diskIO().execute(
                     () -> {
                         mDb.accountDao().insertAccount(tmp);
-                        viewModelUpdate(mDb, viewModel, this);
+                        viewModelUpdate(mDb, viewModel);
                     });
         }
         finish();
@@ -227,7 +226,7 @@ public class AddCheckActivity extends AppCompatActivity {
             AppExecutors.getsInstance().diskIO().execute(
                     () -> {
                         mDb.accountDao().fromArchiveAccountById(mCheckId);
-                        viewModelUpdate(mDb, viewModel, this);
+                        viewModelUpdate(mDb, viewModel);
                     });
             finish();
         }
@@ -248,9 +247,8 @@ public class AddCheckActivity extends AppCompatActivity {
                                 AppExecutors.getsInstance().diskIO().execute(
                                         () -> {
                                             mDb.accountDao().archiveAccountById(mCheckId);
-                                            viewModelUpdate(mDb, viewModel, this);
+                                            viewModelUpdate(mDb, viewModel);
                                         });
-
                                 finish();
 
                             });

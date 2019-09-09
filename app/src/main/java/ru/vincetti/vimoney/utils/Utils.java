@@ -1,7 +1,5 @@
 package ru.vincetti.vimoney.utils;
 
-import android.app.Activity;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,15 +27,14 @@ public class Utils {
         return hash;
     }
 
-    public static void viewModelUpdate(AppDatabase mDb, TransactionViewModel viewModel, Activity activity) {
-        AppExecutors.getsInstance().diskIO().execute(() -> {
-            List<AccountModel> tmpAccList = mDb.accountDao().loadAllAccountsList();
-            List<AccountListModel> tmpAccListFull = mDb.accountDao().loadAllAccountsFullList();
-            activity.runOnUiThread(() -> {
-                viewModel.setAccountNames(genAccountsHash(tmpAccList));
-                viewModel.setNotArchiveAccountNames(genAccountsHash(tmpAccList));
-                viewModel.setCurrencyIdSymbols(genCurrencyIdHash(tmpAccListFull));
-            });
+    public static void viewModelUpdate(AppDatabase mDb, TransactionViewModel viewModel) {
+        List<AccountModel> tmpAccList = mDb.accountDao().loadAllAccountsList();
+        List<AccountModel> tmpAccNotArchList = mDb.accountDao().loadNotArhiveAccountsList();
+        List<AccountListModel> tmpAccListFull = mDb.accountDao().loadAllAccountsFullList();
+        AppExecutors.getsInstance().mainThreadIO().execute(() -> {
+            viewModel.setAccountNames(genAccountsHash(tmpAccList));
+            viewModel.setNotArchiveAccountNames(genAccountsHash(tmpAccNotArchList));
+            viewModel.setCurrencyIdSymbols(genCurrencyIdHash(tmpAccListFull));
         });
     }
 }

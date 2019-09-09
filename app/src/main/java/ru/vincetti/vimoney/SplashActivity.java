@@ -78,7 +78,7 @@ public class SplashActivity extends AppCompatActivity {
         // setting in viewmodel Utils hashes
         final TransactionViewModel viewModel =
                 ViewModelProviders.of(this).get(TransactionViewModel.class);
-        viewModelUpdate(mDb, viewModel, this);
+        AppExecutors.getsInstance().diskIO().execute(() -> viewModelUpdate(mDb, viewModel));
     }
 
     private void retrofitInit() {

@@ -65,12 +65,12 @@ public class TransactionFragment extends Fragment {
 
         viewModel.getAccountNames().observe(getViewLifecycleOwner(), integerStringHashMap -> {
             accountNames = integerStringHashMap;
-            spinnerInit(view);
-            spinner2Init(view);
         });
 
         viewModel.getNotArchiveAccountNames().observe(getViewLifecycleOwner(), integerStringHashMap -> {
             notArchiveAccountNames = integerStringHashMap;
+            spinnerInit(view);
+            spinner2Init(view);
         });
 
         if (getArguments() != null && getArguments().getInt(TransactionActivity.EXTRA_TRANS_ID) > 0) {
@@ -161,7 +161,7 @@ public class TransactionFragment extends Fragment {
         accSpinner = view.findViewById(R.id.add_acc_list);
         ArrayList<String> accountsArray = new ArrayList<>();
         accountsArray.add("Выберите счет");
-        for (Map.Entry<Integer, String> entry : accountNames.entrySet()) {
+        for (Map.Entry<Integer, String> entry : notArchiveAccountNames.entrySet()) {
             accountsArray.add(entry.getValue());
         }
         ArrayAdapter<String> adapter =
