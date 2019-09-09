@@ -38,8 +38,7 @@ import ru.vincetti.vimoney.transaction.TransactionViewModel;
 
 import static ru.vincetti.vimoney.data.sqlite.VimonContract.ConfigEntry.CONFIG_KEY_NAME_USER_NAME;
 import static ru.vincetti.vimoney.utils.LogicMath.accountBalanceUpdateById;
-import static ru.vincetti.vimoney.utils.Utils.genAccountsHash;
-import static ru.vincetti.vimoney.utils.Utils.genCurrencyIdHash;
+import static ru.vincetti.vimoney.utils.Utils.viewModelUpdate;
 
 public class SplashActivity extends AppCompatActivity {
     private final String LOG_TAG = "SPLASH_DEBUG";
@@ -79,12 +78,7 @@ public class SplashActivity extends AppCompatActivity {
         // setting in viewmodel Utils hashes
         final TransactionViewModel viewModel =
                 ViewModelProviders.of(this).get(TransactionViewModel.class);
-        mDb.accountDao().loadAllAccountsFull().observe(this,
-                accountListModels -> viewModel.setCurrencyIdSymbols(genCurrencyIdHash(accountListModels)));
-        mDb.accountDao().loadAllAccounts().observe(this,
-                accountModels -> viewModel.setAccountNames(genAccountsHash(accountModels)));
-        mDb.accountDao().loadNotArhiveAccounts().observe(this,
-                accountModels -> viewModel.setNotArchiveAccountNames(genAccountsHash(accountModels)));
+        viewModelUpdate(mDb, viewModel, this);
     }
 
     private void retrofitInit() {

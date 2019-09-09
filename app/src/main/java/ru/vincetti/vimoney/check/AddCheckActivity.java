@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import java.util.List;
 
@@ -24,6 +25,9 @@ import ru.vincetti.vimoney.data.AppExecutors;
 import ru.vincetti.vimoney.data.models.AccountModel;
 import ru.vincetti.vimoney.data.models.CurrencyModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
+import ru.vincetti.vimoney.transaction.TransactionViewModel;
+
+import static ru.vincetti.vimoney.utils.Utils.viewModelUpdate;
 
 public class AddCheckActivity extends AppCompatActivity {
     private final static String EXTRA_CHECK_ID = "Extra_check_id";
@@ -31,9 +35,9 @@ public class AddCheckActivity extends AppCompatActivity {
 
     private int mCheckId = DEFAULT_CHECK_ID;
     private int mSum = 0;
-    private String currencySymbols;
     private int checkCurrency;
     private AppDatabase mDb;
+    private TransactionViewModel viewModel;
     private EditText checkName;
     private Button btnSave;
     private ImageView btnDelete, btnFromArhive;
@@ -59,6 +63,8 @@ public class AddCheckActivity extends AppCompatActivity {
         findViewById(R.id.setting_navigation_back_btn).setOnClickListener(view -> finish());
 
         mDb = AppDatabase.getInstance(this);
+        // setting in viewmodel Utils hashes
+        viewModel = ViewModelProviders.of(this).get(TransactionViewModel.class);
         initView();
 
         Intent intent = getIntent();
@@ -177,7 +183,7 @@ public class AddCheckActivity extends AppCompatActivity {
 
     // get index in spinner
     private int getIndex(CurrencyModel tmpAcc) {
-        if(tmpAcc != null){
+        if (tmpAcc != null) {
             for (int i = 0; i < curSpinner.getCount(); i++) {
                 if (curSpinner.getItemAtPosition(i).toString().equals(tmpAcc.getSymbol())) {
                     return i;
@@ -200,11 +206,17 @@ public class AddCheckActivity extends AppCompatActivity {
             // update logic
             tmp.setId(mCheckId);
             AppExecutors.getsInstance().diskIO().execute(
-                    () -> mDb.accountDao().updateAccount(tmp));
+                    () -> {
+                        mDb.accountDao().updateAccount(tmp);
+                        viewModelUpdate(mDb, viewModel, this);
+                    });
         } else {
             // new transaction
             AppExecutors.getsInstance().diskIO().execute(
-                    () -> mDb.accountDao().insertAccount(tmp));
+                    () -> {
+                        mDb.accountDao().insertAccount(tmp);
+                        viewModelUpdate(mDb, viewModel, this);
+                    });
         }
         finish();
     }
@@ -213,7 +225,10 @@ public class AddCheckActivity extends AppCompatActivity {
     private void restore() {
         if (mCheckId != DEFAULT_CHECK_ID) {
             AppExecutors.getsInstance().diskIO().execute(
-                    () -> mDb.accountDao().fromArchiveAccountById(mCheckId));
+                    () -> {
+                        mDb.accountDao().fromArchiveAccountById(mCheckId);
+                        viewModelUpdate(mDb, viewModel, this);
+                    });
             finish();
         }
     }
@@ -231,7 +246,11 @@ public class AddCheckActivity extends AppCompatActivity {
                             (dialogInterface, i) -> {
                                 // delete query
                                 AppExecutors.getsInstance().diskIO().execute(
-                                        () -> mDb.accountDao().archiveAccountById(mCheckId));
+                                        () -> {
+                                            mDb.accountDao().archiveAccountById(mCheckId);
+                                            viewModelUpdate(mDb, viewModel, this);
+                                        });
+
                                 finish();
 
                             });

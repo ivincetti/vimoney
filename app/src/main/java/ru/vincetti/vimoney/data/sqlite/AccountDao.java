@@ -19,12 +19,22 @@ public interface AccountDao {
     @Query("SELECT * FROM accounts ORDER BY archive ASC, name ASC")
     LiveData<List<AccountModel>> loadAllAccounts();
 
+    @Query("SELECT * FROM accounts ORDER BY archive ASC, name ASC")
+    List<AccountModel> loadAllAccountsList();
+
     @Query("SELECT accounts.id, accounts.name, currency.symbol AS account_symbol, " +
             "accounts.sum, accounts.type, accounts.archive " +
             "FROM accounts, currency " +
             "WHERE accounts.currency == currency.code " +
             "ORDER BY accounts.archive ASC, accounts.name ASC")
     LiveData<List<AccountListModel>> loadAllAccountsFull();
+
+    @Query("SELECT accounts.id, accounts.name, currency.symbol AS account_symbol, " +
+            "accounts.sum, accounts.type, accounts.archive " +
+            "FROM accounts, currency " +
+            "WHERE accounts.currency == currency.code " +
+            "ORDER BY accounts.archive ASC, accounts.name ASC")
+    List<AccountListModel> loadAllAccountsFullList();
 
     @Query("SELECT * FROM accounts WHERE archive = 0 ORDER BY name ASC")
     LiveData<List<AccountModel>> loadNotArhiveAccounts();
