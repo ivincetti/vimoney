@@ -11,12 +11,10 @@ public class AppExecutors {
 
     private static AppExecutors sInstance;
     private final Executor diskIO;
-    private final Executor networkIO;
     private final Executor mainThreadIO;
 
-    public AppExecutors(Executor diskIO, Executor networkIO, Executor mainThreadIO) {
+    public AppExecutors(Executor diskIO, Executor mainThreadIO) {
         this.diskIO = diskIO;
-        this.networkIO = networkIO;
         this.mainThreadIO = mainThreadIO;
     }
 
@@ -25,7 +23,6 @@ public class AppExecutors {
             synchronized (LOCK) {
                 sInstance = new AppExecutors(
                         Executors.newSingleThreadExecutor(),
-                        Executors.newFixedThreadPool(2),
                         new MainThreadExecutor());
             }
         }
@@ -34,10 +31,6 @@ public class AppExecutors {
 
     public Executor diskIO() {
         return diskIO;
-    }
-
-    public Executor networkIO() {
-        return networkIO;
     }
 
     public Executor mainThreadIO() {

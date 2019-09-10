@@ -99,7 +99,7 @@ public class TransactionTransferFragment extends TransactionFragment implements 
         accSpinnerTo = view.findViewById(R.id.add_acc_list_to);
         ArrayList<String> accounts2Array = new ArrayList<>();
         accounts2Array.add("Выберите счет");
-        for (Map.Entry<Integer, String> entry : accountNames.entrySet()) {
+        for (Map.Entry<Integer, String> entry : notArchiveAccountNames.entrySet()) {
             accounts2Array.add(entry.getValue());
         }
         // Создаем адаптер ArrayAdapter с помощью массива строк и стандартной разметки элемета spinner
@@ -133,8 +133,6 @@ public class TransactionTransferFragment extends TransactionFragment implements 
                 //
             }
         });
-
-
     }
 
     @Override

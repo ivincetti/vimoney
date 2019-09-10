@@ -39,6 +39,9 @@ public interface AccountDao {
     @Query("SELECT * FROM accounts WHERE archive = 0 ORDER BY name ASC")
     LiveData<List<AccountModel>> loadNotArhiveAccounts();
 
+    @Query("SELECT * FROM accounts WHERE archive = 0 ORDER BY name ASC")
+    List<AccountModel> loadNotArhiveAccountsList();
+
     @Query("SELECT accounts.id, accounts.name, currency.symbol AS account_symbol, " +
             "accounts.sum, accounts.type, accounts.archive " +
             "FROM accounts, currency " +

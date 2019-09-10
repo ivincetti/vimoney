@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
 
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.data.AppExecutors;
@@ -18,6 +19,9 @@ import ru.vincetti.vimoney.data.models.AccountListModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.history.HistoryFragment;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
+import ru.vincetti.vimoney.transaction.TransactionViewModel;
+
+import static ru.vincetti.vimoney.utils.Utils.viewModelUpdate;
 
 public class CheckActivity extends AppCompatActivity {
     private final static String EXTRA_CHECK_ID = "Extra_check_id";
@@ -26,6 +30,7 @@ public class CheckActivity extends AppCompatActivity {
 
     private int mCheckId = DEFAULT_CHECK_ID;
     private AppDatabase mDb;
+    private TransactionViewModel viewModel;
     private TextView checkName, checkType, checkBalance, isArchive, checkSymbol;
     private ImageView btnDelete, btnFromArhive;
 
@@ -42,6 +47,7 @@ public class CheckActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.top_toolbar);
         setSupportActionBar(toolbar);
         mDb = AppDatabase.getInstance(this);
+        viewModel = ViewModelProviders.of(this).get(TransactionViewModel.class);
         initViews();
 
         Intent intent = getIntent();
@@ -112,7 +118,10 @@ public class CheckActivity extends AppCompatActivity {
     private void restore() {
         if (mCheckId != DEFAULT_CHECK_ID) {
             AppExecutors.getsInstance().diskIO().execute(
-                    () -> mDb.accountDao().fromArchiveAccountById(mCheckId));
+                    () -> {
+                        mDb.accountDao().fromArchiveAccountById(mCheckId);
+                        viewModelUpdate(mDb, viewModel);
+                    });
         }
     }
 
@@ -129,7 +138,10 @@ public class CheckActivity extends AppCompatActivity {
                             (dialogInterface, i) -> {
                                 // delete query
                                 AppExecutors.getsInstance().diskIO().execute(
-                                        () -> mDb.accountDao().archiveAccountById(mCheckId));
+                                        () -> {
+                                            mDb.accountDao().archiveAccountById(mCheckId);
+                                            viewModelUpdate(mDb, viewModel);
+                                        });
 
                             });
             builder.create().show();
