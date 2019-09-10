@@ -65,12 +65,12 @@ public class TransactionFragment extends Fragment {
 
         viewModel.getAccountNames().observe(getViewLifecycleOwner(), integerStringHashMap -> {
             accountNames = integerStringHashMap;
-            spinnerInit(view);
-            spinner2Init(view);
         });
 
         viewModel.getNotArchiveAccountNames().observe(getViewLifecycleOwner(), integerStringHashMap -> {
             notArchiveAccountNames = integerStringHashMap;
+            spinnerInit(view);
+            spinner2Init(view);
         });
 
         if (getArguments() != null && getArguments().getInt(TransactionActivity.EXTRA_TRANS_ID) > 0) {
@@ -83,8 +83,8 @@ public class TransactionFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         setTypeAction();
+
         viewModel.getTransaction().observe(getViewLifecycleOwner(), transactionModel -> {
             mTrans.copyFrom(transactionModel);
             accOld = transactionModel.getAccountId();
@@ -107,6 +107,7 @@ public class TransactionFragment extends Fragment {
                 txtCurrency.setText(curSymbolsId.get(transactionModel.getAccountId()));
                 initFragmentLogic();
             } else {
+                txtAccount.setText(getResources().getString(R.string.add_no_account_text));
                 initFragmentLogic();
             }
         });
@@ -160,8 +161,8 @@ public class TransactionFragment extends Fragment {
     void spinnerInit(View view) {
         accSpinner = view.findViewById(R.id.add_acc_list);
         ArrayList<String> accountsArray = new ArrayList<>();
-        accountsArray.add("Выберите счет");
-        for (Map.Entry<Integer, String> entry : accountNames.entrySet()) {
+        accountsArray.add(getResources().getString(R.string.add_no_account_text));
+        for (Map.Entry<Integer, String> entry : notArchiveAccountNames.entrySet()) {
             accountsArray.add(entry.getValue());
         }
         ArrayAdapter<String> adapter =
