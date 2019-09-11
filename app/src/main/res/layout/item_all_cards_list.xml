@@ -15,7 +15,7 @@
         android:id="@+id/acc_list_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
+
         android:paddingStart="@dimen/big_padding"
         android:paddingEnd="@dimen/big_padding">
 
@@ -24,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:textColor="@color/colorTextMain"
             android:textSize="@dimen/text_st_numbers"
             tools:text="@string/home_title_acc_name" />
@@ -53,10 +54,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@id/acc_symbol"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:textColor="@color/colorTextMain"
             android:textSize="@dimen/text_big_numbers"
             android:textStyle="bold"
             tools:text="@string/home_title_acc_balance" />
+
         <TextView
             android:id="@+id/acc_symbol"
             android:layout_width="wrap_content"
@@ -65,6 +68,7 @@
             android:layout_marginStart="@dimen/sm_padding"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:textColor="@color/colorTextMain"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:textSize="@dimen/text_big_numbers"
             android:textStyle="bold"
             tools:text="@string/currency_ruble_symbol" />

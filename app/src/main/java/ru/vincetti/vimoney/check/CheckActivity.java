@@ -2,6 +2,7 @@ package ru.vincetti.vimoney.check;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -100,6 +101,7 @@ public class CheckActivity extends AppCompatActivity {
         checkName.setText(accountModel.getName());
         checkType.setText(accountModel.getType());
         checkBalance.setText(String.valueOf(accountModel.getSum()));
+        findViewById(R.id.check_acc_container).setBackgroundColor(Color.parseColor(accountModel.getColor()));
 
         if (accountModel.isArhive()) {
             isArchive.setVisibility(View.VISIBLE);

@@ -1,11 +1,13 @@
 package ru.vincetti.vimoney.data.adapters;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -19,6 +21,7 @@ public class AllCardsListRVAdapter extends RecyclerView.Adapter<AllCardsListRVAd
 
     class CardsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView accName, accType, accBalance, isArchive, accSymbol;
+        View accContaner;
 
         public CardsViewHolder(@NonNull View itemView, OnCardClickListener listener) {
             super(itemView);
@@ -27,6 +30,7 @@ public class AllCardsListRVAdapter extends RecyclerView.Adapter<AllCardsListRVAd
             accBalance = itemView.findViewById(R.id.acc_balance);
             isArchive = itemView.findViewById(R.id.acc_archive);
             accSymbol = itemView.findViewById(R.id.acc_symbol);
+            accContaner = itemView.findViewById(R.id.acc_list_container);
             itemView.setOnClickListener(this);
         }
 
@@ -55,6 +59,7 @@ public class AllCardsListRVAdapter extends RecyclerView.Adapter<AllCardsListRVAd
         holder.accType.setText(tmpAcc.getType());
         holder.accBalance.setText(String.valueOf(tmpAcc.getSum()));
         holder.accSymbol.setText(tmpAcc.getSymbol());
+        holder.accContaner.setBackgroundColor(ColorUtils.setAlphaComponent(Color.parseColor(tmpAcc.getColor()), 35));
         if(!tmpAcc.isArhive()){
             holder.isArchive.setVisibility(View.INVISIBLE);
         } else {

@@ -1,5 +1,6 @@
 package ru.vincetti.vimoney.data.adapters;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.
 
     class CardsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView accName, accType, accBalance, accSymbol;
+        View accContainer;
 
         public CardsViewHolder(@NonNull View itemView, OnCardClickListener listener) {
             super(itemView);
@@ -26,6 +28,7 @@ public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.
             accType = itemView.findViewById(R.id.home_acc_type);
             accBalance = itemView.findViewById(R.id.home_acc_balance);
             accSymbol = itemView.findViewById(R.id.home_acc_symbol);
+            accContainer = itemView.findViewById(R.id.home_acc_container);
             itemView.setOnClickListener(this);
         }
 
@@ -54,6 +57,7 @@ public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.
         holder.accType.setText(tmpAcc.getType());
         holder.accBalance.setText(String.valueOf(tmpAcc.getSum()));
         holder.accSymbol.setText(tmpAcc.getSymbol());
+        holder.accContainer.setBackgroundColor(Color.parseColor(tmpAcc.getColor()));
     }
 
     @Override
