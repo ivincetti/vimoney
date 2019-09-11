@@ -127,7 +127,7 @@ public class AddCheckActivity extends AppCompatActivity {
 
     private void changeBackgroundColor(int selectedColor) {
         colorView.setBackgroundColor(selectedColor);
-        color = String.format("#%06X", (0xFFFFFF & selectedColor));
+        color = String.format("#%06x", (0xffffff & selectedColor));
     }
 
     private void pickColor() {
@@ -137,18 +137,11 @@ public class AddCheckActivity extends AppCompatActivity {
                 .initialColor(getResources().getColor(R.color.colorPrimary))
                 .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                 .density(12)
-                .setOnColorSelectedListener(new OnColorSelectedListener() {
-                    @Override
-                    public void onColorSelected(int selectedColor) {
-                        // do nothing
-                    }
+                .setOnColorSelectedListener(selectedColor -> {
+                    // do nothing
                 })
-                .setPositiveButton("ok", new ColorPickerClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
-                        changeBackgroundColor(selectedColor);
-                    }
-                })
+                .setPositiveButton("ok", (dialog, selectedColor, allColors)
+                        -> changeBackgroundColor(selectedColor))
                 .setNegativeButton("cancel", (dialog, which) -> dialog.dismiss())
                 .build()
                 .show();
