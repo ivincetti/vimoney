@@ -23,6 +23,11 @@
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:textColor="@color/colorTextWhite"
             android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:paddingEnd="@dimen/sm_padding"
+            android:paddingStart="@dimen/sm_padding"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_st_numbers"
+            style="@style/textBlackShadow"
             tools:text="@string/home_title_acc_name"/>
 
         <TextView
@@ -32,7 +37,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:textColor="@color/colorTextWhite"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_alignBaseline="@id/home_acc_name"
             tools:text="@string/home_title_acc_type"/>
 
         <TextView
@@ -45,6 +50,7 @@
             android:textColor="@color/colorTextWhite"
             android:textSize="@dimen/text_big_numbers"
             android:textStyle="bold"
+            style="@style/textBlackShadow"
             tools:text="@string/home_title_acc_balance" />
 
         <TextView
@@ -58,6 +64,8 @@
             android:textColor="@color/colorTextWhite"
             android:textSize="@dimen/text_big_numbers"
             android:textStyle="bold"
+            style="@style/textBlackShadow"
+            android:paddingEnd="@dimen/sm_padding"
             tools:text="@string/currency_ruble_symbol" />
 
     </RelativeLayout>

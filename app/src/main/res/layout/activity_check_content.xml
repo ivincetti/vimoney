@@ -29,16 +29,21 @@
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:textColor="@color/colorTextWhite"
+                android:paddingEnd="@dimen/sm_padding"
+                android:paddingStart="@dimen/sm_padding"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_st_numbers"
+                style="@style/textBlackShadow"
                 tools:text="@string/home_title_acc_name" />
 
             <TextView
                 android:id="@+id/check_acc_archive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_below="@id/check_acc_name"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/check_acc_type"
                 android:textColor="@color/colorTextSecondary"
-                android:visibility="invisible"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 tools:text="@string/check_arсhive_txt" />
 
             <TextView
@@ -48,7 +53,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:textColor="@color/colorTextSecondary"
+                android:textColor="@color/colorTextWhite"
+                android:layout_alignBaseline="@id/check_acc_name"
                 tools:text="@string/home_title_acc_type" />
 
             <TextView
@@ -61,6 +67,7 @@
                 android:textColor="@color/colorTextWhite"
                 android:textSize="@dimen/text_big_numbers"
                 android:textStyle="bold"
+                style="@style/textBlackShadow"
                 tools:text="@string/home_title_acc_balance" />
 
             <TextView
@@ -74,6 +81,9 @@
                 android:textColor="@color/colorTextWhite"
                 android:textSize="@dimen/text_big_numbers"
                 android:textStyle="bold"
+                android:paddingEnd="@dimen/sm_padding"
+                android:paddingStart="@dimen/sm_padding"
+                style="@style/textBlackShadow"
                 tools:text="@string/currency_ruble_symbol" />
 
         </RelativeLayout>
