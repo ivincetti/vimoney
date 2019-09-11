@@ -198,7 +198,8 @@ public class AddCheckActivity extends AppCompatActivity {
                 String.valueOf(checkName.getText()),
                 typeEntered(),
                 mSum,
-                checkCurrency
+                checkCurrency,
+                "#164fc6"
         );
 
         if (mCheckId != DEFAULT_CHECK_ID) {

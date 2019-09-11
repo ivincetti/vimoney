@@ -24,21 +24,23 @@ public class AccountModel {
     @ColumnInfo(name = "extra_value")
     @NonNull
     private String extraValue;
-
+    @NonNull
+    private String color;
     @ColumnInfo(name = "archive")
     private boolean isArhive;
 
     @Ignore
-    public AccountModel(String name, String type, int sum, int currency) {
+    public AccountModel(String name, String type, int sum, int currency, String color) {
         this.name = name;
         this.type = type;
         this.sum = sum;
         this.currency = currency;
         this.extraKey = "";
         this.extraValue = "";
+        this.color = color;
     }
 
-    public AccountModel(int id, String name, String type, int sum, int currency) {
+    public AccountModel(int id, String name, String type, int sum, int currency, String color) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -46,6 +48,7 @@ public class AccountModel {
         this.currency = currency;
         this.extraKey = "";
         this.extraValue = "";
+        this.color = color;
     }
 
     public int getId() {
@@ -98,5 +101,14 @@ public class AccountModel {
 
     public void setExtraValue(String extraValue) {
         this.extraValue = extraValue;
+    }
+
+    @NonNull
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(@NonNull String color) {
+        this.color = color;
     }
 }

@@ -13,10 +13,14 @@ public class VimonContract {
         public static final String TABLE_NAME = "accounts";
 
         public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_NAME = "name";
         public static final String COLUMN_TYPE = "type";
-        public static final String COLUMN_TITLE = "title";
-        public static final String COLUMN_INSTRUMENT = "instrument";
-        public static final String COLUMN_BALANCE = "balance";
+        public static final String COLUMN_BALANCE = "sum";
+        public static final String COLUMN_CURRENCY = "currency";
+        public static final String COLUMN_COLOR = "color";
+        public static final String COLUMN_EXTRA_KEY = "extra_key";
+        public static final String COLUMN_EXTRA_VALUE = "extra_value";
+        public static final String COLUMN_ARCHIVE = "archive";
     }
 
     public static final class ConfigEntry implements BaseColumns {

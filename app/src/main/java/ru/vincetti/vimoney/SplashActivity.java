@@ -185,7 +185,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void accountUpdate(int accId, String type, String title, int ins, int balance) {
-        AccountModel newAcc = new AccountModel(accId, title, type, balance, 810);
+        AccountModel newAcc = new AccountModel(accId, title, type, balance, 810, "#164fc6");
         mDb.accountDao().insertAccount(newAcc);
         accountBalanceUpdateById(mDb, accId);
     }

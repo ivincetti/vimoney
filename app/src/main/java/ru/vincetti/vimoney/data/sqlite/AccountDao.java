@@ -23,14 +23,14 @@ public interface AccountDao {
     List<AccountModel> loadAllAccountsList();
 
     @Query("SELECT accounts.id, accounts.name, currency.symbol AS account_symbol, " +
-            "accounts.sum, accounts.type, accounts.archive " +
+            "accounts.sum, accounts.type, accounts.archive, accounts.color " +
             "FROM accounts, currency " +
             "WHERE accounts.currency == currency.code " +
             "ORDER BY accounts.archive ASC, accounts.name ASC")
     LiveData<List<AccountListModel>> loadAllAccountsFull();
 
     @Query("SELECT accounts.id, accounts.name, currency.symbol AS account_symbol, " +
-            "accounts.sum, accounts.type, accounts.archive " +
+            "accounts.sum, accounts.type, accounts.archive, accounts.color " +
             "FROM accounts, currency " +
             "WHERE accounts.currency == currency.code " +
             "ORDER BY accounts.archive ASC, accounts.name ASC")
@@ -43,7 +43,7 @@ public interface AccountDao {
     List<AccountModel> loadNotArhiveAccountsList();
 
     @Query("SELECT accounts.id, accounts.name, currency.symbol AS account_symbol, " +
-            "accounts.sum, accounts.type, accounts.archive " +
+            "accounts.sum, accounts.type, accounts.archive, accounts.color " +
             "FROM accounts, currency " +
             "WHERE accounts.currency == currency.code AND  accounts.archive = 0 " +
             "ORDER BY accounts.name ASC")
@@ -53,7 +53,7 @@ public interface AccountDao {
     LiveData<AccountModel> loadAccountById(int accId);
 
     @Query("SELECT accounts.id, accounts.name, currency.symbol AS account_symbol, " +
-            "accounts.sum, accounts.type, accounts.archive " +
+            "accounts.sum, accounts.type, accounts.archive, accounts.color " +
             "FROM accounts, currency " +
             "WHERE accounts.currency == currency.code " +
             "AND  accounts.id = :accId " +

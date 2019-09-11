@@ -36,7 +36,8 @@ public abstract class AppDatabase extends RoomDatabase {
                                 AppDatabase.MIGRATION_3_4,
                                 AppDatabase.MIGRATION_4_5,
                                 AppDatabase.MIGRATION_5_6,
-                                AppDatabase.MIGRATION_6_7
+                                AppDatabase.MIGRATION_6_7,
+                                AppDatabase.MIGRATION_7_8
                         )
                         .build();
             }
@@ -108,6 +109,15 @@ public abstract class AppDatabase extends RoomDatabase {
         public void migrate(final SupportSQLiteDatabase db) {
             db.execSQL("ALTER TABLE transactions ADD COLUMN system INTEGER DEFAULT 0 NOT NULL");
             db.execSQL("ALTER TABLE transactions ADD COLUMN deleted INTEGER DEFAULT 0 NOT NULL");
+        }
+    };
+
+    // add transaction columns: system and deleted
+    private static final Migration MIGRATION_7_8 = new Migration(7, 8) {
+        @Override
+        public void migrate(final SupportSQLiteDatabase db) {
+            db.execSQL("ALTER TABLE accounts ADD COLUMN color TEXT DEFAULT '' NOT NULL");
+            db.execSQL("UPDATE accounts SET color=\"#164fc6\"");
         }
     };
 }

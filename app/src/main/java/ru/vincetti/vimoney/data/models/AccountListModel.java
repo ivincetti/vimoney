@@ -10,7 +10,7 @@ public class AccountListModel {
     public int sum;
     @ColumnInfo(name = "account_symbol")
     public String curSymbol;
-
+    public String color;
     @ColumnInfo(name = "archive")
     public boolean isArhive;
 
@@ -36,5 +36,9 @@ public class AccountListModel {
 
     public String getSymbol() {
         return curSymbol;
+    }
+
+    public String getColor() {
+        return color;
     }
 }
