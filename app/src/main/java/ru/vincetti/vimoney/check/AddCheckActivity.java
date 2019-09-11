@@ -1,8 +1,11 @@
 package ru.vincetti.vimoney.check;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,12 +14,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.OnColorSelectedListener;
+import com.flask.colorpicker.builder.ColorPickerClickListener;
+import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
 import java.util.List;
 
@@ -36,11 +46,13 @@ public class AddCheckActivity extends AppCompatActivity {
     private int mCheckId = DEFAULT_CHECK_ID;
     private int mSum = 0;
     private int checkCurrency;
+    private String color;
     private AppDatabase mDb;
     private TransactionViewModel viewModel;
     private EditText checkName;
     private Button btnSave;
     private ImageView btnDelete, btnFromArhive;
+    private View colorView;
     private RadioGroup typeRadioGroup;
     Spinner curSpinner;
 
@@ -79,6 +91,8 @@ public class AddCheckActivity extends AppCompatActivity {
                     checkName.setText(String.valueOf(accModel.getName()));
                     mSum = accModel.getSum();
                     checkCurrency = accModel.getCurrency();
+                    color = accModel.getColor();
+                    colorView.setBackgroundColor(Color.parseColor(color));
                     typeLoad(accModel.getType());
 
                     if (accModel.isArhive()) {
@@ -102,11 +116,42 @@ public class AddCheckActivity extends AppCompatActivity {
         btnFromArhive = findViewById(R.id.add_check_navigation_from_archive_btn);
         btnFromArhive.setOnClickListener(view -> restore());
         typeRadioGroup = findViewById(R.id.radioGroup);
+        colorView = findViewById(R.id.add_check_color_view);
+        colorView.setOnClickListener(view -> pickColor());
 
         findViewById(R.id.add_check_navigation_add_btn)
                 .setOnClickListener(view -> save());
         findViewById(R.id.setting_navigation_back_btn)
                 .setOnClickListener(view -> showUnsavedDialog());
+    }
+
+    private void changeBackgroundColor(int selectedColor) {
+        colorView.setBackgroundColor(selectedColor);
+        color = String.format("#%06X", (0xFFFFFF & selectedColor));
+    }
+
+    private void pickColor() {
+        ColorPickerDialogBuilder
+                .with(this)
+                .setTitle("Choose color")
+                .initialColor(getResources().getColor(R.color.colorPrimary))
+                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                .density(12)
+                .setOnColorSelectedListener(new OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int selectedColor) {
+                        // do nothing
+                    }
+                })
+                .setPositiveButton("ok", new ColorPickerClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int selectedColor, Integer[] allColors) {
+                        changeBackgroundColor(selectedColor);
+                    }
+                })
+                .setNegativeButton("cancel", (dialog, which) -> dialog.dismiss())
+                .build()
+                .show();
     }
 
     // radioButton clicked option selected
@@ -199,7 +244,7 @@ public class AddCheckActivity extends AppCompatActivity {
                 typeEntered(),
                 mSum,
                 checkCurrency,
-                "#164fc6"
+                color
         );
 
         if (mCheckId != DEFAULT_CHECK_ID) {
@@ -212,6 +257,9 @@ public class AddCheckActivity extends AppCompatActivity {
                     });
         } else {
             // new transaction
+            if (TextUtils.isEmpty(color)) {
+                tmp.setColor(String.format("#%06x", ContextCompat.getColor(this, R.color.colorPrimary) & 0xffffff));
+            }
             AppExecutors.getsInstance().diskIO().execute(
                     () -> {
                         mDb.accountDao().insertAccount(tmp);

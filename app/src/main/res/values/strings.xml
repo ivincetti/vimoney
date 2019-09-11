@@ -98,5 +98,6 @@
     <string name="currency_name_dollar">доллар</string>
     <string name="currency_name_euro">евро</string>
     <string name="currency_name_yuan">юань</string>
+    <string name="color_string">цвет</string>
 
 </resources>

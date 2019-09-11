@@ -20,7 +20,7 @@ import ru.vincetti.vimoney.data.models.TransactionModel;
         TransactionModel.class,
         ConfigModel.class,
         CurrencyModel.class},
-        version = 7, exportSchema = false)
+        version = 8, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
     private static final Object LOCK = new Object();

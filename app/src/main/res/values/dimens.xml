@@ -5,6 +5,7 @@
     <dimen name="big_padding">16dp</dimen>
     <dimen name="st_padding">8dp</dimen>
     <dimen name="sm_padding">4dp</dimen>
+    <dimen name="color_view_height">48dp</dimen>
     <dimen name="bottom_bar_height">56dp</dimen>
 
     <dimen name="text_sm_numbers">16sp</dimen>

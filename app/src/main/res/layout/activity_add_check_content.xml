@@ -74,6 +74,29 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sm_padding"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="@string/color_string"
+            android:textSize="@dimen/text_st_numbers" />
+
+        <View
+            android:id="@+id/add_check_color_view"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/color_view_height"
+            android:background="@color/colorPrimary"
+            />
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/add_check_save_btn"
         android:layout_width="wrap_content"
