@@ -133,16 +133,14 @@ public class AddCheckActivity extends AppCompatActivity {
     private void pickColor() {
         ColorPickerDialogBuilder
                 .with(this)
-                .setTitle("Choose color")
+                .setTitle(getResources().getString(R.string.check_add_alert_color_header))
                 .initialColor(getResources().getColor(R.color.colorPrimary))
                 .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                 .density(12)
-                .setOnColorSelectedListener(selectedColor -> {
-                    // do nothing
-                })
-                .setPositiveButton("ok", (dialog, selectedColor, allColors)
-                        -> changeBackgroundColor(selectedColor))
-                .setNegativeButton("cancel", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(getResources().getString(R.string.check_add_alert_color_positive),
+                        (dialog, selectedColor, allColors) -> changeBackgroundColor(selectedColor))
+                .setNegativeButton(getResources().getString(R.string.check_add_alert_color_negative),
+                        (dialog, which) -> dialog.dismiss())
                 .build()
                 .show();
     }

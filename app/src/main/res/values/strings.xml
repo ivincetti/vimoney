@@ -71,6 +71,9 @@
     <string name="check_add_alert_question">Закрыть окно без сохранения?</string>
     <string name="check_add_alert_negative">Не сохранять</string>
     <string name="check_add_alert_positive">Продолжить</string>
+    <string name="check_add_alert_color_header">Выберите цвет</string>
+    <string name="check_add_alert_color_positive">Ок</string>
+    <string name="check_add_alert_color_negative">Отмена</string>
     <string name="settings_check_title_home">Список счетов</string>
 
     <!--Check Activity-->
