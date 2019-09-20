@@ -19,12 +19,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.check.CheckActivity;
 import ru.vincetti.vimoney.check.ChecksListActivity;
+import ru.vincetti.vimoney.data.AppExecutors;
 import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.history.HistoryActivity;
 import ru.vincetti.vimoney.history.HistoryFragment;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
+import ru.vincetti.vimoney.transaction.TransactionViewModel;
 import ru.vincetti.vimoney.utils.LogicMath;
+
+import static ru.vincetti.vimoney.utils.Utils.viewModelUpdate;
 
 public class HomeActivity extends AppCompatActivity {
     private final static String CHANNEL_ID = "15";
@@ -127,6 +131,10 @@ public class HomeActivity extends AppCompatActivity {
         LiveData<Integer> lSum2 = mDb.transactionDao().loadSumTransactionExpenseMonth("09","2019");
         lSum2.observe(this, integer -> mStatExpense.setText(String.valueOf(integer)));
 
+        // setting in viewmodel Utils hashes
+        final TransactionViewModel transactionViewModel =
+                ViewModelProviders.of(this).get(TransactionViewModel.class);
+        AppExecutors.getsInstance().diskIO().execute(() -> viewModelUpdate(mDb, transactionViewModel));
     }
 
     // Notification channel register

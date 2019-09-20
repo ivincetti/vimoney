@@ -11,7 +11,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import java.sql.Date;
 import java.util.List;
@@ -34,11 +33,9 @@ import ru.vincetti.vimoney.data.models.json.TransactionsItem;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.data.sqlite.VimonContract;
 import ru.vincetti.vimoney.home.HomeActivity;
-import ru.vincetti.vimoney.transaction.TransactionViewModel;
 
 import static ru.vincetti.vimoney.data.sqlite.VimonContract.ConfigEntry.CONFIG_KEY_NAME_USER_NAME;
 import static ru.vincetti.vimoney.utils.LogicMath.accountBalanceUpdateById;
-import static ru.vincetti.vimoney.utils.Utils.viewModelUpdate;
 
 public class SplashActivity extends AppCompatActivity {
     private final String LOG_TAG = "SPLASH_DEBUG";
@@ -67,18 +64,12 @@ public class SplashActivity extends AppCompatActivity {
                     } else {
                         retrofitInit();
                         loadJson();
-                        HomeActivity.start(getApplicationContext());
                     }
                 } else {
                     HomeActivity.start(getApplicationContext());
                 }
             }
         });
-
-        // setting in viewmodel Utils hashes
-        final TransactionViewModel viewModel =
-                ViewModelProviders.of(this).get(TransactionViewModel.class);
-        AppExecutors.getsInstance().diskIO().execute(() -> viewModelUpdate(mDb, viewModel));
     }
 
     private void retrofitInit() {
@@ -95,6 +86,7 @@ public class SplashActivity extends AppCompatActivity {
             public void onResponse(Call<ConfigFile> call, Response<ConfigFile> response) {
                 if (response.body() != null) {
                     configDbUpdate(response.body().getDateEdit(), response);
+                    HomeActivity.start(getApplicationContext());
                 }
             }
 
@@ -110,7 +102,6 @@ public class SplashActivity extends AppCompatActivity {
         configDbDateInsert(timeMillisLong);
         // user info to base
         userUpdate(response.body().getUser().getName());
-        // accounts info to base
         transactionsImport(response.body().getTransactions());
         currencyImport(response.body().getCurrency());
         accountsUpdate(response.body().getAccounts());
