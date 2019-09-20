@@ -138,40 +138,44 @@ public class TransactionTransferFragment extends TransactionFragment implements 
     @Override
         // save transaction logic
     void save(int typeAction) {
-        if (mTrans.getAccountId() != TransactionModel.DEFAULT_ID && accIdTo != TransactionModel.DEFAULT_ID && !txtSumTo.getText().toString().equals("")) {
-            mTrans.setDescription(String.valueOf(txtName.getText()));
-            mTrans.setDate(mDate);
-            mTrans.setType(typeAction);
-            mTrans.setSum(Float.valueOf(txtSum.getText().toString()));
-
-            mTrans.setExtraKey("transfer_transaction_id");
-            nestedTrans.setSum(Float.valueOf(txtSumTo.getText().toString()));
-            nestedTrans.setAccountId(accIdTo);
-            nestedTrans.setExtraKey(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY);
-            nestedTrans.setExtraValue(String.valueOf(mTrans.getId()));
-            nestedTrans.setDate(mDate);
-            nestedTrans.setType(TransactionModel.TRANSACTION_TYPE_INCOME);
-            nestedTrans.setSystem(true);
-
-            if (mTrans.getId() != TransactionModel.DEFAULT_ID) {
-                // update logic
-                transferUpdate();
+        if (mTrans.getAccountId() != TransactionModel.DEFAULT_ID && accIdTo != TransactionModel.DEFAULT_ID) {
+            if (txtSumTo.getText().toString().equals("") || txtSum.getText().toString().equals("")) {
+                Toast.makeText(getActivity(), getResources().getString(R.string.add_check_no_sum_warning), Toast.LENGTH_SHORT).show();
             } else {
-                // new transaction
-                transferInsert();
-            }
-            // update balance for current (accId) account
-            LogicMath.accountBalanceUpdateById(mDb, mTrans.getAccountId());
-            LogicMath.accountBalanceUpdateById(mDb, accIdTo);
-            // update balance for account updated
-            if (mTrans.getAccountId() != accOld) {
-                LogicMath.accountBalanceUpdateById(mDb, accOld);
-            }
-            if (accIdTo != accNew) {
-                LogicMath.accountBalanceUpdateById(mDb, accNew);
-            }
+                mTrans.setDescription(String.valueOf(txtName.getText()));
+                mTrans.setDate(mDate);
+                mTrans.setType(typeAction);
+                mTrans.setSum(Float.valueOf(txtSum.getText().toString()));
 
-            getActivity().finish();
+                mTrans.setExtraKey("transfer_transaction_id");
+                nestedTrans.setSum(Float.valueOf(txtSumTo.getText().toString()));
+                nestedTrans.setAccountId(accIdTo);
+                nestedTrans.setExtraKey(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY);
+                nestedTrans.setExtraValue(String.valueOf(mTrans.getId()));
+                nestedTrans.setDate(mDate);
+                nestedTrans.setType(TransactionModel.TRANSACTION_TYPE_INCOME);
+                nestedTrans.setSystem(true);
+
+                if (mTrans.getId() != TransactionModel.DEFAULT_ID) {
+                    // update logic
+                    transferUpdate();
+                } else {
+                    // new transaction
+                    transferInsert();
+                }
+                // update balance for current (accId) account
+                LogicMath.accountBalanceUpdateById(mDb, mTrans.getAccountId());
+                LogicMath.accountBalanceUpdateById(mDb, accIdTo);
+                // update balance for account updated
+                if (mTrans.getAccountId() != accOld) {
+                    LogicMath.accountBalanceUpdateById(mDb, accOld);
+                }
+                if (accIdTo != accNew) {
+                    LogicMath.accountBalanceUpdateById(mDb, accNew);
+                }
+
+                getActivity().finish();
+            }
         } else {
             Toast.makeText(getActivity(), getResources().getString(R.string.add_check_no_account_warning), Toast.LENGTH_SHORT).show();
         }

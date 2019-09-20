@@ -205,26 +205,30 @@ public class TransactionFragment extends Fragment {
     // save transaction logic
     void save(int typeAction) {
         if (mTrans.getAccountId() != TransactionModel.DEFAULT_ID) {
-            mTrans.setDescription(String.valueOf(txtName.getText()));
-            mTrans.setDate(mDate);
-            mTrans.setType(typeAction);
-            mTrans.setSum(Float.valueOf(txtSum.getText().toString()));
+            if(txtSum.getText().toString().equals("")){
+                Toast.makeText(getActivity(), getResources().getString(R.string.add_check_no_sum_warning), Toast.LENGTH_SHORT).show();
+            } else{
+                mTrans.setDescription(String.valueOf(txtName.getText()));
+                mTrans.setDate(mDate);
+                mTrans.setType(typeAction);
+                mTrans.setSum(Float.valueOf(txtSum.getText().toString()));
 
-            if (mTrans.getId() != TransactionModel.DEFAULT_ID) {
-                // update logic
-                AppExecutors.getsInstance().diskIO().execute(
-                        () -> {
-                            mDb.transactionDao().updateTransaction(mTrans);
-                            LogicMath.accountBalanceUpdateById(mDb, accOld);
-                        });
-            } else {
-                // new transaction
-                AppExecutors.getsInstance().diskIO().execute(
-                        () -> mDb.transactionDao().insertTransaction(mTrans));
+                if (mTrans.getId() != TransactionModel.DEFAULT_ID) {
+                    // update logic
+                    AppExecutors.getsInstance().diskIO().execute(
+                            () -> {
+                                mDb.transactionDao().updateTransaction(mTrans);
+                                LogicMath.accountBalanceUpdateById(mDb, accOld);
+                            });
+                } else {
+                    // new transaction
+                    AppExecutors.getsInstance().diskIO().execute(
+                            () -> mDb.transactionDao().insertTransaction(mTrans));
+                }
+                // update balance for current (accId) account
+                LogicMath.accountBalanceUpdateById(mDb, mTrans.getAccountId());
+                getActivity().finish();
             }
-            // update balance for current (accId) account
-            LogicMath.accountBalanceUpdateById(mDb, mTrans.getAccountId());
-            getActivity().finish();
         } else {
             Toast.makeText(getActivity(), getResources().getString(R.string.add_check_no_account_warning), Toast.LENGTH_SHORT).show();
         }
