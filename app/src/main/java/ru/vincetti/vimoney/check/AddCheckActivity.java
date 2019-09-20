@@ -135,7 +135,7 @@ public class AddCheckActivity extends AppCompatActivity {
                 .with(this)
                 .setTitle(getResources().getString(R.string.check_add_alert_color_header))
                 .initialColor(getResources().getColor(R.color.colorPrimary))
-                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
                 .density(12)
                 .setPositiveButton(getResources().getString(R.string.check_add_alert_color_positive),
                         (dialog, selectedColor, allColors) -> changeBackgroundColor(selectedColor))
