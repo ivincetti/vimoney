@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import ru.vincetti.vimoney.R;
 
 public class HistoryActivity extends AppCompatActivity {
-    private static final int TRANSACTIONS_COUNT = 25;
 
     public static void start(Context context) {
         context.startActivity(new Intent(context, HistoryActivity.class));
@@ -31,10 +30,6 @@ public class HistoryActivity extends AppCompatActivity {
     // Show historyFragment
     private void showTransactionsHistory(){
         HistoryFragment historyFragment = new HistoryFragment();
-
-        Bundle args = new Bundle();
-        args.putInt(HistoryFragment.BUNDLE_TRANS_COUNT_NAME, TRANSACTIONS_COUNT);
-        historyFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.history_main_container, historyFragment)
                 .commit();
