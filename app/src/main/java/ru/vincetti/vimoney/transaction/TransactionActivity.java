@@ -82,6 +82,7 @@ public class TransactionActivity extends AppCompatActivity {
                         if (transactionModel.getExtraKey().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)) {
                             accNestedId = Integer.valueOf(transactionModel.getExtraValue());
                         }
+                        viewModel.setTransaction(mTransaction);
                     }
                 });
             } else if (intent.hasExtra(EXTRA_ACCOUNT_ID)) {
@@ -188,7 +189,7 @@ public class TransactionActivity extends AppCompatActivity {
                                             if (mTransaction.getExtraKey().equals(TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY)
                                                     && accNestedId > 0) {
                                                 // update balance for nested transfer account
-                                                int nestedAccId= mDb.transactionDao().getAccountTransactionById(accNestedId);
+                                                int nestedAccId = mDb.transactionDao().getAccountTransactionById(accNestedId);
                                                 LogicMath.accountBalanceUpdateById(mDb, nestedAccId);
                                                 // delete nested
                                                 mDb.transactionDao().deleteTransactionById(accNestedId);

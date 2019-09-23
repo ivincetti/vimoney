@@ -205,9 +205,9 @@ public class TransactionFragment extends Fragment {
     // save transaction logic
     void save(int typeAction) {
         if (mTrans.getAccountId() != TransactionModel.DEFAULT_ID) {
-            if(txtSum.getText().toString().equals("")){
+            if (txtSum.getText().toString().equals("")) {
                 Toast.makeText(getActivity(), getResources().getString(R.string.add_check_no_sum_warning), Toast.LENGTH_SHORT).show();
-            } else{
+            } else {
                 mTrans.setDescription(String.valueOf(txtName.getText()));
                 mTrans.setDate(mDate);
                 mTrans.setType(typeAction);

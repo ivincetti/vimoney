@@ -62,7 +62,7 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/sliding_tabs"
             android:background="@color/colorBackground"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="horizontal" />
 
