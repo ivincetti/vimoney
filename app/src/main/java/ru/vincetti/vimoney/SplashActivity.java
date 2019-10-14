@@ -62,7 +62,7 @@ public class SplashActivity extends AppCompatActivity {
                     if (nInfo == null || !nInfo.isConnected()) {
                         alertNetworkDialogShow();
                     } else {
-                        retrofitInit();
+                        jsonDownloader = retrofitInit();
                         loadJson();
                     }
                 } else {
@@ -72,12 +72,12 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
-    private void retrofitInit() {
+    private JsonDownloader retrofitInit() {
         Retrofit json = new Retrofit.Builder()
                 .baseUrl("https://vincetti.ru/vimoney/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        jsonDownloader = json.create(JsonDownloader.class);
+         return json.create(JsonDownloader.class);
     }
 
     private void loadJson() {
