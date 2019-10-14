@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +14,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.check.CheckActivity;
@@ -37,7 +39,8 @@ public class HomeActivity extends AppCompatActivity {
 
     CardsListRVAdapter mAdapter;
 
-    private TextView mBalanceText, mStatExpense, mStatIncome;
+    private Date date;
+    private TextView mBalanceText, mStatExpense, mStatIncome, mStatMonth;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, HomeActivity.class);
@@ -54,6 +57,7 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         viewInit();
 
+        date = new Date();
         // список карт/счетов
         mAdapter = new CardsListRVAdapter(itemId -> CheckActivity.start(this, itemId));
         RecyclerView cardsListView = findViewById(R.id.home_cards_recycle_view);
@@ -72,6 +76,7 @@ public class HomeActivity extends AppCompatActivity {
         mStatExpense.setText(String.valueOf(0));
         mStatIncome = findViewById(R.id.home_stat_income_txt);
         mStatIncome.setText(String.valueOf(0));
+        mStatMonth = findViewById(R.id.home_month);
         findViewById(R.id.home_fab)
                 .setOnClickListener(view -> TransactionActivity.start(this));
         findViewById(R.id.home_accounts_link)
@@ -125,10 +130,17 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         // get stat
+        mStatMonth.setText(new SimpleDateFormat("MMM").format(date));
         AppDatabase mDb = AppDatabase.getInstance(this);
-        LiveData<Integer> lSum1 = mDb.transactionDao().loadSumTransactionIncomeMonth("09","2019");
+        LiveData<Integer> lSum1 = mDb.transactionDao().loadSumTransactionIncomeMonth(
+                new SimpleDateFormat("MM").format(date),
+                "2019"
+        );
         lSum1.observe(this, integer -> mStatIncome.setText(String.valueOf(integer)));
-        LiveData<Integer> lSum2 = mDb.transactionDao().loadSumTransactionExpenseMonth("09","2019");
+        LiveData<Integer> lSum2 = mDb.transactionDao().loadSumTransactionExpenseMonth(
+                new SimpleDateFormat("MM").format(date),
+                "2019"
+        );
         lSum2.observe(this, integer -> mStatExpense.setText(String.valueOf(integer)));
 
         // setting in viewmodel Utils hashes
