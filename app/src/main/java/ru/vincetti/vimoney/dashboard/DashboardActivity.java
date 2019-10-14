@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.vincetti.vimoney.R;
@@ -26,6 +26,12 @@ public class DashboardActivity extends MvpAppCompatActivity implements Dashboard
     @BindView(R.id.dashboard_btn)
     Button dashboardBtn;
 
+    @BindView(R.id.dashboard_container)
+    View container;
+
+    @BindView(R.id.dashboard_progress)
+    ProgressBar progressBar;
+
     public static void start(Context context) {
         context.startActivity(new Intent(context, DashboardActivity.class));
     }
@@ -35,15 +41,32 @@ public class DashboardActivity extends MvpAppCompatActivity implements Dashboard
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         ButterKnife.bind(this);
+    }
 
-        findViewById(R.id.setting_navigation_back_btn).setOnClickListener(view -> finish());
-        dashboardBtn.setOnClickListener(
-                v -> mPresenter.changeText("Уже как бы октябрь")
-        );
+    @OnClick(R.id.setting_navigation_back_btn)
+    void back() {
+        finish();
+    }
+
+    @OnClick(R.id.dashboard_btn)
+    void btnClick() {
+        mPresenter.changeText("Уже как бы октябрь");
     }
 
     @Override
-    public void changeText(String text){
+    public void changeText(String text) {
         dashboardText.setText(text);
+    }
+
+    @Override
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+        container.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideProgress() {
+        progressBar.setVisibility(View.GONE);
+        container.setVisibility(View.VISIBLE);
     }
 }

@@ -1,23 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_margin="@dimen/big_padding">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/dashboard_txt"
+    <ProgressBar
+        android:id="@+id/dashboard_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/dashboard_title_home"
-        android:textAllCaps="true" />
+        android:layout_gravity="center" />
 
-    <Button
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/dashboard_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Update" />
+    <LinearLayout
+        android:id="@+id/dashboard_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/big_padding"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/dashboard_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/dashboard_title_home"
+            android:textAllCaps="true" />
+
+        <Button
+            android:id="@+id/dashboard_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Update" />
+
+    </LinearLayout>
+</FrameLayout>
+

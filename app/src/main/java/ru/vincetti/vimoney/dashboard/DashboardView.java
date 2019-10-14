@@ -7,4 +7,6 @@ import moxy.viewstate.strategy.StateStrategyType;
 @StateStrategyType(AddToEndStrategy.class)
 public interface DashboardView extends MvpView {
     void changeText(String text);
+    void showProgress();
+    void hideProgress();
 }

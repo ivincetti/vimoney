@@ -10,6 +10,7 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
 import ru.vincetti.vimoney.data.models.TransactionListModel;
 import ru.vincetti.vimoney.data.models.TransactionModel;
 
@@ -79,6 +80,11 @@ public interface TransactionDao {
             + " AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year"
             + " AND system=0")
     LiveData<Integer> loadSumTransactionIncomeMonth(String month, String year);
+
+    @Query("SELECT * FROM transactions WHERE system=0 "
+            + " AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month"
+            + " AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year")
+    Flowable<List<TransactionModel>> loadTransactionStatByMonth(String month, String year);
 
     @Query("SELECT SUM(sum) FROM transactions WHERE type =" + TRANSACTION_TYPE_SPENT
             + " AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month"
