@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.check.CheckActivity;
 import ru.vincetti.vimoney.check.ChecksListActivity;
+import ru.vincetti.vimoney.dashboard.DashboardActivity;
 import ru.vincetti.vimoney.data.AppExecutors;
 import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
@@ -77,9 +78,8 @@ public class HomeActivity extends AppCompatActivity {
                 .setOnClickListener(view -> ChecksListActivity.start(this));
         findViewById(R.id.home_transactions_link)
                 .setOnClickListener(view -> HistoryActivity.start(this));
-        // not implemented
-        //findViewById(R.id.home_user_stat_link)
-        //        .setOnClickListener(view -> DashboardActivity.start(this));
+        findViewById(R.id.home_stat_link)
+                .setOnClickListener(view -> DashboardActivity.start(this));
     }
 
     // Show historyFragment
