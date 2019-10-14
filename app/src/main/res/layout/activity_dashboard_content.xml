@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_margin="@dimen/big_padding"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,23 +14,14 @@
         android:id="@+id/dashboard_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/big_padding"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/dashboard_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/dashboard_title_home"
-            android:textAllCaps="true" />
+        <include layout="@layout/stat_income_exspance"/>
 
-        <Button
-            android:id="@+id/dashboard_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Update" />
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/dashboard_chart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
 
     </LinearLayout>
 </FrameLayout>
