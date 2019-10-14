@@ -10,7 +10,7 @@ import androidx.room.Update;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
+import io.reactivex.Single;
 import ru.vincetti.vimoney.data.models.TransactionListModel;
 import ru.vincetti.vimoney.data.models.TransactionModel;
 
@@ -85,7 +85,7 @@ public interface TransactionDao {
             + " AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month"
             + " AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year"
             + " AND system=0")
-    Flowable<Integer> loadSumTransactionIncomeMonthRx(String month, String year);
+    Single<Integer> loadSumTransactionIncomeMonthRx(String month, String year);
 
     @Query("SELECT SUM(sum) FROM transactions WHERE type =" + TRANSACTION_TYPE_SPENT
             + " AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month"
@@ -95,13 +95,13 @@ public interface TransactionDao {
     @Query("SELECT SUM(sum) FROM transactions WHERE type =" + TRANSACTION_TYPE_SPENT
             + " AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month"
             + " AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year")
-    Flowable<Integer> loadSumTransactionExpenseMonthRx(String month, String year);
+    Single<Integer> loadSumTransactionExpenseMonthRx(String month, String year);
 
     @Query("SELECT * FROM transactions WHERE system=0 "
             + " AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month"
             + " AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year"
             + " ORDER BY transactions.date")
-    Flowable<List<TransactionModel>> loadTransactionStatByMonth(String month, String year);
+    Single<List<TransactionModel>> loadTransactionStatByMonth(String month, String year);
 
     @Query("SELECT IFNULL((Select SUM(sum) FROM transactions WHERE type=" + TRANSACTION_TYPE_INCOME + " AND account_id = :accId),0) - "
             + "IFNULL((SELECT SUM(sum) FROM transactions WHERE (type=" + TRANSACTION_TYPE_SPENT + " OR type=" + TRANSACTION_TYPE_TRANSFER + ") AND  account_id = :accId),0)")

@@ -8,6 +8,9 @@ import moxy.viewstate.strategy.StateStrategyType;
 
 @StateStrategyType(AddToEndStrategy.class)
 public interface DashboardView extends MvpView {
+
+    void setMonth(String date);
+
     void loadChart(LineData lineData);
 
     void loadStatExpense(String expense);

@@ -6,7 +6,10 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -20,10 +23,16 @@ import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 @InjectViewState
 class DashboardPresenter extends MvpPresenter<DashboardView> {
 
-    AppDatabase appDatabase;
+    private AppDatabase appDatabase;
+    private Calendar cal;
+    private String month;
 
     DashboardPresenter() {
         appDatabase = AppDatabase.getInstance(MyApp.getAppContext());
+
+        cal = Calendar.getInstance();
+        cal.setTime(new Date());
+
         getData();
     }
 
@@ -36,15 +45,20 @@ class DashboardPresenter extends MvpPresenter<DashboardView> {
     }
 
     void getData() {
+        getViewState().setMonth(new SimpleDateFormat("MMM").format(cal.getTime()));
+        month = new SimpleDateFormat("MM").format(cal.getTime());
         showProgress();
         getStat();
         getExpense();
         getIncome();
     }
 
+    /**
+     * получение данных графика
+     */
     private void getStat() {
         appDatabase.transactionDao()
-                .loadTransactionStatByMonth("10", "2019")
+                .loadTransactionStatByMonth(String.valueOf(month), "2019")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(transactionListModels -> {
@@ -68,19 +82,43 @@ class DashboardPresenter extends MvpPresenter<DashboardView> {
 
     }
 
+    /**
+     * получение данных расходов
+     */
     private void getExpense() {
         appDatabase.transactionDao()
-                .loadSumTransactionExpenseMonthRx("10", "2019")
+                .loadSumTransactionExpenseMonthRx(String.valueOf(month), "2019")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(integer -> getViewState().loadStatExpense(String.valueOf(integer)));
+                .subscribe(
+                        integer -> getViewState().loadStatExpense(String.valueOf(integer)),
+                        throwable -> getViewState().loadStatExpense("0")
+                );
     }
 
+    /**
+     * получение данных доходов
+     */
     private void getIncome() {
         appDatabase.transactionDao()
-                .loadSumTransactionIncomeMonthRx("10", "2019")
+                .loadSumTransactionIncomeMonthRx(String.valueOf(month), "2019")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(integer -> getViewState().loadStatIncome(String.valueOf(integer)));
+                .subscribe(
+                        integer -> getViewState().loadStatIncome(String.valueOf(integer)),
+                        throwable -> getViewState().loadStatIncome("0")
+                );
+
+    }
+
+
+    public void setMonthPrev() {
+        cal.add(Calendar.MONTH, -1);
+        getData();
+    }
+
+    public void setMonthNext() {
+        cal.add(Calendar.MONTH, 1);
+        getData();
     }
 }

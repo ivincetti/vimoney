@@ -39,6 +39,9 @@ public class DashboardActivity extends MvpAppCompatActivity implements Dashboard
     @BindView(R.id.home_stat_expense_txt)
     TextView expenseTxt;
 
+    @BindView(R.id.dashboard_month)
+    TextView dashboardMonth;
+
     public static void start(Context context) {
         context.startActivity(new Intent(context, DashboardActivity.class));
     }
@@ -49,15 +52,16 @@ public class DashboardActivity extends MvpAppCompatActivity implements Dashboard
         setContentView(R.layout.activity_dashboard);
         ButterKnife.bind(this);
 
+        graphInit();
+    }
+
+    void graphInit() {
         dashboardChart.getLegend().setEnabled(false);
         dashboardChart.getDescription().setEnabled(false);
         XAxis bottom = dashboardChart.getXAxis();
         bottom.setPosition(XAxis.XAxisPosition.BOTTOM);
         bottom.setDrawGridLines(false);
-//        bottom.setGranularity(1f);
-        // data has AxisDependency.LEFT
         YAxis left = dashboardChart.getAxisLeft();
-//        left.setDrawLabels(false); // no axis labels
         left.setDrawAxisLine(false); // no axis line
         left.setDrawGridLines(false); // no grid lines
         left.setDrawZeroLine(true); // draw a zero line
@@ -69,6 +73,21 @@ public class DashboardActivity extends MvpAppCompatActivity implements Dashboard
         finish();
     }
 
+    @OnClick(R.id.dashboard_month_next)
+    void nextMonth() {
+        mPresenter.setMonthNext();
+    }
+
+    @OnClick(R.id.dashboard_month_previous)
+    void prevMonth() {
+        mPresenter.setMonthPrev();
+    }
+
+    @Override
+    public void setMonth(String date) {
+        dashboardMonth.setText(date);
+    }
+
     @Override
     public void loadChart(LineData lineData) {
         dashboardChart.setData(lineData);
@@ -76,12 +95,12 @@ public class DashboardActivity extends MvpAppCompatActivity implements Dashboard
     }
 
     @Override
-    public void loadStatIncome(String income){
+    public void loadStatIncome(String income) {
         incomeTxt.setText(income);
     }
 
     @Override
-    public void loadStatExpense(String expense){
+    public void loadStatExpense(String expense) {
         expenseTxt.setText(expense);
     }
 
