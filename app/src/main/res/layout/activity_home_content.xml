@@ -78,7 +78,7 @@
             android:text="@string/home_fragment_stat_link_title" />
     </LinearLayout>
 
-    <include layout="@layout/stat_income_exspance" />
+    <include layout="@layout/stat_income_exspence" />
 
     <!--Заголовок транзакций-->
     <LinearLayout

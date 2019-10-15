@@ -46,7 +46,7 @@
         </RelativeLayout>
 
 
-        <include layout="@layout/stat_income_exspance" />
+        <include layout="@layout/stat_income_exspence" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:layout_marginTop="@dimen/big_padding"

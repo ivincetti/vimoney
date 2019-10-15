@@ -5,9 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.check.ChecksListActivity;
+import ru.vincetti.vimoney.settings.json.jsonFile;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -20,8 +21,9 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        LifecycleOwner lf = this;
+
         findViewById(R.id.setting_navigation_back_btn).setOnClickListener(view -> finish());
-        findViewById(R.id.btn_check_settings)
-                .setOnClickListener(view -> ChecksListActivity.start(this));
+        findViewById(R.id.btn_check_settings).setOnClickListener(v -> jsonFile.export(lf));
     }
 }
