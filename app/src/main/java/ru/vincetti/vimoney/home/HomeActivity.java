@@ -136,12 +136,20 @@ public class HomeActivity extends AppCompatActivity {
                 new SimpleDateFormat("MM").format(date),
                 "2019"
         );
-        lSum1.observe(this, integer -> mStatIncome.setText(String.valueOf(integer)));
+        lSum1.observe(this, integer -> {
+            if (integer != null) {
+                mStatIncome.setText(String.valueOf(integer));
+            }
+        });
         LiveData<Integer> lSum2 = mDb.transactionDao().loadSumTransactionExpenseMonth(
                 new SimpleDateFormat("MM").format(date),
                 "2019"
         );
-        lSum2.observe(this, integer -> mStatExpense.setText(String.valueOf(integer)));
+        lSum2.observe(this, integer -> {
+            if (integer != null) {
+                mStatExpense.setText(String.valueOf(integer));
+            }
+        });
 
         // setting in viewmodel Utils hashes
         final TransactionViewModel transactionViewModel =
