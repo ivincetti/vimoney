@@ -12,7 +12,7 @@
     <string name="home_title_acc_balance">10000</string>
     <string name="home_stat_income_icon">home_stat_income_icon</string>
     <string name="home_stat_spending_icon">home_stat_spending_icon</string>
-    <string name="home_fragment_stat_title">Статистика за</string>
+    <string name="home_fragment_stat_title">Статистика</string>
     <string name="home_accounts_title">Счета</string>
     <string name="home_fragment_stat_month_sample">Сентябрь</string>
     <string name="home_fragment_income_title">Доходы</string>
@@ -20,6 +20,7 @@
     <string name="home_fragment_spending_sample">11000</string>
     <string name="home_fragment_spending_title">Расходы</string>
     <string name="home_fragment_transactions_link_title">посмотреть все</string>
+    <string name="home_fragment_stat_link_title">просмотреть</string>
 
     <!--History Activity-->
     <string name="history_title_home">Транзакции</string>

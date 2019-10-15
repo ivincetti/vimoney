@@ -64,7 +64,7 @@ class DashboardPresenter extends MvpPresenter<DashboardView> {
                 .subscribe(transactionListModels -> {
                     hideProgress();
                     int sum = 0;
-                    List<Entry> entries = new ArrayList<Entry>();
+                    List<Entry> entries = new ArrayList<>();
                     for (TransactionModel model : transactionListModels) {
                         if (model.getType() == TransactionModel.TRANSACTION_TYPE_INCOME) {
                             sum += model.getSum();
@@ -76,6 +76,20 @@ class DashboardPresenter extends MvpPresenter<DashboardView> {
                         );
                     }
                     LineDataSet dataSet = new LineDataSet(entries, "Label");
+//                    dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+//                    dataSet.setCubicIntensity(0.2f);
+                    dataSet.setDrawFilled(true);
+                    dataSet.setDrawCircles(false);
+                    dataSet.setLineWidth(1.8f);
+                    dataSet.setCircleRadius(4f);
+//                    set1.setCircleColor(Color.WHITE);
+//                    set1.setHighLightColor(Color.rgb(244, 117, 117));
+//                    set1.setColor(Color.WHITE);
+//                    set1.setFillColor(Color.WHITE);
+                    dataSet.setFillAlpha(100);
+                    dataSet.setDrawHorizontalHighlightIndicator(false);
+
+                    // create a data object with the data sets
                     LineData lineData = new LineData(dataSet);
                     getViewState().loadChart(lineData);
                 });
