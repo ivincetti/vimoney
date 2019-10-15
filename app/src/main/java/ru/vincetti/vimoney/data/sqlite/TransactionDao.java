@@ -76,30 +76,30 @@ public interface TransactionDao {
     LiveData<TransactionModel> loadTransactionById(int id);
 
     @Query("SELECT SUM(sum) FROM transactions WHERE type =" + TRANSACTION_TYPE_INCOME
-            + " AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month"
-            + " AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year"
+            + " AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month"
+            + " AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year"
             + " AND system=0")
     LiveData<Integer> loadSumTransactionIncomeMonth(String month, String year);
 
     @Query("SELECT SUM(sum) FROM transactions WHERE type =" + TRANSACTION_TYPE_INCOME
-            + " AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month"
-            + " AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year"
+            + " AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month"
+            + " AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year"
             + " AND system=0")
     Single<Integer> loadSumTransactionIncomeMonthRx(String month, String year);
 
     @Query("SELECT SUM(sum) FROM transactions WHERE type =" + TRANSACTION_TYPE_SPENT
-            + " AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month"
-            + " AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year")
+            + " AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month"
+            + " AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year")
     LiveData<Integer> loadSumTransactionExpenseMonth(String month, String year);
 
     @Query("SELECT SUM(sum) FROM transactions WHERE type =" + TRANSACTION_TYPE_SPENT
-            + " AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month"
-            + " AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year")
+            + " AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month"
+            + " AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year")
     Single<Integer> loadSumTransactionExpenseMonthRx(String month, String year);
 
     @Query("SELECT * FROM transactions WHERE system=0 "
-            + " AND strftime('%m', datetime(date/1000, 'unixepoch')) = :month"
-            + " AND strftime('%Y', datetime(date/1000, 'unixepoch')) = :year"
+            + " AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month"
+            + " AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year"
             + " ORDER BY transactions.date")
     Single<List<TransactionModel>> loadTransactionStatByMonth(String month, String year);
 
