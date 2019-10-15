@@ -1,6 +1,6 @@
 package ru.vincetti.vimoney.dashboard;
 
-import android.text.format.DateFormat;
+import android.annotation.SuppressLint;
 
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers;
 import moxy.InjectViewState;
 import moxy.MvpPresenter;
 import ru.vincetti.vimoney.MyApp;
-import ru.vincetti.vimoney.data.models.TransactionModel;
+import ru.vincetti.vimoney.data.models.TransactionStatDayModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 
 @InjectViewState
@@ -56,6 +56,7 @@ class DashboardPresenter extends MvpPresenter<DashboardView> {
     /**
      * получение данных графика
      */
+    @SuppressLint("CheckResult")
     private void getStat() {
         appDatabase.transactionDao()
                 .loadTransactionStatByMonth(String.valueOf(month), "2019")
@@ -65,15 +66,10 @@ class DashboardPresenter extends MvpPresenter<DashboardView> {
                     hideProgress();
                     int sum = 0;
                     List<Entry> entries = new ArrayList<>();
-                    for (TransactionModel model : transactionListModels) {
-                        if (model.getType() == TransactionModel.TRANSACTION_TYPE_INCOME) {
-                            sum += model.getSum();
-                        } else if (model.getType() == TransactionModel.TRANSACTION_TYPE_SPENT) {
-                            sum -= model.getSum();
-                        }
-                        entries.add(new Entry(
-                                Float.valueOf(DateFormat.format("dd", model.getDate()).toString()), sum)
-                        );
+                    entries.add(new Entry(0, sum));
+                    for (TransactionStatDayModel model : transactionListModels) {
+                        sum += model.getSum();
+                        entries.add(new Entry(model.getDay(), sum));
                     }
                     LineDataSet dataSet = new LineDataSet(entries, "Label");
 //                    dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
@@ -99,6 +95,7 @@ class DashboardPresenter extends MvpPresenter<DashboardView> {
     /**
      * получение данных расходов
      */
+    @SuppressLint("CheckResult")
     private void getExpense() {
         appDatabase.transactionDao()
                 .loadSumTransactionExpenseMonthRx(String.valueOf(month), "2019")
@@ -113,6 +110,7 @@ class DashboardPresenter extends MvpPresenter<DashboardView> {
     /**
      * получение данных доходов
      */
+    @SuppressLint("CheckResult")
     private void getIncome() {
         appDatabase.transactionDao()
                 .loadSumTransactionIncomeMonthRx(String.valueOf(month), "2019")

@@ -13,6 +13,7 @@ import java.util.List;
 import io.reactivex.Single;
 import ru.vincetti.vimoney.data.models.TransactionListModel;
 import ru.vincetti.vimoney.data.models.TransactionModel;
+import ru.vincetti.vimoney.data.models.TransactionStatDayModel;
 
 import static ru.vincetti.vimoney.data.models.TransactionModel.TRANSACTION_TYPE_INCOME;
 import static ru.vincetti.vimoney.data.models.TransactionModel.TRANSACTION_TYPE_SPENT;
@@ -56,7 +57,7 @@ public interface TransactionDao {
             "FROM transactions, accounts, currency " +
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +
-            "AND ((transactions.account_id == :id" +" AND transactions.system == 0) " +
+            "AND ((transactions.account_id == :id" + " AND transactions.system == 0) " +
             "OR transactions.id IN (SELECT id from transactions WHERE extra_value IN(SELECT id from transactions WHERE account_id = :id AND system=1))) " +
             "ORDER BY transactions.date DESC")
     LiveData<List<TransactionListModel>> loadCheckTransactionsFull(int id);
@@ -67,7 +68,7 @@ public interface TransactionDao {
             "FROM transactions, accounts, currency " +
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +
-            "AND ((transactions.account_id == :id" +" AND transactions.system == 0) " +
+            "AND ((transactions.account_id == :id" + " AND transactions.system == 0) " +
             "OR transactions.id IN (SELECT id from transactions WHERE extra_value IN(SELECT id from transactions WHERE account_id = :id AND system=1))) " +
             "ORDER BY transactions.date DESC LIMIT :num")
     LiveData<List<TransactionListModel>> loadCheckTransactionsCountFull(int id, int num);
@@ -97,11 +98,24 @@ public interface TransactionDao {
             + " AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year")
     Single<Integer> loadSumTransactionExpenseMonthRx(String month, String year);
 
-    @Query("SELECT * FROM transactions WHERE system=0 "
+    @Query("SELECT strftime('%d', datetime(date/1000, 'unixepoch', 'localtime')) AS day, " +
+            "((Select IFNULL(Sum(sum),0) FROM transactions t2 WHERE " +
+            "strftime('%d', datetime(t2.date/1000, 'unixepoch', 'localtime')) = strftime('%d', datetime(transactions.date/1000, 'unixepoch', 'localtime')) AND " +
+            "strftime('%m', datetime(t2.date/1000, 'unixepoch', 'localtime')) = :month AND " +
+            "strftime('%Y', datetime(t2.date/1000, 'unixepoch', 'localtime')) = \"2019\" AND " +
+            "t2.type = 1) -\n" +
+            "(Select IFNULL(Sum(sum),0) FROM transactions t3 WHERE \n" +
+            "strftime('%d', datetime(t3.date/1000, 'unixepoch', 'localtime')) = strftime('%d', datetime(transactions.date/1000, 'unixepoch', 'localtime')) AND\n" +
+            "strftime('%m', datetime(t3.date/1000, 'unixepoch', 'localtime')) = :month AND\n" +
+            "strftime('%Y', datetime(t3.date/1000, 'unixepoch', 'localtime')) = \"2019\" AND\n" +
+            "type = 2 )) AS sum " +
+            "FROM transactions WHERE system=0 "
             + " AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month"
             + " AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year"
-            + " ORDER BY transactions.date")
-    Single<List<TransactionModel>> loadTransactionStatByMonth(String month, String year);
+            + " GROUP BY day "
+            + " ORDER BY transactions.date"
+    )
+    Single<List<TransactionStatDayModel>> loadTransactionStatByMonth(String month, String year);
 
     @Query("SELECT IFNULL((Select SUM(sum) FROM transactions WHERE type=" + TRANSACTION_TYPE_INCOME + " AND account_id = :accId),0) - "
             + "IFNULL((SELECT SUM(sum) FROM transactions WHERE (type=" + TRANSACTION_TYPE_SPENT + " OR type=" + TRANSACTION_TYPE_TRANSFER + ") AND  account_id = :accId),0)")
