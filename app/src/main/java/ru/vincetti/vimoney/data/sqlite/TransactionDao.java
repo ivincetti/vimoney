@@ -10,6 +10,7 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import ru.vincetti.vimoney.data.models.TransactionListModel;
 import ru.vincetti.vimoney.data.models.TransactionModel;
@@ -22,8 +23,8 @@ import static ru.vincetti.vimoney.data.models.TransactionModel.TRANSACTION_TYPE_
 @Dao
 public interface TransactionDao {
 
-    @Query("SELECT * FROM transactions ORDER BY date DESC")
-    LiveData<List<TransactionModel>> loadAllTransactions();
+    @Query("SELECT * FROM transactions ORDER BY id ASC")
+    Single<List<TransactionModel>> loadAllTransactions();
 
     @Query("SELECT * FROM transactions WHERE transactions.system == 0 ORDER BY date DESC LIMIT :num")
     LiveData<List<TransactionModel>> loadAllTransactionsCount(int num);
@@ -134,6 +135,9 @@ public interface TransactionDao {
 
     @Query("DELETE FROM transactions WHERE id = :transId")
     void deleteTransactionById(int transId);
+
+    @Query("DELETE FROM transactions")
+    Completable deleteAllTransactions();
 
     @Insert
     long insertTransaction(TransactionModel t);

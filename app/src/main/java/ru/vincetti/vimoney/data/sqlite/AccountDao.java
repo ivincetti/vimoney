@@ -10,14 +10,16 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import io.reactivex.Completable;
+import io.reactivex.Single;
 import ru.vincetti.vimoney.data.models.AccountListModel;
 import ru.vincetti.vimoney.data.models.AccountModel;
 
 @Dao
 public interface AccountDao {
 
-    @Query("SELECT * FROM accounts ORDER BY archive ASC, name ASC")
-    LiveData<List<AccountModel>> loadAllAccounts();
+    @Query("SELECT * FROM accounts ORDER BY id ASC")
+    Single<List<AccountModel>> loadAllAccounts();
 
     @Query("SELECT * FROM accounts ORDER BY archive ASC, name ASC")
     List<AccountModel> loadAllAccountsList();
@@ -74,6 +76,9 @@ public interface AccountDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateAccount(AccountModel acc);
+
+    @Query("Delete FROM accounts")
+    Completable deleteAllAccounts();
 
     @Delete
     void deleteAccount(AccountModel acc);

@@ -15,6 +15,8 @@ import ru.vincetti.vimoney.home.HomeActivity;
 
 public class NotificationService extends IntentService {
     public final static String NOTIFICATION_ACTION = "Notification-service";
+    public final static String NOTIFICATION_SAVE_ACTION = "Notification-save-action";
+    public final static String NOTIFICATION_SAVE_ERROR_ACTION = "Notification-save-error-action";
     public final static String NOTIFICATION_CHANNEL_ID = "Notification_Chanel";
     public final static int NOTIFICATION_ID = 1231231;
 
@@ -24,13 +26,45 @@ public class NotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (NOTIFICATION_ACTION.equals(intent.getAction())) {
-            showNotification(this);
+        switch (intent.getAction()){
+            case NOTIFICATION_ACTION:{
+                showNotification(this);
+                break;
+            }
+            case NOTIFICATION_SAVE_ACTION:{
+                showSaveNotification(this);
+                break;
+            }
+            case NOTIFICATION_SAVE_ERROR_ACTION:{
+                showSaveErrorNotification(this);
+                break;
+            }
         }
     }
 
 
     private static void showNotification(Context context) {
+        showNotification(context,
+                context.getString(R.string.notification_sample_title_text),
+                context.getString(R.string.notification_sample_body_text)
+        );
+    }
+
+    private static void showSaveNotification(Context context) {
+        showNotification(context,
+                context.getString(R.string.notification_save_title_text),
+                context.getString(R.string.notification_save_body_text)
+        );
+    }
+
+    private static void showSaveErrorNotification(Context context) {
+        showNotification(context,
+                context.getString(R.string.notification_save_error_title_text),
+                context.getString(R.string.notification_save_body_text)
+        );
+    }
+
+    private static void showNotification(Context context, String title, String body) {
         NotificationManager nManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -50,8 +84,8 @@ public class NotificationService extends IntentService {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_notifications_dark)
-                        .setContentTitle(context.getString(R.string.notification_sample_title_text))
-                        .setContentText(context.getString(R.string.notification_sample_body_text))
+                        .setContentTitle(title)
+                        .setContentText(body)
                         .setAutoCancel(true)
                         .setContentIntent(pendingIntent);
 

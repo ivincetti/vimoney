@@ -34,6 +34,9 @@
     <string name="notification_notify_btn_text">Уведомить</string>
     <string name="notification_sample_title_text">Пора отчитываться!</string>
     <string name="notification_sample_body_text">Сегодня вы не вносили данные по финансовым транзакциям</string>
+    <string name="notification_save_title_text">Сохранено</string>
+    <string name="notification_save_error_title_text">Ошибка</string>
+    <string name="notification_save_body_text">Выгрузка данных по операциям прошла успешно</string>
 
     <!--Add/Transaction Activity-->
     <string name="add_title_home_spent">Расход</string>
@@ -91,7 +94,8 @@
     <string name="channel_name" translatable="false">reminder</string>
     <string name="channel_description">не забудьте внести</string>
     <string name="back_icon_description">кнопка назад</string>
-    <string name="settings_check_settings_btn">настройки счетов</string>
+    <string name="settings_save_transactions_btn">Сохранить операции</string>
+    <string name="settings_load_transactions_btn">Загрузить операции</string>
     <string name="add_check_no_account_warning">пожалуйста, выберите счет</string>
     <string name="add_check_no_sum_warning">пожалуйста, введите сумму</string>
 

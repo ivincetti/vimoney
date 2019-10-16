@@ -52,14 +52,30 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <Button
-            android:id="@+id/btn_check_settings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="@dimen/st_padding"
-            android:text="@string/settings_check_settings_btn"
-            android:textAllCaps="true" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_save_transactions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/st_padding"
+                android:text="@string/settings_save_transactions_btn"
+                android:textAllCaps="true" />
+
+            <Button
+                android:id="@+id/btn_load_transactions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/st_padding"
+                android:text="@string/settings_load_transactions_btn"
+                android:textAllCaps="true" />
+
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
