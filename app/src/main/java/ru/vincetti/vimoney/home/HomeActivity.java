@@ -30,7 +30,6 @@ import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.history.HistoryActivity;
 import ru.vincetti.vimoney.history.HistoryFragment;
-import ru.vincetti.vimoney.notifications.NotificationsActivity;
 import ru.vincetti.vimoney.settings.SettingsActivity;
 import ru.vincetti.vimoney.transaction.TransactionActivity;
 import ru.vincetti.vimoney.transaction.TransactionViewModel;
@@ -39,6 +38,7 @@ import ru.vincetti.vimoney.utils.LogicMath;
 import static ru.vincetti.vimoney.utils.Utils.viewModelUpdate;
 
 public class HomeActivity extends AppCompatActivity {
+    private static final String TAG = "DEBUG HomeActivity";
     private final static String CHANNEL_ID = "15";
     private final static int TR_MAIN_COUNT = 10;
 
@@ -139,7 +139,7 @@ public class HomeActivity extends AppCompatActivity {
         AppDatabase mDb = AppDatabase.getInstance(this);
         LiveData<Integer> lSum1 = mDb.transactionDao().loadSumTransactionIncomeMonth(
                 new SimpleDateFormat("MM").format(date),
-                "2019"
+                new SimpleDateFormat("YYYY").format(date)
         );
         lSum1.observe(this, integer -> {
             if (integer != null) {
@@ -148,7 +148,7 @@ public class HomeActivity extends AppCompatActivity {
         });
         LiveData<Integer> lSum2 = mDb.transactionDao().loadSumTransactionExpenseMonth(
                 new SimpleDateFormat("MM").format(date),
-                "2019"
+                new SimpleDateFormat("YYYY").format(date)
         );
         lSum2.observe(this, integer -> {
             if (integer != null) {
