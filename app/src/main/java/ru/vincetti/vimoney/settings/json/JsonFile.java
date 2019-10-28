@@ -17,11 +17,12 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.vincetti.vimoney.data.AppExecutors;
+import io.reactivex.schedulers.Schedulers;
 import ru.vincetti.vimoney.data.models.AccountModel;
 import ru.vincetti.vimoney.data.models.TransactionModel;
 import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.service.FileService;
+import ru.vincetti.vimoney.utils.LogicMath;
 
 public class JsonFile {
     public static final String FILE_NAME_TRANSACTIONS = "transactions.json";
@@ -35,41 +36,54 @@ public class JsonFile {
     }
 
     public static void load(Context context) {
-        Gson gson = new Gson();
         final AppDatabase db = AppDatabase.getInstance(context);
 
-        AppExecutors.getsInstance().diskIO().execute(() -> {
-            String transactionsJson;
-            String accountsJson;
+        if (isExternalMounted()) {
+            String transactionsJson = readExternalFile(context, FILE_NAME_TRANSACTIONS);
+            String accountsJson = readExternalFile(context, FILE_NAME_ACCOUNTS);
 
-            if (isExternalMounted()){
-                transactionsJson = readExternalFile(context, FILE_NAME_TRANSACTIONS);
-                accountsJson = readExternalFile(context, FILE_NAME_ACCOUNTS);
-
-                if (!TextUtils.isEmpty(transactionsJson) && !TextUtils.isEmpty(accountsJson)) {
-                    db.transactionDao()
-                            .deleteAllTransactions()
-                            .doOnComplete(() -> {
-                                Type listType = new TypeToken<ArrayList<TransactionModel>>() {}.getType();
-                                List<TransactionModel> transactions = gson.fromJson(transactionsJson, listType);
-                                for (TransactionModel transaction : transactions) {
-                                    db.transactionDao().insertTransaction(transaction);
-                                }
-                                db.accountDao()
-                                        .deleteAllAccounts()
-                                        .doOnComplete(() -> {
-                                            Type listType1 = new TypeToken<ArrayList<AccountModel>>() {}.getType();
-                                            List<AccountModel> transactions1 = gson.fromJson(accountsJson, listType1);
-                                            for (AccountModel account : transactions1) {
-                                                db.accountDao().insertAccount(account);
-                                            }
-                                        })
-                                        .subscribe();
-                            })
-                            .subscribe();
-                }
+            if (!TextUtils.isEmpty(transactionsJson) && !TextUtils.isEmpty(accountsJson)) {
+                transactionsToDbSave(db, transactionsJson);
+                accountsToDbSave(db, accountsJson);
             }
-        });
+        }
+
+    }
+
+    private static void transactionsToDbSave(AppDatabase db, String transactionsJson) {
+        Gson gson = new Gson();
+
+        db.transactionDao()
+                .deleteAllTransactions()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .doOnComplete(() -> {
+                    Type listType = new TypeToken<ArrayList<TransactionModel>>() {}.getType();
+                    List<TransactionModel> transactions = gson.fromJson(transactionsJson, listType);
+                    for (TransactionModel transaction : transactions) {
+                        db.transactionDao().insertTransaction(transaction);
+                    }
+
+                })
+                .subscribe();
+    }
+
+    private static void accountsToDbSave(AppDatabase db, String accountsJson) {
+        Gson gson = new Gson();
+
+        db.accountDao()
+                .deleteAllAccounts()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .doOnComplete(() -> {
+                    Type listType = new TypeToken<ArrayList<AccountModel>>() {}.getType();
+                    List<AccountModel> transactions1 = gson.fromJson(accountsJson, listType);
+                    for (AccountModel account : transactions1) {
+                        db.accountDao().insertAccount(account);
+                        LogicMath.accountBalanceUpdateById(account.getId());
+                    }
+                })
+                .subscribe();
     }
 
     private static String readExternalFile(Context context, String fileName) {
