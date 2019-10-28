@@ -46,6 +46,7 @@ public class JsonFile {
                 transactionsToDbSave(db, transactionsJson);
                 accountsToDbSave(db, accountsJson);
             }
+            // TODO update balance needed
         }
 
     }
