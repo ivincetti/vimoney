@@ -3,9 +3,11 @@ package ru.vincetti.vimoney.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.FileOutputStream;
 
 import io.reactivex.schedulers.Schedulers;
@@ -14,6 +16,7 @@ import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.settings.json.JsonFile;
 
 public class FileService extends IntentService {
+    private static final String TAG = "DEBUG";
     public final static String SAVE_ACTION = "save-file-service";
 
     public FileService() {
@@ -27,7 +30,7 @@ public class FileService extends IntentService {
         }
     }
 
-    public static void export() {
+    public void export() {
         Gson gson = new Gson();
         Context context = MyApp.getAppContext();
 
@@ -39,9 +42,7 @@ public class FileService extends IntentService {
                 .subscribe(
                         accountModels -> {
                             String accountJson = gson.toJson(accountModels);
-                            FileOutputStream fosAccount = context.openFileOutput(JsonFile.FILE_NAME_ACCOUNTS, MODE_PRIVATE);
-
-                            fosAccount.write(accountJson.getBytes());
+                            writeFileExternalStorage(accountJson.getBytes(), JsonFile.FILE_NAME_ACCOUNTS);
 
                             AppDatabase
                                     .getInstance(context)
@@ -52,9 +53,7 @@ public class FileService extends IntentService {
                                     .subscribe(
                                             transactionModels -> {
                                                 String transactionsJson = gson.toJson(transactionModels);
-                                                FileOutputStream fos = context.openFileOutput(JsonFile.FILE_NAME_TRANSACTIONS, MODE_PRIVATE);
-
-                                                fos.write(transactionsJson.getBytes());
+                                                writeFileExternalStorage(transactionsJson.getBytes(), JsonFile.FILE_NAME_TRANSACTIONS);
 
                                                 MyApp.getAppContext().startService(new Intent(context, NotificationService.class)
                                                         .setAction(NotificationService.NOTIFICATION_SAVE_ACTION));
@@ -64,5 +63,33 @@ public class FileService extends IntentService {
                             MyApp.getAppContext().startService(new Intent(context, NotificationService.class)
                                     .setAction(NotificationService.NOTIFICATION_SAVE_ERROR_ACTION));
                         });
+    }
+
+    public void writeFileExternalStorage(byte jsonBytes[], String fileName) {
+        //If it isn't mounted - we can't write into it.
+        if (isExternalMounted()) {
+            writeExternalFile(jsonBytes, fileName);
+        }
+    }
+
+    private boolean isExternalMounted() {
+        //Checking the availability state of the External Storage.
+        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
+    }
+
+    private void writeExternalFile(byte[] jsonBytes, String fileName) {
+        //Create a new file that points to the root directory, with the given name:
+        File jsonFile = new File(getExternalFilesDir(null), fileName);
+
+        //the write operation
+        FileOutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(jsonFile, false);
+            outputStream.write(jsonBytes);
+            outputStream.flush();
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
