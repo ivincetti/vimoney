@@ -16,7 +16,6 @@ import ru.vincetti.vimoney.data.sqlite.AppDatabase;
 import ru.vincetti.vimoney.settings.json.JsonFile;
 
 public class FileService extends IntentService {
-    private static final String TAG = "DEBUG";
     public final static String SAVE_ACTION = "save-file-service";
 
     public FileService() {
