@@ -16,12 +16,12 @@ import ru.vincetti.vimoney.data.models.TransactionListModel;
 
 public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAdapter.ViewHolder> {
     private List<TransactionListModel> data;
-    OnTransactionClickListener mListener;
+    private OnTransactionClickListener mListener;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView name, date, acc, sum, cur;
 
-        public ViewHolder(@NonNull View itemView, OnTransactionClickListener listener) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.home_transactions_name);
             date = itemView.findViewById(R.id.home_transactions_date);
@@ -46,7 +46,7 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_transactions_list
                 , parent, false);
-        return new ViewHolder(view, mListener);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
 
         holder.name.setText(tmpTr.getDescription());
         holder.date.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(tmpTr.getDate()));
-        holder.sum.setText(tmpTr.getTypeString() + " " + tmpTr.getSum());
+        holder.sum.setText(String.format("%s %s", tmpTr.getTypeString(), tmpTr.getSum()));
         holder.acc.setText(tmpTr.getAccountName());
         holder.cur.setText(tmpTr.getCurSymbol());
     }
@@ -72,10 +72,6 @@ public class TransactionsRVAdapter extends RecyclerView.Adapter<TransactionsRVAd
         void onTrClick(int itemId);
     }
 
-    /**
-     * When data changes, this method updates the list of taskEntries
-     * and notifies the adapter to use the new values on it
-     */
     public void setTransaction(List<TransactionListModel> transList) {
         data = transList;
         notifyDataSetChanged();

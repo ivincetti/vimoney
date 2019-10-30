@@ -57,24 +57,24 @@ public class HistoryFragment extends Fragment {
                 LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
                         .transactionDao().loadCheckTransactionsFull(trCheckId);
                 transList.observe(this,
-                        transactions -> transactionsRVAdapter.setTransaction(transactions));
+                        transactionsRVAdapter::setTransaction);
             } else {
                 LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
                         .transactionDao().loadCheckTransactionsCountFull(trCheckId, trCount);
                 transList.observe(this,
-                        transactions -> transactionsRVAdapter.setTransaction(transactions));
+                        transactionsRVAdapter::setTransaction);
             }
         } else {
             if (trCount == DEFAULT_TRANSACTIONS) {
                 LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
                         .transactionDao().loadAllTransactionsFull();
                 transList.observe(this,
-                        transactions -> transactionsRVAdapter.setTransaction(transactions));
+                        transactionsRVAdapter::setTransaction);
             } else {
                 LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
                         .transactionDao().loadAllTransactionsCountFull(trCount);
                 transList.observe(this,
-                        transactions -> transactionsRVAdapter.setTransaction(transactions));
+                        transactionsRVAdapter::setTransaction);
             }
         }
     }

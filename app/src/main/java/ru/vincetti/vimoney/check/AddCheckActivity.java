@@ -1,7 +1,6 @@
 package ru.vincetti.vimoney.check;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +22,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.OnColorSelectedListener;
-import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
 import java.util.List;
@@ -162,9 +158,6 @@ public class AddCheckActivity extends AppCompatActivity {
     // radioButton option load
     private void typeLoad(String type) {
         switch (type) {
-            case AccountModel.ACCOUNT_TYPE_CASH:
-                typeRadioGroup.check(R.id.add_check_type_cash);
-                break;
             case AccountModel.ACCOUNT_TYPE_DEBIT:
                 typeRadioGroup.check(R.id.add_check_type_debit);
                 break;

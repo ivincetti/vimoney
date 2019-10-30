@@ -24,7 +24,8 @@ public class ChecksListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checks_list);
 
-        findViewById(R.id.setting_navigation_back_btn).setOnClickListener(view -> finish());
+        findViewById(R.id.setting_navigation_back_btn)
+                .setOnClickListener(view -> finish());
         findViewById(R.id.check_list_fab)
                 .setOnClickListener(view -> AddCheckActivity.start(this));
 
@@ -41,8 +42,6 @@ public class ChecksListActivity extends AppCompatActivity {
 
     private void accountsLoadFromDB(){
         AccountsViewModel viewModel = ViewModelProviders.of(this).get(AccountsViewModel.class);
-        viewModel.getAccounts().observe(this, accounts -> {
-            mAdapter.setList(accounts);
-        });
+        viewModel.getAccounts().observe(this, accounts -> mAdapter.setList(accounts));
     }
 }

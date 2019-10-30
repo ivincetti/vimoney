@@ -47,7 +47,7 @@ public class TransactionFragment extends Fragment {
     TransactionViewModel viewModel;
     TextView txtName, txtSum, txtDate, txtCurrency, txtAccount;
     Spinner accSpinner;
-    Button btnSave;
+    private Button btnSave;
     Date mDate;
 
     @Override
@@ -59,13 +59,11 @@ public class TransactionFragment extends Fragment {
         initViews(view);
         mTrans = new TransactionModel();
         viewModel = ViewModelProviders.of(getActivity()).get(TransactionViewModel.class);
-        viewModel.getCurrencyIdSymbols().observe(getViewLifecycleOwner(), integerStringHashMap -> {
-            curSymbolsId = integerStringHashMap;
-        });
+        viewModel.getCurrencyIdSymbols().observe(getViewLifecycleOwner(),
+                integerStringHashMap -> curSymbolsId = integerStringHashMap);
 
-        viewModel.getAccountNames().observe(getViewLifecycleOwner(), integerStringHashMap -> {
-            accountNames = integerStringHashMap;
-        });
+        viewModel.getAccountNames().observe(getViewLifecycleOwner(),
+                integerStringHashMap -> accountNames = integerStringHashMap);
 
         viewModel.getNotArchiveAccountNames().observe(getViewLifecycleOwner(), integerStringHashMap -> {
             notArchiveAccountNames = integerStringHashMap;
@@ -141,9 +139,7 @@ public class TransactionFragment extends Fragment {
         btnSave = view.findViewById(R.id.add_btn);
         btnSave.setOnClickListener(view1 -> save(typeAction));
         txtAccount = view.findViewById(R.id.add_acc_name);
-        txtAccount.setOnClickListener(view13 -> {
-            accSpinner.performClick();
-        });
+        txtAccount.setOnClickListener(view13 -> accSpinner.performClick());
 
         container = view.findViewById(R.id.fragment_container);
         progressBar = view.findViewById(R.id.fragment_progress_bar);

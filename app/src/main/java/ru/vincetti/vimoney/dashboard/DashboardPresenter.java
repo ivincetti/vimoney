@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -45,8 +46,8 @@ class DashboardPresenter extends MvpPresenter<DashboardView> {
     }
 
     void getData() {
-        getViewState().setMonth(new SimpleDateFormat("MMM").format(cal.getTime()));
-        month = new SimpleDateFormat("MM").format(cal.getTime());
+        getViewState().setMonth(new SimpleDateFormat("MMM", Locale.getDefault()).format(cal.getTime()));
+        month = new SimpleDateFormat("MM", Locale.getDefault()).format(cal.getTime());
         showProgress();
         getStat();
         getExpense();

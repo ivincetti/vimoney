@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import ru.vincetti.vimoney.R;
 import ru.vincetti.vimoney.check.CheckActivity;
@@ -38,7 +39,6 @@ import ru.vincetti.vimoney.utils.LogicMath;
 import static ru.vincetti.vimoney.utils.Utils.viewModelUpdate;
 
 public class HomeActivity extends AppCompatActivity {
-    private static final String TAG = "DEBUG HomeActivity";
     private final static String CHANNEL_ID = "15";
     private final static int TR_MAIN_COUNT = 10;
 
@@ -115,13 +115,8 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-//            case R.id.navigation_bar_notification:
-//                NotificationsActivity.start(this);
-//                break;
-            case R.id.navigation_bar_settings:
-                SettingsActivity.start(this);
-                break;
+        if (item.getItemId() == R.id.navigation_bar_settings) {
+            SettingsActivity.start(this);
         }
         return true;
     }
@@ -133,33 +128,38 @@ public class HomeActivity extends AppCompatActivity {
             mBalanceText.setText(String.valueOf(LogicMath.userBalanceChange(accounts)));
             mAdapter.setList(accounts);
         });
-
-        // get stat
-        mStatMonth.setText(new SimpleDateFormat("MMM").format(date));
         AppDatabase mDb = AppDatabase.getInstance(this);
-        LiveData<Integer> lSum1 = mDb.transactionDao().loadSumTransactionIncomeMonth(
-                new SimpleDateFormat("MM").format(date),
-                new SimpleDateFormat("YYYY").format(date)
-        );
-        lSum1.observe(this, integer -> {
-            if (integer != null) {
-                mStatIncome.setText(String.valueOf(integer));
-            }
-        });
-        LiveData<Integer> lSum2 = mDb.transactionDao().loadSumTransactionExpenseMonth(
-                new SimpleDateFormat("MM").format(date),
-                new SimpleDateFormat("YYYY").format(date)
-        );
-        lSum2.observe(this, integer -> {
-            if (integer != null) {
-                mStatExpense.setText(String.valueOf(integer));
-            }
-        });
+        monthStatLoad(mDb);
 
         // setting in viewmodel Utils hashes
         final TransactionViewModel transactionViewModel =
                 ViewModelProviders.of(this).get(TransactionViewModel.class);
         AppExecutors.getsInstance().diskIO().execute(() -> viewModelUpdate(mDb, transactionViewModel));
+    }
+
+    private void monthStatLoad(AppDatabase mDb) {
+        // get stat
+        mStatMonth.setText(new SimpleDateFormat("MMM", Locale.getDefault()).format(date));
+        LiveData<Integer> lSum1 = mDb.transactionDao()
+                .loadSumTransactionIncomeMonth(
+                        new SimpleDateFormat("MM", Locale.getDefault()).format(date),
+                        new SimpleDateFormat("YYYY", Locale.getDefault()).format(date)
+                );
+        lSum1.observe(this, integer -> {
+            if (integer != null) {
+                mStatIncome.setText(String.valueOf(integer));
+            }
+        });
+        LiveData<Integer> lSum2 = mDb.transactionDao()
+                .loadSumTransactionExpenseMonth(
+                        new SimpleDateFormat("MM", Locale.getDefault()).format(date),
+                        new SimpleDateFormat("YYYY", Locale.getDefault()).format(date)
+                );
+        lSum2.observe(this, integer -> {
+            if (integer != null) {
+                mStatExpense.setText(String.valueOf(integer));
+            }
+        });
     }
 
     // Notification channel register

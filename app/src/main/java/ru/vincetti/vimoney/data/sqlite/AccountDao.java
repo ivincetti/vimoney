@@ -2,7 +2,6 @@ package ru.vincetti.vimoney.data.sqlite;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -63,7 +62,7 @@ public interface AccountDao {
     LiveData<AccountListModel> loadAccountByIdFull(int accId);
 
     @Query("UPDATE accounts SET sum = :sum WHERE id = :accId")
-    int updateSumByAccId(int accId, float sum);
+    void updateSumByAccId(int accId, float sum);
 
     @Query("UPDATE accounts SET archive = 1 WHERE id = :accId")
     void archiveAccountById(int accId);
@@ -79,8 +78,4 @@ public interface AccountDao {
 
     @Query("Delete FROM accounts")
     Completable deleteAllAccounts();
-
-    @Delete
-    void deleteAccount(AccountModel acc);
-
 }

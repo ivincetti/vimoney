@@ -77,7 +77,7 @@ public class SplashActivity extends AppCompatActivity {
                 .baseUrl("https://vincetti.ru/vimoney/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-         return json.create(JsonDownloader.class);
+        return json.create(JsonDownloader.class);
     }
 
     private void loadJson() {
@@ -132,20 +132,18 @@ public class SplashActivity extends AppCompatActivity {
 
     // import sample transactions from config
     private void transactionsImport(List<TransactionsItem> transactionItems) {
-        AppExecutors.getsInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                for (TransactionsItem tr : transactionItems) {
-                    mDb.transactionDao().insertTransaction(
-                            new TransactionModel(
-                                    new Date(tr.getDate()),
-                                    tr.getAccountId(),
-                                    getResources().getString(R.string.transaction_import_sample_desc),
-                                    tr.getType(),
-                                    tr.getSum()));
-                }
-            }
-        });
+        AppExecutors.getsInstance().diskIO().execute(
+                () -> {
+                    for (TransactionsItem tr : transactionItems) {
+                        mDb.transactionDao().insertTransaction(
+                                new TransactionModel(
+                                        new Date(tr.getDate()),
+                                        tr.getAccountId(),
+                                        getResources().getString(R.string.transaction_import_sample_desc),
+                                        tr.getType(),
+                                        tr.getSum()));
+                    }
+                });
     }
 
     // insert new date edit in config DB table

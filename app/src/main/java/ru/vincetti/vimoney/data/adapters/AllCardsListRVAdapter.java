@@ -21,16 +21,16 @@ public class AllCardsListRVAdapter extends RecyclerView.Adapter<AllCardsListRVAd
 
     class CardsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView accName, accType, accBalance, isArchive, accSymbol;
-        View accContaner;
+        View accContainer;
 
-        public CardsViewHolder(@NonNull View itemView, OnCardClickListener listener) {
+        CardsViewHolder(@NonNull View itemView) {
             super(itemView);
             accName = itemView.findViewById(R.id.acc_name);
             accType = itemView.findViewById(R.id.acc_type);
             accBalance = itemView.findViewById(R.id.acc_balance);
             isArchive = itemView.findViewById(R.id.acc_archive);
             accSymbol = itemView.findViewById(R.id.acc_symbol);
-            accContaner = itemView.findViewById(R.id.acc_list_container);
+            accContainer = itemView.findViewById(R.id.acc_list_container);
             itemView.setOnClickListener(this);
         }
 
@@ -49,7 +49,7 @@ public class AllCardsListRVAdapter extends RecyclerView.Adapter<AllCardsListRVAd
     public CardsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_all_cards_list
                 , parent, false);
-        return new CardsViewHolder(view, mListener);
+        return new CardsViewHolder(view);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class AllCardsListRVAdapter extends RecyclerView.Adapter<AllCardsListRVAd
         holder.accType.setText(tmpAcc.getType());
         holder.accBalance.setText(String.valueOf(tmpAcc.getSum()));
         holder.accSymbol.setText(tmpAcc.getSymbol());
-        holder.accContaner.setBackgroundColor(ColorUtils.setAlphaComponent(Color.parseColor(tmpAcc.getColor()), 35));
+        holder.accContainer.setBackgroundColor(ColorUtils.setAlphaComponent(Color.parseColor(tmpAcc.getColor()), 35));
         if(!tmpAcc.isArhive()){
             holder.isArchive.setVisibility(View.INVISIBLE);
         } else {

@@ -11,7 +11,7 @@ import ru.vincetti.vimoney.transaction.TransactionViewModel;
 
 public class Utils {
 
-    public static HashMap<Integer, String> genCurrencyIdHash(List<AccountListModel> t) {
+    private static HashMap<Integer, String> genCurrencyIdHash(List<AccountListModel> t) {
         HashMap<Integer, String> hash = new HashMap<>();
         for (AccountListModel o : t) {
             hash.put(o.getId(), o.getSymbol());
@@ -19,7 +19,7 @@ public class Utils {
         return hash;
     }
 
-    public static HashMap<Integer, String> genAccountsHash(List<AccountModel> t) {
+    private static HashMap<Integer, String> genAccountsHash(List<AccountModel> t) {
         HashMap<Integer, String> hash = new HashMap<>();
         for (AccountModel o : t) {
             hash.put(o.getId(), o.getName());

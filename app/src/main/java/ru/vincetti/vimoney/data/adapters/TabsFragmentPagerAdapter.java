@@ -15,7 +15,7 @@ public class TabsFragmentPagerAdapter extends FragmentPagerAdapter {
     private final Bundle fragmentBundle;
 
     public TabsFragmentPagerAdapter(FragmentManager fm, Bundle data) {
-        super(fm);
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         fragmentBundle = data;
     }
 

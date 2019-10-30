@@ -46,9 +46,7 @@ public class TransactionTransferFragment extends TransactionFragment implements 
         txtSumTo = view.findViewById(R.id.add_sum_to);
         txtCurrencyTo = view.findViewById(R.id.add_acc_cur_to);
         txtAccountTo = view.findViewById(R.id.add_acc_name_to);
-        txtAccountTo.setOnClickListener(view13 -> {
-            accSpinnerTo.performClick();
-        });
+        txtAccountTo.setOnClickListener(view13 -> accSpinnerTo.performClick());
         txtSum.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

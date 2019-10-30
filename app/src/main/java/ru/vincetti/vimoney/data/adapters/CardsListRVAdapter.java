@@ -22,7 +22,7 @@ public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.
         TextView accName, accType, accBalance, accSymbol;
         View accContainer;
 
-        public CardsViewHolder(@NonNull View itemView, OnCardClickListener listener) {
+        CardsViewHolder(@NonNull View itemView) {
             super(itemView);
             accName = itemView.findViewById(R.id.home_acc_name);
             accType = itemView.findViewById(R.id.home_acc_type);
@@ -47,7 +47,7 @@ public class CardsListRVAdapter extends RecyclerView.Adapter<CardsListRVAdapter.
     public CardsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cards_list
                 , parent, false);
-        return new CardsViewHolder(view, mListener);
+        return new CardsViewHolder(view);
     }
 
     @Override

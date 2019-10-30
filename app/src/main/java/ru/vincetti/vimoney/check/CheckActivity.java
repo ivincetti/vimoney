@@ -56,7 +56,7 @@ public class CheckActivity extends AppCompatActivity {
             mCheckId = intent.getIntExtra(EXTRA_CHECK_ID, DEFAULT_CHECK_ID);
 
             LiveData<AccountListModel> data = mDb.accountDao().loadAccountByIdFull(mCheckId);
-            data.observe(this, accountModel -> loadAccount(accountModel));
+            data.observe(this, this::loadAccount);
             showTransactionsHistory(mCheckId);
         }
     }
@@ -77,9 +77,8 @@ public class CheckActivity extends AppCompatActivity {
                 view -> AddCheckActivity.start(CheckActivity.this, mCheckId));
         findViewById(R.id.setting_navigation_back_btn)
                 .setOnClickListener(view -> finish());
-        findViewById(R.id.check_fab).setOnClickListener(view -> {
-            TransactionActivity.startCheckId(this, mCheckId);
-        });
+        findViewById(R.id.check_fab).setOnClickListener(
+                view -> TransactionActivity.startCheckId(this, mCheckId));
     }
 
     // show transaction for this account

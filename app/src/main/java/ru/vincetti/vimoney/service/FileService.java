@@ -58,13 +58,11 @@ public class FileService extends IntentService {
                                                         .setAction(NotificationService.NOTIFICATION_SAVE_ACTION));
                                             });
 
-                        }, throwable -> {
-                            MyApp.getAppContext().startService(new Intent(context, NotificationService.class)
-                                    .setAction(NotificationService.NOTIFICATION_SAVE_ERROR_ACTION));
-                        });
+                        }, throwable -> MyApp.getAppContext().startService(new Intent(context, NotificationService.class)
+                                .setAction(NotificationService.NOTIFICATION_SAVE_ERROR_ACTION)));
     }
 
-    public void writeFileExternalStorage(byte jsonBytes[], String fileName) {
+    public void writeFileExternalStorage(byte[] jsonBytes, String fileName) {
         //If it isn't mounted - we can't write into it.
         if (isExternalMounted()) {
             writeExternalFile(jsonBytes, fileName);
