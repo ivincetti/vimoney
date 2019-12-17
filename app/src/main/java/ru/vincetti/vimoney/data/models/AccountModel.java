@@ -51,6 +51,16 @@ public class AccountModel {
         this.color = color;
     }
 
+    @Ignore
+    public AccountModel() {
+        this.name = "";
+        this.type = ACCOUNT_TYPE_CASH;
+        this.sum = 0;
+        this.extraKey = "";
+        this.extraValue = "";
+        this.color = "";
+    }
+
     public int getId() {
         return id;
     }
@@ -63,12 +73,24 @@ public class AccountModel {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getType() {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public int getSum() {
         return sum;
+    }
+
+    public void setSum(int sum) {
+        this.sum = sum;
     }
 
     public boolean isArhive() {

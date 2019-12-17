@@ -7,9 +7,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import ru.vincetti.vimoney.data.models.TransactionModel;
-import ru.vincetti.vimoney.transaction.TransactionIncomeFragment;
-import ru.vincetti.vimoney.transaction.TransactionSpentFragment;
-import ru.vincetti.vimoney.transaction.TransactionTransferFragment;
+import ru.vincetti.vimoney.transaction.add.TransactionIncomeFragment;
+import ru.vincetti.vimoney.transaction.spent.TransactionSpentFragment;
+import ru.vincetti.vimoney.transaction.transfer.TransactionTransferFragment;
 
 public class TabsFragmentPagerAdapter extends FragmentPagerAdapter {
     private final Bundle fragmentBundle;
@@ -38,22 +38,24 @@ public class TabsFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int i) {
         switch (i) {
-            case 0:
-                final TransactionSpentFragment spentFragment = new TransactionSpentFragment();
-                spentFragment.setArguments(this.fragmentBundle);
-                return spentFragment;
-            case 1:
-                final TransactionIncomeFragment incomeFragment = new TransactionIncomeFragment();
-                incomeFragment.setArguments(this.fragmentBundle);
-                return incomeFragment;
-            case 2:
-                final TransactionTransferFragment transferFragment = new TransactionTransferFragment();
-                transferFragment.setArguments(this.fragmentBundle);
-                return transferFragment;
+//            case 0:
+//                final TransactionSpentFragment spentFragment = new TransactionSpentFragment();
+//                spentFragment.setArguments(this.fragmentBundle);
+//                return spentFragment;
+//            case 1:
+//                final TransactionIncomeFragment incomeFragment = new TransactionIncomeFragment();
+//                incomeFragment.setArguments(this.fragmentBundle);
+//                return incomeFragment;
+//            case 2:
+//                final TransactionTransferFragment transferFragment = new TransactionTransferFragment();
+//                transferFragment.setArguments(this.fragmentBundle);
+//                return transferFragment;
 //            case 3:
 //                return new TransactionDebtFragment();
             default:
-                return null;
+                final TransactionSpentFragment spentFragment = new TransactionSpentFragment();
+                spentFragment.setArguments(this.fragmentBundle);
+                return spentFragment;
         }
     }
 

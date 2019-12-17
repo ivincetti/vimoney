@@ -93,7 +93,9 @@
 
         </RelativeLayout>
 
-        <include layout="@layout/fragment_add_all"/>
+        <include
+            android:id="@+id/fragment_add_content"
+            layout="@layout/fragment_add_all"/>
 
     </LinearLayout>
 

@@ -10,8 +10,8 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
+import ru.vincetti.vimoney.MainActivity;
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.home.HomeActivity;
 
 public class NotificationService extends IntentService {
     public final static String NOTIFICATION_ACTION = "Notification-service";
@@ -26,16 +26,16 @@ public class NotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        switch (intent.getAction()){
-            case NOTIFICATION_ACTION:{
+        switch (intent.getAction()) {
+            case NOTIFICATION_ACTION: {
                 showNotification(this);
                 break;
             }
-            case NOTIFICATION_SAVE_ACTION:{
+            case NOTIFICATION_SAVE_ACTION: {
                 showSaveNotification(this);
                 break;
             }
-            case NOTIFICATION_SAVE_ERROR_ACTION:{
+            case NOTIFICATION_SAVE_ERROR_ACTION: {
                 showSaveErrorNotification(this);
                 break;
             }
@@ -75,8 +75,8 @@ public class NotificationService extends IntentService {
             nManager.createNotificationChannel(notificationChannel);
         }
 
-        // open HomeActivity onClick
-        Intent intent = new Intent(context, HomeActivity.class);
+        // open MainActivity onClick
+        Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,
                 0, intent, 0);
