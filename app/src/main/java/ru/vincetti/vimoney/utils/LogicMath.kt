@@ -1,4 +1,4 @@
-package ru.vincetti.vimoney.utils;
+package ru.vincetti.vimoney.utils
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -24,7 +24,7 @@ class LogicMath {
         fun userBalanceChange(accList: List<AccountListModel>): Int {
             var bal = 0
             for (o in accList) {
-                bal += o.getSum()
+                bal += o.sum
             }
             return bal
         }

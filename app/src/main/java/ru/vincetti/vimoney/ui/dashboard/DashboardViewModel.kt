@@ -49,8 +49,7 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
      */
     private fun getStat() {
         viewModelScope.launch {
-            val stat = dao
-                    .loadTransactionStatByMonth(SimpleDateFormat("MM")
+            val stat = dao.loadTransactionStatByMonth(SimpleDateFormat("MM")
                             .format(cal.time), "2019")
             var sum = 0f
             val entries = ArrayList<Entry>()

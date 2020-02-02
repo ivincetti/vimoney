@@ -9,36 +9,31 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import ru.vincetti.vimoney.R
+import ru.vincetti.vimoney.databinding.FragmentSplashBinding
 
 class SplashFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(
-                R.layout.activity_splash,
-                container,
-                false
-        )
+        return FragmentSplashBinding.inflate(inflater).root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val viewModel = ViewModelProvider(requireActivity()).get(SplashViewModel::class.java)
 
         val cManager = activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val nInfo = cManager.getActiveNetworkInfo()
 
-        val viewModel = ViewModelProviders.of(requireActivity()).get(SplashViewModel::class.java)
-        // tmp
-        viewModel.networkError.value = (nInfo == null || !nInfo.isConnected())
-
+        if (nInfo == null || !nInfo.isConnected()) viewModel.setNoNetwork()
         viewModel.networkError.observe(this, Observer {
             if (it) alertNetworkDialogShow()
         })
 
         viewModel.need2Navigate2Home.observe(this, Observer {
-            if(it) findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+            if (it) findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
         })
     }
 

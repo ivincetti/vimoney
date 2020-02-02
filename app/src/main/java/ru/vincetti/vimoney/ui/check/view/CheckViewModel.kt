@@ -4,12 +4,8 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.AccountListModel
 import ru.vincetti.vimoney.data.sqlite.AccountDao
-import ru.vincetti.vimoney.transaction.TransactionViewModel
-import ru.vincetti.vimoney.ui.dashboard.DashboardViewModel
-import ru.vincetti.vimoney.utils.TransactionViewModelUtils
-import ru.vincetti.vimoney.utils.UpdateViewModel
 
-class CheckViewModel(private val dao: AccountDao, private val checkID: Int) : UpdateViewModel() {
+class CheckViewModel(private val dao: AccountDao, private val checkID: Int) : ViewModel() {
 
     companion object {
         const val EXTRA_CHECK_ID = "checkID"
@@ -45,13 +41,6 @@ class CheckViewModel(private val dao: AccountDao, private val checkID: Int) : Up
                 dao.archiveAccountById(checkID)
                 _need2UpdateViewModel.value = true
             }
-        }
-    }
-
-    override fun updateTransactionsViewModel(t: TransactionViewModel)
-    {
-        viewModelScope.launch {
-            TransactionViewModelUtils.viewModelUpdate(dao, t)
         }
     }
 }

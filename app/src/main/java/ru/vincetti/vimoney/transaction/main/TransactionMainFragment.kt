@@ -9,16 +9,15 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
+import ru.vincetti.vimoney.MainViewModel
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.TabsFragmentPagerAdapter
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.databinding.FragmentTransactionMainBinding
-import ru.vincetti.vimoney.transaction.TransactionViewModel
-import ru.vincetti.vimoney.transaction.TransactionViewModelFactory
 
 class TransactionMainFragment : Fragment() {
 
@@ -30,7 +29,7 @@ class TransactionMainFragment : Fragment() {
 
     private lateinit var binding: FragmentTransactionMainBinding
     private lateinit var viewModel: TransactionMainViewModel
-    private lateinit var trViewModel: TransactionViewModel
+    private lateinit var mainViewModel: MainViewModel
     private lateinit var vPager: ViewPager
 
     private lateinit var fragmentBundle: Bundle
@@ -40,31 +39,23 @@ class TransactionMainFragment : Fragment() {
         val application = requireNotNull(activity).application
         val mDb = AppDatabase.getInstance(application)
         val viewModelFactory = TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao(), application)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(TransactionMainViewModel::class.java)
-        val transactionViewModelFactory = TransactionViewModelFactory(mDb.transactionDao(), mDb.accountDao())
-        trViewModel = ViewModelProviders.of(this, transactionViewModelFactory).get(TransactionViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(TransactionMainViewModel::class.java)
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
         fragmentBundle = Bundle()
-
         arguments?.let { bundle ->
-            if (bundle.getInt(EXTRA_TRANS_ID) != null
-                    && bundle.getInt(EXTRA_TRANS_ID) != TransactionModel.DEFAULT_ID) {
-                val mTransId = bundle.getInt(EXTRA_TRANS_ID)
-                fragmentBundle.putInt(EXTRA_TRANS_ID, mTransId)
+            val extraTransactionId = bundle.getInt(EXTRA_TRANS_ID)
+            val extraAccId = bundle.getInt(EXTRA_ACCOUNT_ID)
+            if (extraTransactionId > 0) {
                 binding.transactionNavigationDeleteBtn.visibility = View.VISIBLE
-                viewModel.loadTransaction(mTransId)
-            } else {
-                bundle.getInt(EXTRA_ACCOUNT_ID)?.let {
-                    viewModel.setAccount(it)
-                }
-            }
+                viewModel.loadTransaction(extraTransactionId)
+            } else if (extraAccId > 0) viewModel.setAccount(extraAccId)
         }
 
         vPager = binding.viewPager
         vPager.adapter = TabsFragmentPagerAdapter(childFragmentManager, fragmentBundle)
         vPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-                //do nothing
+            override fun onPageScrollStateChanged(state: Int) { //do nothing
             }
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -124,6 +115,7 @@ class TransactionMainFragment : Fragment() {
             else -> {
                 vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_SPENT_TAB, true)
                 setActivityTitle(TransactionModel.TRANSACTION_TYPE_SPENT_TAB)
+                viewModel.saveAction = TransactionModel.TRANSACTION_TYPE_SPENT
             }
 //            TransactionModel.TRANSACTION_TYPE_SPENT -> {
 //                vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_SPENT_TAB, true)

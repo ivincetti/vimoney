@@ -25,7 +25,7 @@ import static ru.vincetti.vimoney.transaction.TransactionConst.EXTRA_TRANS_ID;
 public class HistoryFragment extends Fragment {
     public final static String BUNDLE_TRANS_COUNT_NAME = "ru.vincetti.vimoney.transhistory_count";
     public final static String BUNDLE_TRANS_CHECK_ID_NAME = "ru.vincetti.vimoney.transhistory_check_id";
-    private final static int DEFAULT_TRANSACTIONS = 0;
+    private final static int DEFAULT_TRANSACTIONS = 10;
 
     private int trCount = DEFAULT_TRANSACTIONS;
 
@@ -62,24 +62,28 @@ public class HistoryFragment extends Fragment {
         if (getArguments() != null && getArguments().containsKey(BUNDLE_TRANS_CHECK_ID_NAME)) {
             int trCheckId = getArguments().getInt(BUNDLE_TRANS_CHECK_ID_NAME);
             if (trCount == DEFAULT_TRANSACTIONS) {
-                LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
+                LiveData<List<TransactionListModel>> transList =
+                        AppDatabase.Companion.getInstance(getContext())
                         .transactionDao().loadCheckTransactionsFull(trCheckId);
                 transList.observe(this,
                         transactionsRVAdapter::setTransaction);
             } else {
-                LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
+                LiveData<List<TransactionListModel>> transList =
+                        AppDatabase.Companion.getInstance(getContext())
                         .transactionDao().loadCheckTransactionsCountFull(trCheckId, trCount);
                 transList.observe(this,
                         transactionsRVAdapter::setTransaction);
             }
         } else {
             if (trCount == DEFAULT_TRANSACTIONS) {
-                LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
+                LiveData<List<TransactionListModel>> transList =
+                        AppDatabase.Companion.getInstance(getContext())
                         .transactionDao().loadAllTransactionsFull();
                 transList.observe(this,
                         transactionsRVAdapter::setTransaction);
             } else {
-                LiveData<List<TransactionListModel>> transList = AppDatabase.getInstance(getContext())
+                LiveData<List<TransactionListModel>> transList =
+                        AppDatabase.Companion.getInstance(getContext())
                         .transactionDao().loadAllTransactionsCountFull(trCount);
                 transList.observe(this,
                         transactionsRVAdapter::setTransaction);

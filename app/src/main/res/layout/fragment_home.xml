@@ -54,8 +54,8 @@
             >
 
             <include
-                android:id="@+id/fragment_home_container"
-                layout="@layout/activity_home_content" />
+                android:id="@+id/fragment_home_content"
+                layout="@layout/fragment_home_content" />
 
         </androidx.core.widget.NestedScrollView>
 

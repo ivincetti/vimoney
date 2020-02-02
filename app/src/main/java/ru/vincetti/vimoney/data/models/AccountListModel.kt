@@ -7,7 +7,8 @@ data class AccountListModel(
         val name: String?,
         val type: String?,
         val sum: Int,
-        @ColumnInfo(name = "account_symbol") val curSymbol: String?,
+        // TODO подумать над сохранением/ресурсами
+        @ColumnInfo(name = "account_symbol") val curSymbol: String = "\u20BD",
         val color: String?,
         @ColumnInfo(name = "archive") val isArchive: Boolean
 )

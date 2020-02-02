@@ -11,16 +11,13 @@ import ru.vincetti.vimoney.data.models.AccountModel
 import ru.vincetti.vimoney.data.models.CurrencyModel
 import ru.vincetti.vimoney.data.sqlite.AccountDao
 import ru.vincetti.vimoney.data.sqlite.CurrentDao
-import ru.vincetti.vimoney.transaction.TransactionViewModel
 import ru.vincetti.vimoney.ui.check.AccountConst
-import ru.vincetti.vimoney.utils.TransactionViewModelUtils.Companion.viewModelUpdate
-import ru.vincetti.vimoney.utils.UpdateAndroidViewModel
 
 class AddCheckViewModel(
         private val accDao: AccountDao,
         private val curDao: CurrentDao,
         val app: Application
-) : UpdateAndroidViewModel(app) {
+) : AndroidViewModel(app) {
 
     private var checkID = AccountConst.DEFAULT_CHECK_ID
 
@@ -134,12 +131,6 @@ class AddCheckViewModel(
         val hexColor = java.lang.String.format("#%06x", (selectedColor and 0xffffff))
         _color.value = selectedColor
         (_check.value as AccountModel).color = hexColor
-    }
-
-    override fun updateTransactionsViewModel(t: TransactionViewModel) {
-        viewModelScope.launch {
-            viewModelUpdate(accDao, t)
-        }
     }
 }
 

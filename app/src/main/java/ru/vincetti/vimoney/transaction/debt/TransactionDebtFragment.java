@@ -10,8 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import ru.vincetti.vimoney.R;
-import ru.vincetti.vimoney.data.models.TransactionModel;
-import ru.vincetti.vimoney.transaction.TransactionFragmentInterface;
 
 public class TransactionDebtFragment extends Fragment {
 

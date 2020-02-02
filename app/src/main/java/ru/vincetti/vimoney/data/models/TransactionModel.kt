@@ -2,6 +2,7 @@ package ru.vincetti.vimoney.data.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.util.*
 
@@ -19,6 +20,21 @@ data class TransactionModel(
         var system: Boolean = false,
         var deleted: Boolean = false
 ) {
+
+    @Ignore
+    constructor(
+            _date: Date,
+            _accountId: Int,
+            _description: String,
+            _type: Int,
+            _sum: Float
+    ) : this(
+            date = _date,
+            accountId = _accountId,
+            description = _description,
+            type = _type,
+            sum = _sum
+    )
 
     companion object {
         const val TRANSACTION_TYPE_INCOME = 1

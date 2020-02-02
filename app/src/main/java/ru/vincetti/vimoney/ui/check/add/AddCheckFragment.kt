@@ -10,7 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
@@ -21,8 +21,6 @@ import ru.vincetti.vimoney.data.models.CurrencyModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.databinding.FragmentAddCheckBinding
 import ru.vincetti.vimoney.ui.check.AccountConst
-import ru.vincetti.vimoney.utils.TransactionViewModelUtils
-import ru.vincetti.vimoney.utils.UpdateAndroidViewModel
 
 class AddCheckFragment : Fragment() {
 
@@ -36,11 +34,11 @@ class AddCheckFragment : Fragment() {
         val db = AppDatabase.getInstance(application)
         val viewModelFactory = AddCheckModelFactory(db.accountDao(), db.currentDao(), application)
 
-        viewmodel = ViewModelProviders.of(this, viewModelFactory).get(AddCheckViewModel::class.java)
+        viewmodel = ViewModelProvider(this, viewModelFactory)
+                .get(AddCheckViewModel::class.java)
         arguments?.let { bundle ->
-            bundle.getInt(AccountConst.EXTRA_CHECK_ID)?.let {
-                viewmodel.loadAccount(it)
-            }
+            val extraCheck = bundle.getInt(AccountConst.EXTRA_CHECK_ID)
+            if (extraCheck > 0) viewmodel.loadAccount(extraCheck)
         }
 
         viewInit()
@@ -70,18 +68,14 @@ class AddCheckFragment : Fragment() {
             showUnsavedDialog()
         }
         viewmodel.isDefault.observe(this, Observer {
-            if (!it) {
-                binding.addCheckContent.addCheckSaveBtn.text = getString(R.string.add_btn_update)
-            }
+            if (!it) binding.addCheckContent.addCheckSaveBtn.text = getString(R.string.add_btn_update)
+
         })
         viewmodel.need2Navigate.observe(this, Observer {
             if (it) goBack()
         })
         viewmodel.need2AllData.observe(this, Observer {
             if (it) showNoDataDialog()
-        })
-        viewmodel.need2UpdateViewModel.observe(this, Observer {
-            if(it) updateTransactionsViewModel(viewmodel)
         })
         viewmodel.color.observe(this, Observer {
             it?.let {
@@ -92,11 +86,9 @@ class AddCheckFragment : Fragment() {
             binding.addCheckContent.addCheckName.setText(it.name)
             typeLoad(it.type)
 
-            if (it.isArhive) {
+            if (it.isArchive) {
                 binding.addCheckNavigationFromArchiveBtn.visibility = View.VISIBLE
-            } else {
-                binding.addCheckNavigationDeleteBtn.visibility = View.VISIBLE
-            }
+            } else binding.addCheckNavigationDeleteBtn.visibility = View.VISIBLE
         })
         viewmodel.currency.observe(this, Observer {
             it?.let {
@@ -196,10 +188,6 @@ class AddCheckFragment : Fragment() {
                     viewmodel.delete()
                 }
         builder.create().show()
-    }
-
-    private fun updateTransactionsViewModel(viewModel: UpdateAndroidViewModel){
-        TransactionViewModelUtils.updateTransactionsViewModel(activity!!, viewModel)
     }
 
     // not saved transaction cancel dialog

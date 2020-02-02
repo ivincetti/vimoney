@@ -14,21 +14,26 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_add_all.*
 import kotlinx.android.synthetic.main.fragment_add_all.view.*
-import kotlinx.android.synthetic.main.fragment_add_transfer.*
+import kotlinx.android.synthetic.main.fragment_add_spent.*
+import ru.vincetti.vimoney.MainViewModel
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.TransactionModel
-import ru.vincetti.vimoney.transaction.TransactionConst
-import ru.vincetti.vimoney.transaction.TransactionViewModel
+import ru.vincetti.vimoney.data.sqlite.AppDatabase
+import ru.vincetti.vimoney.transaction.main.TransactionMainViewModel
+import ru.vincetti.vimoney.transaction.main.TransactionMainViewModelFactory
 import java.text.DateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class TransactionSpentFragment : Fragment() {
 
-    private lateinit var viewModel: TransactionViewModel
+    private lateinit var viewModel: TransactionMainViewModel
+    private lateinit var mainViewModel: MainViewModel
     private var date = Date()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -36,15 +41,14 @@ class TransactionSpentFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProviders.of(requireActivity()).get(TransactionViewModel::class.java)
+        val application = requireNotNull(activity).application
+        val mDb = AppDatabase.getInstance(application)
+        val transactionMainViewModelFactory =
+                TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao(), application)
+        viewModel = ViewModelProvider(requireNotNull(parentFragment!!.viewModelStore),
+                transactionMainViewModelFactory).get(TransactionMainViewModel::class.java)
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         initFragmentViews()
-
-        arguments?.let {
-            if (it.getInt(TransactionConst.EXTRA_TRANS_ID) > 0) {
-                fragment_container.visibility = View.INVISIBLE
-                fragment_progress_bar.visibility = View.VISIBLE
-            }
-        }
     }
 
     override fun onResume() {
@@ -59,21 +63,21 @@ class TransactionSpentFragment : Fragment() {
     }
 
     private fun initFragmentViews() {
-        viewModel.needSum.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.needSum.observe(viewLifecycleOwner, Observer {
             if (it) showNoSumToast()
         })
-        viewModel.needAccount.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.needAccount.observe(viewLifecycleOwner, Observer {
             if (it) showNoAccountToast()
         })
-        viewModel.needToUpdate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.needToUpdate.observe(viewLifecycleOwner, Observer {
             if (it) add_btn.text = getString(R.string.add_btn_update)
         })
 
-        viewModel.transaction.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.transaction.observe(viewLifecycleOwner, Observer {
             it?.let {
-                add_sum.setText(it.sum.toString())
-                add_acc_name.text = viewModel.loadFromAccountNotArchiveNames(it.accountId)
-                add_acc_cur.text = viewModel.loadFromCurSymbols(it.accountId)
+                if (it.sum > 0) add_sum.setText(it.sum.toString())
+                add_acc_name.text = mainViewModel.loadFromAccountNotArchiveNames(it.accountId)
+                add_acc_cur.text = mainViewModel.loadFromCurSymbols(it.accountId)
                 add_date_txt.text = DateFormat
                         .getDateInstance(DateFormat.MEDIUM).format(it.date)
                 fragment_add_content.add_desc.setText(it.description)
@@ -81,10 +85,14 @@ class TransactionSpentFragment : Fragment() {
             }
         })
 
-        viewModel.date.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.date.observe(viewLifecycleOwner, Observer {
             it?.let {
                 date = it
             }
+        })
+
+        viewModel.needToNavigate.observe(viewLifecycleOwner, Observer {
+            if (it) navigateUp()
         })
 
         add_btn.setOnClickListener {
@@ -99,8 +107,7 @@ class TransactionSpentFragment : Fragment() {
         }
 
         add_sum.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                //do nothing
+            override fun afterTextChanged(s: Editable?) { //do nothing
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -108,7 +115,9 @@ class TransactionSpentFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.changeSumAdd(s)
+                s?.let {
+                    if (s.isNotEmpty()) viewModel.changeSumAdd(s)
+                }
             }
         })
     }
@@ -116,7 +125,7 @@ class TransactionSpentFragment : Fragment() {
     private fun spinnerInit(accSpinner: Spinner, viewM: (Int) -> Unit) {
         val accountsArray = ArrayList<String>()
         accountsArray.add(getString(R.string.add_no_account_text))
-        val notArchiveAccountNames = viewModel.accountNotArchiveNames.value
+        val notArchiveAccountNames = mainViewModel.accountNotArchiveNames.value
         notArchiveAccountNames?.let {
             for (entry in it.entries) {
                 accountsArray.add(entry.value)
@@ -186,6 +195,9 @@ class TransactionSpentFragment : Fragment() {
                 fragment_add_content.add_desc.text.toString(),
                 add_sum.text.toString()
         )
+    }
+
+    private fun navigateUp() {
         findNavController().navigateUp()
     }
 }

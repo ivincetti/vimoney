@@ -6,15 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.ui.check.view.CheckViewModel
 import ru.vincetti.vimoney.data.adapters.AllCardsListRVAdapter
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.databinding.FragmentChecksListBinding
+import ru.vincetti.vimoney.ui.check.view.CheckViewModel
 
 class ChecksListFragment : Fragment() {
     private lateinit var binding: FragmentChecksListBinding
@@ -26,8 +26,7 @@ class ChecksListFragment : Fragment() {
         val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
         val viewModelFactory = CheckListModelFactory(db.accountDao())
-        val viewModel = ViewModelProviders
-                .of(this, viewModelFactory)
+        val viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(CheckListViewModel::class.java)
 
         // список карт/счетов

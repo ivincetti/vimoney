@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import ru.vincetti.vimoney.data.models.TransactionListModel
 import ru.vincetti.vimoney.data.models.TransactionModel
-import ru.vincetti.vimoney.data.models.TransactionModel.*
 import ru.vincetti.vimoney.data.models.TransactionStatDayModel
 
 @Dao
@@ -64,13 +63,15 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions WHERE id = :id")
     suspend fun loadTransactionById(id: Int): TransactionModel?
 
-    @Query("SELECT IFNULL(Sum(sum),0) FROM transactions WHERE type =" + TRANSACTION_TYPE_INCOME
+    @Query("SELECT IFNULL(Sum(sum),0) FROM transactions WHERE type ="
+            + TransactionModel.TRANSACTION_TYPE_INCOME
             + " AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month"
             + " AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year"
             + " AND system=0")
     fun loadSumTransactionIncomeMonth(month: String, year: String): LiveData<Int>
 
-    @Query("SELECT IFNULL(Sum(sum),0) FROM transactions WHERE type =" + TRANSACTION_TYPE_SPENT
+    @Query("SELECT IFNULL(Sum(sum),0) FROM transactions WHERE type ="
+            + TransactionModel.TRANSACTION_TYPE_SPENT
             + " AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month"
             + " AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year")
     fun loadSumTransactionExpenseMonth(month: String, year: String): LiveData<Int>
@@ -94,16 +95,21 @@ interface TransactionDao {
     )
     suspend fun loadTransactionStatByMonth(month: String, year: String): List<TransactionStatDayModel>
 
-    @Query("SELECT IFNULL((Select SUM(sum) FROM transactions WHERE type=" + TRANSACTION_TYPE_INCOME + " AND account_id = :accId),0) - "
-            + "IFNULL((SELECT SUM(sum) FROM transactions WHERE (type=" + TRANSACTION_TYPE_SPENT + " OR type=" + TRANSACTION_TYPE_TRANSFER + ") " +
+    @Query("SELECT IFNULL((Select SUM(sum) FROM transactions WHERE type="
+            + TransactionModel.TRANSACTION_TYPE_INCOME + " AND account_id = :accId),0) - "
+            + "IFNULL((SELECT SUM(sum) FROM transactions WHERE (type="
+            + TransactionModel.TRANSACTION_TYPE_SPENT
+            + " OR type=" + TransactionModel.TRANSACTION_TYPE_TRANSFER + ") " +
             "AND  account_id = :accId),0)")
     suspend fun loadSumByCheckId(accId: Int): Float
 
-    @Query("SELECT SUM(sum) FROM transactions WHERE type=" + TRANSACTION_TYPE_INCOME + " AND account_id = :accId")
+    @Query("SELECT SUM(sum) FROM transactions WHERE type="
+            + TransactionModel.TRANSACTION_TYPE_INCOME + " AND account_id = :accId")
     suspend fun loadSumIncomeByCheckId(accId: Int): Float
 
-    @Query("SELECT SUM(sum) FROM transactions WHERE (type=" + TRANSACTION_TYPE_SPENT
-            + " OR type=" + TRANSACTION_TYPE_TRANSFER + ")"
+    @Query("SELECT SUM(sum) FROM transactions"
+            + " WHERE (type=" + TransactionModel.TRANSACTION_TYPE_SPENT
+            + " OR type=" + TransactionModel.TRANSACTION_TYPE_TRANSFER + ")"
             + " AND  account_id = :accId")
     suspend fun loadSumExpenseByCheckId(accId: Int): Float
 

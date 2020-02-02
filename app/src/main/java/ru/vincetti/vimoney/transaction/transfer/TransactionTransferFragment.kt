@@ -14,22 +14,25 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_add_all.*
 import kotlinx.android.synthetic.main.fragment_add_all.view.*
 import kotlinx.android.synthetic.main.fragment_add_transfer.*
+import ru.vincetti.vimoney.MainViewModel
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.TransactionModel
+import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.transaction.TransactionConst
-import ru.vincetti.vimoney.transaction.TransactionViewModel
+import ru.vincetti.vimoney.transaction.main.TransactionMainViewModel
+import ru.vincetti.vimoney.transaction.main.TransactionMainViewModelFactory
 import java.text.DateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 class TransactionTransferFragment : Fragment() {
 
-    private lateinit var viewModel: TransactionViewModel
+    private lateinit var viewModel: TransactionMainViewModel
+    private lateinit var mainViewModel: MainViewModel
     private var date = Date()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -37,7 +40,13 @@ class TransactionTransferFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProviders.of(requireActivity()).get(TransactionViewModel::class.java)
+        val application = requireNotNull(activity).application
+        val mDb = AppDatabase.getInstance(application)
+        val transactionMainViewModelFactory =
+                TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao(), application)
+        viewModel = ViewModelProvider(requireNotNull(parentFragment!!.viewModelStore),
+                transactionMainViewModelFactory).get(TransactionMainViewModel::class.java)
+        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         viewModel.saveAction = TransactionModel.TRANSACTION_TYPE_TRANSFER
         initFragmentViews()
 
@@ -71,7 +80,7 @@ class TransactionTransferFragment : Fragment() {
             if (it) add_btn.text = getString(R.string.add_btn_update)
         })
 
-        viewModel.accountNotArchiveNames.observe(this, androidx.lifecycle.Observer {
+        mainViewModel.accountNotArchiveNames.observe(this, androidx.lifecycle.Observer {
             spinnerInit(add_acc_list, it, viewModel::setAccount)
             spinnerInit(add_acc_list_to, it, viewModel::setAccountTo)
         })
@@ -79,8 +88,8 @@ class TransactionTransferFragment : Fragment() {
         viewModel.transaction.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
                 add_sum.setText(it.sum.toString())
-                add_acc_name.text = viewModel.loadFromAccountNotArchiveNames(it.accountId)
-                add_acc_cur.text = viewModel.loadFromCurSymbols(it.accountId)
+                add_acc_name.text = mainViewModel.loadFromAccountNotArchiveNames(it.accountId)
+                add_acc_cur.text = mainViewModel.loadFromCurSymbols(it.accountId)
                 add_date_txt.text = DateFormat
                         .getDateInstance(DateFormat.MEDIUM).format(it.date)
                 fragment_add_content.add_desc.setText(it.description)
@@ -90,8 +99,8 @@ class TransactionTransferFragment : Fragment() {
         viewModel.nestedTransaction.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
                 add_sum_to.setText(it.sum.toString())
-                add_acc_name_to.text = viewModel.loadFromAccountNotArchiveNames(it.accountId)
-                add_acc_cur_to.text = viewModel.loadFromCurSymbols(it.accountId)
+                add_acc_name_to.text = mainViewModel.loadFromAccountNotArchiveNames(it.accountId)
+                add_acc_cur_to.text = mainViewModel.loadFromCurSymbols(it.accountId)
             }
         })
 

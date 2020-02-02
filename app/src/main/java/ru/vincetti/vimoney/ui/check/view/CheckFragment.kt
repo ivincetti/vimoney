@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
@@ -16,8 +16,6 @@ import ru.vincetti.vimoney.databinding.FragmentCheckBinding
 import ru.vincetti.vimoney.transaction.TransactionConst
 import ru.vincetti.vimoney.ui.check.AccountConst
 import ru.vincetti.vimoney.ui.history.HistoryFragment
-import ru.vincetti.vimoney.utils.TransactionViewModelUtils
-import ru.vincetti.vimoney.utils.UpdateViewModel
 
 class CheckFragment : Fragment() {
 
@@ -25,22 +23,21 @@ class CheckFragment : Fragment() {
     private lateinit var viewModel: CheckViewModel
     private var checkId: Int = CheckViewModel.DEFAULT_CHECK_ID
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentCheckBinding.inflate(inflater)
         val application = requireNotNull(this.activity).application
         val db = AppDatabase.getInstance(application)
         arguments?.let { bundle ->
-            bundle.getInt(CheckViewModel.EXTRA_CHECK_ID)?.let {
-                checkId = it
-            }
+            val extraCheck = bundle.getInt(CheckViewModel.EXTRA_CHECK_ID)
+            if (extraCheck > 0) checkId = extraCheck
         }
         val viewModelFactory = CheckViewModelFactory(db.accountDao(), checkId)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(CheckViewModel::class.java)
-        viewModel.need2UpdateViewModel.observe(this, Observer {
-            if(it) updateTransactionsViewModel(viewModel)
-        })
+        viewModel = ViewModelProvider(this, viewModelFactory).get(CheckViewModel::class.java)
         initViews()
-
         return binding.root
     }
 
@@ -56,7 +53,7 @@ class CheckFragment : Fragment() {
 
         binding.checkNavigationEditBtn.setOnClickListener {
             val bundle = Bundle()
-            bundle.putInt(AccountConst.EXTRA_CHECK_ID,checkId)
+            bundle.putInt(AccountConst.EXTRA_CHECK_ID, checkId)
             findNavController().navigate(R.id.action_checkFragment_to_addCheckFragment, bundle)
         }
         binding.settingNavigationBackBtn.setOnClickListener {
@@ -64,7 +61,7 @@ class CheckFragment : Fragment() {
         }
         binding.checkFab.setOnClickListener {
             val bundle = Bundle()
-            bundle.putInt(TransactionConst.EXTRA_ACCOUNT_ID,checkId)
+            bundle.putInt(TransactionConst.EXTRA_ACCOUNT_ID, checkId)
             findNavController().navigate(R.id.action_checkFragment_to_transactionMainFragment, bundle)
         }
     }
@@ -73,13 +70,13 @@ class CheckFragment : Fragment() {
     private fun loadAccount() {
         viewModel.model.observe(this, Observer {
             it?.let {
-                binding.fragmentCheckContent.checkAccName.text = it.getName()
-                binding.fragmentCheckContent.checkAccType.text = it.getName()
-                binding.fragmentCheckContent.checkAccBalance.text = it.getSum().toString()
+                binding.fragmentCheckContent.checkAccName.text = it.name
+                binding.fragmentCheckContent.checkAccType.text = it.type
+                binding.fragmentCheckContent.checkAccBalance.text = it.sum.toString()
                 binding.fragmentCheckContent.checkAccContainer
-                        .setBackgroundColor(Color.parseColor(it.getColor()))
+                        .setBackgroundColor(Color.parseColor(it.color))
 
-                if (it.isArhive) {
+                if (it.isArchive) {
                     binding.fragmentCheckContent.checkAccArchive.visibility = View.VISIBLE
                     binding.fragmentCheckContent.checkAccArchive.text = getString(R.string.check_arсhive_txt)
                     binding.checkNavigationFromArchiveBtn.visibility = View.VISIBLE
@@ -90,15 +87,10 @@ class CheckFragment : Fragment() {
                     binding.checkNavigationDeleteBtn.visibility = View.VISIBLE
 
                 }
-                binding.fragmentCheckContent.checkAccSymbol.text = it.symbol
-
+                binding.fragmentCheckContent.checkAccSymbol.text = it.curSymbol
                 showTransactionsHistory(it.id)
             }
         })
-    }
-
-    private fun updateTransactionsViewModel(viewModel: UpdateViewModel){
-        TransactionViewModelUtils.updateTransactionsViewModel(activity!!, viewModel)
     }
 
     // show transaction for this account

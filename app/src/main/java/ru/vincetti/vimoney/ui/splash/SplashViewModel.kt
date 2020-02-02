@@ -56,6 +56,11 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    /** No network. */
+    fun setNoNetwork(){
+        _networkError.value = true
+    }
+
     private fun loadJson() {
         viewModelScope.launch {
             try {
@@ -80,14 +85,16 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
 
     private suspend fun configDbDateInsert(timeMillisLong: Long) {
         val newConfig = ConfigModel(
-                AppDatabase.CONFIG_KEY_NAME_DATE_EDIT,
-                timeMillisLong.toString())
+                keyName = AppDatabase.CONFIG_KEY_NAME_DATE_EDIT,
+                value = timeMillisLong.toString())
         mDb.configDao().insertConfig(newConfig)
     }
 
     private suspend fun userUpdate(user: String) {
         val mUser = mDb.configDao().loadConfigByKey(AppDatabase.CONFIG_KEY_NAME_USER_NAME)
-        val newUser = ConfigModel(AppDatabase.CONFIG_KEY_NAME_USER_NAME, user)
+        val newUser = ConfigModel(
+                keyName = AppDatabase.CONFIG_KEY_NAME_USER_NAME,
+                value = user)
         if (mUser == null) {
             mDb.configDao().insertConfig(newUser)
         } else {
@@ -129,7 +136,7 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     private suspend fun accountUpdate(accId: Int, type: String, title: String, ins: Int, balance: Int) {
-        val newAcc = AccountModel(accId, title, type, balance, 810, "#164fc6")
+        val newAcc = AccountModel(accId, title, type, balance, 810)
         mDb.accountDao().insertAccount(newAcc)
         LogicMath.accountBalanceUpdateById(mDb.transactionDao(), mDb.accountDao(), accId)
     }

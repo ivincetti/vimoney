@@ -1,23 +1,20 @@
 package ru.vincetti.vimoney.data.models
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "currency")
 data class CurrencyModel(
-        @PrimaryKey(autoGenerate = true) var id: Int?,
-        private val code: Int,
+        @PrimaryKey(autoGenerate = true) var id: Int? = null,
+        val code: Int,
         var name: String,
-        private val symbol: String
+        val symbol: String
 ) {
 
-    fun getCode(): Int {
-        return code
-    }
-
-    fun getSymbol(): String {
-        return symbol
-    }
+    @Ignore
+    constructor(_code: Int, _name: String, _symbol: String)
+            : this(code = _code, name = _name, symbol = _symbol)
 
     override fun toString(): String {
         return symbol

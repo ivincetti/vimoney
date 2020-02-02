@@ -35,6 +35,7 @@
                 android:layout_weight="9"
                 android:gravity="end"
                 android:hint="@string/add_sum_sample"
+                android:autofillHints="transaction_sum"
                 android:inputType="numberDecimal"
                 android:paddingStart="@dimen/activity_horizontal_margin"
                 android:paddingEnd="@dimen/activity_horizontal_margin"

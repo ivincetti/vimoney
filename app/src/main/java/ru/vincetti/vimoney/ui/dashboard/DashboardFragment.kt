@@ -1,13 +1,12 @@
 package ru.vincetti.vimoney.ui.dashboard
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
@@ -18,16 +17,21 @@ import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.databinding.FragmentDashboardBinding
 
 class DashboardFragment : Fragment() {
-    lateinit var dashboardChart: LineChart
+    private lateinit var dashboardChart: LineChart
     lateinit var binding: FragmentDashboardBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentDashboardBinding.inflate(inflater)
 
         val application = requireNotNull(this.activity).application
         val db = AppDatabase.getInstance(application)
         val viewModelFactory = DashboardViewModelFactory(db.transactionDao())
-        val viewModel = ViewModelProviders.of(this, viewModelFactory).get(DashboardViewModel::class.java)
+        val viewModel = ViewModelProvider(this, viewModelFactory)
+                .get(DashboardViewModel::class.java)
 
         dashboardChart = binding.dashContent.dashboard_chart
         graphInit()
@@ -54,13 +58,12 @@ class DashboardFragment : Fragment() {
         })
 
         viewModel.isShowProgress.observe(this, Observer {
-            it.let {
+            it?.let {
                 showProgress(it)
             }
         })
 
         viewModel.income.observe(this, Observer {
-            Log.d("DEBUG", "income is $it")
             binding.dashContent.home_stat_income_txt.text = it.toString()
         })
 
