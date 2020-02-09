@@ -23,7 +23,7 @@ class CardsListRVAdapter(
         val accType: TextView = itemView.findViewById(R.id.home_acc_type)
         val accBalance: TextView = itemView.findViewById(R.id.home_acc_balance)
         val accSymbol: TextView = itemView.findViewById(R.id.home_acc_symbol)
-        val accContainer: View = itemView.findViewById(R.id.home_acc_container)
+        val accLabel: View = itemView.findViewById(R.id.home_acc_label)
 
         init {
             itemView.setOnClickListener(this)
@@ -49,7 +49,7 @@ class CardsListRVAdapter(
             holder.accType.text = tmpAcc.type
             holder.accBalance.text = tmpAcc.sum.toString()
             holder.accSymbol.text = tmpAcc.curSymbol
-            holder.accContainer.setBackgroundColor(Color.parseColor(tmpAcc.color))
+            holder.accLabel.setBackgroundColor(Color.parseColor(tmpAcc.color))
         }
     }
 
@@ -61,4 +61,5 @@ class CardsListRVAdapter(
         data = accList
         notifyDataSetChanged()
     }
+
 }

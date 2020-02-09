@@ -10,34 +10,45 @@
 
     <!--карта-->
     <androidx.cardview.widget.CardView
-        android:layout_width="@dimen/card_view_width"
-        android:layout_height="@dimen/card_view_height"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_height="@dimen/card_view_height"
         android:layout_marginEnd="@dimen/big_padding"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="@dimen/sm_padding"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:layout_width="@dimen/card_view_width"
+        app:cardCornerRadius="@dimen/sm_padding"
+        app:cardElevation="@dimen/st_padding"
         >
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/check_acc_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/card_gradient"
+            android:background="@drawable/card"
             >
+
+            <FrameLayout
+                android:id="@+id/check_acc_label"
+                android:layout_width="12dp"
+                android:layout_height="0dp"
+                android:background="@drawable/card_label"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
 
             <TextView
                 android:id="@+id/check_acc_name"
                 style="@style/textBlackShadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:paddingStart="@dimen/sm_padding"
-                android:paddingEnd="@dimen/sm_padding"
+                android:layout_marginTop="@dimen/big_padding"
+                android:layout_marginStart="@dimen/big_padding"
                 android:textColor="@color/colorTextWhite"
                 android:textSize="@dimen/text_st_numbers"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/check_acc_balance"
+                app:layout_constraintStart_toEndOf="@+id/check_acc_label"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="@string/home_title_acc_name"
                 />
 
@@ -45,9 +56,9 @@
                 android:id="@+id/check_acc_archive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/check_acc_type"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                app:layout_constraintStart_toStartOf="@+id/check_acc_type"
+                app:layout_constraintTop_toBottomOf="@+id/check_acc_type"
+                android:layout_marginTop="@dimen/big_padding"
                 android:textColor="@color/colorTextSecondary"
                 tools:text="@string/check_arсhive_txt"
                 />
@@ -56,11 +67,10 @@
                 android:id="@+id/check_acc_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/check_acc_name"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:textColor="@color/colorTextWhite"
+                app:layout_constraintBaseline_toBaselineOf="@+id/check_acc_name"
+                app:layout_constraintEnd_toEndOf="parent"
                 tools:text="@string/home_title_acc_type"
                 />
 
@@ -70,11 +80,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:textColor="@color/colorTextWhite"
                 android:textSize="@dimen/text_big_numbers"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/check_acc_name"
+                app:layout_constraintTop_toBottomOf="@+id/check_acc_name"
                 tools:text="@string/home_title_acc_balance"
                 />
 
@@ -85,17 +96,16 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="@dimen/sm_padding"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:layout_toEndOf="@id/check_acc_balance"
-                android:paddingStart="@dimen/sm_padding"
-                android:paddingEnd="@dimen/sm_padding"
                 android:textColor="@color/colorTextWhite"
                 android:textSize="@dimen/text_big_numbers"
                 android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@+id/check_acc_balance"
+                app:layout_constraintStart_toEndOf="@+id/check_acc_balance"
                 tools:text="@string/currency_ruble_symbol"
                 />
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
     <!--Заголовок транзакций-->

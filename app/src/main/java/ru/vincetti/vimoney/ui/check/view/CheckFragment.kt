@@ -68,7 +68,7 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
                 fragment_check_content.check_acc_name.text = it.name
                 fragment_check_content.check_acc_type.text = it.type
                 fragment_check_content.check_acc_balance.text = it.sum.toString()
-                fragment_check_content.check_acc_container
+                fragment_check_content.check_acc_label
                         .setBackgroundColor(Color.parseColor(it.color))
 
                 if (it.isArchive) {
