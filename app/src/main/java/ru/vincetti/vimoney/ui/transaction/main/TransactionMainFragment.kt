@@ -1,4 +1,4 @@
-package ru.vincetti.vimoney.transaction.main
+package ru.vincetti.vimoney.ui.transaction.main
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -18,14 +19,9 @@ import ru.vincetti.vimoney.data.adapters.TabsFragmentPagerAdapter
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.databinding.FragmentTransactionMainBinding
+import ru.vincetti.vimoney.ui.transaction.TransactionConst
 
 class TransactionMainFragment : Fragment() {
-
-    companion object {
-        const val EXTRA_TRANS_ID = "Extra_transaction_id"
-        const val EXTRA_ACCOUNT_ID = "Extra_account_id"
-    }
-
 
     private lateinit var binding: FragmentTransactionMainBinding
     private lateinit var viewModel: TransactionMainViewModel
@@ -44,8 +40,8 @@ class TransactionMainFragment : Fragment() {
 
         fragmentBundle = Bundle()
         arguments?.let { bundle ->
-            val extraTransactionId = bundle.getInt(EXTRA_TRANS_ID)
-            val extraAccId = bundle.getInt(EXTRA_ACCOUNT_ID)
+            val extraTransactionId = bundle.getInt(TransactionConst.EXTRA_TRANS_ID)
+            val extraAccId = bundle.getInt(TransactionConst.EXTRA_ACCOUNT_ID)
             if (extraTransactionId > 0) {
                 binding.transactionNavigationDeleteBtn.visibility = View.VISIBLE
                 viewModel.loadTransaction(extraTransactionId)
@@ -66,10 +62,17 @@ class TransactionMainFragment : Fragment() {
                 setActivityTitle(position)
             }
         })
-
         initViews()
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher
+                .addCallback(viewLifecycleOwner) {
+                    onBackPressed()
+                }
     }
 
     override fun onPause() {
@@ -89,7 +92,7 @@ class TransactionMainFragment : Fragment() {
         binding.settingNavigationBackBtn.setOnClickListener {
             showUnsavedDialog()
         }
-        viewModel.transaction.observe(this, Observer {
+        viewModel.transaction.observe(viewLifecycleOwner, Observer {
             it?.let {
                 typeLoad(it.type)
             }
@@ -112,23 +115,21 @@ class TransactionMainFragment : Fragment() {
     // radioButton option load
     private fun typeLoad(type: Int) {
         when (type) {
+            TransactionModel.TRANSACTION_TYPE_INCOME -> {
+                vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_INCOME_TAB, true)
+                setActivityTitle(TransactionModel.TRANSACTION_TYPE_INCOME_TAB)
+                viewModel.saveAction = TransactionModel.TRANSACTION_TYPE_INCOME
+            }
+            TransactionModel.TRANSACTION_TYPE_TRANSFER -> {
+                vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_TRANSFER_TAB, true)
+                setActivityTitle(TransactionModel.TRANSACTION_TYPE_TRANSFER_TAB)
+                viewModel.saveAction = TransactionModel.TRANSACTION_TYPE_TRANSFER
+            }
             else -> {
                 vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_SPENT_TAB, true)
                 setActivityTitle(TransactionModel.TRANSACTION_TYPE_SPENT_TAB)
                 viewModel.saveAction = TransactionModel.TRANSACTION_TYPE_SPENT
             }
-//            TransactionModel.TRANSACTION_TYPE_SPENT -> {
-//                vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_SPENT_TAB, true)
-//                setActivityTitle(TransactionModel.TRANSACTION_TYPE_SPENT_TAB)
-//            }
-//            TransactionModel.TRANSACTION_TYPE_INCOME -> {
-//                vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_INCOME_TAB, true)
-//                setActivityTitle(TransactionModel.TRANSACTION_TYPE_INCOME_TAB)
-//            }
-//            TransactionModel.TRANSACTION_TYPE_TRANSFER -> {
-//                vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_TRANSFER_TAB, true)
-//                setActivityTitle(TransactionModel.TRANSACTION_TYPE_TRANSFER_TAB)
-//            }
 //            TransactionModel.TRANSACTION_TYPE_DEBT ->{
 //                vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_DEBT_TAB, true)
 //                setActivityTitle(TransactionModel.TRANSACTION_TYPE_DEBT_TAB)
@@ -168,9 +169,7 @@ class TransactionMainFragment : Fragment() {
         builder.create().show()
     }
 
-    //TODO onBack
-//    fun onBackPressed()
-//    {
-//        showUnsavedDialog();
-//    }
+    private fun onBackPressed() {
+        showUnsavedDialog()
+    }
 }

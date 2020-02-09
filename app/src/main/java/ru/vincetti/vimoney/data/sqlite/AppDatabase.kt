@@ -32,7 +32,6 @@ abstract class AppDatabase : RoomDatabase() {
         private var INSTANCE: AppDatabase? = null
         private const val DB_NAME = "vimoney.db"
         const val CONFIG_KEY_NAME_DATE_EDIT = "date_edit"
-        const val CONFIG_KEY_NAME_USER_NAME = "user_name"
 
         fun getInstance(context: Context): AppDatabase {
             val tempInstance = INSTANCE

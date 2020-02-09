@@ -2,6 +2,7 @@ package ru.vincetti.vimoney.ui.splash
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
@@ -24,17 +25,20 @@ import java.util.*
 class SplashViewModel(val app: Application) : AndroidViewModel(app) {
 
     private var _networkError = MutableLiveData<Boolean>()
-    val networkError
+    val networkError: LiveData<Boolean>
         get() = _networkError
 
     private var _need2Navigate2Home = MutableLiveData<Boolean>()
-    val need2Navigate2Home
+    val need2Navigate2Home: LiveData<Boolean>
         get() = _need2Navigate2Home
 
-    private var jsonDownloader = Retrofit.Builder()
-            .baseUrl("https://vincetti.ru/vimoney/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build().create(JsonDownloader::class.java)
+    private val jsonDownloader by lazy {
+        Retrofit.Builder()
+                .baseUrl("https://vincetti.ru/vimoney/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(JsonDownloader::class.java)
+    }
     private var mDb: AppDatabase = AppDatabase.getInstance(app)
 
     init {
@@ -57,8 +61,12 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     /** No network. */
-    fun setNoNetwork(){
+    fun setNoNetwork() {
         _networkError.value = true
+    }
+
+    fun resetNetworkStatus() {
+        _networkError.value = false
     }
 
     private fun loadJson() {
@@ -75,9 +83,7 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     private suspend fun configDbUpdate(response: ConfigFile) {
-        configDbDateInsert(response.dateEdit)
-        // user info to base
-        userUpdate(response.user.name)
+        configDbDateInsert(response.date_edit)
         transactionsImport(response.transactions)
         currencyImport(response.currency)
         accountsUpdate(response.accounts)
@@ -88,19 +94,6 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
                 keyName = AppDatabase.CONFIG_KEY_NAME_DATE_EDIT,
                 value = timeMillisLong.toString())
         mDb.configDao().insertConfig(newConfig)
-    }
-
-    private suspend fun userUpdate(user: String) {
-        val mUser = mDb.configDao().loadConfigByKey(AppDatabase.CONFIG_KEY_NAME_USER_NAME)
-        val newUser = ConfigModel(
-                keyName = AppDatabase.CONFIG_KEY_NAME_USER_NAME,
-                value = user)
-        if (mUser == null) {
-            mDb.configDao().insertConfig(newUser)
-        } else {
-            newUser.id = mUser.id
-            mDb.configDao().updateConfig(newUser)
-        }
     }
 
     private suspend fun transactionsImport(transactionItems: List<TransactionsItem>) {

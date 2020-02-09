@@ -9,19 +9,20 @@ import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.TransactionListModel
 import java.text.DateFormat
 
-class TransactionsRVAdapter(private val mListener: OnTransactionClickListener
+class TransactionsRVAdapter(private val mListener: (Int) -> Unit
 ) : RecyclerView.Adapter<TransactionsRVAdapter.ViewHolder>() {
 
     private var data: List<TransactionListModel>? = null
 
     inner class ViewHolder(
-            itemView: View, val listener: OnTransactionClickListener
+            itemView: View,
+            val listener: (Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        val name: TextView = itemView.findViewById(R.id.home_transactions_name)
-        val date: TextView = itemView.findViewById(R.id.home_transactions_date)
-        val acc: TextView = itemView.findViewById(R.id.home_transactions_account)
-        val sum: TextView = itemView.findViewById(R.id.home_transactions_balance)
-        val cur: TextView = itemView.findViewById(R.id.home_transactions_currency)
+        private val name: TextView = itemView.findViewById(R.id.home_transactions_name)
+        private val date: TextView = itemView.findViewById(R.id.home_transactions_date)
+        private val acc: TextView = itemView.findViewById(R.id.home_transactions_account)
+        private val sum: TextView = itemView.findViewById(R.id.home_transactions_balance)
+        private val cur: TextView = itemView.findViewById(R.id.home_transactions_currency)
 
         init {
             itemView.setOnClickListener(this)
@@ -29,7 +30,7 @@ class TransactionsRVAdapter(private val mListener: OnTransactionClickListener
 
         override fun onClick(view: View) {
             data?.let {
-                listener.onTrClick(it[adapterPosition].id)
+                listener(it[adapterPosition].id)
             }
         }
 
@@ -56,10 +57,6 @@ class TransactionsRVAdapter(private val mListener: OnTransactionClickListener
 
     override fun getItemCount(): Int {
         return data?.size ?: 0
-    }
-
-    interface OnTransactionClickListener {
-        fun onTrClick(itemId: Int)
     }
 
     fun setTransaction(transList: List<TransactionListModel>) {

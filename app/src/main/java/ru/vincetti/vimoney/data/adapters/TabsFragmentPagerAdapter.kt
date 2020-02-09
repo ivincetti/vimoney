@@ -1,15 +1,15 @@
 package ru.vincetti.vimoney.data.adapters
 
-import android.os.Bundle;
+import android.os.Bundle
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 
-import ru.vincetti.vimoney.data.models.TransactionModel;
-import ru.vincetti.vimoney.transaction.add.TransactionIncomeFragment;
-import ru.vincetti.vimoney.transaction.spent.TransactionSpentFragment;
-import ru.vincetti.vimoney.transaction.transfer.TransactionTransferFragment;
+import ru.vincetti.vimoney.data.models.TransactionModel
+import ru.vincetti.vimoney.ui.transaction.income.TransactionIncomeFragment
+import ru.vincetti.vimoney.ui.transaction.spent.TransactionSpentFragment
+import ru.vincetti.vimoney.ui.transaction.transfer.TransactionTransferFragment
 
 class TabsFragmentPagerAdapter(
         fm: FragmentManager, private val fragmentBundle: Bundle

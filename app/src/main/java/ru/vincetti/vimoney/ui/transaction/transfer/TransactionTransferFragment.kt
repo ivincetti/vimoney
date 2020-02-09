@@ -1,4 +1,4 @@
-package ru.vincetti.vimoney.transaction.transfer
+package ru.vincetti.vimoney.ui.transaction.transfer
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -9,11 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_add_all.*
@@ -23,11 +23,11 @@ import ru.vincetti.vimoney.MainViewModel
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.transaction.TransactionConst
-import ru.vincetti.vimoney.transaction.main.TransactionMainViewModel
-import ru.vincetti.vimoney.transaction.main.TransactionMainViewModelFactory
+import ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModel
+import ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModelFactory
 import java.text.DateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class TransactionTransferFragment : Fragment() {
 
@@ -49,13 +49,6 @@ class TransactionTransferFragment : Fragment() {
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         viewModel.saveAction = TransactionModel.TRANSACTION_TYPE_TRANSFER
         initFragmentViews()
-
-        arguments?.let {
-            if (it.getInt(TransactionConst.EXTRA_TRANS_ID) > 0) {
-                fragment_container.visibility = View.INVISIBLE
-                fragment_progress_bar.visibility = View.VISIBLE
-            }
-        }
     }
 
     override fun onResume() {
@@ -70,25 +63,20 @@ class TransactionTransferFragment : Fragment() {
     }
 
     private fun initFragmentViews() {
-        viewModel.needSum.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.needSum.observe(viewLifecycleOwner, Observer {
             if (it) showNoSumToast()
         })
-        viewModel.needAccount.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.needAccount.observe(viewLifecycleOwner, Observer {
             if (it) showNoAccountToast()
         })
-        viewModel.needToUpdate.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.needToUpdate.observe(viewLifecycleOwner, Observer {
             if (it) add_btn.text = getString(R.string.add_btn_update)
         })
 
-        mainViewModel.accountNotArchiveNames.observe(this, androidx.lifecycle.Observer {
-            spinnerInit(add_acc_list, it, viewModel::setAccount)
-            spinnerInit(add_acc_list_to, it, viewModel::setAccountTo)
-        })
-
-        viewModel.transaction.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.transaction.observe(viewLifecycleOwner, Observer {
             it?.let {
-                add_sum.setText(it.sum.toString())
-                add_acc_name.text = mainViewModel.loadFromAccountNotArchiveNames(it.accountId)
+                if (it.sum > 0) add_sum.setText(it.sum.toString())
+                add_acc_name.setText(mainViewModel.loadFromAccountNotArchiveNames(it.accountId), false)
                 add_acc_cur.text = mainViewModel.loadFromCurSymbols(it.accountId)
                 add_date_txt.text = DateFormat
                         .getDateInstance(DateFormat.MEDIUM).format(it.date)
@@ -96,10 +84,17 @@ class TransactionTransferFragment : Fragment() {
             }
         })
 
+        mainViewModel.accountNotArchiveNames.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                spinnerInit(add_acc_name, it, viewModel::setAccount)
+                spinnerInit(add_acc_name_to, it, viewModel::setAccountTo)
+            }
+        })
+
         viewModel.nestedTransaction.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
-                add_sum_to.setText(it.sum.toString())
-                add_acc_name_to.text = mainViewModel.loadFromAccountNotArchiveNames(it.accountId)
+                if (it.sum > 0) add_sum_to.setText(it.sum.toString())
+                add_acc_name_to.setText(mainViewModel.loadFromAccountNotArchiveNames(it.accountId), false)
                 add_acc_cur_to.text = mainViewModel.loadFromCurSymbols(it.accountId)
             }
         })
@@ -110,15 +105,12 @@ class TransactionTransferFragment : Fragment() {
             }
         })
 
-        add_acc_name_to.setOnClickListener {
-            add_acc_list_to.performClick()
-        }
+        viewModel.needToNavigate.observe(viewLifecycleOwner, Observer {
+            if (it) navigateUp()
+        })
 
         add_btn.setOnClickListener {
             save()
-        }
-        add_acc_name.setOnClickListener {
-            add_acc_list.performClick()
         }
 
         add_date_block.setOnClickListener {
@@ -135,47 +127,40 @@ class TransactionTransferFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.changeSumAdd(s)
+                s?.let {
+                    if (s.isNotEmpty()) viewModel.changeSumAdd(s)
+                }
             }
         })
     }
 
-    private fun spinnerInit(accSpinner: Spinner, notArchiveAccountNames: HashMap<Int, String>?, viewM: (Int) -> Unit) {
+    private fun spinnerInit(accSpinner: AutoCompleteTextView, notArchiveAccountNames: HashMap<Int, String>, viewM: (Int) -> Unit) {
         val accountsArray = ArrayList<String>()
-        accountsArray.add(getString(R.string.add_no_account_text))
-        notArchiveAccountNames?.let {
-            for (entry in it.entries) {
-                accountsArray.add(entry.value)
+        for (entry in notArchiveAccountNames.entries) {
+            accountsArray.add(entry.value)
+        }
+        val adapter = ArrayAdapter<String>(
+                requireContext(),
+                R.layout.dropdown_menu_popup_item,
+                accountsArray
+        )
+        //Применяем адаптер к элементу spinner
+        accSpinner.setAdapter(adapter)
+        accSpinner.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }
-            val adapter =
-                    ArrayAdapter<String>(activity!!, android.R.layout.simple_spinner_item, accountsArray)
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            //Применяем адаптер к элементу spinner
-            accSpinner.adapter = adapter
-            accSpinner.isSelected = false
-            accSpinner.setSelection(TransactionModel.DEFAULT_ID, false)
-            accSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    // do nothing
-                }
 
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    if (position != TransactionModel.DEFAULT_ID) {
-                        var mId: Int = TransactionModel.DEFAULT_ID
-                        // TODO могут быть не только архивные
-                        for (entry in it.entries) {
-                            if (adapter.getItem(position).equals(entry.value)) {
-                                mId = entry.key
-                            }
-                        }
-                        if (mId != TransactionModel.DEFAULT_ID) {
-                            viewM(mId)
-                            accSpinner.tag = position
-                        }
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                for (entry in notArchiveAccountNames.entries) {
+                    if (s.toString() == entry.value) {
+                        viewM(entry.key)
                     }
                 }
             }
-        }
+        })
     }
 
     private fun showNoSumToast() {
@@ -213,6 +198,9 @@ class TransactionTransferFragment : Fragment() {
                 add_sum.text.toString(),
                 add_sum_to.text.toString()
         )
+    }
+
+    private fun navigateUp() {
         findNavController().navigateUp()
     }
 }

@@ -28,12 +28,11 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHomeBinding.inflate(inflater)
-        binding.fragmentHomeContent
         (activity as? AppCompatActivity)?.setSupportActionBar(binding.topToolbar)
 
         val application = requireNotNull(this.activity).application
         val db = AppDatabase.getInstance(application)
-        val viewModelFactory = HomeViewModelFactory(db.accountDao(), db.transactionDao(), application)
+        val viewModelFactory = HomeViewModelFactory(db.accountDao(), db.transactionDao())
         viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
         // список карт/счетов
@@ -51,24 +50,24 @@ class HomeFragment : Fragment() {
         // get stat
         binding.fragmentHomeContent.home_month.text = SimpleDateFormat("MMM").format(date)
 
-        viewModel.accounts.observe(this, Observer {
+        viewModel.accounts.observe(viewLifecycleOwner, Observer {
             binding.homeUserBalance.text = LogicMath.userBalanceChange(it).toString()
             mAdapter.setList(it)
         })
 
-        viewModel.lSum1.observe(this, Observer {
+        viewInit()
+
+        viewModel.incomeSum.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.fragmentHomeContent.home_stat_income_txt.text = it.toString()
             }
         })
-
-        viewModel.lSum2.observe(this, Observer {
+        viewModel.expenseSum.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.fragmentHomeContent.home_stat_expense_txt.text = it.toString()
             }
         })
 
-        viewInit()
         showTransactionsHistory()
 
         return binding.root
@@ -78,7 +77,7 @@ class HomeFragment : Fragment() {
         binding.fragmentHomeContent.home_stat_expense_txt.text = "0"
         binding.fragmentHomeContent.home_stat_income_txt.text = "0"
         binding.homeFab.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_transactionMainFragment)
+            findNavController().navigate(R.id.action_global_transactionMainFragment)
         }
         binding.fragmentHomeContent.home_accounts_link.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_checksListFragment)

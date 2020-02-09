@@ -1,4 +1,4 @@
-package ru.vincetti.vimoney.transaction
+package ru.vincetti.vimoney.ui.transaction
 
 class TransactionConst {
     companion object {

@@ -48,26 +48,26 @@ class DashboardFragment : Fragment() {
             viewModel.setMonthPrev()
         }
 
-        viewModel.monthString.observe(this, Observer {
+        viewModel.monthString.observe(viewLifecycleOwner, Observer {
             binding.dashContent.dashboard_month.text = it
         })
 
-        viewModel.dataSet.observe(this, Observer {
+        viewModel.dataSet.observe(viewLifecycleOwner, Observer {
             dashboardChart.data = it
             dashboardChart.invalidate() // refresh
         })
 
-        viewModel.isShowProgress.observe(this, Observer {
+        viewModel.isShowProgress.observe(viewLifecycleOwner, Observer {
             it?.let {
                 showProgress(it)
             }
         })
 
-        viewModel.income.observe(this, Observer {
+        viewModel.income.observe(viewLifecycleOwner, Observer {
             binding.dashContent.home_stat_income_txt.text = it.toString()
         })
 
-        viewModel.expense.observe(this, Observer {
+        viewModel.expense.observe(viewLifecycleOwner, Observer {
             binding.dashContent.home_stat_expense_txt.text = it.toString()
         })
 

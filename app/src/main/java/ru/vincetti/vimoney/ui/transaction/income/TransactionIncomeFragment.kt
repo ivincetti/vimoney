@@ -1,4 +1,4 @@
-package ru.vincetti.vimoney.transaction.spent
+package ru.vincetti.vimoney.ui.transaction.income
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -9,9 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -24,17 +22,17 @@ import ru.vincetti.vimoney.MainViewModel
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.transaction.main.TransactionMainViewModel
-import ru.vincetti.vimoney.transaction.main.TransactionMainViewModelFactory
+import ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModel
+import ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModelFactory
 import java.text.DateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TransactionSpentFragment : Fragment() {
+class TransactionIncomeFragment : Fragment() {
 
     private lateinit var viewModel: TransactionMainViewModel
     private lateinit var mainViewModel: MainViewModel
-    private var date = Date()
+    private lateinit var date: Date
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_add_spent, container, false)
@@ -48,6 +46,7 @@ class TransactionSpentFragment : Fragment() {
         viewModel = ViewModelProvider(requireNotNull(parentFragment!!.viewModelStore),
                 transactionMainViewModelFactory).get(TransactionMainViewModel::class.java)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        viewModel.saveAction = TransactionModel.TRANSACTION_TYPE_INCOME
         initFragmentViews()
     }
 
@@ -76,12 +75,42 @@ class TransactionSpentFragment : Fragment() {
         viewModel.transaction.observe(viewLifecycleOwner, Observer {
             it?.let {
                 if (it.sum > 0) add_sum.setText(it.sum.toString())
-                add_acc_name.text = mainViewModel.loadFromAccountNotArchiveNames(it.accountId)
+                add_acc_name.setText(mainViewModel.loadFromAccountNotArchiveNames(it.accountId), false)
                 add_acc_cur.text = mainViewModel.loadFromCurSymbols(it.accountId)
                 add_date_txt.text = DateFormat
                         .getDateInstance(DateFormat.MEDIUM).format(it.date)
                 fragment_add_content.add_desc.setText(it.description)
-                spinnerInit(add_acc_list, viewModel::setAccount)
+            }
+        })
+
+        mainViewModel.accountNotArchiveNames.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                val accountsArray = ArrayList<String>()
+                for (entry in it.entries) {
+                    accountsArray.add(entry.value)
+                }
+                val adapter = ArrayAdapter<String>(
+                        requireContext(),
+                        R.layout.dropdown_menu_popup_item,
+                        accountsArray
+                )
+                //Применяем адаптер к элементу spinner
+                add_acc_name.setAdapter(adapter)
+                add_acc_name.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                    }
+
+                    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    }
+
+                    override fun afterTextChanged(s: Editable) {
+                        for (entry in it.entries) {
+                            if (s.toString() == entry.value) {
+                                viewModel.setAccount(entry.key)
+                            }
+                        }
+                    }
+                })
             }
         })
 
@@ -97,9 +126,6 @@ class TransactionSpentFragment : Fragment() {
 
         add_btn.setOnClickListener {
             save()
-        }
-        add_acc_name.setOnClickListener {
-            add_acc_list.performClick()
         }
 
         add_date_block.setOnClickListener {
@@ -120,45 +146,6 @@ class TransactionSpentFragment : Fragment() {
                 }
             }
         })
-    }
-
-    private fun spinnerInit(accSpinner: Spinner, viewM: (Int) -> Unit) {
-        val accountsArray = ArrayList<String>()
-        accountsArray.add(getString(R.string.add_no_account_text))
-        val notArchiveAccountNames = mainViewModel.accountNotArchiveNames.value
-        notArchiveAccountNames?.let {
-            for (entry in it.entries) {
-                accountsArray.add(entry.value)
-            }
-            val adapter =
-                    ArrayAdapter<String>(activity!!, android.R.layout.simple_spinner_item, accountsArray)
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            //Применяем адаптер к элементу spinner
-            accSpinner.adapter = adapter
-            accSpinner.isSelected = false
-            accSpinner.setSelection(TransactionModel.DEFAULT_ID, false)
-            accSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    // do nothing
-                }
-
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    if (position != TransactionModel.DEFAULT_ID) {
-                        var mId: Int = TransactionModel.DEFAULT_ID
-                        // TODO могут быть не только архивные
-                        for (entry in it.entries) {
-                            if (adapter.getItem(position).equals(entry.value)) {
-                                mId = entry.key
-                            }
-                        }
-                        if (mId != TransactionModel.DEFAULT_ID) {
-                            viewM(mId)
-                            accSpinner.tag = position
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private fun showNoSumToast() {
@@ -201,4 +188,5 @@ class TransactionSpentFragment : Fragment() {
         findNavController().navigateUp()
     }
 }
+
 

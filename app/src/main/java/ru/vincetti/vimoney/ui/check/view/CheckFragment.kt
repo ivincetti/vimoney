@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.databinding.FragmentCheckBinding
-import ru.vincetti.vimoney.transaction.TransactionConst
+import ru.vincetti.vimoney.ui.transaction.TransactionConst
 import ru.vincetti.vimoney.ui.check.AccountConst
 import ru.vincetti.vimoney.ui.history.HistoryFragment
 
@@ -62,13 +62,13 @@ class CheckFragment : Fragment() {
         binding.checkFab.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt(TransactionConst.EXTRA_ACCOUNT_ID, checkId)
-            findNavController().navigate(R.id.action_checkFragment_to_transactionMainFragment, bundle)
+            findNavController().navigate(R.id.action_global_transactionMainFragment, bundle)
         }
     }
 
     // account data to UI
     private fun loadAccount() {
-        viewModel.model.observe(this, Observer {
+        viewModel.model.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.fragmentCheckContent.checkAccName.text = it.name
                 binding.fragmentCheckContent.checkAccType.text = it.type

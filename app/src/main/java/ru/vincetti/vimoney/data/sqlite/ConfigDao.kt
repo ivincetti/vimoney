@@ -6,7 +6,7 @@ import ru.vincetti.vimoney.data.models.ConfigModel
 @Dao
 interface ConfigDao {
 
-    @Query("SELECT * FROM config WHERE key_name = :key")
+    @Query("SELECT * FROM config WHERE key_name = :key LIMIT 1")
     suspend fun loadConfigByKey(key: String): ConfigModel?
 
     @Insert

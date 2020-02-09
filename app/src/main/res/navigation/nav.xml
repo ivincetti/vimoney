@@ -133,7 +133,7 @@
     </fragment>
     <fragment
         android:id="@+id/transactionMainFragment"
-        android:name="ru.vincetti.vimoney.transaction.main.TransactionMainFragment"
+        android:name="ru.vincetti.vimoney.ui.transaction.main.TransactionMainFragment"
         android:label="TransactionMainFragment" >
         <argument
             android:name="EXTRA_TRANS_ID"
@@ -143,5 +143,5 @@
             android:name="EXTRA_ACCOUNT_ID"
             app:argType="integer"
             android:defaultValue="0" />
-    </fragment>
+    </fragment><action android:id="@+id/action_global_transactionMainFragment" app:destination="@id/transactionMainFragment"/>
 </navigation>

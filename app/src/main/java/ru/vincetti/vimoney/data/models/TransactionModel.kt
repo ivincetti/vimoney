@@ -13,7 +13,7 @@ data class TransactionModel(
         var description: String = "",
         var date: Date = Date(),
         @ColumnInfo(name = "updated_at") var updatedAt: Date = Date(),
-        var type: Int = 0,
+        var type: Int = TRANSACTION_TYPE_SPENT,
         var sum: Float = 0f,
         @ColumnInfo(name = "extra_key") var extraKey: String = "",
         @ColumnInfo(name = "extra_value") var extraValue: String = "",

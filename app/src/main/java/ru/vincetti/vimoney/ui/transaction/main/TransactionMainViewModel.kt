@@ -1,4 +1,4 @@
-package ru.vincetti.vimoney.transaction.main
+package ru.vincetti.vimoney.ui.transaction.main
 
 import android.app.Application
 import androidx.lifecycle.*
@@ -93,9 +93,16 @@ class TransactionMainViewModel(
     }
 
     fun changeSumAdd(s: CharSequence?) {
-        s?.let {
-            _transaction.value?.sum = it.toString().toFloat()
-            _nestedTransaction.value?.sum = it.toString().toFloat()
+        s?.let { char ->
+            _transaction.value?.let {
+                if (char.toString().toFloat() != it.sum){
+                    it.sum = char.toString().toFloat()
+                    _nestedTransaction.value?.sum = char.toString().toFloat()
+                    // TODO странный метод, но работает - надо вынести суммы строк от цифр
+                    _transaction.value = it
+                    _nestedTransaction.value = _nestedTransaction.value
+                }
+            }
         }
     }
 
@@ -158,8 +165,9 @@ class TransactionMainViewModel(
                     tmpToTransaction.type = TransactionModel.TRANSACTION_TYPE_INCOME
                     tmpToTransaction.system = true
 
-                    if (tmpTransaction.id != TransactionModel.DEFAULT_ID) trUpdate()
-                    else trInsert()
+                    if (tmpTransaction.id != TransactionModel.DEFAULT_ID) {
+                        trUpdate(tmpTransaction, tmpToTransaction)
+                    } else trInsert(tmpTransaction, tmpToTransaction)
                     updateBalance(tmpTransaction, tmpToTransaction)
                 }
             } else {
@@ -180,16 +188,14 @@ class TransactionMainViewModel(
                     _needAccount.value = true
                 }
                 else -> {
-                    if (tmpTransaction.accountId != TransactionModel.DEFAULT_ID) {
-                        tmpTransaction.description = txtName
-                        tmpTransaction.date = date.value!!
-                        tmpTransaction.type = saveAction
-                        tmpTransaction.sum = txtSum.toFloat()
-
-                        if (tmpTransaction.id != TransactionModel.DEFAULT_ID) trUpdate()
-                        else trInsert()
-                        updateBalance(tmpTransaction)
-                    }
+                    tmpTransaction.description = txtName
+                    tmpTransaction.date = date.value!!
+                    tmpTransaction.type = saveAction
+                    tmpTransaction.sum = txtSum.toFloat()
+                    if (tmpTransaction.id != TransactionModel.DEFAULT_ID) {
+                        trUpdate(tmpTransaction)
+                    } else trInsert(tmpTransaction)
+                    updateBalance(tmpTransaction)
                 }
             }
         }
@@ -212,23 +218,24 @@ class TransactionMainViewModel(
         }
     }
 
-    private fun trUpdate() {
-        _nestedTransaction.value?.id = _transaction.value?.extraValue!!.toInt()
+    private fun trUpdate(transaction: TransactionModel, toTransaction: TransactionModel? = null) {
         viewModelScope.launch {
-            transactionDao.updateTransaction(_nestedTransaction.value!!)
-            transactionDao.updateTransaction(_transaction.value!!)
+            toTransaction?.let {
+                it.id = transaction.extraValue.toInt()
+                transactionDao.updateTransaction(it)
+            }
+            transactionDao.updateTransaction(transaction)
         }
         _needToNavigate.value = true
     }
 
-    private fun trInsert() {
+    private fun trInsert(transaction: TransactionModel, toTransaction: TransactionModel? = null) {
         viewModelScope.launch {
-            _nestedTransaction.value?.let {
+            toTransaction?.let {
                 val idTo = transactionDao.insertTransaction(it)
-                _transaction.value?.extraValue = idTo.toString()
-                transactionDao.insertTransaction(_transaction.value!!)
+                transaction.extraValue = idTo.toString()
             }
-            transactionDao.insertTransaction(_transaction.value!!)
+            transactionDao.insertTransaction(transaction)
         }
         _needToNavigate.value = true
     }

@@ -41,7 +41,7 @@ class ChecksListFragment : Fragment() {
             layoutManager = cardsLayoutManager
             setAdapter(adapter)
         }
-        viewModel.accList.observe(this, Observer {
+        viewModel.accList.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.setList(it)
             }

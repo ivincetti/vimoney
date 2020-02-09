@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
@@ -45,6 +46,14 @@ class AddCheckFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher
+                .addCallback(viewLifecycleOwner) {
+                    onBackPressed()
+                }
+    }
+
     private fun viewInit() {
         binding.settingNavigationBackBtn.setOnClickListener {
             goBack()
@@ -67,22 +76,22 @@ class AddCheckFragment : Fragment() {
         binding.settingNavigationBackBtn.setOnClickListener {
             showUnsavedDialog()
         }
-        viewmodel.isDefault.observe(this, Observer {
+        viewmodel.isDefault.observe(viewLifecycleOwner, Observer {
             if (!it) binding.addCheckContent.addCheckSaveBtn.text = getString(R.string.add_btn_update)
 
         })
-        viewmodel.need2Navigate.observe(this, Observer {
+        viewmodel.need2Navigate.observe(viewLifecycleOwner, Observer {
             if (it) goBack()
         })
-        viewmodel.need2AllData.observe(this, Observer {
+        viewmodel.need2AllData.observe(viewLifecycleOwner, Observer {
             if (it) showNoDataDialog()
         })
-        viewmodel.color.observe(this, Observer {
+        viewmodel.color.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.addCheckContent.addCheckColorView.setBackgroundColor(it)
             }
         })
-        viewmodel.check.observe(this, Observer {
+        viewmodel.check.observe(viewLifecycleOwner, Observer {
             binding.addCheckContent.addCheckName.setText(it.name)
             typeLoad(it.type)
 
@@ -90,7 +99,7 @@ class AddCheckFragment : Fragment() {
                 binding.addCheckNavigationFromArchiveBtn.visibility = View.VISIBLE
             } else binding.addCheckNavigationDeleteBtn.visibility = View.VISIBLE
         })
-        viewmodel.currency.observe(this, Observer {
+        viewmodel.currency.observe(viewLifecycleOwner, Observer {
             it?.let {
                 currencyEntered(it)
             }
@@ -138,7 +147,7 @@ class AddCheckFragment : Fragment() {
 
     private fun spinnerInit() {
         val curSpinner = binding.addCheckContent.addCheckCurrencySpinner
-        viewmodel.currencyList.observe(this, Observer {
+        viewmodel.currencyList.observe(viewLifecycleOwner, Observer {
             it?.let {
                 // adapter init
                 val adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, it)
@@ -229,10 +238,7 @@ class AddCheckFragment : Fragment() {
         )
     }
 
-//TODO вернуть к работе
-//
-//    fun onBackPressed()
-//    {
-//        showUnsavedDialog();
-//    }
+    private fun onBackPressed() {
+        showUnsavedDialog()
+    }
 }
