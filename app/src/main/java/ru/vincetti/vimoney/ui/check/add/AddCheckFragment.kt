@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
+import kotlinx.android.synthetic.main.fragment_add_check.*
 import kotlinx.android.synthetic.main.fragment_add_check_content.view.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.AccountModel
@@ -26,7 +27,7 @@ import ru.vincetti.vimoney.ui.check.AccountConst
 class AddCheckFragment : Fragment() {
 
     private lateinit var binding: FragmentAddCheckBinding
-    private lateinit var viewmodel: AddCheckViewModel
+    private lateinit var viewModel: AddCheckViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentAddCheckBinding.inflate(inflater)
@@ -34,24 +35,15 @@ class AddCheckFragment : Fragment() {
         val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
         val viewModelFactory = AddCheckModelFactory(db.accountDao(), db.currentDao(), application)
-
-        viewmodel = ViewModelProvider(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(AddCheckViewModel::class.java)
         arguments?.let { bundle ->
             val extraCheck = bundle.getInt(AccountConst.EXTRA_CHECK_ID)
-            if (extraCheck > 0) viewmodel.loadAccount(extraCheck)
+            if (extraCheck > 0) viewModel.loadAccount(extraCheck)
         }
 
         viewInit()
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        requireActivity().onBackPressedDispatcher
-                .addCallback(viewLifecycleOwner) {
-                    onBackPressed()
-                }
     }
 
     private fun viewInit() {
@@ -62,7 +54,7 @@ class AddCheckFragment : Fragment() {
             showDeleteDialog()
         }
         binding.addCheckNavigationFromArchiveBtn.setOnClickListener {
-            viewmodel.restore()
+            viewModel.restore()
         }
         binding.addCheckContent.addCheckSaveBtn.setOnClickListener {
             save()
@@ -76,22 +68,22 @@ class AddCheckFragment : Fragment() {
         binding.settingNavigationBackBtn.setOnClickListener {
             showUnsavedDialog()
         }
-        viewmodel.isDefault.observe(viewLifecycleOwner, Observer {
+        viewModel.isDefault.observe(viewLifecycleOwner, Observer {
             if (!it) binding.addCheckContent.addCheckSaveBtn.text = getString(R.string.add_btn_update)
 
         })
-        viewmodel.need2Navigate.observe(viewLifecycleOwner, Observer {
+        viewModel.need2Navigate.observe(viewLifecycleOwner, Observer {
             if (it) goBack()
         })
-        viewmodel.need2AllData.observe(viewLifecycleOwner, Observer {
+        viewModel.need2AllData.observe(viewLifecycleOwner, Observer {
             if (it) showNoDataDialog()
         })
-        viewmodel.color.observe(viewLifecycleOwner, Observer {
+        viewModel.color.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.addCheckContent.addCheckColorView.setBackgroundColor(it)
             }
         })
-        viewmodel.check.observe(viewLifecycleOwner, Observer {
+        viewModel.check.observe(viewLifecycleOwner, Observer {
             binding.addCheckContent.addCheckName.setText(it.name)
             typeLoad(it.type)
 
@@ -99,12 +91,19 @@ class AddCheckFragment : Fragment() {
                 binding.addCheckNavigationFromArchiveBtn.visibility = View.VISIBLE
             } else binding.addCheckNavigationDeleteBtn.visibility = View.VISIBLE
         })
-        viewmodel.currency.observe(viewLifecycleOwner, Observer {
+        viewModel.currency.observe(viewLifecycleOwner, Observer {
             it?.let {
                 currencyEntered(it)
             }
         })
         spinnerInit()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            onBackPressed()
+        }
     }
 
     private fun pickColor() {
@@ -116,7 +115,7 @@ class AddCheckFragment : Fragment() {
                 .density(12)
                 .setPositiveButton(R.string.check_add_alert_color_positive
                 ) { _, selectedColor, _ ->
-                    viewmodel.setBackgroundColor(selectedColor)
+                    viewModel.setBackgroundColor(selectedColor)
                 }
                 .setNegativeButton(R.string.check_add_alert_color_negative
                 ) { dialog, _ ->
@@ -127,7 +126,7 @@ class AddCheckFragment : Fragment() {
 
     // radioButton clicked option selected
     private fun typeEntered(): String {
-        return when (binding.container.radioGroup.checkedRadioButtonId) {
+        return when (container.radioGroup.checkedRadioButtonId) {
             R.id.add_check_type_debit -> AccountModel.ACCOUNT_TYPE_DEBIT
             R.id.add_check_type_credit -> AccountModel.ACCOUNT_TYPE_CREDIT
             else -> AccountModel.ACCOUNT_TYPE_CASH
@@ -136,18 +135,18 @@ class AddCheckFragment : Fragment() {
 
     // radioButton option load
     private fun typeLoad(type: String) {
-        val typeRadioGroup = binding.container.radioGroup
-        when (type) {
-            AccountModel.ACCOUNT_TYPE_CASH -> typeRadioGroup.check(R.id.add_check_type_cash)
-            AccountModel.ACCOUNT_TYPE_DEBIT -> typeRadioGroup.check(R.id.add_check_type_debit)
-            AccountModel.ACCOUNT_TYPE_CREDIT -> typeRadioGroup.check(R.id.add_check_type_credit)
-            else -> typeRadioGroup.check(R.id.add_check_type_cash)
+        container.radioGroup.apply {
+            when (type) {
+                AccountModel.ACCOUNT_TYPE_DEBIT -> check(R.id.add_check_type_debit)
+                AccountModel.ACCOUNT_TYPE_CREDIT -> check(R.id.add_check_type_credit)
+                else -> check(R.id.add_check_type_cash)
+            }
         }
     }
 
     private fun spinnerInit() {
         val curSpinner = binding.addCheckContent.addCheckCurrencySpinner
-        viewmodel.currencyList.observe(viewLifecycleOwner, Observer {
+        viewModel.currencyList.observe(viewLifecycleOwner, Observer {
             it?.let {
                 // adapter init
                 val adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, it)
@@ -162,7 +161,7 @@ class AddCheckFragment : Fragment() {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                viewmodel.setCurrency((parent?.selectedItem as CurrencyModel).code)
+                viewModel.setCurrency((parent?.selectedItem as CurrencyModel).code)
             }
         }
 
@@ -172,7 +171,6 @@ class AddCheckFragment : Fragment() {
     private fun currencyEntered(currency: CurrencyModel) {
         val pos = getIndex(currency)
         binding.addCheckContent.addCheckCurrencySpinner.setSelection(pos)
-
     }
 
     // get index in spinner
@@ -189,12 +187,11 @@ class AddCheckFragment : Fragment() {
     private fun showDeleteDialog() {
         val builder = AlertDialog.Builder(requireContext())
                 .setMessage(R.string.check_delete_alert_question)
-                .setNegativeButton(R.string.check_delete_alert_negative)
-                { dialogInterface, _ ->
+                .setNegativeButton(R.string.check_delete_alert_negative) { dialogInterface, _ ->
                     dialogInterface?.dismiss()
                 }
                 .setPositiveButton(R.string.check_delete_alert_positive) { _, _ ->
-                    viewmodel.delete()
+                    viewModel.delete()
                 }
         builder.create().show()
     }
@@ -203,12 +200,10 @@ class AddCheckFragment : Fragment() {
     private fun showUnsavedDialog() {
         val builder = AlertDialog.Builder(requireContext())
                 .setMessage(R.string.check_add_alert_question)
-                .setNegativeButton(R.string.check_add_alert_negative)
-                { _, _ ->
+                .setNegativeButton(R.string.check_add_alert_negative) { _, _ ->
                     goBack()
                 }
-                .setPositiveButton(R.string.check_add_alert_positive)
-                { dialogInterface, _ ->
+                .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
                     dialogInterface?.dismiss()
                 }
         builder.create().show()
@@ -218,24 +213,23 @@ class AddCheckFragment : Fragment() {
     private fun showNoDataDialog() {
         val builder = AlertDialog.Builder(requireContext())
                 .setMessage(R.string.check_add_alert_no_data)
-                .setPositiveButton(R.string.check_add_alert_positive)
-                { dialogInterface, _ ->
+                .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
                     // todo криво надо подумать
-                    viewmodel.need2AllData.value = false
+                    viewModel.need2AllData.value = false
                     dialogInterface?.dismiss()
                 }
         builder.create().show()
     }
 
-    private fun goBack() {
-        findNavController().navigateUp()
-    }
-
     private fun save() {
-        viewmodel.save(
+        viewModel.save(
                 binding.addCheckContent.addCheckName.text.toString(),
                 typeEntered()
         )
+    }
+
+    private fun goBack() {
+        findNavController().navigateUp()
     }
 
     private fun onBackPressed() {

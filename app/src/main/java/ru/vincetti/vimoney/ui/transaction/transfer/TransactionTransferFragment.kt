@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.fragment_add_all.*
 import kotlinx.android.synthetic.main.fragment_add_all.view.*
 import kotlinx.android.synthetic.main.fragment_add_transfer.*
 import ru.vincetti.vimoney.MainViewModel
+import ru.vincetti.vimoney.MainViewModelFactory
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
@@ -35,7 +36,11 @@ class TransactionTransferFragment : Fragment() {
     private lateinit var mainViewModel: MainViewModel
     private var date = Date()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_add_transfer, container, false)
     }
 
@@ -43,10 +48,12 @@ class TransactionTransferFragment : Fragment() {
         val application = requireNotNull(activity).application
         val mDb = AppDatabase.getInstance(application)
         val transactionMainViewModelFactory =
-                TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao(), application)
+                TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao())
         viewModel = ViewModelProvider(requireNotNull(parentFragment!!.viewModelStore),
                 transactionMainViewModelFactory).get(TransactionMainViewModel::class.java)
-        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        val mainViewModelFactory = MainViewModelFactory(mDb.accountDao())
+        mainViewModel = ViewModelProvider(requireActivity(), mainViewModelFactory)
+                .get(MainViewModel::class.java)
         viewModel.saveAction = TransactionModel.TRANSACTION_TYPE_TRANSFER
         initFragmentViews()
     }
@@ -72,7 +79,6 @@ class TransactionTransferFragment : Fragment() {
         viewModel.needToUpdate.observe(viewLifecycleOwner, Observer {
             if (it) add_btn.text = getString(R.string.add_btn_update)
         })
-
         viewModel.transaction.observe(viewLifecycleOwner, Observer {
             it?.let {
                 if (it.sum > 0) add_sum.setText(it.sum.toString())
@@ -83,14 +89,12 @@ class TransactionTransferFragment : Fragment() {
                 fragment_add_content.add_desc.setText(it.description)
             }
         })
-
         mainViewModel.accountNotArchiveNames.observe(viewLifecycleOwner, Observer {
             it?.let {
                 spinnerInit(add_acc_name, it, viewModel::setAccount)
                 spinnerInit(add_acc_name_to, it, viewModel::setAccountTo)
             }
         })
-
         viewModel.nestedTransaction.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
                 if (it.sum > 0) add_sum_to.setText(it.sum.toString())
@@ -98,13 +102,11 @@ class TransactionTransferFragment : Fragment() {
                 add_acc_cur_to.text = mainViewModel.loadFromCurSymbols(it.accountId)
             }
         })
-
         viewModel.date.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
                 date = it
             }
         })
-
         viewModel.needToNavigate.observe(viewLifecycleOwner, Observer {
             if (it) navigateUp()
         })
@@ -181,14 +183,15 @@ class TransactionTransferFragment : Fragment() {
         val calendar = GregorianCalendar()
         calendar.time = date
 
-        val datePickerDialog = DatePickerDialog(activity!!,
+        DatePickerDialog(
+                requireContext(),
                 { _, year, month, day ->
                     viewModel.setDate(GregorianCalendar(year, month, day).time)
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH))
-        datePickerDialog.show()
+                calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 
     // save transaction logic

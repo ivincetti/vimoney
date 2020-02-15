@@ -45,7 +45,6 @@ class CheckViewModel(private val dao: AccountDao, private val checkID: Int) : Vi
     }
 }
 
-
 class CheckViewModelFactory(private val dao: AccountDao, private val id: Int) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CheckViewModel::class.java)) {

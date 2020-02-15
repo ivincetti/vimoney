@@ -13,7 +13,8 @@ class LogicMath {
         suspend fun accountBalanceUpdateById(
                 transactionDao: TransactionDao,
                 accountDao: AccountDao,
-                accId: Int) {
+                accId: Int
+        ) {
             withContext(Dispatchers.IO) {
                 val sum = transactionDao.loadSumByCheckId(accId)
                 accountDao.updateSumByAccId(accId, sum)
@@ -23,9 +24,7 @@ class LogicMath {
         // Math allUser balance
         fun userBalanceChange(accList: List<AccountListModel>): Int {
             var bal = 0
-            for (o in accList) {
-                bal += o.sum
-            }
+            for (o in accList) bal += o.sum
             return bal
         }
     }

@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_add_all.*
 import kotlinx.android.synthetic.main.fragment_add_all.view.*
 import kotlinx.android.synthetic.main.fragment_add_spent.*
 import ru.vincetti.vimoney.MainViewModel
+import ru.vincetti.vimoney.MainViewModelFactory
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
@@ -34,7 +35,11 @@ class TransactionIncomeFragment : Fragment() {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var date: Date
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_add_spent, container, false)
     }
 
@@ -42,10 +47,12 @@ class TransactionIncomeFragment : Fragment() {
         val application = requireNotNull(activity).application
         val mDb = AppDatabase.getInstance(application)
         val transactionMainViewModelFactory =
-                TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao(), application)
+                TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao())
         viewModel = ViewModelProvider(requireNotNull(parentFragment!!.viewModelStore),
                 transactionMainViewModelFactory).get(TransactionMainViewModel::class.java)
-        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        val mainViewModelFactory = MainViewModelFactory(mDb.accountDao())
+        mainViewModel = ViewModelProvider(requireActivity(), mainViewModelFactory)
+                .get(MainViewModel::class.java)
         viewModel.saveAction = TransactionModel.TRANSACTION_TYPE_INCOME
         initFragmentViews()
     }

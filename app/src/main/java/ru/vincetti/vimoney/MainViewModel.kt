@@ -1,23 +1,24 @@
 package ru.vincetti.vimoney
 
-import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.vincetti.vimoney.data.models.AccountListModel
 import ru.vincetti.vimoney.data.models.AccountModel
 import ru.vincetti.vimoney.data.sqlite.AccountDao
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import java.util.*
+import kotlin.collections.set
 
 class MainViewModel(
-        val app: Application
-) : AndroidViewModel(app) {
+        private val accDao: AccountDao
+) : ViewModel() {
 
-    private val accDao: AccountDao = AppDatabase.getInstance(app).accountDao()
-    var curSymbolsId = MutableLiveData<HashMap<Int, String>>()
-    var accountNames = MutableLiveData<HashMap<Int, String>>()
+    private var curSymbolsId = MutableLiveData<HashMap<Int, String>>()
+    private var accountNames = MutableLiveData<HashMap<Int, String>>()
     var accountNotArchiveNames = MutableLiveData<HashMap<Int, String>>()
 
     init {
@@ -57,3 +58,13 @@ class MainViewModel(
     fun loadFromAccountNotArchiveNames(id: Int) = accountNotArchiveNames.value?.get(id)
 }
 
+class MainViewModelFactory(
+        private val accDao: AccountDao
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+            return MainViewModel(accDao) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}

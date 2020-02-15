@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import ru.vincetti.vimoney.MainViewModel
+import ru.vincetti.vimoney.MainViewModelFactory
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.TabsFragmentPagerAdapter
 import ru.vincetti.vimoney.data.models.TransactionModel
@@ -30,13 +31,20 @@ class TransactionMainFragment : Fragment() {
 
     private lateinit var fragmentBundle: Bundle
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentTransactionMainBinding.inflate(inflater)
         val application = requireNotNull(activity).application
         val mDb = AppDatabase.getInstance(application)
-        val viewModelFactory = TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao(), application)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(TransactionMainViewModel::class.java)
-        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        val viewModelFactory = TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao())
+        viewModel = ViewModelProvider(this, viewModelFactory)
+                .get(TransactionMainViewModel::class.java)
+        val mainViewModelFactory = MainViewModelFactory(mDb.accountDao())
+        mainViewModel = ViewModelProvider(requireActivity(), mainViewModelFactory)
+                .get(MainViewModel::class.java)
 
         fragmentBundle = Bundle()
         arguments?.let { bundle ->
@@ -69,10 +77,9 @@ class TransactionMainFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        requireActivity().onBackPressedDispatcher
-                .addCallback(viewLifecycleOwner) {
-                    onBackPressed()
-                }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            onBackPressed()
+        }
     }
 
     override fun onPause() {
@@ -85,7 +92,6 @@ class TransactionMainFragment : Fragment() {
 
     private fun initViews() {
         binding.slidingTabs.setupWithViewPager(vPager)
-
         binding.transactionNavigationDeleteBtn.setOnClickListener {
             showDeleteDialog()
         }
@@ -141,12 +147,10 @@ class TransactionMainFragment : Fragment() {
     private fun showDeleteDialog() {
         val builder = AlertDialog.Builder(requireContext())
                 .setMessage(R.string.transaction_delete_alert_question)
-                .setNegativeButton(R.string.transaction_delete_alert_negative)
-                { dialogInterface, _ ->
+                .setNegativeButton(R.string.transaction_delete_alert_negative) { dialogInterface, _ ->
                     dialogInterface?.dismiss()
                 }
-                .setPositiveButton(R.string.transaction_delete_alert_positive)
-                { _, _ ->
+                .setPositiveButton(R.string.transaction_delete_alert_positive) { _, _ ->
                     // delete query
                     viewModel.delete()
                     findNavController().navigateUp()
@@ -158,12 +162,10 @@ class TransactionMainFragment : Fragment() {
     private fun showUnsavedDialog() {
         val builder = AlertDialog.Builder(requireContext())
                 .setMessage(R.string.transaction_add_alert_question)
-                .setNegativeButton(R.string.transaction_add_alert_negative)
-                { _, _ ->
+                .setNegativeButton(R.string.transaction_add_alert_negative) { _, _ ->
                     findNavController().navigateUp()
                 }
-                .setPositiveButton(R.string.transaction_add_alert_positive)
-                { dialogInterface, _ ->
+                .setPositiveButton(R.string.transaction_add_alert_positive) { dialogInterface, _ ->
                     dialogInterface?.dismiss()
                 }
         builder.create().show()

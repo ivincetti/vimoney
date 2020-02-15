@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_add_all.*
 import kotlinx.android.synthetic.main.fragment_add_all.view.*
 import kotlinx.android.synthetic.main.fragment_add_spent.*
 import ru.vincetti.vimoney.MainViewModel
+import ru.vincetti.vimoney.MainViewModelFactory
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
@@ -42,10 +43,12 @@ class TransactionSpentFragment : Fragment() {
         val application = requireNotNull(activity).application
         val mDb = AppDatabase.getInstance(application)
         val transactionMainViewModelFactory =
-                TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao(), application)
+                TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao())
         viewModel = ViewModelProvider(requireNotNull(parentFragment!!.viewModelStore),
                 transactionMainViewModelFactory).get(TransactionMainViewModel::class.java)
-        mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        val mainViewModelFactory = MainViewModelFactory(mDb.accountDao())
+        mainViewModel = ViewModelProvider(requireActivity(), mainViewModelFactory)
+                .get(MainViewModel::class.java)
         viewModel.saveAction = TransactionModel.TRANSACTION_TYPE_SPENT
         initFragmentViews()
     }
@@ -71,7 +74,6 @@ class TransactionSpentFragment : Fragment() {
         viewModel.needToUpdate.observe(viewLifecycleOwner, Observer {
             if (it) add_btn.text = getString(R.string.add_btn_update)
         })
-
         viewModel.transaction.observe(viewLifecycleOwner, Observer {
             it?.let {
                 if (it.sum > 0) add_sum.setText(it.sum.toString())
@@ -82,7 +84,6 @@ class TransactionSpentFragment : Fragment() {
                 fragment_add_content.add_desc.setText(it.description)
             }
         })
-
         mainViewModel.accountNotArchiveNames.observe(viewLifecycleOwner, Observer {
             it?.let {
                 val accountsArray = ArrayList<String>()
@@ -166,14 +167,15 @@ class TransactionSpentFragment : Fragment() {
         val calendar = GregorianCalendar()
         calendar.time = date
 
-        val datePickerDialog = DatePickerDialog(activity!!,
+        DatePickerDialog(
+                requireContext(),
                 { _, year, month, day ->
                     viewModel.setDate(GregorianCalendar(year, month, day).time)
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH))
-        datePickerDialog.show()
+                calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 
     // save transaction logic

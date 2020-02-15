@@ -26,37 +26,35 @@ class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
     var date = Date()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentHomeBinding.inflate(inflater)
         (activity as? AppCompatActivity)?.setSupportActionBar(binding.topToolbar)
 
-        val application = requireNotNull(this.activity).application
+        val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
         val viewModelFactory = HomeViewModelFactory(db.accountDao(), db.transactionDao())
         viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
-        // список карт/счетов
+        /** Список карт/счетов. */
         val mAdapter = CardsListRVAdapter {
             val bundle = Bundle()
             bundle.putInt(CheckViewModel.EXTRA_CHECK_ID, it)
             findNavController().navigate(R.id.action_homeFragment_to_checkFragment, bundle)
         }
 
-        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        val llManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         val recycler = binding.fragmentHomeContent.home_cards_recycle_view
-        recycler.layoutManager = layoutManager
+        recycler.layoutManager = llManager
         recycler.adapter = mAdapter
-
-        // get stat
-        binding.fragmentHomeContent.home_month.text = SimpleDateFormat("MMM").format(date)
 
         viewModel.accounts.observe(viewLifecycleOwner, Observer {
             binding.homeUserBalance.text = LogicMath.userBalanceChange(it).toString()
             mAdapter.setList(it)
         })
-
-        viewInit()
-
         viewModel.incomeSum.observe(viewLifecycleOwner, Observer {
             it?.let {
                 binding.fragmentHomeContent.home_stat_income_txt.text = it.toString()
@@ -68,14 +66,15 @@ class HomeFragment : Fragment() {
             }
         })
 
+        viewInit()
         showTransactionsHistory()
-
         return binding.root
     }
 
     private fun viewInit() {
         binding.fragmentHomeContent.home_stat_expense_txt.text = "0"
         binding.fragmentHomeContent.home_stat_income_txt.text = "0"
+        binding.fragmentHomeContent.home_month.text = SimpleDateFormat("MMM").format(date)
         binding.homeFab.setOnClickListener {
             findNavController().navigate(R.id.action_global_transactionMainFragment)
         }
@@ -90,11 +89,10 @@ class HomeFragment : Fragment() {
         }
     }
 
-    // Show historyFragment
+    /** Show historyFragment. */
     private fun showTransactionsHistory() {
-        val historyFragment = HistoryFragment()
         childFragmentManager.beginTransaction()
-                .replace(R.id.main_history_container, historyFragment)
+                .replace(R.id.main_history_container, HistoryFragment())
                 .commit()
     }
 

@@ -36,7 +36,7 @@ class HistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val application = requireNotNull(this.activity).application
+        val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
         var trCount = HistoryViewModel.DEFAULT_TRANSACTIONS
         val args = arguments

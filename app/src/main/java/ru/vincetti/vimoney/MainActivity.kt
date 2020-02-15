@@ -18,15 +18,16 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel()
     }
 
-    // Notification channel register
-    private fun createNotificationChannel() { // Create the NotificationChannel, but only on API 26+ because
+    /** Notification channel register. */
+    private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(CHANNEL_ID,
+            val channel = NotificationChannel(
+                    CHANNEL_ID,
                     getString(R.string.channel_name),
-                    NotificationManager.IMPORTANCE_DEFAULT)
+                    NotificationManager.IMPORTANCE_DEFAULT
+            )
             channel.description = getString(R.string.channel_description)
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
+            /** Register the channel with the system. */
             val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager?.createNotificationChannel(channel)
         }

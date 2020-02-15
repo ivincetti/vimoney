@@ -19,7 +19,6 @@ class SettingsFragment : Fragment() {
         binding.settingNavigationBackBtn.setOnClickListener {
             findNavController().navigate(R.id.action_settingsFragment_to_homeFragment)
         }
-
         binding.btnSaveTransactions.setOnClickListener {
             viewModel.saveJson()
         }

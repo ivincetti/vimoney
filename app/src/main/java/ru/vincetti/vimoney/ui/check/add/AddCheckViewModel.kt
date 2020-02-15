@@ -128,12 +128,11 @@ class AddCheckViewModel(
     }
 
     fun setBackgroundColor(selectedColor: Int) {
-        val hexColor = java.lang.String.format("#%06x", (selectedColor and 0xffffff))
         _color.value = selectedColor
-        (_check.value as AccountModel).color = hexColor
+        val hexColor = java.lang.String.format("#%06x", (selectedColor and 0xffffff))
+        _check.value?.color = hexColor
     }
 }
-
 
 class AddCheckModelFactory(
         private val accDao: AccountDao,

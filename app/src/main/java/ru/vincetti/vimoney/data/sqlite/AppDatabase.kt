@@ -13,12 +13,10 @@ import ru.vincetti.vimoney.data.models.ConfigModel
 import ru.vincetti.vimoney.data.models.CurrencyModel
 import ru.vincetti.vimoney.data.models.TransactionModel
 
-@Database(entities = [
-    AccountModel::class,
-    TransactionModel::class,
-    ConfigModel::class,
-    CurrencyModel::class],
-        version = 8, exportSchema = false)
+@Database(entities = [AccountModel::class, TransactionModel::class, ConfigModel::class, CurrencyModel::class],
+        version = 8,
+        exportSchema = false
+)
 @TypeConverters(DateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun accountDao(): AccountDao
@@ -35,9 +33,8 @@ abstract class AppDatabase : RoomDatabase() {
 
         fun getInstance(context: Context): AppDatabase {
             val tempInstance = INSTANCE
-            if (tempInstance != null) {
-                return tempInstance
-            }
+            if (tempInstance != null) return tempInstance
+
             synchronized(this) {
                 val instance =
                         Room.databaseBuilder(

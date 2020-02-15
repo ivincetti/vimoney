@@ -1,6 +1,5 @@
 package ru.vincetti.vimoney.ui.transaction.main
 
-import android.app.Application
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.TransactionModel
@@ -11,9 +10,8 @@ import java.util.*
 
 class TransactionMainViewModel(
         private val transactionDao: TransactionDao,
-        private val accDao: AccountDao,
-        app: Application
-) : AndroidViewModel(app) {
+        private val accDao: AccountDao
+) : ViewModel() {
 
     private var _transaction = MutableLiveData<TransactionModel>()
     val transaction
@@ -77,8 +75,8 @@ class TransactionMainViewModel(
                 if (tmpTransaction.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
                         && tmpTransaction.extraValue.toInt() > 0) {
                     _nestedTransaction.value = loadNestedTransaction(tmpTransaction.extraValue.toInt())
-                    oldTransactionAccountToID = _nestedTransaction.value?.accountId
-                            ?: TransactionModel.DEFAULT_ID
+                    oldTransactionAccountToID =
+                            _nestedTransaction.value?.accountId ?: TransactionModel.DEFAULT_ID
                 }
             }
         }
@@ -87,15 +85,13 @@ class TransactionMainViewModel(
     private suspend fun loadNestedTransaction(id: Int) = transactionDao.loadTransactionById(id)
 
     fun setAccount(id: Int) {
-        _transaction.value?.let {
-            it.accountId = id
-        }
+        _transaction.value?.accountId = id
     }
 
-    fun changeSumAdd(s: CharSequence?) {
-        s?.let { char ->
+    fun changeSumAdd(newSum: CharSequence?) {
+        newSum?.let { char ->
             _transaction.value?.let {
-                if (char.toString().toFloat() != it.sum){
+                if (char.toString().toFloat() != it.sum) {
                     it.sum = char.toString().toFloat()
                     _nestedTransaction.value?.sum = char.toString().toFloat()
                     // TODO странный метод, но работает - надо вынести суммы строк от цифр
@@ -107,15 +103,11 @@ class TransactionMainViewModel(
     }
 
     fun setDate(date: Date) {
-        _transaction.value?.let {
-            it.date = date
-        }
+        _transaction.value?.date = date
     }
 
     fun setAccountTo(id: Int) {
-        _nestedTransaction.value?.let {
-            it.accountId = id
-        }
+        _nestedTransaction.value?.accountId = id
     }
 
     fun delete() {
@@ -138,9 +130,7 @@ class TransactionMainViewModel(
         }
     }
 
-    fun saveTransaction(txtName: String,
-                        txtSum: String,
-                        txtSumTo: String) {
+    fun saveTransaction(txtName: String, txtSum: String, txtSumTo: String) {
         val tmpTransaction = _transaction.value
         val tmpToTransaction = _nestedTransaction.value
         if (tmpTransaction == null || tmpToTransaction == null) {
@@ -176,17 +166,12 @@ class TransactionMainViewModel(
         }
     }
 
-    fun saveTransaction(txtName: String,
-                        txtSum: String) {
+    fun saveTransaction(txtName: String, txtSum: String) {
         val tmpTransaction = _transaction.value
         tmpTransaction?.let {
             when {
-                txtSum == "" -> {
-                    _needSum.value = true
-                }
-                it.accountId < 1 -> {
-                    _needAccount.value = true
-                }
+                txtSum == "" -> _needSum.value = true
+                it.accountId < 1 -> _needAccount.value = true
                 else -> {
                     tmpTransaction.description = txtName
                     tmpTransaction.date = date.value!!
@@ -243,12 +228,11 @@ class TransactionMainViewModel(
 
 class TransactionMainViewModelFactory(
         val transactionDao: TransactionDao,
-        val accDao: AccountDao,
-        val app: Application
+        val accDao: AccountDao
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TransactionMainViewModel::class.java)) {
-            return TransactionMainViewModel(transactionDao, accDao, app) as T
+            return TransactionMainViewModel(transactionDao, accDao) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -8,16 +8,32 @@ import java.util.*
 
 @Entity(tableName = "transactions")
 data class TransactionModel(
-        @PrimaryKey(autoGenerate = true) var id: Int = DEFAULT_ID,
-        @ColumnInfo(name = "account_id") var accountId: Int = DEFAULT_ID,
+
+        @PrimaryKey(autoGenerate = true)
+        var id: Int = DEFAULT_ID,
+
+        @ColumnInfo(name = "account_id")
+        var accountId: Int = DEFAULT_ID,
+
         var description: String = "",
+
         var date: Date = Date(),
-        @ColumnInfo(name = "updated_at") var updatedAt: Date = Date(),
+
+        @ColumnInfo(name = "updated_at")
+        var updatedAt: Date = Date(),
+
         var type: Int = TRANSACTION_TYPE_SPENT,
+
         var sum: Float = 0f,
-        @ColumnInfo(name = "extra_key") var extraKey: String = "",
-        @ColumnInfo(name = "extra_value") var extraValue: String = "",
+
+        @ColumnInfo(name = "extra_key")
+        var extraKey: String = "",
+
+        @ColumnInfo(name = "extra_value")
+        var extraValue: String = "",
+
         var system: Boolean = false,
+
         var deleted: Boolean = false
 ) {
 

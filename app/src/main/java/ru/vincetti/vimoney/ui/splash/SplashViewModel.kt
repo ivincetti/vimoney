@@ -78,7 +78,6 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
             } catch (e: Exception) {
                 _networkError.value = true
             }
-
         }
     }
 
@@ -92,7 +91,8 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
     private suspend fun configDbDateInsert(timeMillisLong: Long) {
         val newConfig = ConfigModel(
                 keyName = AppDatabase.CONFIG_KEY_NAME_DATE_EDIT,
-                value = timeMillisLong.toString())
+                value = timeMillisLong.toString()
+        )
         mDb.configDao().insertConfig(newConfig)
     }
 

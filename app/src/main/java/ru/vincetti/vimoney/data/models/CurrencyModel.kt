@@ -6,9 +6,14 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "currency")
 data class CurrencyModel(
-        @PrimaryKey(autoGenerate = true) var id: Int? = null,
+
+        @PrimaryKey(autoGenerate = true)
+        var id: Int = 0,
+
         val code: Int,
+
         var name: String,
+
         val symbol: String
 ) {
 

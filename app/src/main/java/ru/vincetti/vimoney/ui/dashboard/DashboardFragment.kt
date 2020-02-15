@@ -27,7 +27,7 @@ class DashboardFragment : Fragment() {
     ): View? {
         binding = FragmentDashboardBinding.inflate(inflater)
 
-        val application = requireNotNull(this.activity).application
+        val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
         val viewModelFactory = DashboardViewModelFactory(db.transactionDao())
         val viewModel = ViewModelProvider(this, viewModelFactory)
@@ -43,30 +43,24 @@ class DashboardFragment : Fragment() {
         binding.dashContent.dashboard_month_next.setOnClickListener {
             viewModel.setMonthNext()
         }
-
         binding.dashContent.dashboard_month_previous.setOnClickListener {
             viewModel.setMonthPrev()
         }
-
         viewModel.monthString.observe(viewLifecycleOwner, Observer {
             binding.dashContent.dashboard_month.text = it
         })
-
         viewModel.dataSet.observe(viewLifecycleOwner, Observer {
             dashboardChart.data = it
             dashboardChart.invalidate() // refresh
         })
-
         viewModel.isShowProgress.observe(viewLifecycleOwner, Observer {
             it?.let {
                 showProgress(it)
             }
         })
-
         viewModel.income.observe(viewLifecycleOwner, Observer {
             binding.dashContent.home_stat_income_txt.text = it.toString()
         })
-
         viewModel.expense.observe(viewLifecycleOwner, Observer {
             binding.dashContent.home_stat_expense_txt.text = it.toString()
         })

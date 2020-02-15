@@ -1,4 +1,4 @@
-package ru.vincetti.vimoney.utils;
+package ru.vincetti.vimoney.utils
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -31,6 +31,5 @@ class TransactionsGenerator {
         suspend fun generate(transactionDao: TransactionDao) {
             generate(transactionDao, TRANSACTION_COUNT)
         }
-
     }
 }

@@ -13,9 +13,9 @@ import androidx.navigation.fragment.findNavController
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.databinding.FragmentCheckBinding
-import ru.vincetti.vimoney.ui.transaction.TransactionConst
 import ru.vincetti.vimoney.ui.check.AccountConst
 import ru.vincetti.vimoney.ui.history.HistoryFragment
+import ru.vincetti.vimoney.ui.transaction.TransactionConst
 
 class CheckFragment : Fragment() {
 
@@ -29,7 +29,7 @@ class CheckFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCheckBinding.inflate(inflater)
-        val application = requireNotNull(this.activity).application
+        val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
         arguments?.let { bundle ->
             val extraCheck = bundle.getInt(CheckViewModel.EXTRA_CHECK_ID)
@@ -50,7 +50,6 @@ class CheckFragment : Fragment() {
         binding.checkNavigationFromArchiveBtn.setOnClickListener {
             viewModel.restore()
         }
-
         binding.checkNavigationEditBtn.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt(AccountConst.EXTRA_CHECK_ID, checkId)
@@ -97,10 +96,8 @@ class CheckFragment : Fragment() {
     private fun showTransactionsHistory(checkId: Int) {
         val historyFragment = HistoryFragment()
         val args = Bundle()
-
         args.putInt(HistoryFragment.BUNDLE_TRANS_COUNT_NAME, CheckViewModel.DEFAULT_CHECK_COUNT)
         args.putInt(HistoryFragment.BUNDLE_TRANS_CHECK_ID_NAME, checkId)
-
         historyFragment.arguments = args
 
         childFragmentManager
@@ -115,11 +112,9 @@ class CheckFragment : Fragment() {
                 .setNegativeButton(R.string.check_delete_alert_negative) { dialog, _ ->
                     dialog?.dismiss()
                 }
-                .setPositiveButton(R.string.check_delete_alert_positive)
-                { _, _ ->
+                .setPositiveButton(R.string.check_delete_alert_positive) { _, _ ->
                     viewModel.delete()
                 }
-
         builder.create().show()
     }
 }
