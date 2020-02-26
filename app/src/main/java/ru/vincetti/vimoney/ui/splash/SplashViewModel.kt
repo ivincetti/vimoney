@@ -19,7 +19,7 @@ import ru.vincetti.vimoney.data.models.json.ConfigFile
 import ru.vincetti.vimoney.data.models.json.CurrencyItem
 import ru.vincetti.vimoney.data.models.json.TransactionsItem
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.utils.LogicMath
+import ru.vincetti.vimoney.utils.accountBalanceUpdateById
 import java.util.*
 
 class SplashViewModel(val app: Application) : AndroidViewModel(app) {
@@ -31,6 +31,10 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
     private var _need2Navigate2Home = MutableLiveData<Boolean>()
     val need2Navigate2Home: LiveData<Boolean>
         get() = _need2Navigate2Home
+
+    private var _need2Navigate2Self = MutableLiveData<Boolean>()
+    val need2Navigate2Self: LiveData<Boolean>
+        get() = _need2Navigate2Self
 
     private val jsonDownloader by lazy {
         Retrofit.Builder()
@@ -44,6 +48,7 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
     init {
         _networkError.value = false
         _need2Navigate2Home.value = false
+        _need2Navigate2Self.value = false
         init()
     }
 
@@ -67,6 +72,7 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
 
     fun resetNetworkStatus() {
         _networkError.value = false
+        _need2Navigate2Self.value = true
     }
 
     private fun loadJson() {
@@ -131,6 +137,6 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
     private suspend fun accountUpdate(accId: Int, type: String, title: String, ins: Int, balance: Int) {
         val newAcc = AccountModel(accId, title, type, balance, 810)
         mDb.accountDao().insertAccount(newAcc)
-        LogicMath.accountBalanceUpdateById(mDb.transactionDao(), mDb.accountDao(), accId)
+        accountBalanceUpdateById(mDb.transactionDao(), mDb.accountDao(), accId)
     }
 }

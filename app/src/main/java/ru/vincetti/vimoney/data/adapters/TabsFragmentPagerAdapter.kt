@@ -13,7 +13,7 @@ import ru.vincetti.vimoney.ui.transaction.transfer.TransactionTransferFragment
 
 class TabsFragmentPagerAdapter(
         fm: FragmentManager, private val fragmentBundle: Bundle
-) : FragmentPagerAdapter(fm) {
+) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getPageTitle(position: Int): CharSequence {
         return when (position) {

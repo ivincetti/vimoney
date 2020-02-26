@@ -1,9 +1,7 @@
 package ru.vincetti.vimoney.ui.history
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,7 +14,7 @@ import ru.vincetti.vimoney.data.adapters.TransactionsRVAdapter
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
 
-class HistoryFragment : Fragment() {
+class HistoryFragment : Fragment(R.layout.fragment_history_content) {
 
     private lateinit var viewModel: HistoryViewModel
     private lateinit var viewModelFactory: HistoryViewModelFactory
@@ -24,13 +22,6 @@ class HistoryFragment : Fragment() {
     companion object {
         const val BUNDLE_TRANS_COUNT_NAME = "ru.vincetti.vimoney.transhistory_count"
         const val BUNDLE_TRANS_CHECK_ID_NAME = "ru.vincetti.vimoney.transhistory_check_id"
-    }
-
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_history_content, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,28 +1,30 @@
 package ru.vincetti.vimoney.ui.notifications
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import kotlinx.android.synthetic.main.fragment_notifications.*
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.databinding.FragmentNotificationsBinding
-import ru.vincetti.vimoney.service.NotificationService
 
-class NotificationFragment : Fragment() {
+class NotificationFragment : Fragment(R.layout.fragment_notifications) {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentNotificationsBinding.inflate(inflater)
-        binding.settingNavigationBackBtn.setOnClickListener {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val viewModel = ViewModelProvider(this).get(NotificationViewModel::class.java)
+
+        setting_navigation_back_btn.setOnClickListener {
+            viewModel.homeButton()
+        }
+
+        notification_notify_btn.setOnClickListener {
+            viewModel.notifyButton()
+        }
+
+        viewModel.need2Navigate2Home.observe(viewLifecycleOwner, Observer {
             findNavController().navigate(R.id.action_notificationFragment_to_homeFragment)
-        }
-        binding.notificationNotifyBtn.setOnClickListener {
-            requireActivity().startService(
-                    Intent(requireContext(), NotificationService::class.java)
-                            .setAction(NotificationService.NOTIFICATION_ACTION))
-        }
-        return binding.root
+        })
     }
 }

@@ -1,26 +1,24 @@
 package ru.vincetti.vimoney.ui.check.list
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_checks_list.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.AllCardsListRVAdapter
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.databinding.FragmentChecksListBinding
 import ru.vincetti.vimoney.ui.check.view.CheckViewModel
 
-class ChecksListFragment : Fragment() {
-    private lateinit var binding: FragmentChecksListBinding
+class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentChecksListBinding.inflate(inflater)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         initViews()
 
         val application = requireNotNull(activity).application
@@ -37,7 +35,7 @@ class ChecksListFragment : Fragment() {
         }
         val cardsLayoutManager = LinearLayoutManager(requireContext(),
                 RecyclerView.VERTICAL, false)
-        binding.checkListRecycleView.apply {
+        check_list_recycle_view.apply {
             layoutManager = cardsLayoutManager
             setAdapter(adapter)
         }
@@ -46,15 +44,13 @@ class ChecksListFragment : Fragment() {
                 adapter.setList(it)
             }
         })
-
-        return binding.root
     }
 
     private fun initViews() {
-        binding.settingNavigationBackBtn.setOnClickListener {
+        setting_navigation_back_btn.setOnClickListener {
             findNavController().navigate(R.id.action_checksListFragment_to_homeFragment)
         }
-        binding.checkListFab.setOnClickListener {
+        check_list_fab.setOnClickListener {
             findNavController().navigate(R.id.action_checksListFragment_to_addCheckFragment)
         }
     }

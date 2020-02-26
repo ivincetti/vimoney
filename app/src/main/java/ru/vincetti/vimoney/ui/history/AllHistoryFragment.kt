@@ -1,32 +1,24 @@
 package ru.vincetti.vimoney.ui.history
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import kotlinx.android.synthetic.main.fragment_history.*
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.databinding.FragmentHistoryBinding
 
-class AllHistoryFragment : Fragment() {
+class AllHistoryFragment : Fragment(R.layout.fragment_history) {
 
-    lateinit var binding: FragmentHistoryBinding
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentHistoryBinding.inflate(inflater)
-        viewInit()
-        showTransactionsHistory()
-        return binding.root
-    }
-
-    private fun viewInit() {
-        binding.settingNavigationBackBtn.setOnClickListener {
+        setting_navigation_back_btn.setOnClickListener {
             findNavController().navigate(R.id.action_allHistoryFragment_to_homeFragment)
         }
+        showTransactionsHistory()
     }
 
-    // Show historyFragment
+    /** Show historyFragment. */
     private fun showTransactionsHistory() {
         val historyFragment = HistoryFragment()
         childFragmentManager.beginTransaction()

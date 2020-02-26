@@ -1,30 +1,33 @@
 package ru.vincetti.vimoney.ui.settings
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import kotlinx.android.synthetic.main.fragment_settings.*
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.databinding.FragmentSettingsBinding
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentSettingsBinding.inflate(inflater)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val viewModel = ViewModelProvider(this).get(SettingsViewModel::class.java)
 
-        binding.settingNavigationBackBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_settingsFragment_to_homeFragment)
+        setting_navigation_back_btn.setOnClickListener {
+            viewModel.homeButton()
         }
-        binding.btnSaveTransactions.setOnClickListener {
+
+        btn_save_transactions.setOnClickListener {
             viewModel.saveJson()
         }
-        binding.btnLoadTransactions.setOnClickListener {
+        btn_load_transactions.setOnClickListener {
             viewModel.loadJson()
         }
-        return binding.root
+
+        viewModel.need2Navigate2Home.observe(viewLifecycleOwner, Observer {
+            if (it) findNavController().navigate(R.id.action_settingsFragment_to_homeFragment)
+        })
     }
 }

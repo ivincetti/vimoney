@@ -31,9 +31,14 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
     val isShowProgress
         get() = _isShowProgress
 
+    private var _need2Navigate2Home = MutableLiveData<Boolean>()
+    val need2Navigate2Home: LiveData<Boolean>
+        get() = _need2Navigate2Home
+    
     init {
         cal.time = Date()
         _isShowProgress.value = true
+        _need2Navigate2Home.value = false
         getData()
     }
 
@@ -78,6 +83,10 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
     fun setMonthNext() {
         cal.add(Calendar.MONTH, 1)
         getData()
+    }
+
+    fun homeButton() {
+        _need2Navigate2Home.value = true
     }
 }
 

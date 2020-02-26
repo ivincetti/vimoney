@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class AccountModel(
 
         @PrimaryKey(autoGenerate = true)
-        var id: Int,
+        var id: Int = 0,
 
         var name: String = "",
 

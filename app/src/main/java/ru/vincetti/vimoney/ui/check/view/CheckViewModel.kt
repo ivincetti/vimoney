@@ -23,7 +23,7 @@ class CheckViewModel(private val dao: AccountDao, private val checkID: Int) : Vi
         _need2UpdateViewModel.value = false
     }
 
-    // restore from archive account logic
+    /** Restore from archive account logic. */
     fun restore() {
         if (checkID != DEFAULT_CHECK_ID) {
             viewModelScope.launch {
@@ -33,7 +33,7 @@ class CheckViewModel(private val dao: AccountDao, private val checkID: Int) : Vi
         }
     }
 
-    // archive account logic
+    /** Archive account logic. */
     fun delete() {
         if (checkID != DEFAULT_CHECK_ID) {
             // delete query

@@ -5,9 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -29,26 +27,19 @@ import java.text.DateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TransactionIncomeFragment : Fragment() {
+class TransactionIncomeFragment : Fragment(R.layout.fragment_add_spent) {
 
     private lateinit var viewModel: TransactionMainViewModel
     private lateinit var mainViewModel: MainViewModel
     private lateinit var date: Date
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_add_spent, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val application = requireNotNull(activity).application
         val mDb = AppDatabase.getInstance(application)
         val transactionMainViewModelFactory =
                 TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao())
-        viewModel = ViewModelProvider(requireNotNull(parentFragment!!.viewModelStore),
+        viewModel = ViewModelProvider(requireNotNull(requireParentFragment().viewModelStore),
                 transactionMainViewModelFactory).get(TransactionMainViewModel::class.java)
         val mainViewModelFactory = MainViewModelFactory(mDb.accountDao())
         mainViewModel = ViewModelProvider(requireActivity(), mainViewModelFactory)
@@ -64,7 +55,7 @@ class TransactionIncomeFragment : Fragment() {
         add_sum.requestFocus()
 
         // Show Keyboard
-        val imm: InputMethodManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm: InputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
 
@@ -140,7 +131,8 @@ class TransactionIncomeFragment : Fragment() {
         }
 
         add_sum.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) { //do nothing
+            override fun afterTextChanged(s: Editable?) {
+                //do nothing
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -173,7 +165,7 @@ class TransactionIncomeFragment : Fragment() {
         val calendar = GregorianCalendar()
         calendar.time = date
 
-        val datePickerDialog = DatePickerDialog(activity!!,
+        val datePickerDialog = DatePickerDialog(requireContext(),
                 { _, year, month, day ->
                     viewModel.setDate(GregorianCalendar(year, month, day).time)
                 },
@@ -183,7 +175,7 @@ class TransactionIncomeFragment : Fragment() {
         datePickerDialog.show()
     }
 
-    // save transaction logic
+    /** Save transaction logic. */
     private fun save() {
         viewModel.saveTransaction(
                 fragment_add_content.add_desc.text.toString(),

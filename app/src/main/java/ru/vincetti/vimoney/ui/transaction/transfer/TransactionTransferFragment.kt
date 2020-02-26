@@ -5,9 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -30,26 +28,18 @@ import java.text.DateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TransactionTransferFragment : Fragment() {
+class TransactionTransferFragment : Fragment(R.layout.fragment_add_transfer) {
 
     private lateinit var viewModel: TransactionMainViewModel
     private lateinit var mainViewModel: MainViewModel
     private var date = Date()
-
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_add_transfer, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val application = requireNotNull(activity).application
         val mDb = AppDatabase.getInstance(application)
         val transactionMainViewModelFactory =
                 TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao())
-        viewModel = ViewModelProvider(requireNotNull(parentFragment!!.viewModelStore),
+        viewModel = ViewModelProvider(requireNotNull(requireParentFragment().viewModelStore),
                 transactionMainViewModelFactory).get(TransactionMainViewModel::class.java)
         val mainViewModelFactory = MainViewModelFactory(mDb.accountDao())
         mainViewModel = ViewModelProvider(requireActivity(), mainViewModelFactory)
@@ -65,7 +55,7 @@ class TransactionTransferFragment : Fragment() {
         add_sum.requestFocus()
 
         // Show Keyboard
-        val imm: InputMethodManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm: InputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
 

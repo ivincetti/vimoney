@@ -5,7 +5,7 @@ import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AccountDao
 import ru.vincetti.vimoney.data.sqlite.TransactionDao
-import ru.vincetti.vimoney.utils.LogicMath
+import ru.vincetti.vimoney.utils.accountBalanceUpdateById
 import java.util.*
 
 class TransactionMainViewModel(
@@ -118,13 +118,13 @@ class TransactionMainViewModel(
                             && accNestedId > 0) {
                         // update balance for nested transfer account
                         val nestedAccId = transactionDao.getAccountTransactionById(accNestedId)
-                        LogicMath.accountBalanceUpdateById(transactionDao, accDao, nestedAccId)
+                        accountBalanceUpdateById(transactionDao, accDao, nestedAccId)
                         // delete nested
                         transactionDao.deleteTransactionById(accNestedId)
                     }
                     transactionDao.deleteTransactionById(mTransId)
                     // update balance for current (accId) account
-                    LogicMath.accountBalanceUpdateById(transactionDao, accDao, mAccID)
+                    accountBalanceUpdateById(transactionDao, accDao, mAccID)
                 }
             }
         }
@@ -190,7 +190,7 @@ class TransactionMainViewModel(
         viewModelScope.launch {
             for (transaction in trans) {
                 // update balance for current (accId) account
-                LogicMath.accountBalanceUpdateById(transactionDao, accDao, transaction.accountId)
+                accountBalanceUpdateById(transactionDao, accDao, transaction.accountId)
             }
             // update balance for account updated
             // TODO бред надо автоматизировать
@@ -228,7 +228,7 @@ class TransactionMainViewModel(
 
 class TransactionMainViewModelFactory(
         val transactionDao: TransactionDao,
-        val accDao: AccountDao
+        private val accDao: AccountDao
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TransactionMainViewModel::class.java)) {

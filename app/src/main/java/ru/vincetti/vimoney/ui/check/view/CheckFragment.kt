@@ -2,33 +2,28 @@ package ru.vincetti.vimoney.ui.check.view
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import kotlinx.android.synthetic.main.fragment_check.*
+import kotlinx.android.synthetic.main.fragment_check_content.view.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.databinding.FragmentCheckBinding
-import ru.vincetti.vimoney.ui.check.AccountConst
+import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
 
-class CheckFragment : Fragment() {
+class CheckFragment : Fragment(R.layout.fragment_check) {
 
-    private lateinit var binding: FragmentCheckBinding
     private lateinit var viewModel: CheckViewModel
     private var checkId: Int = CheckViewModel.DEFAULT_CHECK_ID
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentCheckBinding.inflate(inflater)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
         arguments?.let { bundle ->
@@ -38,61 +33,60 @@ class CheckFragment : Fragment() {
         val viewModelFactory = CheckViewModelFactory(db.accountDao(), checkId)
         viewModel = ViewModelProvider(this, viewModelFactory).get(CheckViewModel::class.java)
         initViews()
-        return binding.root
     }
 
     private fun initViews() {
         loadAccount()
 
-        binding.checkNavigationDeleteBtn.setOnClickListener {
+        check_navigation_delete_btn.setOnClickListener {
             showDeleteDialog()
         }
-        binding.checkNavigationFromArchiveBtn.setOnClickListener {
+        check_navigation_from_archive_btn.setOnClickListener {
             viewModel.restore()
         }
-        binding.checkNavigationEditBtn.setOnClickListener {
+        check_navigation_edit_btn.setOnClickListener {
             val bundle = Bundle()
-            bundle.putInt(AccountConst.EXTRA_CHECK_ID, checkId)
+            bundle.putInt(EXTRA_CHECK_ID, checkId)
             findNavController().navigate(R.id.action_checkFragment_to_addCheckFragment, bundle)
         }
-        binding.settingNavigationBackBtn.setOnClickListener {
+        setting_navigation_back_btn.setOnClickListener {
             findNavController().navigateUp()
         }
-        binding.checkFab.setOnClickListener {
+        check_fab.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt(TransactionConst.EXTRA_ACCOUNT_ID, checkId)
             findNavController().navigate(R.id.action_global_transactionMainFragment, bundle)
         }
     }
 
-    // account data to UI
+    /** Account data to UI. */
     private fun loadAccount() {
         viewModel.model.observe(viewLifecycleOwner, Observer {
             it?.let {
-                binding.fragmentCheckContent.checkAccName.text = it.name
-                binding.fragmentCheckContent.checkAccType.text = it.type
-                binding.fragmentCheckContent.checkAccBalance.text = it.sum.toString()
-                binding.fragmentCheckContent.checkAccContainer
+                fragment_check_content.check_acc_name.text = it.name
+                fragment_check_content.check_acc_type.text = it.type
+                fragment_check_content.check_acc_balance.text = it.sum.toString()
+                fragment_check_content.check_acc_container
                         .setBackgroundColor(Color.parseColor(it.color))
 
                 if (it.isArchive) {
-                    binding.fragmentCheckContent.checkAccArchive.visibility = View.VISIBLE
-                    binding.fragmentCheckContent.checkAccArchive.text = getString(R.string.check_arсhive_txt)
-                    binding.checkNavigationFromArchiveBtn.visibility = View.VISIBLE
-                    binding.checkNavigationDeleteBtn.visibility = View.GONE
+                    fragment_check_content.check_acc_archive.visibility = View.VISIBLE
+                    fragment_check_content.check_acc_archive.text = getString(R.string.check_arсhive_txt)
+                    check_navigation_from_archive_btn.visibility = View.VISIBLE
+                    check_navigation_delete_btn.visibility = View.GONE
                 } else {
-                    binding.fragmentCheckContent.checkAccArchive.visibility = View.INVISIBLE
-                    binding.checkNavigationFromArchiveBtn.visibility = View.GONE
-                    binding.checkNavigationDeleteBtn.visibility = View.VISIBLE
+                    fragment_check_content.check_acc_archive.visibility = View.INVISIBLE
+                    check_navigation_from_archive_btn.visibility = View.GONE
+                    check_navigation_delete_btn.visibility = View.VISIBLE
 
                 }
-                binding.fragmentCheckContent.checkAccSymbol.text = it.curSymbol
+                fragment_check_content.check_acc_symbol.text = it.curSymbol
                 showTransactionsHistory(it.id)
             }
         })
     }
 
-    // show transaction for this account
+    /** Show transaction for this account. */
     private fun showTransactionsHistory(checkId: Int) {
         val historyFragment = HistoryFragment()
         val args = Bundle()

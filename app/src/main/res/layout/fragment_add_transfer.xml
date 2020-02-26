@@ -1,212 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     >
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         >
 
         <LinearLayout
-            android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/big_padding"
+            android:layout_marginEnd="@dimen/big_padding"
+            android:orientation="horizontal"
             >
-
+            <!--acc from-->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/big_padding"
-                android:layout_marginEnd="@dimen/big_padding"
-                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:orientation="vertical"
                 >
-                <!--acc from-->
-                <LinearLayout
-                    android:layout_width="0dp"
+
+                <!--Блок суммы-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="@dimen/big_padding"
                     >
 
-                    <!--Блок суммы-->
-                    <RelativeLayout
+                    <EditText
+                        android:id="@+id/add_sum"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginTop="@dimen/big_padding"
-                        >
+                        android:layout_toStartOf="@id/add_acc_cur"
+                        android:gravity="end"
+                        android:hint="@string/add_sum_sample"
+                        android:inputType="numberDecimal"
+                        android:paddingStart="@dimen/activity_horizontal_margin"
+                        android:paddingEnd="@dimen/activity_horizontal_margin"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/text_big_numbers"
+                        android:textStyle="bold"
+                        />
 
-                        <EditText
-                            android:id="@+id/add_sum"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_toStartOf="@id/add_acc_cur"
-                            android:gravity="end"
-                            android:hint="@string/add_sum_sample"
-                            android:inputType="numberDecimal"
-                            android:paddingStart="@dimen/activity_horizontal_margin"
-                            android:paddingEnd="@dimen/activity_horizontal_margin"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="@dimen/text_big_numbers"
-                            android:textStyle="bold"
-                            />
-
-                        <TextView
-                            android:id="@+id/add_acc_cur"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:paddingEnd="@dimen/sm_padding"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="@dimen/text_big_numbers"
-                            android:textStyle="bold"
-                            tools:text="@string/currency_ruble_symbol"
-                            />
-
-                    </RelativeLayout>
-
-                    <!--блок счета-->
-                    <RelativeLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/add_acc_cur"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        >
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:paddingEnd="@dimen/sm_padding"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/text_big_numbers"
+                        android:textStyle="bold"
+                        tools:text="@string/currency_ruble_symbol"
+                        />
 
-                        <ImageView
-                            android:id="@+id/add_acc_image"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_account_dark"
-                            />
+                </RelativeLayout>
 
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_toEndOf="@id/add_acc_image"
-                            android:paddingStart="@dimen/activity_horizontal_margin"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:hint="@string/add_no_account_text"
-                            >
-
-                            <AutoCompleteTextView
-                                android:id="@+id/add_acc_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:cursorVisible="false"
-                                android:focusable="false"
-                                tools:text="@string/home_title_acc_name"
-                                />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                    </RelativeLayout>
-                </LinearLayout>
-                <!--acc to-->
-                <LinearLayout
-                    android:layout_width="0dp"
+                <!--блок счета-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
                     >
 
-                    <!--Блок суммы-->
-                    <RelativeLayout
+                    <ImageView
+                        android:id="@+id/add_acc_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_account_dark"
+                        />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginTop="@dimen/big_padding"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/add_acc_image"
+                        android:hint="@string/add_no_account_text"
+                        android:paddingStart="@dimen/activity_horizontal_margin"
+                        android:textColor="@color/colorPrimaryDark"
                         >
 
-                        <EditText
-                            android:id="@+id/add_sum_to"
+                        <AutoCompleteTextView
+                            android:id="@+id/add_acc_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_toStartOf="@id/add_acc_cur_to"
-                            android:gravity="end"
-                            android:hint="@string/add_sum_sample"
-                            android:inputType="numberDecimal"
-                            android:paddingStart="@dimen/activity_horizontal_margin"
-                            android:paddingEnd="@dimen/activity_horizontal_margin"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="@dimen/text_big_numbers"
-                            android:textStyle="bold"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            tools:text="@string/home_title_acc_name"
                             />
 
-                        <TextView
-                            android:id="@+id/add_acc_cur_to"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:paddingEnd="@dimen/sm_padding"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="@dimen/text_big_numbers"
-                            android:textStyle="bold"
-                            tools:text="@string/currency_ruble_symbol"
-                            />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                    </RelativeLayout>
-
-                    <!--блок счета-->
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
-
-                        <ImageView
-                            android:id="@+id/add_acc_image_to"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_account_dark"
-                            />
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_toEndOf="@id/add_acc_image_to"
-                            android:paddingStart="@dimen/activity_horizontal_margin"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:hint="@string/add_no_account_text"
-                            >
-
-                            <AutoCompleteTextView
-                                android:id="@+id/add_acc_name_to"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:cursorVisible="false"
-                                android:focusable="false"
-                                tools:text="@string/home_title_acc_name"
-                                />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                    </RelativeLayout>
-
-                </LinearLayout>
+                </RelativeLayout>
             </LinearLayout>
+            <!--acc to-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                >
 
-            <include
-                android:id="@+id/fragment_add_content"
-                layout="@layout/fragment_add_all" />
+                <!--Блок суммы-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="@dimen/big_padding"
+                    >
 
+                    <EditText
+                        android:id="@+id/add_sum_to"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@id/add_acc_cur_to"
+                        android:gravity="end"
+                        android:hint="@string/add_sum_sample"
+                        android:inputType="numberDecimal"
+                        android:paddingStart="@dimen/activity_horizontal_margin"
+                        android:paddingEnd="@dimen/activity_horizontal_margin"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/text_big_numbers"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/add_acc_cur_to"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:paddingEnd="@dimen/sm_padding"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/text_big_numbers"
+                        android:textStyle="bold"
+                        tools:text="@string/currency_ruble_symbol"
+                        />
+
+                </RelativeLayout>
+
+                <!--блок счета-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <ImageView
+                        android:id="@+id/add_acc_image_to"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_account_dark"
+                        />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/add_acc_image_to"
+                        android:hint="@string/add_no_account_text"
+                        android:paddingStart="@dimen/activity_horizontal_margin"
+                        android:textColor="@color/colorPrimaryDark"
+                        >
+
+                        <AutoCompleteTextView
+                            android:id="@+id/add_acc_name_to"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            tools:text="@string/home_title_acc_name"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
         </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/fragment_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
+        <include
+            android:id="@+id/fragment_add_content"
+            layout="@layout/fragment_add_all"
             />
-    </FrameLayout>
 
-</layout>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/fragment_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        />
+</FrameLayout>

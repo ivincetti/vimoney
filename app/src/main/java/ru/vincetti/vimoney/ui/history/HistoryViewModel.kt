@@ -1,6 +1,7 @@
 package ru.vincetti.vimoney.ui.history
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import ru.vincetti.vimoney.data.models.TransactionListModel
@@ -12,10 +13,22 @@ class HistoryViewModel(
         checkID: Int?
 ) : ViewModel() {
 
+    private var _need2Navigate2Home = MutableLiveData<Boolean>()
+    val need2Navigate2Home: LiveData<Boolean>
+        get() = _need2Navigate2Home
+
     val transList: LiveData<List<TransactionListModel>> = if (checkID != null) {
         trDao.loadCheckTransactionsCountFull(checkID, count)
     } else {
         trDao.loadAllTransactionsCountFull(count)
+    }
+
+    init {
+        _need2Navigate2Home.value = false
+    }
+
+    fun homeButton() {
+        _need2Navigate2Home.value = true
     }
 
     companion object {

@@ -60,7 +60,8 @@ class TransactionSpentFragment : Fragment() {
         add_sum.requestFocus()
 
         // Show Keyboard
-        val imm: InputMethodManager = activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm: InputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE)
+                as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
 
@@ -77,7 +78,10 @@ class TransactionSpentFragment : Fragment() {
         viewModel.transaction.observe(viewLifecycleOwner, Observer {
             it?.let {
                 if (it.sum > 0) add_sum.setText(it.sum.toString())
-                add_acc_name.setText(mainViewModel.loadFromAccountNotArchiveNames(it.accountId), false)
+                add_acc_name.setText(
+                        mainViewModel.loadFromAccountNotArchiveNames(it.accountId),
+                        false
+                )
                 add_acc_cur.text = mainViewModel.loadFromCurSymbols(it.accountId)
                 add_date_txt.text = DateFormat
                         .getDateInstance(DateFormat.MEDIUM).format(it.date)
@@ -98,12 +102,10 @@ class TransactionSpentFragment : Fragment() {
                 //Применяем адаптер к элементу spinner
                 add_acc_name.setAdapter(adapter)
                 add_acc_name.addTextChangedListener(object : TextWatcher {
-                    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                    override fun beforeTextChanged(s: CharSequence, st: Int, c: Int, a: Int) {
                     }
-
-                    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    override fun onTextChanged(s: CharSequence, st: Int, b: Int, c: Int) {
                     }
-
                     override fun afterTextChanged(s: Editable) {
                         for (entry in it.entries) {
                             if (s.toString() == entry.value) {
@@ -136,12 +138,10 @@ class TransactionSpentFragment : Fragment() {
         add_sum.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) { //do nothing
             }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(s: CharSequence?, st: Int, c: Int, a: Int) {
                 //do nothing
             }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun onTextChanged(s: CharSequence?, st: Int, b: Int, c: Int) {
                 s?.let {
                     if (s.isNotEmpty()) viewModel.changeSumAdd(s)
                 }
@@ -150,14 +150,14 @@ class TransactionSpentFragment : Fragment() {
     }
 
     private fun showNoSumToast() {
-        Toast.makeText(activity,
+        Toast.makeText(requireActivity(),
                 getString(R.string.add_check_no_sum_warning),
                 Toast.LENGTH_SHORT)
                 .show()
     }
 
     private fun showNoAccountToast() {
-        Toast.makeText(activity,
+        Toast.makeText(requireActivity(),
                 getString(R.string.add_check_no_account_warning),
                 Toast.LENGTH_SHORT)
                 .show()

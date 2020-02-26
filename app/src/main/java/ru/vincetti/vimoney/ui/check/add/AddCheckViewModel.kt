@@ -11,7 +11,7 @@ import ru.vincetti.vimoney.data.models.AccountModel
 import ru.vincetti.vimoney.data.models.CurrencyModel
 import ru.vincetti.vimoney.data.sqlite.AccountDao
 import ru.vincetti.vimoney.data.sqlite.CurrentDao
-import ru.vincetti.vimoney.ui.check.AccountConst
+import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 
 class AddCheckViewModel(
         private val accDao: AccountDao,
@@ -19,7 +19,7 @@ class AddCheckViewModel(
         val app: Application
 ) : AndroidViewModel(app) {
 
-    private var checkID = AccountConst.DEFAULT_CHECK_ID
+    private var checkID = DEFAULT_CHECK_ID
 
     val isDefault = MutableLiveData<Boolean>()
     private var isDefaultBool = true
@@ -67,7 +67,7 @@ class AddCheckViewModel(
         }
     }
 
-    // save account logic
+    /** Save account logic. */
     fun save(name: String, type: String) {
         if (TextUtils.isEmpty(name)
                 || TextUtils.isEmpty(type)
@@ -101,7 +101,7 @@ class AddCheckViewModel(
         }
     }
 
-    // restore from archive account logic
+    /** Restore from archive account logic. */
     fun restore() {
         if (!isDefaultBool) {
             viewModelScope.launch {
@@ -112,7 +112,7 @@ class AddCheckViewModel(
         }
     }
 
-    // archive account logic
+    /** Archive account logic. */
     fun delete() {
         if (!isDefaultBool) {
             viewModelScope.launch {

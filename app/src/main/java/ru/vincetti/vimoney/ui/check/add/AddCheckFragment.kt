@@ -1,9 +1,7 @@
 package ru.vincetti.vimoney.ui.check.add
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.addCallback
@@ -21,16 +19,14 @@ import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.AccountModel
 import ru.vincetti.vimoney.data.models.CurrencyModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.databinding.FragmentAddCheckBinding
-import ru.vincetti.vimoney.ui.check.AccountConst
+import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 
-class AddCheckFragment : Fragment() {
+class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
 
-    private lateinit var binding: FragmentAddCheckBinding
     private lateinit var viewModel: AddCheckViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentAddCheckBinding.inflate(inflater)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
@@ -38,38 +34,34 @@ class AddCheckFragment : Fragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(AddCheckViewModel::class.java)
         arguments?.let { bundle ->
-            val extraCheck = bundle.getInt(AccountConst.EXTRA_CHECK_ID)
+            val extraCheck = bundle.getInt(EXTRA_CHECK_ID)
             if (extraCheck > 0) viewModel.loadAccount(extraCheck)
         }
 
         viewInit()
-        return binding.root
     }
 
     private fun viewInit() {
-        binding.settingNavigationBackBtn.setOnClickListener {
-            goBack()
-        }
-        binding.addCheckNavigationDeleteBtn.setOnClickListener {
+        add_check_navigation_delete_btn.setOnClickListener {
             showDeleteDialog()
         }
-        binding.addCheckNavigationFromArchiveBtn.setOnClickListener {
+        add_check_navigation_from_archive_btn.setOnClickListener {
             viewModel.restore()
         }
-        binding.addCheckContent.addCheckSaveBtn.setOnClickListener {
+        add_check_navigation_add_btn.setOnClickListener {
             save()
         }
-        binding.addCheckNavigationAddBtn.setOnClickListener {
+        add_check_navigation_add_btn.setOnClickListener {
             save()
         }
-        binding.addCheckContent.addCheckColorView.setOnClickListener {
+        add_check_content.add_check_color_view.setOnClickListener {
             pickColor()
         }
-        binding.settingNavigationBackBtn.setOnClickListener {
+        setting_navigation_back_btn.setOnClickListener {
             showUnsavedDialog()
         }
         viewModel.isDefault.observe(viewLifecycleOwner, Observer {
-            if (!it) binding.addCheckContent.addCheckSaveBtn.text = getString(R.string.add_btn_update)
+            if (!it) add_check_content.add_check_save_btn.text = getString(R.string.add_btn_update)
 
         })
         viewModel.need2Navigate.observe(viewLifecycleOwner, Observer {
@@ -80,16 +72,16 @@ class AddCheckFragment : Fragment() {
         })
         viewModel.color.observe(viewLifecycleOwner, Observer {
             it?.let {
-                binding.addCheckContent.addCheckColorView.setBackgroundColor(it)
+                add_check_content.add_check_color_view.setBackgroundColor(it)
             }
         })
         viewModel.check.observe(viewLifecycleOwner, Observer {
-            binding.addCheckContent.addCheckName.setText(it.name)
+            add_check_content.add_check_name.setText(it.name)
             typeLoad(it.type)
 
             if (it.isArchive) {
-                binding.addCheckNavigationFromArchiveBtn.visibility = View.VISIBLE
-            } else binding.addCheckNavigationDeleteBtn.visibility = View.VISIBLE
+                add_check_navigation_from_archive_btn.visibility = View.VISIBLE
+            } else add_check_navigation_delete_btn.visibility = View.VISIBLE
         })
         viewModel.currency.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -124,7 +116,7 @@ class AddCheckFragment : Fragment() {
                 .build().show()
     }
 
-    // radioButton clicked option selected
+    /** RadioButton clicked option selected. */
     private fun typeEntered(): String {
         return when (container.radioGroup.checkedRadioButtonId) {
             R.id.add_check_type_debit -> AccountModel.ACCOUNT_TYPE_DEBIT
@@ -133,7 +125,7 @@ class AddCheckFragment : Fragment() {
         }
     }
 
-    // radioButton option load
+    /** RadioButton option load. */
     private fun typeLoad(type: String) {
         container.radioGroup.apply {
             when (type) {
@@ -145,7 +137,7 @@ class AddCheckFragment : Fragment() {
     }
 
     private fun spinnerInit() {
-        val curSpinner = binding.addCheckContent.addCheckCurrencySpinner
+        val curSpinner = add_check_content.add_check_currency_spinner
         viewModel.currencyList.observe(viewLifecycleOwner, Observer {
             it?.let {
                 // adapter init
@@ -167,15 +159,15 @@ class AddCheckFragment : Fragment() {
 
     }
 
-    // spinner load option selected
+    /** Spinner load option selected. */
     private fun currencyEntered(currency: CurrencyModel) {
         val pos = getIndex(currency)
-        binding.addCheckContent.addCheckCurrencySpinner.setSelection(pos)
+        add_check_content.add_check_currency_spinner.setSelection(pos)
     }
 
-    // get index in spinner
+    /** Get index in spinner. */
     private fun getIndex(tmpAcc: CurrencyModel): Int {
-        val spinner = binding.addCheckContent.addCheckCurrencySpinner
+        val spinner = add_check_content.add_check_currency_spinner
         for (i in 0..spinner.count) {
             if (spinner.getItemAtPosition(i).toString() == tmpAcc.symbol) {
                 return i
@@ -196,7 +188,7 @@ class AddCheckFragment : Fragment() {
         builder.create().show()
     }
 
-    // not saved transaction cancel dialog
+    /** Not saved transaction cancel dialog. */
     private fun showUnsavedDialog() {
         val builder = AlertDialog.Builder(requireContext())
                 .setMessage(R.string.check_add_alert_question)
@@ -209,7 +201,7 @@ class AddCheckFragment : Fragment() {
         builder.create().show()
     }
 
-    // not saved transaction cancel dialog
+    /** Not saved transaction cancel dialog. */
     private fun showNoDataDialog() {
         val builder = AlertDialog.Builder(requireContext())
                 .setMessage(R.string.check_add_alert_no_data)
@@ -223,7 +215,7 @@ class AddCheckFragment : Fragment() {
 
     private fun save() {
         viewModel.save(
-                binding.addCheckContent.addCheckName.text.toString(),
+                add_check_content.add_check_name.text.toString(),
                 typeEntered()
         )
     }
