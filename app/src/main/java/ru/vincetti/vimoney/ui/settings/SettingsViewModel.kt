@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.App
 import ru.vincetti.vimoney.settings.json.JsonFile
+import ru.vincetti.vimoney.utils.showNotification
 
 class SettingsViewModel : ViewModel() {
 
@@ -35,6 +36,11 @@ class SettingsViewModel : ViewModel() {
             viewModelScope.launch {
                 JsonFile.load(it)
             }
+            showNotification(
+                    context,
+                    "Import done",
+                    "all transactions successfully imported"
+            )
         }
     }
 }

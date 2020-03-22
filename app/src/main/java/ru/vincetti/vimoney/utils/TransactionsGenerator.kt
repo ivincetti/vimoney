@@ -6,25 +6,28 @@ import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.TransactionDao
 import java.util.*
 
-private const val TRANSACTION_COUNT = 5
+private const val SAMPLE_COUNT = 5
+private const val SAMPLE_ACC_COUNT = 3
+private const val SAMPLE_DESC = "Sample"
+private const val SAMPLE_SUM = 150F
 
-// sample accounts transactions generate
+/** Sample accounts transactions generate. */
 private suspend fun generate(transactionDao: TransactionDao, count: Int) {
     withContext(Dispatchers.IO) {
         for (i in 0..count) {
             val tmp = TransactionModel(
                     Date(),
-                    (Random().nextInt(3) + 1),
-                    "Sample",
+                    (Random().nextInt(SAMPLE_ACC_COUNT) + 1),
+                    SAMPLE_DESC,
                     (i % 2 + 1),
-                    150f
+                    SAMPLE_SUM
             )
             transactionDao.insertTransaction(tmp)
         }
     }
 }
 
-// use default count
-suspend fun generate(transactionDao: TransactionDao) {
-    generate(transactionDao, TRANSACTION_COUNT)
+/** Generate [SAMPLE_COUNT] transactions. */
+suspend fun generateSample(transactionDao: TransactionDao) {
+    generate(transactionDao, SAMPLE_COUNT)
 }

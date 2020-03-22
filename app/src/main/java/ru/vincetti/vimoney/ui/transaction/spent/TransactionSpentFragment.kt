@@ -29,22 +29,18 @@ import java.text.DateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TransactionSpentFragment : Fragment() {
+class TransactionSpentFragment : Fragment(R.layout.fragment_add_spent) {
 
     private lateinit var viewModel: TransactionMainViewModel
     private lateinit var mainViewModel: MainViewModel
     private lateinit var date: Date
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_add_spent, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val application = requireNotNull(activity).application
         val mDb = AppDatabase.getInstance(application)
         val transactionMainViewModelFactory =
                 TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao())
-        viewModel = ViewModelProvider(requireNotNull(parentFragment!!.viewModelStore),
+        viewModel = ViewModelProvider(requireNotNull(requireParentFragment().viewModelStore),
                 transactionMainViewModelFactory).get(TransactionMainViewModel::class.java)
         val mainViewModelFactory = MainViewModelFactory(mDb.accountDao())
         mainViewModel = ViewModelProvider(requireActivity(), mainViewModelFactory)
@@ -94,7 +90,7 @@ class TransactionSpentFragment : Fragment() {
                 for (entry in it.entries) {
                     accountsArray.add(entry.value)
                 }
-                val adapter = ArrayAdapter<String>(
+                val adapter = ArrayAdapter(
                         requireContext(),
                         R.layout.dropdown_menu_popup_item,
                         accountsArray
@@ -104,8 +100,10 @@ class TransactionSpentFragment : Fragment() {
                 add_acc_name.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(s: CharSequence, st: Int, c: Int, a: Int) {
                     }
+
                     override fun onTextChanged(s: CharSequence, st: Int, b: Int, c: Int) {
                     }
+
                     override fun afterTextChanged(s: Editable) {
                         for (entry in it.entries) {
                             if (s.toString() == entry.value) {
@@ -138,9 +136,11 @@ class TransactionSpentFragment : Fragment() {
         add_sum.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) { //do nothing
             }
+
             override fun beforeTextChanged(s: CharSequence?, st: Int, c: Int, a: Int) {
                 //do nothing
             }
+
             override fun onTextChanged(s: CharSequence?, st: Int, b: Int, c: Int) {
                 s?.let {
                     if (s.isNotEmpty()) viewModel.changeSumAdd(s)
@@ -150,17 +150,19 @@ class TransactionSpentFragment : Fragment() {
     }
 
     private fun showNoSumToast() {
-        Toast.makeText(requireActivity(),
+        Toast.makeText(
+                requireActivity(),
                 getString(R.string.add_check_no_sum_warning),
-                Toast.LENGTH_SHORT)
-                .show()
+                Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun showNoAccountToast() {
-        Toast.makeText(requireActivity(),
+        Toast.makeText(
+                requireActivity(),
                 getString(R.string.add_check_no_account_warning),
-                Toast.LENGTH_SHORT)
-                .show()
+                Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun showDateDialog() {

@@ -62,20 +62,16 @@ object JsonFile {
             } catch (e: IOException) {
                 e.printStackTrace()
             } finally {
-                if (fisTransactions != null) {
-                    try {
-                        fisTransactions.close()
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
+                try {
+                    fisTransactions?.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
                 }
 
-                if (fisAccounts != null) {
-                    try {
-                        fisAccounts.close()
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
+                try {
+                    fisAccounts?.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
                 }
             }
 

@@ -49,15 +49,16 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
         _networkError.value = false
         _need2Navigate2Home.value = false
         _need2Navigate2Self.value = false
-        init()
+        checkDb()
     }
 
-    private fun init() {
+    /** Check not empty DB. */
+    private fun checkDb() {
         viewModelScope.launch {
             val config = mDb.configDao().loadConfigByKey(AppDatabase.CONFIG_KEY_NAME_DATE_EDIT)
             if (config == null) {
                 if (!_networkError.value!!) {
-                    loadJson()
+                    loadJsonFromServer()
                 }
             } else {
                 _need2Navigate2Home.value = true
@@ -70,12 +71,13 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
         _networkError.value = true
     }
 
+    /** Reload fragment from scratch. */
     fun resetNetworkStatus() {
         _networkError.value = false
         _need2Navigate2Self.value = true
     }
 
-    private fun loadJson() {
+    private fun loadJsonFromServer() {
         viewModelScope.launch {
             try {
                 val configModel = jsonDownloader.loadPreferences("Ru")

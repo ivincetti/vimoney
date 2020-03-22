@@ -24,7 +24,7 @@ class NotificationFragment : Fragment(R.layout.fragment_notifications) {
         }
 
         viewModel.need2Navigate2Home.observe(viewLifecycleOwner, Observer {
-            findNavController().navigate(R.id.action_notificationFragment_to_homeFragment)
+            if (it) findNavController().navigate(R.id.action_notificationFragment_to_homeFragment)
         })
     }
 }

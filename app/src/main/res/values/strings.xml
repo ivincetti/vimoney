@@ -93,7 +93,7 @@
 
     <!--Sys-->
     <string name="channel_name" translatable="false">reminder</string>
-    <string name="channel_description">не забудьте внести</string>
+    <string name="channel_description">не забудьте внести транзакции</string>
     <string name="back_icon_description">кнопка назад</string>
     <string name="settings_save_transactions_btn">Сохранить операции</string>
     <string name="settings_load_transactions_btn">Загрузить операции</string>

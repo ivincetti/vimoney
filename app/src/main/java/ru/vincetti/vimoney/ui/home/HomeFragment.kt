@@ -1,9 +1,6 @@
 package ru.vincetti.vimoney.ui.home
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -86,6 +83,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         fragment_home_content.home_stat_link.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_dashboardFragment)
         }
+
+        home_menu_notification.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_notificationFragment)
+        }
+
+        home_menu_settings.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
+        }
     }
 
     /** Show historyFragment. */
@@ -93,20 +98,5 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         childFragmentManager.beginTransaction()
                 .replace(R.id.main_history_container, HistoryFragment())
                 .commit()
-    }
-
-    /** Settings & notification Activity in beta. */
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.bottom_nav_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        findNavController().navigate(
-                when (item.itemId) {
-                    R.id.navigation_bar_notification -> R.id.action_homeFragment_to_notificationFragment
-                    //R.id.navigation_bar_settings
-                    else -> R.id.action_homeFragment_to_settingsFragment
-                })
-        return true
     }
 }
