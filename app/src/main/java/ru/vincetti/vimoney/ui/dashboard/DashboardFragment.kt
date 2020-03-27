@@ -3,8 +3,8 @@ package ru.vincetti.vimoney.ui.dashboard
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
@@ -15,6 +15,10 @@ import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 
 class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
+
+    private val viewModel: DashboardViewModel by viewModels { viewModelFactory }
+
+    private lateinit var viewModelFactory: DashboardViewModelFactory
     private lateinit var dashboardChart: LineChart
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -22,9 +26,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
         val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
-        val viewModelFactory = DashboardViewModelFactory(db.transactionDao())
-        val viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(DashboardViewModel::class.java)
+        viewModelFactory = DashboardViewModelFactory(db.transactionDao())
 
         dashboardChart = dash_content.dashboard_chart
         graphInit()

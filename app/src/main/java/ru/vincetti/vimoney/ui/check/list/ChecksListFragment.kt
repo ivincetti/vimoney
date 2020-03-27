@@ -3,8 +3,8 @@ package ru.vincetti.vimoney.ui.check.list
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +16,10 @@ import ru.vincetti.vimoney.ui.check.view.CheckViewModel
 
 class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
 
+    private val viewModel: CheckListViewModel by viewModels { viewModelFactory }
+
+    private lateinit var viewModelFactory: CheckListModelFactory
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -23,9 +27,7 @@ class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
 
         val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
-        val viewModelFactory = CheckListModelFactory(db.accountDao())
-        val viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(CheckListViewModel::class.java)
+        viewModelFactory = CheckListModelFactory(db.accountDao())
 
         // список карт/счетов
         val adapter = AllCardsListRVAdapter {

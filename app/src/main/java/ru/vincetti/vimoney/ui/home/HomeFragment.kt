@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -22,7 +22,9 @@ import java.util.*
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
-    lateinit var viewModel: HomeViewModel
+    private val viewModel: HomeViewModel by viewModels { viewModelFactory }
+
+    private lateinit var viewModelFactory: HomeViewModelFactory
     var date = Date()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -32,8 +34,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val application = requireActivity().application
         val db = AppDatabase.getInstance(application)
-        val viewModelFactory = HomeViewModelFactory(db.accountDao(), db.transactionDao())
-        viewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
+        viewModelFactory = HomeViewModelFactory(db.accountDao(), db.transactionDao())
 
         /** Список карт/счетов. */
         val mAdapter = CardsListRVAdapter {

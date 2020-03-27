@@ -8,8 +8,8 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
@@ -23,16 +23,17 @@ import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 
 class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
 
-    private lateinit var viewModel: AddCheckViewModel
+    private val viewModel: AddCheckViewModel by viewModels { viewModelFactory }
+
+    private lateinit var viewModelFactory: AddCheckModelFactory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
-        val viewModelFactory = AddCheckModelFactory(db.accountDao(), db.currentDao(), application)
-        viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(AddCheckViewModel::class.java)
+        viewModelFactory = AddCheckModelFactory(db.accountDao(), db.currentDao(), application)
+
         arguments?.let { bundle ->
             val extraCheck = bundle.getInt(EXTRA_CHECK_ID)
             if (extraCheck > 0) viewModel.loadAccount(extraCheck)

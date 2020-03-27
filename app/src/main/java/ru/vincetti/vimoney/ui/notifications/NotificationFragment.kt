@@ -3,17 +3,18 @@ package ru.vincetti.vimoney.ui.notifications
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_notifications.*
 import ru.vincetti.vimoney.R
 
 class NotificationFragment : Fragment(R.layout.fragment_notifications) {
 
+    val viewModel: NotificationViewModel by viewModels()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewModel = ViewModelProvider(this).get(NotificationViewModel::class.java)
 
         setting_navigation_back_btn.setOnClickListener {
             viewModel.homeButton()

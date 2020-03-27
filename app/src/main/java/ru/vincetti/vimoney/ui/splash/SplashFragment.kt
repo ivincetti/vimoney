@@ -4,19 +4,18 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.utils.isNetworkAvailable
 
 class SplashFragment : Fragment(R.layout.fragment_splash) {
 
-    private lateinit var viewModel: SplashViewModel
+    private val viewModel: SplashViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
 
         if (!isNetworkAvailable(requireContext())) viewModel.setNoNetwork()
         viewModel.networkError.observe(viewLifecycleOwner, Observer {

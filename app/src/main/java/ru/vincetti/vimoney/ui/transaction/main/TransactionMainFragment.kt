@@ -7,6 +7,8 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -22,8 +24,11 @@ import ru.vincetti.vimoney.ui.transaction.TransactionConst
 
 class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
 
-    private lateinit var viewModel: TransactionMainViewModel
-    private lateinit var mainViewModel: MainViewModel
+    private val viewModel: TransactionMainViewModel by viewModels { viewModelFactory }
+    private val mainViewModel: MainViewModel by activityViewModels { mainViewModelFactory }
+
+    private lateinit var viewModelFactory : TransactionMainViewModelFactory
+    private lateinit var mainViewModelFactory : MainViewModelFactory
     private lateinit var fragmentBundle: Bundle
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,12 +36,8 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
 
         val application = requireNotNull(activity).application
         val mDb = AppDatabase.getInstance(application)
-        val viewModelFactory = TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao())
-        viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(TransactionMainViewModel::class.java)
-        val mainViewModelFactory = MainViewModelFactory(mDb.accountDao())
-        mainViewModel = ViewModelProvider(requireActivity(), mainViewModelFactory)
-                .get(MainViewModel::class.java)
+        viewModelFactory = TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao())
+        mainViewModelFactory = MainViewModelFactory(mDb.accountDao())
 
         fragmentBundle = Bundle()
         arguments?.let { bundle ->

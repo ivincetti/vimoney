@@ -3,8 +3,8 @@ package ru.vincetti.vimoney.ui.history
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +16,8 @@ import ru.vincetti.vimoney.ui.transaction.TransactionConst
 
 class HistoryFragment : Fragment(R.layout.fragment_history_content) {
 
-    private lateinit var viewModel: HistoryViewModel
+    private val viewModel: HistoryViewModel by viewModels { viewModelFactory }
+
     private lateinit var viewModelFactory: HistoryViewModelFactory
 
     companion object {
@@ -56,8 +57,6 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
                     null)
         }
 
-        viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(HistoryViewModel::class.java)
         // список транзакций
         val transactionsRVAdapter = TransactionsRVAdapter { itemId ->
             val bundle = Bundle()

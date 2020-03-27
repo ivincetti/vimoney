@@ -11,8 +11,9 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_add_all.*
 import kotlinx.android.synthetic.main.fragment_add_all.view.*
@@ -30,20 +31,20 @@ import kotlin.collections.ArrayList
 
 class TransactionTransferFragment : Fragment(R.layout.fragment_add_transfer) {
 
-    private lateinit var viewModel: TransactionMainViewModel
-    private lateinit var mainViewModel: MainViewModel
+    private val viewModel: TransactionMainViewModel by viewModels({ requireParentFragment() }) { viewModelFactory }
+    private val mainViewModel: MainViewModel by activityViewModels { mainViewModelFactory }
+
+    private lateinit var viewModelFactory: TransactionMainViewModelFactory
+    private lateinit var mainViewModelFactory: MainViewModelFactory
+
     private var date = Date()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val application = requireNotNull(activity).application
         val mDb = AppDatabase.getInstance(application)
-        val transactionMainViewModelFactory =
-                TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao())
-        viewModel = ViewModelProvider(requireNotNull(requireParentFragment().viewModelStore),
-                transactionMainViewModelFactory).get(TransactionMainViewModel::class.java)
-        val mainViewModelFactory = MainViewModelFactory(mDb.accountDao())
-        mainViewModel = ViewModelProvider(requireActivity(), mainViewModelFactory)
-                .get(MainViewModel::class.java)
+        viewModelFactory = TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao())
+        mainViewModelFactory = MainViewModelFactory(mDb.accountDao())
+
         viewModel.saveAction = TransactionModel.TRANSACTION_TYPE_TRANSFER
         initFragmentViews()
     }

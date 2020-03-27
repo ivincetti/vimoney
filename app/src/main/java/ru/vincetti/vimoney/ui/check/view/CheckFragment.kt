@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_check.*
 import kotlinx.android.synthetic.main.fragment_check_content.view.*
@@ -18,8 +18,10 @@ import ru.vincetti.vimoney.ui.transaction.TransactionConst
 
 class CheckFragment : Fragment(R.layout.fragment_check) {
 
-    private lateinit var viewModel: CheckViewModel
+    private val viewModel: CheckViewModel by viewModels { viewModelFactory }
+
     private var checkId: Int = CheckViewModel.DEFAULT_CHECK_ID
+    private lateinit var viewModelFactory: CheckViewModelFactory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,8 +32,7 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
             val extraCheck = bundle.getInt(CheckViewModel.EXTRA_CHECK_ID)
             if (extraCheck > 0) checkId = extraCheck
         }
-        val viewModelFactory = CheckViewModelFactory(db.accountDao(), checkId)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(CheckViewModel::class.java)
+        viewModelFactory = CheckViewModelFactory(db.accountDao(), checkId)
         initViews()
     }
 
