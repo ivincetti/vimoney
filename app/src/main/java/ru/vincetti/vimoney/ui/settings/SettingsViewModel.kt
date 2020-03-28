@@ -36,6 +36,7 @@ class SettingsViewModel : ViewModel() {
             viewModelScope.launch {
                 JsonFile.load(it)
             }
+            //TODO проверить
             showNotification(
                     context,
                     "Import done",

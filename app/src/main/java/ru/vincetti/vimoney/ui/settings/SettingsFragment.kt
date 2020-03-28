@@ -16,6 +16,10 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.need2Navigate2Home.observe(viewLifecycleOwner, Observer {
+            if (it) findNavController().navigate(R.id.action_settingsFragment_to_homeFragment)
+        })
+
         setting_navigation_back_btn.setOnClickListener {
             viewModel.homeButton()
         }
@@ -26,9 +30,5 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         btn_load_transactions.setOnClickListener {
             viewModel.loadJson()
         }
-
-        viewModel.need2Navigate2Home.observe(viewLifecycleOwner, Observer {
-            if (it) findNavController().navigate(R.id.action_settingsFragment_to_homeFragment)
-        })
     }
 }

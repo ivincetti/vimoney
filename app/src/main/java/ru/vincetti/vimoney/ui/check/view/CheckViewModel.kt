@@ -4,12 +4,11 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.AccountListModel
 import ru.vincetti.vimoney.data.sqlite.AccountDao
+import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 
 class CheckViewModel(private val dao: AccountDao, private val checkID: Int) : ViewModel() {
 
     companion object {
-        const val EXTRA_CHECK_ID = "checkID"
-        const val DEFAULT_CHECK_ID = -1
         const val DEFAULT_CHECK_COUNT = 20
     }
 

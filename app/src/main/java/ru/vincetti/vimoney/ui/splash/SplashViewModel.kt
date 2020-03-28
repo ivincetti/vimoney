@@ -1,6 +1,7 @@
 package ru.vincetti.vimoney.ui.splash
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,6 +21,7 @@ import ru.vincetti.vimoney.data.models.json.CurrencyItem
 import ru.vincetti.vimoney.data.models.json.TransactionsItem
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.utils.accountBalanceUpdateById
+import ru.vincetti.vimoney.utils.isNetworkAvailable
 import java.util.*
 
 class SplashViewModel(val app: Application) : AndroidViewModel(app) {
@@ -67,8 +69,8 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     /** No network. */
-    fun setNoNetwork() {
-        _networkError.value = true
+    fun setNetwork(context: Context) {
+        if (!isNetworkAvailable(context)) _networkError.value = true
     }
 
     /** Reload fragment from scratch. */

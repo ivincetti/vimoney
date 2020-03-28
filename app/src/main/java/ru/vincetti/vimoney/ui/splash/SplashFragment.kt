@@ -8,7 +8,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.utils.isNetworkAvailable
 
 class SplashFragment : Fragment(R.layout.fragment_splash) {
 
@@ -17,7 +16,8 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!isNetworkAvailable(requireContext())) viewModel.setNoNetwork()
+        viewModel.setNetwork(requireContext())
+
         viewModel.networkError.observe(viewLifecycleOwner, Observer {
             if (it) alertNetworkDialogShow()
         })

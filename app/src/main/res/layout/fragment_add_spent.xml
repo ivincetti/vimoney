@@ -76,24 +76,19 @@
                 android:src="@drawable/ic_account_dark"
                 />
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            <TextView
+                android:id="@+id/add_acc_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:inputType="none"
-                android:hint="@string/add_no_account_text"
-                >
-
-                <AutoCompleteTextView
-                    android:id="@+id/add_acc_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:gravity="center_vertical"
+                android:textSize="@dimen/text_sm_numbers"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="@string/add_no_account_text"
+                android:ellipsize="end"
+                android:padding="@dimen/big_padding"
+                android:maxLines="1"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                />
 
         </LinearLayout>
 

@@ -41,16 +41,31 @@ class TransactionMainViewModel(
     val error
         get() = _error
 
-    val date = Transformations.map(_transaction) {
-        it.date
-    }
+    private val _date = MutableLiveData<Date>()
+    val date
+        get() = _date
+
+    private val _accountId = MutableLiveData<Int>()
+    val accountId
+        get() = _accountId
+
+    private val _accountIdTo = MutableLiveData<Int>()
+    val accountIdTo
+        get() = _accountIdTo
+
+    private val _sum = MutableLiveData<Float>()
+    val sum
+        get() = _sum
+
+    private val _description = MutableLiveData<String>()
+    val description
+        get() = _description
 
     var saveAction = TransactionModel.TRANSACTION_TYPE_SPENT
     private var oldTransactionAccountID = TransactionModel.DEFAULT_ID
     private var oldTransactionAccountToID = TransactionModel.DEFAULT_ID
 
     private var accNestedId = TransactionModel.DEFAULT_ID
-    private var mAccID = TransactionModel.DEFAULT_ID
     private val mTransId = TransactionModel.DEFAULT_ID
 
     init {
@@ -71,6 +86,10 @@ class TransactionMainViewModel(
                 if (tmpTransaction.id != TransactionModel.DEFAULT_ID) {
                     _needToUpdate.value = true
                     oldTransactionAccountID = tmpTransaction.id
+                    _accountId.value = tmpTransaction.accountId
+                    _sum.value = tmpTransaction.sum
+                    _description.value = tmpTransaction.description
+                    _date.value = tmpTransaction.date
                 }
                 if (tmpTransaction.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
                         && tmpTransaction.extraValue.toInt() > 0) {
@@ -85,35 +104,25 @@ class TransactionMainViewModel(
     private suspend fun loadNestedTransaction(id: Int) = transactionDao.loadTransactionById(id)
 
     fun setAccount(id: Int) {
-        _transaction.value?.accountId = id
-    }
-
-    fun changeSumAdd(newSum: CharSequence?) {
-        newSum?.let { char ->
-            _transaction.value?.let {
-                if (char.toString().toFloat() != it.sum) {
-                    it.sum = char.toString().toFloat()
-                    _nestedTransaction.value?.sum = char.toString().toFloat()
-                    // TODO странный метод, но работает - надо вынести суммы строк от цифр
-                    _transaction.value = it
-                    _nestedTransaction.value = _nestedTransaction.value
-                }
-            }
-        }
-    }
-
-    fun setDate(date: Date) {
-        _transaction.value?.date = date
+        _accountId.value = id
     }
 
     fun setAccountTo(id: Int) {
-        _nestedTransaction.value?.accountId = id
+        _accountIdTo.value = id
+    }
+
+    fun setSum(newSum: String) {
+        _sum.value = newSum.toFloat()
+    }
+
+    fun setDate(newDate: Date) {
+        _date.value = newDate
     }
 
     fun delete() {
         viewModelScope.launch {
             _transaction.value?.let {
-                if ((_transaction.value as TransactionModel).id != TransactionModel.DEFAULT_ID) {
+                if (it.id != TransactionModel.DEFAULT_ID) {
                     if (it.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
                             && accNestedId > 0) {
                         // update balance for nested transfer account
@@ -124,19 +133,19 @@ class TransactionMainViewModel(
                     }
                     transactionDao.deleteTransactionById(mTransId)
                     // update balance for current (accId) account
-                    accountBalanceUpdateById(transactionDao, accDao, mAccID)
+                    accountBalanceUpdateById(transactionDao, accDao, accountId.value!!)
                 }
             }
         }
     }
 
-    fun saveTransaction(txtName: String, txtSum: String, txtSumTo: String) {
+    fun saveTransactionTo(txtName: String, txtSum: String, txtSumTo: String) {
         val tmpTransaction = _transaction.value
         val tmpToTransaction = _nestedTransaction.value
         if (tmpTransaction == null || tmpToTransaction == null) {
             _error.value = true
         } else {
-            if (tmpTransaction.accountId != TransactionModel.DEFAULT_ID
+            if (_accountId.value != TransactionModel.DEFAULT_ID
                     && tmpToTransaction.accountId != TransactionModel.DEFAULT_ID) {
                 if (txtSumTo == "" || txtSum == "") {
                     _needSum.value = true
@@ -157,7 +166,9 @@ class TransactionMainViewModel(
 
                     if (tmpTransaction.id != TransactionModel.DEFAULT_ID) {
                         trUpdate(tmpTransaction, tmpToTransaction)
-                    } else trInsert(tmpTransaction, tmpToTransaction)
+                    } else {
+                        trInsert(tmpTransaction, tmpToTransaction)
+                    }
                     updateBalance(tmpTransaction, tmpToTransaction)
                 }
             } else {
@@ -171,15 +182,18 @@ class TransactionMainViewModel(
         tmpTransaction?.let {
             when {
                 txtSum == "" -> _needSum.value = true
-                it.accountId < 1 -> _needAccount.value = true
+                accountId.value!! < 1 -> _needAccount.value = true
                 else -> {
                     tmpTransaction.description = txtName
                     tmpTransaction.date = date.value!!
                     tmpTransaction.type = saveAction
+                    tmpTransaction.accountId = _accountId.value!!
                     tmpTransaction.sum = txtSum.toFloat()
                     if (tmpTransaction.id != TransactionModel.DEFAULT_ID) {
                         trUpdate(tmpTransaction)
-                    } else trInsert(tmpTransaction)
+                    } else {
+                        trInsert(tmpTransaction)
+                    }
                     updateBalance(tmpTransaction)
                 }
             }

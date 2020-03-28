@@ -30,6 +30,7 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
 
         val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
+        // TODO вынести!
         var trCount = HistoryViewModel.DEFAULT_TRANSACTIONS
         val args = arguments
         if (args !== null) {
@@ -50,14 +51,13 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
                         null)
             }
         } else {
-            //TODO no need I think
+            //TODO точно надо?
             viewModelFactory = HistoryViewModelFactory(
                     db.transactionDao(),
                     trCount,
                     null)
         }
 
-        // список транзакций
         val transactionsRVAdapter = TransactionsRVAdapter { itemId ->
             val bundle = Bundle()
             bundle.putInt(TransactionConst.EXTRA_TRANS_ID, itemId)
@@ -66,8 +66,7 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
                     bundle)
         }
         home_transactions_recycle_view.setHasFixedSize(true)
-        val trLayoutManager = LinearLayoutManager(
-                requireContext(), RecyclerView.VERTICAL, false)
+        val trLayoutManager = LinearLayoutManager(requireContext())
         home_transactions_recycle_view.layoutManager = trLayoutManager
         home_transactions_recycle_view.adapter = transactionsRVAdapter
 

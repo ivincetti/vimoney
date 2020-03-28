@@ -3,12 +3,8 @@ package ru.vincetti.vimoney.ui.transaction.transfer
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -27,7 +23,6 @@ import ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModel
 import ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModelFactory
 import java.text.DateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class TransactionTransferFragment : Fragment(R.layout.fragment_add_transfer) {
 
@@ -70,34 +65,51 @@ class TransactionTransferFragment : Fragment(R.layout.fragment_add_transfer) {
         viewModel.needToUpdate.observe(viewLifecycleOwner, Observer {
             if (it) add_btn.text = getString(R.string.add_btn_update)
         })
-        viewModel.transaction.observe(viewLifecycleOwner, Observer {
+
+        viewModel.accountId.observe(viewLifecycleOwner, Observer {
+            add_acc_name.text = mainViewModel.loadFromAccountNotArchiveNames(it)
+            add_acc_cur.text = mainViewModel.loadFromCurSymbols(it)
+        })
+
+        viewModel.accountIdTo.observe(viewLifecycleOwner, Observer {
+            add_acc_name_to.text = mainViewModel.loadFromAccountNotArchiveNames(it)
+            add_acc_cur_to.text = mainViewModel.loadFromCurSymbols(it)
+        })
+
+        viewModel.sum.observe(viewLifecycleOwner, Observer {
+            if (it > 0) add_sum.setText(it.toString())
+        })
+        viewModel.date.observe(viewLifecycleOwner, Observer {
             it?.let {
-                if (it.sum > 0) add_sum.setText(it.sum.toString())
-                add_acc_name.setText(mainViewModel.loadFromAccountNotArchiveNames(it.accountId), false)
-                add_acc_cur.text = mainViewModel.loadFromCurSymbols(it.accountId)
+                date = it
                 add_date_txt.text = DateFormat
-                        .getDateInstance(DateFormat.MEDIUM).format(it.date)
-                fragment_add_content.add_desc.setText(it.description)
+                        .getDateInstance(DateFormat.MEDIUM).format(it)
             }
         })
+        viewModel.description.observe(viewLifecycleOwner, Observer {
+            fragment_add_content.add_desc.setText(it)
+        })
+
         mainViewModel.accountNotArchiveNames.observe(viewLifecycleOwner, Observer {
             it?.let {
-                spinnerInit(add_acc_name, it, viewModel::setAccount)
-                spinnerInit(add_acc_name_to, it, viewModel::setAccountTo)
+                add_acc_name.setOnClickListener {
+                    TODO("Show popUp")
+                }
+
+                add_acc_name_to.setOnClickListener {
+                    TODO("Show popUp")
+                }
             }
         })
+
         viewModel.nestedTransaction.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
                 if (it.sum > 0) add_sum_to.setText(it.sum.toString())
-                add_acc_name_to.setText(mainViewModel.loadFromAccountNotArchiveNames(it.accountId), false)
+                add_acc_name_to.text = mainViewModel.loadFromAccountNotArchiveNames(it.accountId)
                 add_acc_cur_to.text = mainViewModel.loadFromCurSymbols(it.accountId)
             }
         })
-        viewModel.date.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            it?.let {
-                date = it
-            }
-        })
+
         viewModel.needToNavigate.observe(viewLifecycleOwner, Observer {
             if (it) navigateUp()
         })
@@ -109,51 +121,6 @@ class TransactionTransferFragment : Fragment(R.layout.fragment_add_transfer) {
         add_date_block.setOnClickListener {
             showDateDialog()
         }
-
-        add_sum.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                //do nothing
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //do nothing
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                s?.let {
-                    if (s.isNotEmpty()) viewModel.changeSumAdd(s)
-                }
-            }
-        })
-    }
-
-    private fun spinnerInit(accSpinner: AutoCompleteTextView, notArchiveAccountNames: HashMap<Int, String>, viewM: (Int) -> Unit) {
-        val accountsArray = ArrayList<String>()
-        for (entry in notArchiveAccountNames.entries) {
-            accountsArray.add(entry.value)
-        }
-        val adapter = ArrayAdapter<String>(
-                requireContext(),
-                R.layout.dropdown_menu_popup_item,
-                accountsArray
-        )
-        //Применяем адаптер к элементу spinner
-        accSpinner.setAdapter(adapter)
-        accSpinner.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                for (entry in notArchiveAccountNames.entries) {
-                    if (s.toString() == entry.value) {
-                        viewM(entry.key)
-                    }
-                }
-            }
-        })
     }
 
     private fun showNoSumToast() {
@@ -187,7 +154,7 @@ class TransactionTransferFragment : Fragment(R.layout.fragment_add_transfer) {
 
     // save transaction logic
     private fun save() {
-        viewModel.saveTransaction(
+        viewModel.saveTransactionTo(
                 fragment_add_content.add_desc.text.toString(),
                 add_sum.text.toString(),
                 add_sum_to.text.toString()

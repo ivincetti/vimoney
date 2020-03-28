@@ -77,22 +77,22 @@ class AddCheckViewModel(
         } else {
             val tmpAcc = check.value
             tmpAcc?.let {
-                tmpAcc.name = name
-                tmpAcc.type = type
+                it.name = name
+                it.type = type
                 if (!isDefaultBool) {
                     // update logic
                     viewModelScope.launch {
-                        accDao.updateAccount(tmpAcc)
+                        accDao.updateAccount(it)
                         _need2UpdateViewModel.value = true
                     }
                 } else {
-                    tmpAcc.sum = 0
+                    it.sum = 0
                     // new transaction
-                    tmpAcc.color = java.lang.String.format("#%06x",
+                    it.color = java.lang.String.format("#%06x",
                             (ContextCompat.getColor(app, R.color.colorPrimary) and 0xffffff))
 
                     viewModelScope.launch {
-                        accDao.insertAccount(tmpAcc)
+                        accDao.insertAccount(it)
                         _need2UpdateViewModel.value = true
                     }
                 }
@@ -107,8 +107,8 @@ class AddCheckViewModel(
             viewModelScope.launch {
                 accDao.fromArchiveAccountById(checkID)
                 _need2UpdateViewModel.value = true
+                _need2Navigate.value = true
             }
-            _need2Navigate.value = true
         }
     }
 

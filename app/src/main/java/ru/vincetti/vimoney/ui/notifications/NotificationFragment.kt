@@ -16,6 +16,10 @@ class NotificationFragment : Fragment(R.layout.fragment_notifications) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.need2Navigate2Home.observe(viewLifecycleOwner, Observer {
+            if (it) findNavController().navigate(R.id.action_notificationFragment_to_homeFragment)
+        })
+
         setting_navigation_back_btn.setOnClickListener {
             viewModel.homeButton()
         }
@@ -23,9 +27,5 @@ class NotificationFragment : Fragment(R.layout.fragment_notifications) {
         notification_notify_btn.setOnClickListener {
             viewModel.notifyButton()
         }
-
-        viewModel.need2Navigate2Home.observe(viewLifecycleOwner, Observer {
-            if (it) findNavController().navigate(R.id.action_notificationFragment_to_homeFragment)
-        })
     }
 }

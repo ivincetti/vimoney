@@ -3,19 +3,13 @@ package ru.vincetti.vimoney.ui.transaction.spent
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_add_all.*
 import kotlinx.android.synthetic.main.fragment_add_all.view.*
@@ -29,7 +23,6 @@ import ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModel
 import ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModelFactory
 import java.text.DateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class TransactionSpentFragment : Fragment(R.layout.fragment_add_spent) {
 
@@ -38,7 +31,6 @@ class TransactionSpentFragment : Fragment(R.layout.fragment_add_spent) {
 
     private lateinit var viewModelFactory: TransactionMainViewModelFactory
     private lateinit var mainViewModelFactory: MainViewModelFactory
-
 
     private lateinit var date: Date
 
@@ -74,53 +66,30 @@ class TransactionSpentFragment : Fragment(R.layout.fragment_add_spent) {
         viewModel.needToUpdate.observe(viewLifecycleOwner, Observer {
             if (it) add_btn.text = getString(R.string.add_btn_update)
         })
-        viewModel.transaction.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                if (it.sum > 0) add_sum.setText(it.sum.toString())
-                add_acc_name.setText(
-                        mainViewModel.loadFromAccountNotArchiveNames(it.accountId),
-                        false
-                )
-                add_acc_cur.text = mainViewModel.loadFromCurSymbols(it.accountId)
-                add_date_txt.text = DateFormat
-                        .getDateInstance(DateFormat.MEDIUM).format(it.date)
-                fragment_add_content.add_desc.setText(it.description)
-            }
+
+        viewModel.accountId.observe(viewLifecycleOwner, Observer {
+            add_acc_name.text = mainViewModel.loadFromAccountNotArchiveNames(it)
+            add_acc_cur.text = mainViewModel.loadFromCurSymbols(it)
         })
-        mainViewModel.accountNotArchiveNames.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                val accountsArray = ArrayList<String>()
-                for (entry in it.entries) {
-                    accountsArray.add(entry.value)
-                }
-                val adapter = ArrayAdapter(
-                        requireContext(),
-                        R.layout.dropdown_menu_popup_item,
-                        accountsArray
-                )
-                //Применяем адаптер к элементу spinner
-                add_acc_name.setAdapter(adapter)
-                add_acc_name.addTextChangedListener(object : TextWatcher {
-                    override fun beforeTextChanged(s: CharSequence, st: Int, c: Int, a: Int) {
-                    }
-
-                    override fun onTextChanged(s: CharSequence, st: Int, b: Int, c: Int) {
-                    }
-
-                    override fun afterTextChanged(s: Editable) {
-                        for (entry in it.entries) {
-                            if (s.toString() == entry.value) {
-                                viewModel.setAccount(entry.key)
-                            }
-                        }
-                    }
-                })
-            }
+        viewModel.sum.observe(viewLifecycleOwner, Observer {
+            if (it > 0) add_sum.setText(it.toString())
         })
-
         viewModel.date.observe(viewLifecycleOwner, Observer {
             it?.let {
                 date = it
+                add_date_txt.text = DateFormat
+                        .getDateInstance(DateFormat.MEDIUM).format(it)
+            }
+        })
+        viewModel.description.observe(viewLifecycleOwner, Observer {
+            fragment_add_content.add_desc.setText(it)
+        })
+
+        mainViewModel.accountNotArchiveNames.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                add_acc_name.setOnClickListener {
+                    TODO("Show popUp")
+                }
             }
         })
 
@@ -135,21 +104,6 @@ class TransactionSpentFragment : Fragment(R.layout.fragment_add_spent) {
         add_date_block.setOnClickListener {
             showDateDialog()
         }
-
-        add_sum.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) { //do nothing
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, st: Int, c: Int, a: Int) {
-                //do nothing
-            }
-
-            override fun onTextChanged(s: CharSequence?, st: Int, b: Int, c: Int) {
-                s?.let {
-                    if (s.isNotEmpty()) viewModel.changeSumAdd(s)
-                }
-            }
-        })
     }
 
     private fun showNoSumToast() {
@@ -183,7 +137,7 @@ class TransactionSpentFragment : Fragment(R.layout.fragment_add_spent) {
         ).show()
     }
 
-    // save transaction logic
+    /** Save transaction logic. */
     private fun save() {
         viewModel.saveTransaction(
                 fragment_add_content.add_desc.text.toString(),

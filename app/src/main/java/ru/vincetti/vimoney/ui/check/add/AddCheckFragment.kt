@@ -95,7 +95,7 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
     override fun onResume() {
         super.onResume()
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            onBackPressed()
+            showUnsavedDialog()
         }
     }
 
@@ -223,9 +223,5 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
 
     private fun goBack() {
         findNavController().navigateUp()
-    }
-
-    private fun onBackPressed() {
-        showUnsavedDialog()
     }
 }

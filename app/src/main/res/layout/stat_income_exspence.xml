@@ -52,6 +52,7 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="24sp"
             android:textStyle="bold"
+            android:text="@string/home_fragment_income"
             tools:text="@string/home_fragment_income_sample"
             />
 
@@ -98,6 +99,7 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="24sp"
             android:textStyle="bold"
+            android:text="@string/home_fragment_spending"
             tools:text="@string/home_fragment_spending_sample"
             />
 

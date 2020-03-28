@@ -25,12 +25,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val viewModel: HomeViewModel by viewModels { viewModelFactory }
 
     private lateinit var viewModelFactory: HomeViewModelFactory
-    var date = Date()
+    private var date = Date()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as? AppCompatActivity)?.setSupportActionBar(top_toolbar)
+        (requireActivity() as? AppCompatActivity)?.setSupportActionBar(top_toolbar)
 
         val application = requireActivity().application
         val db = AppDatabase.getInstance(application)
@@ -43,7 +43,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             findNavController().navigate(R.id.action_homeFragment_to_checkFragment, bundle)
         }
 
-        val llManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        val llManager = LinearLayoutManager(
+                requireActivity(),
+                LinearLayoutManager.HORIZONTAL,
+                false)
         val recycler = fragment_home_content.home_cards_recycle_view
         recycler.layoutManager = llManager
         recycler.adapter = mAdapter
@@ -68,8 +71,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun viewInit() {
-        fragment_home_content.home_stat_expense_txt.text = "0"
-        fragment_home_content.home_stat_income_txt.text = "0"
         fragment_home_content.home_month.text = SimpleDateFormat("MMM").format(date)
 
         home_fab.setOnClickListener {
@@ -84,11 +85,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         fragment_home_content.home_stat_link.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_dashboardFragment)
         }
-
         home_menu_notification.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_notificationFragment)
         }
-
         home_menu_settings.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
         }

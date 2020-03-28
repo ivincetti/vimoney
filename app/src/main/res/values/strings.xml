@@ -16,7 +16,9 @@
     <string name="home_accounts_title">Счета</string>
     <string name="home_fragment_stat_month_sample">Сентябрь</string>
     <string name="home_fragment_income_title">Доходы</string>
+    <string name="home_fragment_income">0</string>
     <string name="home_fragment_income_sample">20000</string>
+    <string name="home_fragment_spending">0</string>
     <string name="home_fragment_spending_sample">11000</string>
     <string name="home_fragment_spending_title">Расходы</string>
     <string name="home_fragment_transactions_link_title">посмотреть все</string>

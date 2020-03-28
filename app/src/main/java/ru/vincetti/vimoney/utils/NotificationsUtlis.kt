@@ -31,7 +31,10 @@ fun createNotificationChannel(context: Context) {
 }
 
 /** Show notification. */
-fun showNotification(context: Context, title: String, body: String) {
+fun showNotification(
+        context: Context,
+        title: String,
+        body: String) {
     val nManager = NotificationManagerCompat.from(context)
 
     val intent = Intent(context, MainActivity::class.java)

@@ -15,6 +15,7 @@ class AllHistoryFragment : Fragment(R.layout.fragment_history) {
         setting_navigation_back_btn.setOnClickListener {
             findNavController().navigate(R.id.action_allHistoryFragment_to_homeFragment)
         }
+
         showTransactionsHistory()
     }
 

@@ -7,12 +7,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_checks_list.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.AllCardsListRVAdapter
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.ui.check.view.CheckViewModel
+import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 
 class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
 
@@ -32,11 +31,10 @@ class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
         // список карт/счетов
         val adapter = AllCardsListRVAdapter {
             val bundle = Bundle()
-            bundle.putInt(CheckViewModel.EXTRA_CHECK_ID, it)
+            bundle.putInt(EXTRA_CHECK_ID, it)
             findNavController().navigate(R.id.action_checksListFragment_to_checkFragment, bundle)
         }
-        val cardsLayoutManager = LinearLayoutManager(requireContext(),
-                RecyclerView.VERTICAL, false)
+        val cardsLayoutManager = LinearLayoutManager(requireContext())
         check_list_recycle_view.apply {
             layoutManager = cardsLayoutManager
             setAdapter(adapter)

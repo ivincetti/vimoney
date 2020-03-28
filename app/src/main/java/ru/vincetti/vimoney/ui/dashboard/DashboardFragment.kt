@@ -46,12 +46,10 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         })
         viewModel.dataSet.observe(viewLifecycleOwner, Observer {
             dashboardChart.data = it
-            dashboardChart.invalidate() // refresh
+            dashboardChart.invalidate()
         })
         viewModel.isShowProgress.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                showProgress(it)
-            }
+            showProgress(it)
         })
         viewModel.need2Navigate2Home.observe(viewLifecycleOwner, Observer {
             if (it) findNavController().navigate(R.id.action_dashboardFragment_to_homeFragment)

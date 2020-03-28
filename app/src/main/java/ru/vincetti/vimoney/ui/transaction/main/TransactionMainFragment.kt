@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.fragment_transaction_main.*
@@ -27,8 +26,8 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
     private val viewModel: TransactionMainViewModel by viewModels { viewModelFactory }
     private val mainViewModel: MainViewModel by activityViewModels { mainViewModelFactory }
 
-    private lateinit var viewModelFactory : TransactionMainViewModelFactory
-    private lateinit var mainViewModelFactory : MainViewModelFactory
+    private lateinit var viewModelFactory: TransactionMainViewModelFactory
+    private lateinit var mainViewModelFactory: MainViewModelFactory
     private lateinit var fragmentBundle: Bundle
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,7 +66,7 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
     override fun onResume() {
         super.onResume()
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            onBackPressed()
+            showUnsavedDialog()
         }
     }
 
@@ -158,9 +157,5 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
                     dialogInterface?.dismiss()
                 }
         builder.create().show()
-    }
-
-    private fun onBackPressed() {
-        showUnsavedDialog()
     }
 }
