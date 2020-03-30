@@ -9,7 +9,8 @@ import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.TransactionListModel
 import java.text.DateFormat
 
-class TransactionsRVAdapter(private val mListener: (Int) -> Unit
+class TransactionsRVAdapter(
+        private val mListener: (Int) -> Unit
 ) : RecyclerView.Adapter<TransactionsRVAdapter.ViewHolder>() {
 
     private var data: List<TransactionListModel>? = null
@@ -44,8 +45,8 @@ class TransactionsRVAdapter(private val mListener: (Int) -> Unit
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_transactions_list
-                , parent, false)
+        val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_transactions_list, parent, false)
         return ViewHolder(view, mListener)
     }
 

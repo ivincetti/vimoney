@@ -3,17 +3,13 @@ package ru.vincetti.vimoney.service
 import android.app.IntentService
 import android.content.Intent
 import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import ru.vincetti.vimoney.App
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.settings.json.JsonFile
 
 class FileService : IntentService("FileService") {
 
-    // использование своего job
     private val myJob = Job()
     private val myScope = CoroutineScope(Dispatchers.IO + myJob)
 
@@ -47,5 +43,11 @@ class FileService : IntentService("FileService") {
                     Intent(App.context, NotificationService::class.java)
                             .setAction(NotificationService.NOTIFICATION_SAVE_ACTION))
         }
+    }
+
+    override fun onDestroy() {
+        myJob.cancel()
+
+        super.onDestroy()
     }
 }

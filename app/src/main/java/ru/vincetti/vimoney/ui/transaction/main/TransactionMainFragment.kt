@@ -112,17 +112,14 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
             TransactionModel.TRANSACTION_TYPE_INCOME -> {
                 view_pager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_INCOME_TAB, true)
                 setActivityTitle(TransactionModel.TRANSACTION_TYPE_INCOME_TAB)
-                viewModel.saveAction = TransactionModel.TRANSACTION_TYPE_INCOME
             }
             TransactionModel.TRANSACTION_TYPE_TRANSFER -> {
                 view_pager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_TRANSFER_TAB, true)
                 setActivityTitle(TransactionModel.TRANSACTION_TYPE_TRANSFER_TAB)
-                viewModel.saveAction = TransactionModel.TRANSACTION_TYPE_TRANSFER
             }
             else -> {
                 view_pager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_SPENT_TAB, true)
                 setActivityTitle(TransactionModel.TRANSACTION_TYPE_SPENT_TAB)
-                viewModel.saveAction = TransactionModel.TRANSACTION_TYPE_SPENT
             }
 //            TransactionModel.TRANSACTION_TYPE_DEBT ->{
 //                vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_DEBT_TAB, true)
@@ -139,9 +136,7 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
                     dialogInterface?.dismiss()
                 }
                 .setPositiveButton(R.string.transaction_delete_alert_positive) { _, _ ->
-                    // delete query
                     viewModel.delete()
-                    findNavController().navigateUp()
                 }
         builder.create().show()
     }

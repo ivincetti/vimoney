@@ -11,7 +11,7 @@ import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.AccountListModel
 
 class AllCardsListRVAdapter(
-        val listener: (Int) -> Unit
+        private val listener: (Int) -> Unit
 ) : RecyclerView.Adapter<AllCardsListRVAdapter.CardsViewHolder>() {
     private var data: List<AccountListModel>? = null
 
@@ -38,8 +38,8 @@ class AllCardsListRVAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardsViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_all_cards_list
-                , parent, false)
+        val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_all_cards_list, parent, false)
         return CardsViewHolder(view, listener)
     }
 

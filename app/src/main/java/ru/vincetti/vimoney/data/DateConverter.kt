@@ -7,11 +7,10 @@ class DateConverter {
 
     @TypeConverter
     fun toDate(timestamp: Long?): Date? {
-        return if (timestamp == null) {
-            null
-        } else {
-            Date(timestamp)
+        timestamp?.let {
+            return Date(timestamp)
         }
+        return null
     }
 
     @TypeConverter

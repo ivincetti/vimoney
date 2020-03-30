@@ -21,6 +21,6 @@ suspend fun accountBalanceUpdateById(
 /** Math all user balance. */
 fun userBalanceChange(accList: List<AccountListModel>): Int {
     var bal = 0
-    for (o in accList) bal += o.sum
+    for (account in accList) bal += account.sum
     return bal
 }

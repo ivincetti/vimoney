@@ -122,7 +122,7 @@ interface TransactionDao {
     @Query("DELETE FROM transactions")
     suspend fun deleteAllTransactions()
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(t: TransactionModel): Long
 
     @Update(onConflict = OnConflictStrategy.REPLACE)

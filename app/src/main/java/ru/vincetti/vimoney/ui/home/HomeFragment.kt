@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.stat_income_exspence.view.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.ui.check.view.CheckViewModel
+import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
 import ru.vincetti.vimoney.utils.userBalanceChange
 import java.text.SimpleDateFormat
@@ -39,7 +39,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         /** Список карт/счетов. */
         val mAdapter = CardsListRVAdapter {
             val bundle = Bundle()
-            bundle.putInt(CheckViewModel.EXTRA_CHECK_ID, it)
+            bundle.putInt(EXTRA_CHECK_ID, it)
             findNavController().navigate(R.id.action_homeFragment_to_checkFragment, bundle)
         }
 

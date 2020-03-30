@@ -35,7 +35,7 @@ class TabsFragmentPagerAdapter(
             2 -> {
                 val transferFragment = TransactionTransferFragment()
                 transferFragment.arguments = this.fragmentBundle
-                return transferFragment
+                transferFragment
             }
 //            case 3:
 //                return new TransactionDebtFragment();
