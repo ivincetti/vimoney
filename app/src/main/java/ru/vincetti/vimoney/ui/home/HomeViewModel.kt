@@ -12,9 +12,10 @@ import java.util.*
 class HomeViewModel(accDao: AccountDao, trDao: TransactionDao) : ViewModel() {
     val accounts: LiveData<List<AccountListModel>> = accDao.loadNotArchiveAccountsFull()
     var date: String = SimpleDateFormat("MM").format(Date())
+    var year: String = SimpleDateFormat("YYYY").format(Date())
 
-    val incomeSum: LiveData<Int> = trDao.loadSumTransactionIncomeMonth(date, "2019")
-    val expenseSum: LiveData<Int> = trDao.loadSumTransactionExpenseMonth(date, "2019")
+    val incomeSum: LiveData<Int> = trDao.loadSumTransactionIncomeMonth(date, year)
+    val expenseSum: LiveData<Int> = trDao.loadSumTransactionExpenseMonth(date, year)
 }
 
 class HomeViewModelFactory(

@@ -13,11 +13,15 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
 
     private val cal: Calendar = Calendar.getInstance()
 
-    var income: LiveData<Int> = dao.loadSumTransactionIncomeMonth(SimpleDateFormat("MM")
-            .format(cal.time), "2019")
+    var income: LiveData<Int> = dao.loadSumTransactionIncomeMonth(
+            SimpleDateFormat("MM").format(cal.time),
+            SimpleDateFormat("YYYY").format(cal.time)
+    )
 
-    val expense = dao.loadSumTransactionExpenseMonth(SimpleDateFormat("MM")
-            .format(cal.time), "2019")
+    val expense = dao.loadSumTransactionExpenseMonth(
+            SimpleDateFormat("MM").format(cal.time),
+            SimpleDateFormat("YYYY").format(cal.time)
+    )
 
     private var _monthString = MutableLiveData<String>()
     val monthString
@@ -34,7 +38,7 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
     private var _need2Navigate2Home = MutableLiveData<Boolean>()
     val need2Navigate2Home: LiveData<Boolean>
         get() = _need2Navigate2Home
-    
+
     init {
         cal.time = Date()
         _isShowProgress.value = true
@@ -50,8 +54,10 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
     /** Получение статистики. */
     private fun getStat() {
         viewModelScope.launch {
-            val stat = dao.loadTransactionStatByMonth(SimpleDateFormat("MM")
-                    .format(cal.time), "2019")
+            val stat = dao.loadTransactionStatByMonth(
+                    SimpleDateFormat("MM").format(cal.time),
+                    SimpleDateFormat("YYYY").format(cal.time)
+            )
             var sum = 0f
             val entries = ArrayList<Entry>()
             entries.add(Entry(0f, sum))
