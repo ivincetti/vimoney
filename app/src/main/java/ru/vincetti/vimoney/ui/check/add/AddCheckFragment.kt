@@ -1,11 +1,11 @@
 package ru.vincetti.vimoney.ui.check.add
 
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import kotlinx.android.synthetic.main.fragment_add_check.*
+import kotlinx.android.synthetic.main.fragment_add_check_content.*
 import kotlinx.android.synthetic.main.fragment_add_check_content.view.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.AccountModel
@@ -52,7 +53,7 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
         add_check_navigation_add_btn.setOnClickListener {
             save()
         }
-        add_check_navigation_add_btn.setOnClickListener {
+        add_check_save_btn.setOnClickListener {
             save()
         }
         add_check_content.add_check_color_view.setOnClickListener {
@@ -62,8 +63,7 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
             showUnsavedDialog()
         }
         viewModel.isDefault.observe(viewLifecycleOwner, Observer {
-            if (!it) add_check_content.add_check_save_btn.text = getString(R.string.add_btn_update)
-
+            if (!it) add_check_save_btn.text = getString(R.string.add_btn_update)
         })
         viewModel.need2Navigate.observe(viewLifecycleOwner, Observer {
             if (it) goBack()
@@ -82,14 +82,22 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
 
             if (it.isArchive) {
                 add_check_navigation_from_archive_btn.visibility = View.VISIBLE
-            } else add_check_navigation_delete_btn.visibility = View.VISIBLE
+                add_check_navigation_delete_btn.visibility = View.GONE
+            } else {
+                add_check_navigation_from_archive_btn.visibility = View.GONE
+                add_check_navigation_delete_btn.visibility = View.VISIBLE
+            }
         })
         viewModel.currency.observe(viewLifecycleOwner, Observer {
             it?.let {
-                currencyEntered(it)
+                add_check_currency.text = it.symbol
             }
         })
-        spinnerInit()
+        viewModel.currencyList.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                loadCurrency(it, add_check_currency)
+            }
+        })
     }
 
     override fun onResume() {
@@ -137,44 +145,22 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
         }
     }
 
-    private fun spinnerInit() {
-        val curSpinner = add_check_content.add_check_currency_spinner
-        viewModel.currencyList.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                // adapter init
-                val adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, it)
-                adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
-                curSpinner.adapter = adapter
-            }
-        })
-
-        curSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                //do nothing
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                viewModel.setCurrency((parent?.selectedItem as CurrencyModel).code)
-            }
+    private fun loadCurrency(list: List<CurrencyModel>, view: View) {
+        view.setOnClickListener {
+            popUpCurrencyShow(list, view)
         }
-
     }
 
-    /** Spinner load option selected. */
-    private fun currencyEntered(currency: CurrencyModel) {
-        val pos = getIndex(currency)
-        add_check_content.add_check_currency_spinner.setSelection(pos)
-    }
-
-    /** Get index in spinner. */
-    private fun getIndex(tmpAcc: CurrencyModel): Int {
-        val spinner = add_check_content.add_check_currency_spinner
-        for (i in 0..spinner.count) {
-            if (spinner.getItemAtPosition(i).toString() == tmpAcc.symbol) {
-                return i
-            }
+    private fun popUpCurrencyShow(list: List<CurrencyModel>, view: View) {
+        val popUp = PopupMenu(requireContext(), view)
+        for (i in list.indices) {
+            popUp.menu.add(Menu.NONE, list[i].code, i, list[i].symbol)
         }
-        return 0
+        popUp.setOnMenuItemClickListener {
+            viewModel.setCurrency(it.itemId)
+            true
+        }
+        popUp.show()
     }
 
     private fun showDeleteDialog() {

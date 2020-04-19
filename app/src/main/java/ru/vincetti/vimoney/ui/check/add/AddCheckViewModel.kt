@@ -59,6 +59,7 @@ class AddCheckViewModel(
     fun loadAccount(id: Int) {
         viewModelScope.launch {
             val tmp = accDao.loadAccountById(id)
+            checkID = id
             _color.value = Color.parseColor(tmp.color)
             _check.value = tmp
             _currency.value = curDao.loadCurrencyByCode(tmp.currency)
@@ -72,7 +73,7 @@ class AddCheckViewModel(
         if (TextUtils.isEmpty(name)
                 || TextUtils.isEmpty(type)
                 || requireNotNull(color.value) > 0
-                || _currency.value == null) {
+        ) {
             need2AllData.value = true
         } else {
             val tmpAcc = check.value
@@ -125,6 +126,9 @@ class AddCheckViewModel(
 
     fun setCurrency(checkCurrency: Int) {
         _check.value?.currency = checkCurrency
+        viewModelScope.launch {
+            _currency.value = curDao.loadCurrencyByCode(checkCurrency)
+        }
     }
 
     fun setBackgroundColor(selectedColor: Int) {
