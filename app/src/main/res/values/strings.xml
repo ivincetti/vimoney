@@ -16,7 +16,9 @@
     <string name="home_accounts_title">Счета</string>
     <string name="home_fragment_stat_month_sample">Сентябрь</string>
     <string name="home_fragment_income_title">Доходы</string>
+    <string name="home_fragment_income">0</string>
     <string name="home_fragment_income_sample">20000</string>
+    <string name="home_fragment_spending">0</string>
     <string name="home_fragment_spending_sample">11000</string>
     <string name="home_fragment_spending_title">Расходы</string>
     <string name="home_fragment_transactions_link_title">посмотреть все</string>
@@ -73,6 +75,7 @@
     <string name="check_delete_alert_negative">Остаться</string>
     <string name="check_delete_alert_positive">Удалить</string>
     <string name="check_add_alert_question">Закрыть окно без сохранения?</string>
+    <string name="check_add_alert_no_data">Не заполнены поля</string>
     <string name="check_add_alert_negative">Не сохранять</string>
     <string name="check_add_alert_positive">Продолжить</string>
     <string name="check_add_alert_color_header">Выберите цвет</string>
@@ -92,7 +95,7 @@
 
     <!--Sys-->
     <string name="channel_name" translatable="false">reminder</string>
-    <string name="channel_description">не забудьте внести</string>
+    <string name="channel_description">не забудьте внести транзакции</string>
     <string name="back_icon_description">кнопка назад</string>
     <string name="settings_save_transactions_btn">Сохранить операции</string>
     <string name="settings_load_transactions_btn">Загрузить операции</string>

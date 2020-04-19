@@ -21,6 +21,21 @@
         <item name="colorAccent">@color/colorBackground</item>
     </style>
 
+    <style name="FabStyle">
+        <item name="android:layout_gravity">bottom|end</item>
+        <item name="android:layout_margin">@dimen/big_padding</item>
+        <item name="srcCompat">@drawable/ic_add_white</item>
+        <item name="tint">@android:color/white</item>
+        <item name="backgroundTint">@color/colorAccent</item>
+        <item name="fabSize">normal</item>
+    </style>
+
+    <style name="mainButtonStyle">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:backgroundTint">@color/colorAccent</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
     <style name="textBlackShadow">
         <item name="android:shadowColor">@android:color/black</item>
         <item name="android:shadowDx">4</item>

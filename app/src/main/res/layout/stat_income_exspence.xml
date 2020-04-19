@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,21 +8,24 @@
     android:orientation="horizontal"
     android:paddingStart="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/st_padding"
-    android:paddingEnd="@dimen/activity_horizontal_margin">
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    >
 
     <!--Статистика доходов-->
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        >
 
         <ImageView
             android:id="@+id/home_stat_income"
             android:layout_width="@dimen/icon_st_size"
             android:layout_height="@dimen/icon_st_size"
             android:layout_alignParentStart="true"
+            android:src="@drawable/ic_arrow_upward_black"
             android:contentDescription="@string/home_stat_income_icon"
-            android:src="@drawable/ic_arrow_upward_black" />
+            />
 
         <TextView
             android:id="@+id/home_stat_income_string"
@@ -32,7 +36,8 @@
             android:gravity="center_horizontal"
             android:paddingStart="@dimen/st_padding"
             android:paddingEnd="@dimen/st_padding"
-            android:text="@string/home_fragment_income_title" />
+            android:text="@string/home_fragment_income_title"
+            />
 
         <TextView
             android:id="@+id/home_stat_income_txt"
@@ -47,7 +52,9 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="24sp"
             android:textStyle="bold"
-            tools:text="@string/home_fragment_income_sample" />
+            android:text="@string/home_fragment_income"
+            tools:text="@string/home_fragment_income_sample"
+            />
 
     </RelativeLayout>
 
@@ -55,15 +62,17 @@
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        >
 
         <ImageView
             android:id="@+id/home_stat_spending"
             android:layout_width="@dimen/icon_st_size"
             android:layout_height="@dimen/icon_st_size"
             android:layout_alignParentStart="true"
+            android:src="@drawable/ic_arrow_downward_black"
             android:contentDescription="@string/home_stat_spending_icon"
-            android:src="@drawable/ic_arrow_downward_black" />
+            />
 
         <TextView
             android:id="@+id/home_stat_spending_string"
@@ -74,7 +83,8 @@
             android:gravity="center_horizontal"
             android:paddingStart="@dimen/st_padding"
             android:paddingEnd="@dimen/st_padding"
-            android:text="@string/home_fragment_spending_title" />
+            android:text="@string/home_fragment_spending_title"
+            />
 
         <TextView
             android:id="@+id/home_stat_expense_txt"
@@ -89,7 +99,9 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="24sp"
             android:textStyle="bold"
-            tools:text="@string/home_fragment_spending_sample" />
+            android:text="@string/home_fragment_spending"
+            tools:text="@string/home_fragment_spending_sample"
+            />
 
 
     </RelativeLayout>
