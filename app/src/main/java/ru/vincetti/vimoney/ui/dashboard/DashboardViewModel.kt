@@ -15,12 +15,12 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
 
     var income: LiveData<Int> = dao.loadSumTransactionIncomeMonth(
             SimpleDateFormat("MM").format(cal.time),
-            SimpleDateFormat("YYYY").format(cal.time)
+            SimpleDateFormat("yyyy").format(cal.time)
     )
 
     val expense = dao.loadSumTransactionExpenseMonth(
             SimpleDateFormat("MM").format(cal.time),
-            SimpleDateFormat("YYYY").format(cal.time)
+            SimpleDateFormat("yyyy").format(cal.time)
     )
 
     private var _monthString = MutableLiveData<String>()
@@ -56,7 +56,7 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
         viewModelScope.launch {
             val stat = dao.loadTransactionStatByMonth(
                     SimpleDateFormat("MM").format(cal.time),
-                    SimpleDateFormat("YYYY").format(cal.time)
+                    SimpleDateFormat("yyyy").format(cal.time)
             )
             var sum = 0f
             val entries = ArrayList<Entry>()
