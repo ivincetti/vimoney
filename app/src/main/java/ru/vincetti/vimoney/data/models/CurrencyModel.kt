@@ -12,7 +12,7 @@ data class CurrencyModel(
 
         val code: Int,
 
-        var name: String,
+        val name: String?,
 
         val symbol: String
 ) {

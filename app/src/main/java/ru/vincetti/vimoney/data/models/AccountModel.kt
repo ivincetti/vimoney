@@ -10,9 +10,9 @@ data class AccountModel(
         @PrimaryKey(autoGenerate = true)
         var id: Int = 0,
 
-        var name: String = "",
+        var name: String? = "",
 
-        var type: String = ACCOUNT_TYPE_CASH,
+        var type: String? = ACCOUNT_TYPE_CASH,
 
         var sum: Int = 0,
 

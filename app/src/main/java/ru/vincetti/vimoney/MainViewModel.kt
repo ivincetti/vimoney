@@ -33,9 +33,13 @@ class MainViewModel(
         return hash
     }
 
-    private fun genAccountsHash(t: List<AccountModel>): HashMap<Int, String> {
+    private fun genAccountsHash(list: List<AccountModel>): HashMap<Int, String> {
         val hash = HashMap<Int, String>()
-        for (o in t) hash[o.id] = o.name
+        for (o in list) {
+            o.name?.let {
+                hash[o.id] = it
+            }
+        }
         return hash
     }
 

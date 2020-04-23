@@ -11,7 +11,7 @@ data class ConfigModel(
         var id: Int = 0,
 
         @ColumnInfo(name = "key_name")
-        val keyName: String,
+        val keyName: String?,
 
-        val value: String
+        val value: String?
 )
