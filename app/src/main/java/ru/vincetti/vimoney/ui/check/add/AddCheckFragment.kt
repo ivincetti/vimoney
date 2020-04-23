@@ -77,15 +77,17 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
             }
         })
         viewModel.check.observe(viewLifecycleOwner, Observer {
-            add_check_content.add_check_name.setText(it.name)
-            typeLoad(it.type)
+            it.type?.let { type ->
+                add_check_content.add_check_name.setText(it.name)
+                typeLoad(type)
 
-            if (it.isArchive) {
-                add_check_navigation_from_archive_btn.visibility = View.VISIBLE
-                add_check_navigation_delete_btn.visibility = View.GONE
-            } else {
-                add_check_navigation_from_archive_btn.visibility = View.GONE
-                add_check_navigation_delete_btn.visibility = View.VISIBLE
+                if (it.isArchive) {
+                    add_check_navigation_from_archive_btn.visibility = View.VISIBLE
+                    add_check_navigation_delete_btn.visibility = View.GONE
+                } else {
+                    add_check_navigation_from_archive_btn.visibility = View.GONE
+                    add_check_navigation_delete_btn.visibility = View.VISIBLE
+                }
             }
         })
         viewModel.currency.observe(viewLifecycleOwner, Observer {
