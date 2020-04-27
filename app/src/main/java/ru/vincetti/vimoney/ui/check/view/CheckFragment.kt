@@ -113,4 +113,5 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
                 }
         builder.create().show()
     }
+
 }
