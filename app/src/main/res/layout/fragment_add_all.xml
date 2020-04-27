@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    tools:background="@color/colorBackgroundDark"
     >
 
     <!--блок комментария-->
@@ -13,13 +14,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingStart="@dimen/big_padding"
-        android:paddingEnd="@dimen/big_padding">
+        android:paddingEnd="@dimen/big_padding"
+        >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_comment_dark" />
+            android:src="@drawable/ic_comment_dark"
+            />
 
         <EditText
             android:id="@+id/add_desc"
@@ -27,10 +30,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:hint="@string/add_desc_sample"
+            android:textColorHint="@color/colorSecondaryTextDark"
             android:inputType="text"
             android:paddingStart="@dimen/activity_horizontal_margin"
             android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:textColor="@color/colorPrimaryDark" />
+            android:textColor="@color/colorPrimaryTextDark"
+            android:fontFamily="sans-serif-medium"
+            />
 
     </LinearLayout>
 
@@ -41,28 +47,33 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingStart="@dimen/big_padding"
-        android:paddingEnd="@dimen/big_padding">
+        android:paddingEnd="@dimen/big_padding"
+        >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_calendar_dark" />
+            android:src="@drawable/ic_calendar_dark"
+            />
 
         <TextView
             android:id="@+id/add_date_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/big_padding"
-            tools:text="@string/add_date_sample_txt" />
+            android:textColor="@color/colorPrimaryTextDark"
+            android:fontFamily="sans-serif-medium"
+            tools:text="@string/add_date_sample_txt"
+            />
     </LinearLayout>
 
     <Button
         android:id="@+id/add_btn"
+        style="@style/mainButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_btn_save"
-        style="@style/mainButtonStyle"
         />
 
 </LinearLayout>

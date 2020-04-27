@@ -6,6 +6,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackgroundDark"
     tools:context=".ui.check.list.ChecksListFragment"
     >
 
@@ -18,7 +19,7 @@
             android:id="@+id/top_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorBackground"
+            android:background="@color/colorBackgroundDark"
             >
 
             <RelativeLayout
@@ -44,7 +45,8 @@
                     android:paddingStart="@dimen/st_padding"
                     android:paddingEnd="@dimen/st_padding"
                     android:text="@string/settings_check_title_home"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryTextDark"
+                    android:fontFamily="sans-serif-medium"
                     android:textSize="@dimen/text_st_numbers"
                     android:textStyle="bold"
                     />

@@ -2,10 +2,12 @@ package ru.vincetti.vimoney.ui.check.list
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_checks_list.*
 import ru.vincetti.vimoney.R
@@ -35,7 +37,18 @@ class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
             findNavController().navigate(R.id.action_checksListFragment_to_checkFragment, bundle)
         }
         val cardsLayoutManager = LinearLayoutManager(requireContext())
+        val lineDivider = DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+        )
+        lineDivider.setDrawable(
+                ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.light_divider
+                )!!
+        )
         check_list_recycle_view.apply {
+            addItemDecoration(lineDivider)
             layoutManager = cardsLayoutManager
             setAdapter(adapter)
         }

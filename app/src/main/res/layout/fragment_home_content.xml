@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:background="@color/colorBackgroundDark"
     android:orientation="vertical">
 
     <!--Заголовок Счетов-->
@@ -20,7 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/home_accounts_title"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorPrimaryTextDark"
+            android:fontFamily="sans-serif-medium"
             android:textSize="@dimen/text_st_numbers"
             android:textStyle="bold" />
 
@@ -28,6 +30,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:textColor="@color/colorSecondaryTextDark"
+            android:fontFamily="sans-serif-medium"
             android:paddingStart="@dimen/st_padding"
             android:paddingEnd="@dimen/st_padding"
             android:text="@string/home_fragment_transactions_link_title" />
@@ -55,7 +59,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/home_fragment_stat_title"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorPrimaryTextDark"
+            android:fontFamily="sans-serif-medium"
             android:textSize="@dimen/text_st_numbers"
             android:textStyle="bold" />
 
@@ -66,16 +71,20 @@
             android:layout_gravity="center_vertical"
             android:paddingStart="@dimen/st_padding"
             android:paddingEnd="@dimen/st_padding"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorPrimaryTextDark"
+            android:fontFamily="sans-serif-medium"
             tools:text="@string/home_fragment_stat_month_sample" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:textColor="@color/colorSecondaryTextDark"
+            android:fontFamily="sans-serif-medium"
             android:paddingStart="@dimen/st_padding"
             android:paddingEnd="@dimen/st_padding"
             android:text="@string/home_fragment_stat_link_title" />
+
     </LinearLayout>
 
     <include layout="@layout/stat_income_exspence" />
@@ -95,7 +104,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/history_title_home"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorPrimaryTextDark"
+            android:fontFamily="sans-serif-medium"
             android:textSize="@dimen/text_st_numbers"
             android:textStyle="bold" />
 
@@ -103,6 +113,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:textColor="@color/colorSecondaryTextDark"
+            android:fontFamily="sans-serif-medium"
             android:paddingStart="@dimen/st_padding"
             android:paddingEnd="@dimen/st_padding"
             android:text="@string/home_fragment_transactions_link_title" />

@@ -18,7 +18,7 @@
             android:id="@+id/top_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorBackground"
+            android:background="@color/colorBackgroundDark"
             >
 
             <RelativeLayout
@@ -44,7 +44,8 @@
                     android:paddingStart="@dimen/st_padding"
                     android:paddingEnd="@dimen/st_padding"
                     android:text="@string/settings_title_home"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryTextDark"
+                    android:fontFamily="sans-serif-medium"
                     android:textSize="@dimen/text_st_numbers"
                     android:textStyle="bold"
                     />
@@ -57,12 +58,14 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorBackgroundDark"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
             android:orientation="vertical"
             >
 
@@ -73,6 +76,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/st_padding"
                 android:text="@string/settings_save_transactions_btn"
+                android:backgroundTint="@color/colorSecondaryDark"
                 android:textAllCaps="true"
                 />
 
@@ -82,6 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/st_padding"
+                android:backgroundTint="@color/colorSecondaryDark"
                 android:text="@string/settings_load_transactions_btn"
                 android:textAllCaps="true"
                 />

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:background="@color/colorBackgroundDark"
     >
 
     <LinearLayout
@@ -43,10 +44,12 @@
                         android:layout_toStartOf="@id/add_acc_cur"
                         android:gravity="end"
                         android:hint="@string/add_sum_sample"
+                        android:textColorHint="@color/colorSecondaryTextDark"
                         android:inputType="numberDecimal"
                         android:paddingStart="@dimen/activity_horizontal_margin"
                         android:paddingEnd="@dimen/activity_horizontal_margin"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorPrimaryTextDark"
+                        android:fontFamily="sans-serif-medium"
                         android:textSize="@dimen/text_big_numbers"
                         android:textStyle="bold"
                         />
@@ -58,7 +61,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:paddingEnd="@dimen/sm_padding"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorPrimaryTextDark"
+                        android:fontFamily="sans-serif-medium"
                         android:textSize="@dimen/text_big_numbers"
                         android:textStyle="bold"
                         tools:text="@string/currency_ruble_symbol"
@@ -87,7 +91,8 @@
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@id/add_acc_image"
                         android:textSize="@dimen/text_sm_numbers"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorPrimaryTextDark"
+                        android:fontFamily="sans-serif-medium"
                         android:text="@string/add_no_account_text"
                         android:ellipsize="end"
                         android:padding="@dimen/big_padding"
@@ -120,10 +125,12 @@
                         android:layout_toStartOf="@id/add_acc_cur_to"
                         android:gravity="end"
                         android:hint="@string/add_sum_sample"
+                        android:textColorHint="@color/colorSecondaryTextDark"
                         android:inputType="numberDecimal"
                         android:paddingStart="@dimen/activity_horizontal_margin"
                         android:paddingEnd="@dimen/activity_horizontal_margin"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorPrimaryTextDark"
+                        android:fontFamily="sans-serif-medium"
                         android:textSize="@dimen/text_big_numbers"
                         android:textStyle="bold"
                         />
@@ -135,7 +142,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:paddingEnd="@dimen/sm_padding"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorPrimaryTextDark"
+                        android:fontFamily="sans-serif-medium"
                         android:textSize="@dimen/text_big_numbers"
                         android:textStyle="bold"
                         tools:text="@string/currency_ruble_symbol"
@@ -164,7 +172,8 @@
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@id/add_acc_image_to"
                         android:textSize="@dimen/text_sm_numbers"
-                        android:textColor="@color/colorPrimaryDark"
+                        android:textColor="@color/colorPrimaryTextDark"
+                        android:fontFamily="sans-serif-medium"
                         android:text="@string/add_no_account_text"
                         android:ellipsize="end"
                         android:padding="@dimen/big_padding"
@@ -191,4 +200,5 @@
         android:layout_gravity="center"
         android:visibility="gone"
         />
+
 </FrameLayout>

@@ -18,7 +18,7 @@
             android:id="@+id/top_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorBackground"
+            android:background="@color/colorBackgroundDark"
             >
 
             <RelativeLayout
@@ -33,7 +33,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:contentDescription="@string/back_icon_description"
-                    android:src="@drawable/ic_arrow_back_dark"
+                    app:srcCompat="@drawable/ic_arrow_back_dark"
                     />
 
                 <TextView
@@ -44,7 +44,8 @@
                     android:paddingStart="@dimen/st_padding"
                     android:paddingEnd="@dimen/st_padding"
                     android:text="@string/check_title_home"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryTextDark"
+                    android:fontFamily="sans-serif-medium"
                     android:textSize="@dimen/text_st_numbers"
                     android:textStyle="bold"
                     />
@@ -58,7 +59,7 @@
                     android:contentDescription="@string/add_transaction_button_desc"
                     android:paddingStart="@dimen/big_padding"
                     android:paddingEnd="@dimen/big_padding"
-                    android:src="@drawable/ic_delete_dark"
+                    app:srcCompat="@drawable/ic_delete_dark"
                     android:visibility="gone"
                     />
 
@@ -71,7 +72,7 @@
                     android:contentDescription="@string/add_transaction_button_desc"
                     android:paddingStart="@dimen/big_padding"
                     android:paddingEnd="@dimen/big_padding"
-                    android:src="@drawable/ic_restore_dark"
+                    app:srcCompat="@drawable/ic_restore_dark"
                     android:visibility="gone"
                     />
 
@@ -84,7 +85,7 @@
                     android:contentDescription="@string/add_transaction_button_desc"
                     android:paddingStart="@dimen/big_padding"
                     android:paddingEnd="@dimen/big_padding"
-                    android:src="@drawable/ic_mode_edit_dark"
+                    app:srcCompat="@drawable/ic_mode_edit_dark"
                     />
 
             </RelativeLayout>
@@ -96,6 +97,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorBackgroundDark"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
 

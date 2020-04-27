@@ -6,7 +6,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.notifications.Fr"
+    tools:context=".ui.notifications.NotificationFragment"
     >
 
     <com.google.android.material.appbar.AppBarLayout
@@ -18,7 +18,7 @@
             android:id="@+id/top_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorBackground"
+            android:background="@color/colorBackgroundDark"
             >
 
             <RelativeLayout
@@ -44,7 +44,8 @@
                     android:paddingStart="@dimen/st_padding"
                     android:paddingEnd="@dimen/st_padding"
                     android:text="@string/notification_title_home"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryTextDark"
+                    android:fontFamily="sans-serif-medium"
                     android:textSize="@dimen/text_st_numbers"
                     android:textStyle="bold"
                     />
@@ -57,6 +58,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorBackgroundDark"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
 
@@ -65,6 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:backgroundTint="@color/colorSecondaryDark"
             android:layout_margin="@dimen/sm_padding"
             android:text="@string/notification_notify_btn_text"
             android:textAllCaps="true"

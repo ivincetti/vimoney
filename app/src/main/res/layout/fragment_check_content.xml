@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    tools:background="@color/colorBackgroundDark"
     >
 
     <!--карта-->
@@ -118,7 +119,8 @@
         android:paddingStart="@dimen/activity_horizontal_margin"
         android:paddingEnd="@dimen/activity_horizontal_margin"
         android:text="@string/history_title_home"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorPrimaryTextDark"
+        android:fontFamily="sans-serif-medium"
         android:textSize="@dimen/text_st_numbers"
         android:textStyle="bold"
         />

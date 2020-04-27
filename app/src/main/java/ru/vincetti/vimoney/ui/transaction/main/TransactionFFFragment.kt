@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_add_spent.*
 import ru.vincetti.vimoney.MainViewModel
 import ru.vincetti.vimoney.MainViewModelFactory
 import ru.vincetti.vimoney.R
+import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import java.text.DateFormat
 import java.util.*
@@ -104,8 +105,10 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
             if (it) add_btn.text = getString(R.string.add_btn_update)
         })
         viewModel.accountId.observe(viewLifecycleOwner, Observer {
-            add_acc_name.text = mainViewModel.loadFromAccountNames(it)
-            add_acc_cur.text = mainViewModel.loadFromCurSymbols(it)
+            if (it != TransactionModel.DEFAULT_ID) {
+                add_acc_name.text = mainViewModel.loadFromAccountNames(it)
+                add_acc_cur.text = mainViewModel.loadFromCurSymbols(it)
+            }
         })
         viewModel.sum.observe(viewLifecycleOwner, Observer {
             if (it > 0) add_sum.setText(it.toString())

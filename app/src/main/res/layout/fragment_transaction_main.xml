@@ -17,6 +17,7 @@
             android:id="@+id/top_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorBackgroundDark"
             >
 
             <RelativeLayout
@@ -56,7 +57,8 @@
                     android:paddingStart="@dimen/st_padding"
                     android:paddingEnd="@dimen/st_padding"
                     android:text="@string/add_title_home_spent"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimaryTextDark"
+                    android:fontFamily="sans-serif-medium"
                     android:textSize="@dimen/text_st_numbers"
                     android:textStyle="bold"
                     />
@@ -69,7 +71,12 @@
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorBackground"
+            android:background="@color/colorBackgroundDark"
+            app:tabTextColor="@color/colorSecondaryTextDark"
+            app:tabSelectedTextColor="@color/colorPrimaryTextDark"
+            app:tabIndicatorColor="@color/colorSecondaryDark"
+            app:tabIndicatorHeight="@dimen/sm_padding"
+            app:tabTextAppearance="@style/tabTextStyle"
             android:scrollbars="horizontal"
             />
 
@@ -79,6 +86,7 @@
         android:id="@+id/view_pager"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorBackgroundDark"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
