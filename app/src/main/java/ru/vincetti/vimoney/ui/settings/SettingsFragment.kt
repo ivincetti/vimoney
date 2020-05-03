@@ -19,15 +19,22 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         viewModel.need2Navigate2Home.observe(viewLifecycleOwner, Observer {
             if (it) findNavController().navigate(R.id.action_settingsFragment_to_homeFragment)
         })
+        viewModel.importButtonState.observe(viewLifecycleOwner, Observer {
+            btn_save_transactions.isEnabled = it
+        })
+        viewModel.exportButtonState.observe(viewLifecycleOwner, Observer {
+            btn_load_transactions.isEnabled = it
+        })
 
         setting_navigation_back_btn.setOnClickListener {
             viewModel.homeButton()
         }
-
         btn_save_transactions.setOnClickListener {
+            btn_save_transactions.isEnabled = false
             viewModel.saveJson()
         }
         btn_load_transactions.setOnClickListener {
+            btn_load_transactions.isEnabled = false
             viewModel.loadJson()
         }
     }
