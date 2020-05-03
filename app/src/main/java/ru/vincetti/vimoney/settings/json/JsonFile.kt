@@ -1,7 +1,7 @@
 package ru.vincetti.vimoney.settings.json
 
 import android.content.Context
-import android.content.Intent
+import android.content.Context.MODE_PRIVATE
 import android.text.TextUtils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -10,7 +10,6 @@ import kotlinx.coroutines.withContext
 import ru.vincetti.vimoney.data.models.AccountModel
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.service.FileService
 import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.IOException
@@ -19,13 +18,26 @@ import java.util.*
 
 object JsonFile {
 
-    const val FILE_NAME_TRANSACTIONS = "transactions.json"
-    const val FILE_NAME_ACCOUNTS = "accounts.json"
+    private const val FILE_NAME_TRANSACTIONS = "transactions.json"
+    private const val FILE_NAME_ACCOUNTS = "accounts.json"
 
-    fun save(context: Context) {
-        context.startService(
-                Intent(context, FileService::class.java).setAction(FileService.SAVE_ACTION)
-        )
+    suspend fun save(context: Context) {
+        withContext(Dispatchers.IO) {
+            val gson = Gson()
+            val mDb = AppDatabase.getInstance(context)
+            val accounts = mDb.accountDao().loadAllAccounts()
+            accounts?.let {
+                val accountJson: String = gson.toJson(it)
+                val fosAccount = context.openFileOutput(FILE_NAME_ACCOUNTS, MODE_PRIVATE)
+                fosAccount?.write(accountJson.toByteArray())
+            }
+            val transactions = mDb.transactionDao().loadAllTransactions()
+            transactions?.let {
+                val transactionsJson = gson.toJson(it)
+                val fos = context.openFileOutput(FILE_NAME_TRANSACTIONS, MODE_PRIVATE)
+                fos?.write(transactionsJson.toByteArray())
+            }
+        }
     }
 
     suspend fun load(context: Context) {
@@ -93,4 +105,5 @@ object JsonFile {
             }
         }
     }
+
 }

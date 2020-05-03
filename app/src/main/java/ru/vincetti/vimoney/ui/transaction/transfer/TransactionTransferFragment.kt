@@ -19,8 +19,10 @@ class TransactionTransferFragment : TransactionFFFragment(R.layout.fragment_add_
         viewModel.nestedTransaction.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
                 if (it.sum > 0) add_sum_to.setText(it.sum.toString())
-                add_acc_name_to.text = mainViewModel.loadFromAccountNotArchiveNames(it.accountId)
-                add_acc_cur_to.text = mainViewModel.loadFromCurSymbols(it.accountId)
+                if (it.accountId != TransactionModel.DEFAULT_ID) {
+                    add_acc_name_to.text = mainViewModel.loadFromAccountNotArchiveNames(it.accountId)
+                    add_acc_cur_to.text = mainViewModel.loadFromCurSymbols(it.accountId)
+                }
             }
         })
         viewModel.accountIdTo.observe(viewLifecycleOwner, Observer {

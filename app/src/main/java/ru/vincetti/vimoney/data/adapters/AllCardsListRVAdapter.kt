@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.AccountListModel
@@ -24,7 +23,7 @@ class AllCardsListRVAdapter(
         val accBalance: TextView = itemView.findViewById(R.id.acc_balance)
         val isArchive: TextView = itemView.findViewById(R.id.acc_archive)
         val accSymbol: TextView = itemView.findViewById(R.id.acc_symbol)
-        val accContainer: View = itemView.findViewById(R.id.acc_list_container)
+        val accLabel: View = itemView.findViewById(R.id.acc_label)
 
         init {
             itemView.setOnClickListener(this)
@@ -50,9 +49,7 @@ class AllCardsListRVAdapter(
             holder.accType.text = tmpAcc.type
             holder.accBalance.text = tmpAcc.sum.toString()
             holder.accSymbol.text = tmpAcc.curSymbol
-            holder.accContainer.setBackgroundColor(
-                    ColorUtils.setAlphaComponent(Color.parseColor(tmpAcc.color), 35)
-            )
+            holder.accLabel.setBackgroundColor(Color.parseColor(tmpAcc.color))
             if (!tmpAcc.isArchive) {
                 holder.isArchive.visibility = View.INVISIBLE
             } else {
@@ -69,4 +66,5 @@ class AllCardsListRVAdapter(
         data = accList
         notifyDataSetChanged()
     }
+
 }

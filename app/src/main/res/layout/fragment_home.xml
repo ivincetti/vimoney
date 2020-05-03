@@ -18,10 +18,10 @@
             android:id="@+id/top_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorBackground"
+            android:background="@color/colorBackgroundDark"
             >
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 >
@@ -31,9 +31,10 @@
                     android:id="@+id/home_user_balance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/colorPrimaryDark"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textColor="@color/colorPrimaryElementsDark"
                     android:textSize="@dimen/text_big_numbers"
                     android:textStyle="bold"
                     tools:text="10000"
@@ -44,8 +45,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="@dimen/big_padding"
-                    android:layout_toStartOf="@+id/home_menu_settings"
-                    android:layout_centerVertical="true"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/home_menu_settings"
                     app:srcCompat = "@drawable/ic_notifications_dark"
                     android:visibility="invisible"
                     tools:visibility="visible"
@@ -56,12 +58,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="@dimen/big_padding"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:srcCompat = "@drawable/ic_settings_dark"
                     />
 
-            </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -70,6 +73,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorBackgroundDark"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
 

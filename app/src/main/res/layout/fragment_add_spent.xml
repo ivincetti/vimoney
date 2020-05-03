@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:background="@color/colorBackgroundDark"
     >
 
     <ProgressBar
@@ -43,7 +45,9 @@
                 android:inputType="numberDecimal"
                 android:paddingStart="@dimen/activity_horizontal_margin"
                 android:paddingEnd="@dimen/activity_horizontal_margin"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorSecondaryTextDark"
+                android:textColor="@color/colorPrimaryTextDark"
+                android:fontFamily="sans-serif-medium"
                 android:textSize="@dimen/text_big_numbers"
                 android:textStyle="bold" />
 
@@ -53,7 +57,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 tools:text="@string/currency_ruble_symbol"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorPrimaryTextDark"
+                android:fontFamily="sans-serif-medium"
                 android:textSize="@dimen/text_big_numbers"
                 android:textStyle="bold" />
 
@@ -73,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_account_dark"
+                app:srcCompat="@drawable/ic_account_dark"
                 />
 
             <TextView
@@ -82,7 +87,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:textSize="@dimen/text_sm_numbers"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorPrimaryTextDark"
+                android:fontFamily="sans-serif-medium"
                 android:text="@string/add_no_account_text"
                 android:ellipsize="end"
                 android:padding="@dimen/big_padding"
@@ -99,4 +105,3 @@
     </LinearLayout>
 
 </FrameLayout>
-

@@ -4,10 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.vincetti.vimoney.App
 import ru.vincetti.vimoney.settings.json.JsonFile
-import ru.vincetti.vimoney.utils.showNotification
 
 class SettingsViewModel : ViewModel() {
 
@@ -15,8 +16,18 @@ class SettingsViewModel : ViewModel() {
     val need2Navigate2Home: LiveData<Boolean>
         get() = _need2Navigate2Home
 
+    private var _importButtonState = MutableLiveData<Boolean>()
+    val importButtonState: LiveData<Boolean>
+        get() = _importButtonState
+
+    private var _exportButtonState = MutableLiveData<Boolean>()
+    val exportButtonState: LiveData<Boolean>
+        get() = _exportButtonState
+
     init {
         _need2Navigate2Home.value = false
+        _importButtonState.value = true
+        _exportButtonState.value = true
     }
 
     fun homeButton() {
@@ -24,9 +35,13 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun saveJson() {
-        val context = App.context
-        context?.let {
-            JsonFile.save(it)
+        App.context?.let {
+            viewModelScope.launch {
+                JsonFile.save(it)
+                withContext(Dispatchers.Main) {
+                    setImportButtonState(true)
+                }
+            }
         }
     }
 
@@ -35,13 +50,19 @@ class SettingsViewModel : ViewModel() {
         context?.let {
             viewModelScope.launch {
                 JsonFile.load(it)
+                withContext(Dispatchers.Main) {
+                    setExportButtonState(true)
+                }
             }
-            //TODO проверить
-            showNotification(
-                    context,
-                    "Import done",
-                    "all transactions successfully imported"
-            )
         }
     }
+
+    private fun setImportButtonState(state: Boolean) {
+        _importButtonState.value = state
+    }
+
+    private fun setExportButtonState(state: Boolean) {
+        _exportButtonState.value = state
+    }
+
 }
