@@ -21,7 +21,7 @@
             android:background="@color/colorBackgroundDark"
             >
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 >
@@ -30,36 +30,39 @@
                     android:id="@+id/setting_navigation_back_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:contentDescription="@string/back_icon_description"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:srcCompat="@drawable/ic_arrow_back_dark"
+                    android:contentDescription="@string/back_icon_description"
                     />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/setting_navigation_back_btn"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/setting_navigation_back_btn"
                     android:paddingStart="@dimen/st_padding"
                     android:paddingEnd="@dimen/st_padding"
-                    android:text="@string/check_title_home"
                     android:textColor="@color/colorPrimaryTextDark"
                     android:fontFamily="sans-serif-medium"
                     android:textSize="@dimen/text_st_numbers"
                     android:textStyle="bold"
+                    android:text="@string/check_title_home"
                     />
 
                 <ImageView
                     android:id="@+id/check_navigation_delete_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toStartOf="@id/check_navigation_edit_btn"
-                    android:contentDescription="@string/add_transaction_button_desc"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/check_navigation_edit_btn"
                     android:paddingStart="@dimen/big_padding"
                     android:paddingEnd="@dimen/big_padding"
                     app:srcCompat="@drawable/ic_delete_dark"
+                    android:contentDescription="@string/add_transaction_button_desc"
                     android:visibility="gone"
                     />
 
@@ -67,12 +70,13 @@
                     android:id="@+id/check_navigation_from_archive_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toStartOf="@id/check_navigation_edit_btn"
-                    android:contentDescription="@string/add_transaction_button_desc"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/check_navigation_edit_btn"
                     android:paddingStart="@dimen/big_padding"
                     android:paddingEnd="@dimen/big_padding"
                     app:srcCompat="@drawable/ic_restore_dark"
+                    android:contentDescription="@string/add_transaction_button_desc"
                     android:visibility="gone"
                     />
 
@@ -80,15 +84,16 @@
                     android:id="@+id/check_navigation_edit_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:contentDescription="@string/add_transaction_button_desc"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:paddingStart="@dimen/big_padding"
                     android:paddingEnd="@dimen/big_padding"
                     app:srcCompat="@drawable/ic_mode_edit_dark"
+                    android:contentDescription="@string/add_transaction_button_desc"
                     />
 
-            </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.appcompat.widget.Toolbar>
 

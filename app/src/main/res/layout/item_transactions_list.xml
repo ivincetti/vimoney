@@ -19,9 +19,9 @@
         android:id="@+id/card_transactions_image"
         android:layout_width="@dimen/icon_st_size"
         android:layout_height="@dimen/icon_st_size"
-        android:contentDescription="@string/history_category_image_desc"
-        android:src="@drawable/ic_monetization_black"
         android:textColor="@color/colorTextWhite"
+        android:contentDescription="@string/history_category_image_desc"
+        app:srcCompat="@drawable/ic_monetization_black"
         />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,14 +33,14 @@
             android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:orientation="vertical"
             android:paddingStart="@dimen/st_padding"
             android:paddingEnd="@dimen/st_padding"
             android:fontFamily="sans-serif-medium"
             android:textColor="@color/colorSecondaryTextDark"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             >
 
             <TextView
@@ -57,7 +57,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="@string/home_title_acc_type"
                 android:fontFamily="sans-serif-medium"
                 android:textColor="@color/colorPrimaryTextDark"
                 android:textStyle="bold"
@@ -69,7 +68,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="@string/home_title_acc_type"
                 android:fontFamily="sans-serif-medium"
                 android:textColor="@color/colorSecondaryTextDark"
                 tools:text="@string/add_desc_sample"
@@ -81,13 +79,13 @@
             android:id="@+id/home_transactions_balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/home_transactions_currency"
+            app:layout_constraintEnd_toStartOf="@+id/home_transactions_currency"
+            app:layout_constraintTop_toTopOf="@+id/home_transactions_currency"
             android:fontFamily="sans-serif-medium"
             android:textColor="@color/colorPrimaryTextDark"
             android:textSize="@dimen/text_st_numbers"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/home_transactions_currency"
-            app:layout_constraintEnd_toStartOf="@+id/home_transactions_currency"
-            app:layout_constraintTop_toTopOf="@+id/home_transactions_currency"
             tools:text="@string/home_fragment_income_sample"
             />
 
@@ -95,15 +93,15 @@
             android:id="@+id/home_transactions_currency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:paddingStart="@dimen/st_padding"
             android:paddingEnd="@dimen/big_padding"
             android:fontFamily="sans-serif-medium"
             android:textColor="@color/colorPrimaryTextDark"
             android:textSize="@dimen/text_st_numbers"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:text="@string/currency_ruble_symbol"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

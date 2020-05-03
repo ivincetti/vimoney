@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:background="@color/colorBackgroundDark"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <!--Заголовок Счетов-->
     <LinearLayout
@@ -14,17 +17,19 @@
         android:layout_marginTop="@dimen/big_padding"
         android:orientation="horizontal"
         android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin">
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/home_accounts_title"
             android:textColor="@color/colorPrimaryTextDark"
             android:fontFamily="sans-serif-medium"
             android:textSize="@dimen/text_st_numbers"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:text="@string/home_accounts_title"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -34,7 +39,9 @@
             android:fontFamily="sans-serif-medium"
             android:paddingStart="@dimen/st_padding"
             android:paddingEnd="@dimen/st_padding"
-            android:text="@string/home_fragment_transactions_link_title" />
+            android:text="@string/home_fragment_transactions_link_title"
+            />
+
     </LinearLayout>
 
     <!--Список карт-->
@@ -42,7 +49,12 @@
         android:id="@+id/home_cards_recycle_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/big_padding" />
+        android:layout_marginStart="@dimen/big_padding"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_cards_list"
+        tools:itemCount="3"
+        />
 
     <!--Заголовок статистики-->
     <LinearLayout
@@ -52,17 +64,19 @@
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:orientation="horizontal"
         android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin">
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/home_fragment_stat_title"
             android:textColor="@color/colorPrimaryTextDark"
             android:fontFamily="sans-serif-medium"
             android:textSize="@dimen/text_st_numbers"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:text="@string/home_fragment_stat_title"
+            />
 
         <TextView
             android:id="@+id/home_month"
@@ -73,7 +87,8 @@
             android:paddingEnd="@dimen/st_padding"
             android:textColor="@color/colorPrimaryTextDark"
             android:fontFamily="sans-serif-medium"
-            tools:text="@string/home_fragment_stat_month_sample" />
+            tools:text="@string/home_fragment_stat_month_sample"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -83,7 +98,8 @@
             android:fontFamily="sans-serif-medium"
             android:paddingStart="@dimen/st_padding"
             android:paddingEnd="@dimen/st_padding"
-            android:text="@string/home_fragment_stat_link_title" />
+            android:text="@string/home_fragment_stat_link_title"
+            />
 
     </LinearLayout>
 
@@ -97,17 +113,19 @@
         android:layout_marginTop="@dimen/big_padding"
         android:orientation="horizontal"
         android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin">
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/history_title_home"
             android:textColor="@color/colorPrimaryTextDark"
             android:fontFamily="sans-serif-medium"
             android:textSize="@dimen/text_st_numbers"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:text="@string/history_title_home"
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -117,14 +135,16 @@
             android:fontFamily="sans-serif-medium"
             android:paddingStart="@dimen/st_padding"
             android:paddingEnd="@dimen/st_padding"
-            android:text="@string/home_fragment_transactions_link_title" />
+            android:text="@string/home_fragment_transactions_link_title"
+            />
+
     </LinearLayout>
 
     <!--Список транзаций-->
     <FrameLayout
         android:id="@+id/main_history_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
+        android:layout_height="wrap_content"
+        />
 
 </LinearLayout>

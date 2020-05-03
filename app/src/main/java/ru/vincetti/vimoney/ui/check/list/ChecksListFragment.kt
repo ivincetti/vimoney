@@ -36,7 +36,6 @@ class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
             bundle.putInt(EXTRA_CHECK_ID, it)
             findNavController().navigate(R.id.action_checksListFragment_to_checkFragment, bundle)
         }
-        val cardsLayoutManager = LinearLayoutManager(requireContext())
         val lineDivider = DividerItemDecoration(
                 requireContext(),
                 DividerItemDecoration.VERTICAL
@@ -49,7 +48,6 @@ class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
         )
         check_list_recycle_view.apply {
             addItemDecoration(lineDivider)
-            layoutManager = cardsLayoutManager
             setAdapter(adapter)
         }
         viewModel.accList.observe(viewLifecycleOwner, Observer {

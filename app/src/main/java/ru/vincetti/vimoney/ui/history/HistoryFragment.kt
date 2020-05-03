@@ -78,10 +78,8 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
                         R.drawable.light_divider
                 )!!
         )
-        val trLayoutManager = LinearLayoutManager(requireContext())
         home_transactions_recycle_view.apply {
             addItemDecoration(lineDivider)
-            layoutManager = trLayoutManager
             adapter = transactionsRVAdapter
         }
         viewModel.transList.observe(viewLifecycleOwner, Observer { trList ->

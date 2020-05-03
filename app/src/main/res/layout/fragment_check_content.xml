@@ -16,7 +16,7 @@
         android:layout_marginEnd="@dimen/big_padding"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:layout_width="@dimen/card_view_width"
-        app:cardCornerRadius="@dimen/sm_padding"
+        app:cardCornerRadius="@dimen/st_padding"
         app:cardElevation="@dimen/st_padding"
         >
 
@@ -31,25 +31,25 @@
                 android:id="@+id/check_acc_label"
                 android:layout_width="12dp"
                 android:layout_height="0dp"
-                android:background="@drawable/card_label"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:background="@drawable/card_label"
                 />
 
             <TextView
                 android:id="@+id/check_acc_name"
-                style="@style/textBlackShadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/check_acc_balance"
+                app:layout_constraintStart_toEndOf="@+id/check_acc_label"
+                app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="@dimen/big_padding"
                 android:layout_marginStart="@dimen/big_padding"
                 android:textColor="@color/colorTextWhite"
                 android:textSize="@dimen/text_st_numbers"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/check_acc_balance"
-                app:layout_constraintStart_toEndOf="@+id/check_acc_label"
-                app:layout_constraintTop_toTopOf="parent"
+                style="@style/textBlackShadow"
                 tools:text="@string/home_title_acc_name"
                 />
 
@@ -68,10 +68,10 @@
                 android:id="@+id/check_acc_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:textColor="@color/colorTextWhite"
                 app:layout_constraintBaseline_toBaselineOf="@+id/check_acc_name"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:textColor="@color/colorTextWhite"
                 tools:text="@string/home_title_acc_type"
                 />
 
@@ -80,29 +80,29 @@
                 style="@style/textBlackShadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/check_acc_name"
+                app:layout_constraintTop_toBottomOf="@+id/check_acc_name"
                 android:layout_alignParentBottom="true"
                 android:textColor="@color/colorTextWhite"
                 android:textSize="@dimen/text_big_numbers"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/check_acc_name"
-                app:layout_constraintTop_toBottomOf="@+id/check_acc_name"
                 tools:text="@string/home_title_acc_balance"
                 />
 
             <TextView
                 android:id="@+id/check_acc_symbol"
-                style="@style/textBlackShadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintBaseline_toBaselineOf="@+id/check_acc_balance"
+                app:layout_constraintStart_toEndOf="@+id/check_acc_balance"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="@dimen/sm_padding"
                 android:layout_toEndOf="@id/check_acc_balance"
                 android:textColor="@color/colorTextWhite"
                 android:textSize="@dimen/text_big_numbers"
                 android:textStyle="bold"
-                app:layout_constraintBaseline_toBaselineOf="@+id/check_acc_balance"
-                app:layout_constraintStart_toEndOf="@+id/check_acc_balance"
+                style="@style/textBlackShadow"
                 tools:text="@string/currency_ruble_symbol"
                 />
 
@@ -118,11 +118,11 @@
         android:layout_marginTop="@dimen/big_padding"
         android:paddingStart="@dimen/activity_horizontal_margin"
         android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:text="@string/history_title_home"
         android:textColor="@color/colorPrimaryTextDark"
         android:fontFamily="sans-serif-medium"
         android:textSize="@dimen/text_st_numbers"
         android:textStyle="bold"
+        android:text="@string/history_title_home"
         />
 
     <!--Список транзаций-->
