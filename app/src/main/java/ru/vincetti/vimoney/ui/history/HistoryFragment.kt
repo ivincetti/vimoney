@@ -2,10 +2,12 @@ package ru.vincetti.vimoney.ui.history
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_history_content.*
@@ -66,10 +68,20 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
                     bundle)
         }
         home_transactions_recycle_view.setHasFixedSize(true)
-        val trLayoutManager = LinearLayoutManager(requireContext())
-        home_transactions_recycle_view.layoutManager = trLayoutManager
-        home_transactions_recycle_view.adapter = transactionsRVAdapter
-
+        val lineDivider = DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+        )
+        lineDivider.setDrawable(
+                ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.light_divider
+                )!!
+        )
+        home_transactions_recycle_view.apply {
+            addItemDecoration(lineDivider)
+            adapter = transactionsRVAdapter
+        }
         viewModel.transList.observe(viewLifecycleOwner, Observer { trList ->
             trList?.let {
                 transactionsRVAdapter.setTransaction(trList)

@@ -43,12 +43,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             findNavController().navigate(R.id.action_homeFragment_to_checkFragment, bundle)
         }
 
-        val llManager = LinearLayoutManager(
-                requireActivity(),
-                LinearLayoutManager.HORIZONTAL,
-                false)
         val recycler = fragment_home_content.home_cards_recycle_view
-        recycler.layoutManager = llManager
         recycler.adapter = mAdapter
 
         viewModel.accounts.observe(viewLifecycleOwner, Observer {

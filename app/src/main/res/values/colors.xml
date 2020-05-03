@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#164fc6</color>
-    <color name="colorPrimaryDark">#15315f</color>
-    <color name="colorAccent">#d81b60</color>
+    <color name="colorPrimaryDark">@color/colorBackgroundDark</color>
+    <color name="colorAccent">@color/colorSecondaryTextDark</color>
 
     <color name="colorIncome">#06DF58</color>
     <color name="colorSpent">#F82020</color>
@@ -15,4 +15,12 @@
     <color name="colorBackground">#f9f9fa</color>
     <color name="colorBackgroundNotification">#f2f3f5</color>
     <color name="colorBackgroundNotificationBlue">#e5f4fa</color>
+
+    <color name="colorBackgroundDark">#343133</color>
+    <color name="colorPrimaryTextDark">@color/colorPrimaryElementsDark</color>
+    <color name="colorPrimaryElementsDark">#E1DEE0</color>
+    <color name="colorSecondaryDark">#514D50</color>
+    <color name="colorSecondaryTextDark">@color/colorSecondaryDark</color>
+    <color name="lightDivider">@color/colorSecondaryDark</color>
+
 </resources>
