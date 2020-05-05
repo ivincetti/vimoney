@@ -13,19 +13,16 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
 
     private val cal: Calendar = Calendar.getInstance()
 
-    var income: LiveData<Int> = dao.loadSumTransactionIncomeMonth(
-            SimpleDateFormat("MM").format(cal.time),
-            SimpleDateFormat("yyyy").format(cal.time)
-    )
-
-    val expense = dao.loadSumTransactionExpenseMonth(
-            SimpleDateFormat("MM").format(cal.time),
-            SimpleDateFormat("yyyy").format(cal.time)
-    )
+    val income = MutableLiveData<Int>()
+    val expense = MutableLiveData<Int>()
 
     private var _monthString = MutableLiveData<String>()
     val monthString
         get() = _monthString
+
+    private var _yearString = MutableLiveData<String>()
+    val yearString
+        get() = _yearString
 
     private var _dataSet = MutableLiveData<LineData>()
     val dataSet
@@ -41,18 +38,35 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
 
     init {
         cal.time = Date()
+        income.value = 0
+        expense.value = 0
         _isShowProgress.value = true
         _need2Navigate2Home.value = false
-        getData()
+        getGraphData()
     }
 
-    private fun getData() {
-        monthString.value = SimpleDateFormat("MMM").format(cal.time)
-        getStat()
+    private fun getGraphData() {
+        _monthString.value = SimpleDateFormat("MMM").format(cal.time)
+        _yearString.value = SimpleDateFormat("yyyy").format(cal.time)
+        getAmountData()
+        getGraphStat()
+    }
+
+    private fun getAmountData(){
+        viewModelScope.launch {
+            income.value = dao.loadSumTransactionIncomeMonth(
+                    SimpleDateFormat("MM").format(cal.time),
+                    SimpleDateFormat("yyyy").format(cal.time)
+            )
+            expense.value = dao.loadSumTransactionExpenseMonth(
+                    SimpleDateFormat("MM").format(cal.time),
+                    SimpleDateFormat("yyyy").format(cal.time)
+            )
+        }
     }
 
     /** Получение статистики. */
-    private fun getStat() {
+    private fun getGraphStat() {
         viewModelScope.launch {
             val stat = dao.loadTransactionStatByMonth(
                     SimpleDateFormat("MM").format(cal.time),
@@ -83,12 +97,22 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
 
     fun setMonthPrev() {
         cal.add(Calendar.MONTH, -1)
-        getData()
+        getGraphData()
     }
 
     fun setMonthNext() {
         cal.add(Calendar.MONTH, 1)
-        getData()
+        getGraphData()
+    }
+
+    fun setYearPrev() {
+        cal.add(Calendar.YEAR, -1)
+        getGraphData()
+    }
+
+    fun setYearNext() {
+        cal.add(Calendar.YEAR, 1)
+        getGraphData()
     }
 
     fun homeButton() {

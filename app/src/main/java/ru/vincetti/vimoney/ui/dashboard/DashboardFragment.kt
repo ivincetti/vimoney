@@ -44,6 +44,15 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         viewModel.monthString.observe(viewLifecycleOwner, Observer {
             dash_content.dashboard_month.text = it
         })
+        dash_content.dashboard_year_next.setOnClickListener {
+            viewModel.setYearNext()
+        }
+        dash_content.dashboard_year_previous.setOnClickListener {
+            viewModel.setYearPrev()
+        }
+        viewModel.yearString.observe(viewLifecycleOwner, Observer {
+            dash_content.dashboard_year.text = it
+        })
         viewModel.dataSet.observe(viewLifecycleOwner, Observer {
             dashboardChart.data = it
             dashboardChart.invalidate()
@@ -84,4 +93,5 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
             dash_content.dashboard_container.visibility = View.VISIBLE
         }
     }
+
 }

@@ -9,10 +9,10 @@ import ru.vincetti.vimoney.data.models.TransactionStatDayModel
 @Dao
 interface TransactionDao {
 
-    @Query("SELECT * FROM transactions ORDER BY id ASC")
+    @Query("SELECT * FROM transactions ORDER BY id DESC")
     suspend fun loadAllTransactions(): List<TransactionModel>?
 
-    @Query("SELECT * FROM transactions WHERE transactions.system == 0 ORDER BY date DESC LIMIT :num")
+    @Query("SELECT * FROM transactions WHERE transactions.system == 0 ORDER BY id DESC LIMIT :num")
     fun loadAllTransactionsCount(num: Int): LiveData<List<TransactionModel>>
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol, " +
@@ -22,7 +22,7 @@ interface TransactionDao {
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +
             "AND transactions.system == 0 " +
-            "ORDER BY transactions.date DESC")
+            "ORDER BY transactions.id DESC")
     fun loadAllTransactionsFull(): LiveData<List<TransactionListModel>>
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol, " +
@@ -32,10 +32,10 @@ interface TransactionDao {
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +
             "AND transactions.system == 0 " +
-            "ORDER BY transactions.date DESC LIMIT :num")
+            "ORDER BY transactions.id DESC LIMIT :num")
     fun loadAllTransactionsCountFull(num: Int): LiveData<List<TransactionListModel>>
 
-    @Query("SELECT * FROM transactions WHERE account_id = :id AND transactions.system == 0 ORDER BY date DESC LIMIT :num")
+    @Query("SELECT * FROM transactions WHERE account_id = :id AND transactions.system == 0 ORDER BY id DESC LIMIT :num")
     fun loadCheckTransactionsCount(id: Int, num: Int): LiveData<List<TransactionModel>>
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol," +
@@ -46,7 +46,7 @@ interface TransactionDao {
             "AND accounts.currency == currency.code " +
             "AND ((transactions.account_id == :id" + " AND transactions.system == 0) " +
             "OR transactions.id IN (SELECT id from transactions WHERE extra_value IN(SELECT id from transactions WHERE account_id = :id AND system=1))) " +
-            "ORDER BY transactions.date DESC")
+            "ORDER BY transactions.id DESC")
     fun loadCheckTransactionsFull(id: Int): LiveData<List<TransactionListModel>>
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol," +
@@ -57,7 +57,7 @@ interface TransactionDao {
             "AND accounts.currency == currency.code " +
             "AND ((transactions.account_id == :id" + " AND transactions.system == 0) " +
             "OR transactions.id IN (SELECT id from transactions WHERE extra_value IN(SELECT id from transactions WHERE account_id = :id AND system=1))) " +
-            "ORDER BY transactions.date DESC LIMIT :num")
+            "ORDER BY transactions.id DESC LIMIT :num")
     fun loadCheckTransactionsCountFull(id: Int, num: Int): LiveData<List<TransactionListModel>>
 
     @Query("SELECT * FROM transactions WHERE id = :id")
@@ -68,26 +68,26 @@ interface TransactionDao {
             + " AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month"
             + " AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year"
             + " AND system=0")
-    fun loadSumTransactionIncomeMonth(month: String, year: String): LiveData<Int>
+    suspend fun loadSumTransactionIncomeMonth(month: String, year: String): Int
 
     @Query("SELECT IFNULL(Sum(sum),0) FROM transactions WHERE type ="
             + TransactionModel.TRANSACTION_TYPE_SPENT
             + " AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month"
             + " AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year")
-    fun loadSumTransactionExpenseMonth(month: String, year: String): LiveData<Int>
+    suspend fun loadSumTransactionExpenseMonth(month: String, year: String): Int
 
     @Query("SELECT strftime('%d', datetime(date/1000, 'unixepoch', 'localtime')) AS day, " +
             "((Select IFNULL(Sum(sum),0) FROM transactions t2 WHERE " +
             "strftime('%d', datetime(t2.date/1000, 'unixepoch', 'localtime')) = strftime('%d', datetime(transactions.date/1000, 'unixepoch', 'localtime')) AND " +
             "strftime('%m', datetime(t2.date/1000, 'unixepoch', 'localtime')) = :month AND " +
-            "strftime('%Y', datetime(t2.date/1000, 'unixepoch', 'localtime')) = \"2019\" AND " +
-            "t2.type = 1) -\n" +
+            "strftime('%Y', datetime(t2.date/1000, 'unixepoch', 'localtime')) = :year AND " +
+            "t2.type = 1 AND system = 0) -\n" +
             "(Select IFNULL(Sum(sum),0) FROM transactions t3 WHERE \n" +
             "strftime('%d', datetime(t3.date/1000, 'unixepoch', 'localtime')) = strftime('%d', datetime(transactions.date/1000, 'unixepoch', 'localtime')) AND\n" +
             "strftime('%m', datetime(t3.date/1000, 'unixepoch', 'localtime')) = :month AND\n" +
-            "strftime('%Y', datetime(t3.date/1000, 'unixepoch', 'localtime')) = \"2019\" AND\n" +
-            "type = 2 )) AS sum " +
-            "FROM transactions WHERE system=0 "
+            "strftime('%Y', datetime(t3.date/1000, 'unixepoch', 'localtime')) = :year AND\n" +
+            "type = 2 AND system = 0)) AS sum " +
+            "FROM transactions WHERE system = 0 "
             + " AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month"
             + " AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year"
             + " GROUP BY day "
@@ -127,4 +127,5 @@ interface TransactionDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateTransaction(t: TransactionModel)
+
 }
