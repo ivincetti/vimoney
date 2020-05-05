@@ -1,8 +1,7 @@
 package ru.vincetti.vimoney.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
+import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.AccountListModel
 import ru.vincetti.vimoney.data.sqlite.AccountDao
 import ru.vincetti.vimoney.data.sqlite.TransactionDao
@@ -14,8 +13,15 @@ class HomeViewModel(accDao: AccountDao, trDao: TransactionDao) : ViewModel() {
     var date: String = SimpleDateFormat("MM").format(Date())
     var year: String = SimpleDateFormat("yyyy").format(Date())
 
-    val incomeSum: LiveData<Int> = trDao.loadSumTransactionIncomeMonth(date, year)
-    val expenseSum: LiveData<Int> = trDao.loadSumTransactionExpenseMonth(date, year)
+    val incomeSum = MutableLiveData<Int>()
+    val expenseSum = MutableLiveData<Int>()
+
+    init {
+        viewModelScope.launch {
+            incomeSum.value = trDao.loadSumTransactionIncomeMonth(date, year)
+            expenseSum.value = trDao.loadSumTransactionExpenseMonth(date, year)
+        }
+    }
 }
 
 class HomeViewModelFactory(

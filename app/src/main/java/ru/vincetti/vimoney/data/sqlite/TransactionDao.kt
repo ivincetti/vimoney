@@ -68,26 +68,26 @@ interface TransactionDao {
             + " AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month"
             + " AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year"
             + " AND system=0")
-    fun loadSumTransactionIncomeMonth(month: String, year: String): LiveData<Int>
+    suspend fun loadSumTransactionIncomeMonth(month: String, year: String): Int
 
     @Query("SELECT IFNULL(Sum(sum),0) FROM transactions WHERE type ="
             + TransactionModel.TRANSACTION_TYPE_SPENT
             + " AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month"
             + " AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year")
-    fun loadSumTransactionExpenseMonth(month: String, year: String): LiveData<Int>
+    suspend fun loadSumTransactionExpenseMonth(month: String, year: String): Int
 
     @Query("SELECT strftime('%d', datetime(date/1000, 'unixepoch', 'localtime')) AS day, " +
             "((Select IFNULL(Sum(sum),0) FROM transactions t2 WHERE " +
             "strftime('%d', datetime(t2.date/1000, 'unixepoch', 'localtime')) = strftime('%d', datetime(transactions.date/1000, 'unixepoch', 'localtime')) AND " +
             "strftime('%m', datetime(t2.date/1000, 'unixepoch', 'localtime')) = :month AND " +
-            "strftime('%Y', datetime(t2.date/1000, 'unixepoch', 'localtime')) = \"2019\" AND " +
-            "t2.type = 1) -\n" +
+            "strftime('%Y', datetime(t2.date/1000, 'unixepoch', 'localtime')) = :year AND " +
+            "t2.type = 1 AND system = 0) -\n" +
             "(Select IFNULL(Sum(sum),0) FROM transactions t3 WHERE \n" +
             "strftime('%d', datetime(t3.date/1000, 'unixepoch', 'localtime')) = strftime('%d', datetime(transactions.date/1000, 'unixepoch', 'localtime')) AND\n" +
             "strftime('%m', datetime(t3.date/1000, 'unixepoch', 'localtime')) = :month AND\n" +
-            "strftime('%Y', datetime(t3.date/1000, 'unixepoch', 'localtime')) = \"2019\" AND\n" +
-            "type = 2 )) AS sum " +
-            "FROM transactions WHERE system=0 "
+            "strftime('%Y', datetime(t3.date/1000, 'unixepoch', 'localtime')) = :year AND\n" +
+            "type = 2 AND system = 0)) AS sum " +
+            "FROM transactions WHERE system = 0 "
             + " AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month"
             + " AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year"
             + " GROUP BY day "
