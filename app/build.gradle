@@ -22,8 +22,8 @@ android {
         applicationId "ru.vincetti.vimoney"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 14
-        versionName "2.0.2"
+        versionCode 16
+        versionName "3.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.release
     }
