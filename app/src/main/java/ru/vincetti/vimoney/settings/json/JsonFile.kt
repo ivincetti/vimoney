@@ -1,19 +1,15 @@
 package ru.vincetti.vimoney.settings.json
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.text.TextUtils
-import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.vincetti.vimoney.data.models.AccountModel
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import java.io.BufferedReader
-import java.io.FileInputStream
-import java.io.IOException
-import java.io.InputStreamReader
+import java.io.*
 import java.util.*
 
 object JsonFile {
@@ -23,25 +19,29 @@ object JsonFile {
 
     suspend fun save(context: Context) {
         withContext(Dispatchers.IO) {
-            val gson = Gson()
+            val gson = GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()
             val mDb = AppDatabase.getInstance(context)
             val accounts = mDb.accountDao().loadAllAccounts()
             accounts?.let {
                 val accountJson: String = gson.toJson(it)
-                val fosAccount = context.openFileOutput(FILE_NAME_ACCOUNTS, MODE_PRIVATE)
-                fosAccount?.write(accountJson.toByteArray())
+                val file = File(context.getExternalFilesDir(null), FILE_NAME_ACCOUNTS)
+                val fosAccount = FileOutputStream(file)
+                fosAccount.write(accountJson.toByteArray())
+                fosAccount.close()
             }
             val transactions = mDb.transactionDao().loadAllTransactions()
             transactions?.let {
                 val transactionsJson = gson.toJson(it)
-                val fos = context.openFileOutput(FILE_NAME_TRANSACTIONS, MODE_PRIVATE)
-                fos?.write(transactionsJson.toByteArray())
+                val file = File(context.getExternalFilesDir(null), FILE_NAME_TRANSACTIONS)
+                val fos = FileOutputStream(file)
+                fos.write(transactionsJson.toByteArray())
+                fos.close()
             }
         }
     }
 
     suspend fun load(context: Context) {
-        val gson = Gson()
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()
         val db = AppDatabase.getInstance(context)
 
         withContext(Dispatchers.IO) {
@@ -51,7 +51,8 @@ object JsonFile {
             val accountsJsonBuilder = StringBuilder()
 
             try {
-                fisTransactions = context.openFileInput(FILE_NAME_TRANSACTIONS)
+                val file = File(context.getExternalFilesDir(null), FILE_NAME_TRANSACTIONS)
+                fisTransactions = FileInputStream(file)
                 var isr = InputStreamReader(fisTransactions)
                 var br = BufferedReader(isr)
                 var text: String?
@@ -62,7 +63,8 @@ object JsonFile {
                     text = br.readLine()
                 }
 
-                fisAccounts = context.openFileInput(FILE_NAME_ACCOUNTS)
+                val fileAcc = File(context.getExternalFilesDir(null), FILE_NAME_ACCOUNTS)
+                fisAccounts = FileInputStream(fileAcc)
                 isr = InputStreamReader(fisAccounts)
                 br = BufferedReader(isr)
 

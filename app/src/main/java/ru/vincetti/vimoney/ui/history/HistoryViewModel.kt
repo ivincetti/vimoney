@@ -12,11 +12,12 @@ class HistoryViewModel(
         checkID: Int?
 ) : ViewModel() {
 
-    val transList: LiveData<List<TransactionListModel>> = if (checkID != null) {
-        trDao.loadCheckTransactionsCountFull(checkID, count)
-    } else {
-        trDao.loadAllTransactionsCountFull(count)
-    }
+    val transList: LiveData<List<TransactionListModel>> =
+            if (checkID != null) {
+                trDao.loadCheckTransactionsCountFull(checkID, count)
+            } else {
+                trDao.loadAllTransactionsCountFull(count)
+            }
 
     companion object {
         const val DEFAULT_TRANSACTIONS = 10
