@@ -1,14 +1,14 @@
 package ru.vincetti.vimoney.ui.dashboard
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.XAxis
 import kotlinx.android.synthetic.main.fragment_dashboard.*
+import kotlinx.android.synthetic.main.fragment_dashboard_content.*
 import kotlinx.android.synthetic.main.fragment_dashboard_content.view.*
 import kotlinx.android.synthetic.main.stat_income_exspence.view.*
 import ru.vincetti.vimoney.R
@@ -19,7 +19,6 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     private val viewModel: DashboardViewModel by viewModels { viewModelFactory }
 
     private lateinit var viewModelFactory: DashboardViewModelFactory
-    private lateinit var dashboardChart: LineChart
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -28,7 +27,6 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         val db = AppDatabase.getInstance(application)
         viewModelFactory = DashboardViewModelFactory(db.transactionDao())
 
-        dashboardChart = dash_content.dashboard_chart
         graphInit()
 
         setting_navigation_back_btn.setOnClickListener {
@@ -54,8 +52,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
             dash_content.dashboard_year.text = it
         })
         viewModel.dataSet.observe(viewLifecycleOwner, Observer {
-            dashboardChart.data = it
-            dashboardChart.invalidate()
+            dashboard_lineChart.animate(it)
         })
         viewModel.isShowProgress.observe(viewLifecycleOwner, Observer {
             showProgress(it)
@@ -72,16 +69,12 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     }
 
     private fun graphInit() {
-        dashboardChart.legend.isEnabled = false
-        dashboardChart.description.isEnabled = false
-        val bottom = dashboardChart.xAxis
-        bottom.position = XAxis.XAxisPosition.BOTTOM
-        bottom.setDrawGridLines(false)
-        val left = dashboardChart.axisLeft
-        left.setDrawAxisLine(false) // no axis line
-        left.setDrawGridLines(false) // no grid lines
-        left.setDrawZeroLine(true) // draw a zero line
-        dashboardChart.axisRight.isEnabled = false // no right axis
+        dashboard_lineChart.gradientFillColors =
+                intArrayOf(
+                        Color.parseColor("#81FFFFFF"),
+                        Color.TRANSPARENT
+                )
+        dashboard_lineChart.animation.duration = 400L
     }
 
     private fun showProgress(need2Show: Boolean) {
