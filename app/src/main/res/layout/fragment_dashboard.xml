@@ -30,9 +30,9 @@
                     android:id="@+id/setting_navigation_back_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_arrow_back_dark"
                     android:contentDescription="@string/back_icon_description"
                     />
@@ -40,16 +40,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/setting_navigation_back_btn"
+                    app:layout_constraintTop_toTopOf="parent"
                     android:paddingStart="@dimen/st_padding"
                     android:paddingEnd="@dimen/st_padding"
-                    android:textColor="@color/colorPrimaryTextDark"
                     android:fontFamily="sans-serif-medium"
+                    android:text="@string/dashboard_title_home"
+                    android:textColor="@color/colorPrimaryTextDark"
                     android:textSize="@dimen/text_st_numbers"
                     android:textStyle="bold"
-                    android:text="@string/dashboard_title_home"
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -58,18 +58,10 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorBackgroundDark"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
+    <include
+        android:id="@+id/dash_content"
+        layout="@layout/fragment_dashboard_content"
+        />
 
-        <include
-            android:id="@+id/dash_content"
-            layout="@layout/fragment_dashboard_content"
-            />
-
-    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
