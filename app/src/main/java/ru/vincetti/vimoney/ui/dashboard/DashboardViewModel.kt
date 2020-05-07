@@ -1,9 +1,6 @@
 package ru.vincetti.vimoney.ui.dashboard
 
 import androidx.lifecycle.*
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.sqlite.TransactionDao
 import java.text.SimpleDateFormat
@@ -24,7 +21,7 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
     val yearString
         get() = _yearString
 
-    private var _dataSet = MutableLiveData<LineData>()
+    private var _dataSet = MutableLiveData<LinkedHashMap<String, Float>>()
     val dataSet
         get() = _dataSet
 
@@ -52,7 +49,7 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
         getGraphStat()
     }
 
-    private fun getAmountData(){
+    private fun getAmountData() {
         viewModelScope.launch {
             income.value = dao.loadSumTransactionIncomeMonth(
                     SimpleDateFormat("MM").format(cal.time),
@@ -73,25 +70,14 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
                     SimpleDateFormat("yyyy").format(cal.time)
             )
             var sum = 0f
-            val entries = ArrayList<Entry>()
-            entries.add(Entry(0f, sum))
+            val entries = LinkedHashMap<String, Float>()
+            entries["0"] = sum
             for (model in stat) {
                 sum += model.sum
-                entries.add(Entry(model.day.toFloat(), sum))
+                entries[model.day] = sum
             }
-            val dataSet = LineDataSet(entries, "Label")
-            dataSet.apply {
-                setDrawFilled(true)
-                setDrawCircles(false)
-                lineWidth = 1.8f
-                circleRadius = 4f
-                fillAlpha = 100
-                setDrawHorizontalHighlightIndicator(false)
-            }
-            // create a data object with the data sets
-            val lineData = LineData(dataSet)
+            _dataSet.value = entries
             _isShowProgress.value = false
-            _dataSet.value = lineData
         }
     }
 
