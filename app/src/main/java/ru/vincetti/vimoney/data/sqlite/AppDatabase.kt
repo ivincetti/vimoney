@@ -19,7 +19,7 @@ import ru.vincetti.vimoney.data.models.TransactionModel
     ConfigModel::class,
     CurrencyModel::class
 ],
-        version = 8,
+        version = 9,
         exportSchema = false
 )
 @TypeConverters(DateConverter::class)
@@ -54,7 +54,8 @@ abstract class AppDatabase : RoomDatabase() {
                                         MIGRATION_4_5,
                                         MIGRATION_5_6,
                                         MIGRATION_6_7,
-                                        MIGRATION_7_8
+                                        MIGRATION_7_8,
+                                        MIGRATION_8_9
                                 )
                                 .build()
                 INSTANCE = instance
@@ -120,6 +121,13 @@ abstract class AppDatabase : RoomDatabase() {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE accounts ADD COLUMN color TEXT DEFAULT '' NOT NULL")
                 db.execSQL("UPDATE accounts SET color=\"#164fc6\"")
+            }
+        }
+
+        // add account column: include in all balance
+        private val MIGRATION_8_9 = object : Migration(8, 9) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE accounts ADD COLUMN need_all_balance INTEGER DEFAULT 1 NOT NULL")
             }
         }
     }

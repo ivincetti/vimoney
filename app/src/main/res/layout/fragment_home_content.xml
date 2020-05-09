@@ -5,8 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:background="@color/colorBackgroundDark"
     android:orientation="vertical"
+    tools:background="@color/colorBackgroundDark"
     >
 
     <!--Заголовок Счетов-->
@@ -39,7 +39,7 @@
             android:fontFamily="sans-serif-medium"
             android:paddingStart="@dimen/st_padding"
             android:paddingEnd="@dimen/st_padding"
-            android:text="@string/home_fragment_transactions_link_title"
+            android:text="@string/home_fragment_link_to_all_title"
             />
 
     </LinearLayout>
@@ -98,7 +98,7 @@
             android:fontFamily="sans-serif-medium"
             android:paddingStart="@dimen/st_padding"
             android:paddingEnd="@dimen/st_padding"
-            android:text="@string/home_fragment_stat_link_title"
+            android:text="@string/home_fragment_link_to_all_title"
             />
 
     </LinearLayout>
@@ -135,7 +135,7 @@
             android:fontFamily="sans-serif-medium"
             android:paddingStart="@dimen/st_padding"
             android:paddingEnd="@dimen/st_padding"
-            android:text="@string/home_fragment_transactions_link_title"
+            android:text="@string/home_fragment_link_to_all_title"
             />
 
     </LinearLayout>

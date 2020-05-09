@@ -108,6 +108,26 @@
         android:orientation="horizontal"
         >
 
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/add_check_all_balance_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/sm_padding"
+            android:textColor="@color/colorSecondaryTextDark"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="@dimen/text_st_numbers"
+            android:text="@string/add_check_all_balance_need"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sm_padding"
+        android:orientation="horizontal"
+        >
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"

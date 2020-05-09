@@ -20,8 +20,7 @@
     <string name="home_fragment_spending">0</string>
     <string name="home_fragment_spending_sample">11000</string>
     <string name="home_fragment_spending_title">Расходы</string>
-    <string name="home_fragment_transactions_link_title">посмотреть все</string>
-    <string name="home_fragment_stat_link_title">просмотреть</string>
+    <string name="home_fragment_link_to_all_title">показать все</string>
 
     <!--History Activity-->
     <string name="history_title_home">Транзакции</string>
@@ -49,6 +48,7 @@
     <string name="add_spent_btn_text">расход</string>
     <string name="add_income_btn_text">доход</string>
     <string name="add_no_account_text">Выберите счет</string>
+    <string name="add_check_all_balance_need">учитывать в балансе</string>
     <string name="transaction_add_alert_question">Закрыть окно без сохранения?</string>
     <string name="transaction_add_alert_negative">Не сохранять</string>
     <string name="transaction_add_alert_positive">Продолжить</string>

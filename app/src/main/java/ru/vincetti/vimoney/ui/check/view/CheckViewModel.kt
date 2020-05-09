@@ -4,50 +4,66 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.AccountListModel
 import ru.vincetti.vimoney.data.sqlite.AccountDao
+import ru.vincetti.vimoney.data.sqlite.TransactionDao
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
+import ru.vincetti.vimoney.utils.accountBalanceUpdateById
 
-class CheckViewModel(private val dao: AccountDao, private val checkID: Int) : ViewModel() {
+class CheckViewModel(
+        private val transactionDao: TransactionDao,
+        private val accountDao: AccountDao,
+        private val accountId: Int
+) : ViewModel() {
 
     companion object {
         const val DEFAULT_CHECK_COUNT = 20
     }
 
-    val model: LiveData<AccountListModel> = dao.loadAccountByIdFull(checkID)
+    val model: LiveData<AccountListModel> = accountDao.loadAccountByIdFull(accountId)
 
-    private var _need2UpdateViewModel = MutableLiveData<Boolean>()
-    val need2UpdateViewModel
-        get() = _need2UpdateViewModel
+    private var _updateButtonEnable = MutableLiveData<Boolean>()
+    val updateButtonEnable
+        get() = _updateButtonEnable
 
     init {
-        _need2UpdateViewModel.value = false
+        _updateButtonEnable.value = true
     }
 
     /** Restore from archive account logic. */
     fun restore() {
-        if (checkID != DEFAULT_CHECK_ID) {
+        if (accountId != DEFAULT_CHECK_ID) {
             viewModelScope.launch {
-                dao.fromArchiveAccountById(checkID)
-                _need2UpdateViewModel.value = true
+                accountDao.fromArchiveAccountById(accountId)
             }
         }
     }
 
     /** Archive account logic. */
     fun delete() {
-        if (checkID != DEFAULT_CHECK_ID) {
+        if (accountId != DEFAULT_CHECK_ID) {
             // delete query
             viewModelScope.launch {
-                dao.archiveAccountById(checkID)
-                _need2UpdateViewModel.value = true
+                accountDao.archiveAccountById(accountId)
             }
+        }
+    }
+
+    fun update() {
+        _updateButtonEnable.value = false
+        viewModelScope.launch {
+            accountBalanceUpdateById(transactionDao, accountDao, accountId)
+            _updateButtonEnable.value = true
         }
     }
 }
 
-class CheckViewModelFactory(private val dao: AccountDao, private val id: Int) : ViewModelProvider.Factory {
+class CheckViewModelFactory(
+        private val transactionDao: TransactionDao,
+        private val accountDao: AccountDao,
+        private val id: Int
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CheckViewModel::class.java)) {
-            return CheckViewModel(dao, id) as T
+            return CheckViewModel(transactionDao, accountDao, id) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
