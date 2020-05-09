@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home_content.view.*
 import kotlinx.android.synthetic.main.stat_income_exspence.view.*
@@ -16,7 +15,6 @@ import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
-import ru.vincetti.vimoney.utils.userBalanceChange
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -46,9 +44,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val recycler = fragment_home_content.home_cards_recycle_view
         recycler.adapter = mAdapter
 
+        viewModel.userBalance.observe(viewLifecycleOwner, Observer {
+            home_user_balance.text = it.toString()
+        })
         viewModel.accounts.observe(viewLifecycleOwner, Observer {
-            home_user_balance.text = userBalanceChange(it).toString()
             mAdapter.setList(it)
+        })
+        viewModel.homeButtonEnabled.observe(viewLifecycleOwner, Observer {
+            home_menu_update.isEnabled = it
         })
         viewModel.incomeSum.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -85,6 +88,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         home_menu_settings.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
+        }
+        home_menu_update.setOnClickListener {
+            viewModel.updateAllAccounts()
         }
     }
 

@@ -21,8 +21,7 @@
     <string name="home_fragment_spending">0</string>
     <string name="home_fragment_spending_sample">11000</string>
     <string name="home_fragment_spending_title">Expenses</string>
-    <string name="home_fragment_transactions_link_title">show all</string>
-    <string name="home_fragment_stat_link_title">show</string>
+    <string name="home_fragment_link_to_all_title">show all</string>
 
     <!--History Activity-->
     <string name="history_title_home">Records</string>
@@ -71,6 +70,9 @@
     <string name="add_check_type_debit_txt">debit</string>
     <string name="add_check_type_credit_txt">credit</string>
     <string name="add_check_name_hint">name</string>
+    <string name="add_check_no_account_warning">Please, choose account</string>
+    <string name="add_check_no_sum_warning">Please, set the amount</string>
+    <string name="add_check_all_balance_need">balance include</string>
     <string name="check_delete_alert_question">Are you sure want to delete?</string>
     <string name="check_delete_alert_negative">Keep</string>
     <string name="check_delete_alert_positive">Delete</string>
@@ -99,8 +101,6 @@
     <string name="back_icon_description">Back</string>
     <string name="settings_save_transactions_btn">Save records</string>
     <string name="settings_load_transactions_btn">Load records</string>
-    <string name="add_check_no_account_warning">Please, choose account</string>
-    <string name="add_check_no_sum_warning">Please, set the amount</string>
 
     <!--Currency-->
     <string name="currency_name">currency</string>

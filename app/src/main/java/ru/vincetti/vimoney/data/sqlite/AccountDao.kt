@@ -39,7 +39,7 @@ interface AccountDao {
             "FROM accounts, currency " +
             "WHERE accounts.currency == currency.code AND  accounts.archive = 0 " +
             "ORDER BY accounts.name ASC")
-    fun loadNotArchiveAccountsFull(): LiveData<List<AccountListModel>>
+    fun loadNotArchiveAccountsFull(): List<AccountListModel>
 
     @Query("SELECT * FROM accounts WHERE id = :accId")
     suspend fun loadAccountById(accId: Int): AccountModel

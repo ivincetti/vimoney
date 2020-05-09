@@ -10,7 +10,6 @@
     android:paddingStart="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/st_padding"
     android:paddingEnd="@dimen/activity_horizontal_margin"
-    tools:layout_height="wrap_content"
     tools:background="@color/colorBackgroundDark"
     >
 

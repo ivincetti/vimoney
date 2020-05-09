@@ -9,6 +9,7 @@ import kotlinx.coroutines.withContext
 import ru.vincetti.vimoney.data.models.AccountModel
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
+import ru.vincetti.vimoney.utils.accountBalanceUpdateAll
 import java.io.*
 import java.util.*
 
@@ -105,6 +106,7 @@ object JsonFile {
                     db.accountDao().insertAccount(account)
                 }
             }
+            accountBalanceUpdateAll(db.transactionDao(), db.accountDao())
         }
     }
 

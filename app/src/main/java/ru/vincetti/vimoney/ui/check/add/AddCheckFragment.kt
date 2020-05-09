@@ -59,11 +59,17 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
         add_check_content.add_check_color_view.setOnClickListener {
             pickColor()
         }
+        add_check_all_balance_switch.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.setNeed2AllData(isChecked)
+        }
         setting_navigation_back_btn.setOnClickListener {
             showUnsavedDialog()
         }
         viewModel.isDefault.observe(viewLifecycleOwner, Observer {
             if (!it) add_check_save_btn.text = getString(R.string.add_btn_update)
+        })
+        viewModel.needAllBalance.observe(viewLifecycleOwner, Observer {
+            add_check_all_balance_switch.isChecked = it
         })
         viewModel.need2Navigate.observe(viewLifecycleOwner, Observer {
             if (it) goBack()

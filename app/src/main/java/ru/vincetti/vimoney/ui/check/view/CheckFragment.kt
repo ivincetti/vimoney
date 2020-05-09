@@ -33,7 +33,7 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
             val extraCheck = bundle.getInt(EXTRA_CHECK_ID)
             if (extraCheck > 0) checkId = extraCheck
         }
-        viewModelFactory = CheckViewModelFactory(db.accountDao(), checkId)
+        viewModelFactory = CheckViewModelFactory(db.transactionDao(), db.accountDao(), checkId)
         initViews()
     }
 
@@ -45,6 +45,9 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
         }
         check_navigation_from_archive_btn.setOnClickListener {
             viewModel.restore()
+        }
+        check_navigation_update_btn.setOnClickListener {
+            viewModel.update()
         }
         check_navigation_edit_btn.setOnClickListener {
             val bundle = Bundle()
@@ -85,6 +88,9 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
                 fragment_check_content.check_acc_symbol.text = it.curSymbol
                 showTransactionsHistory(it.id)
             }
+        })
+        viewModel.updateButtonEnable.observe(viewLifecycleOwner, Observer {
+            check_navigation_update_btn.isEnabled = it
         })
     }
 
