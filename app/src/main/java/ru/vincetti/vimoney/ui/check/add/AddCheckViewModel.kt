@@ -25,12 +25,12 @@ class AddCheckViewModel(
     private var isDefaultBool = true
 
     private var _need2Navigate = MutableLiveData<Boolean>()
-    val need2Navigate
+    val need2Navigate: LiveData<Boolean>
         get() = _need2Navigate
 
-    private var _need2UpdateViewModel = MutableLiveData<Boolean>()
-    val need2UpdateViewModel
-        get() = _need2UpdateViewModel
+    private var _needAllBalance = MutableLiveData<Boolean>()
+    val needAllBalance: LiveData<Boolean>
+        get() = _needAllBalance
 
     var need2AllData = MutableLiveData<Boolean>()
 
@@ -51,8 +51,8 @@ class AddCheckViewModel(
     init {
         isDefault.value = true
         need2AllData.value = false
-        _need2UpdateViewModel.value = false
         _need2Navigate.value = false
+        _needAllBalance.value = true
         _check.value = AccountModel()
     }
 
@@ -63,6 +63,7 @@ class AddCheckViewModel(
             _color.value = Color.parseColor(tmp.color)
             _check.value = tmp
             _currency.value = curDao.loadCurrencyByCode(tmp.currency)
+            _needAllBalance.value = tmp.needAllBalance
             isDefault.value = false
             isDefaultBool = false
         }
@@ -80,11 +81,11 @@ class AddCheckViewModel(
             tmpAcc?.let {
                 it.name = name
                 it.type = type
+                it.needAllBalance = _needAllBalance.value!!
                 if (!isDefaultBool) {
                     // update logic
                     viewModelScope.launch {
                         accDao.updateAccount(it)
-                        _need2UpdateViewModel.value = true
                     }
                 } else {
                     it.sum = 0
@@ -94,7 +95,6 @@ class AddCheckViewModel(
 
                     viewModelScope.launch {
                         accDao.insertAccount(it)
-                        _need2UpdateViewModel.value = true
                     }
                 }
                 _need2Navigate.value = true
@@ -107,7 +107,6 @@ class AddCheckViewModel(
         if (!isDefaultBool) {
             viewModelScope.launch {
                 accDao.fromArchiveAccountById(checkID)
-                _need2UpdateViewModel.value = true
                 _need2Navigate.value = true
             }
         }
@@ -118,10 +117,13 @@ class AddCheckViewModel(
         if (!isDefaultBool) {
             viewModelScope.launch {
                 accDao.archiveAccountById(checkID)
-                _need2UpdateViewModel.value = true
                 _need2Navigate.value = true
             }
         }
+    }
+
+    fun setNeed2AllData(isChecked: Boolean) {
+        _needAllBalance.value = isChecked
     }
 
     fun setCurrency(checkCurrency: Int) {

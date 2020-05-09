@@ -48,6 +48,7 @@
     <string name="add_spent_btn_text">расход</string>
     <string name="add_income_btn_text">доход</string>
     <string name="add_no_account_text">Выберите счет</string>
+    <string name="add_check_all_balance_need">учитывать в балансе</string>
     <string name="transaction_add_alert_question">Закрыть окно без сохранения?</string>
     <string name="transaction_add_alert_negative">Не сохранять</string>
     <string name="transaction_add_alert_positive">Продолжить</string>

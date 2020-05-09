@@ -39,14 +39,7 @@ suspend fun userBalanceUpdate(accountDao: AccountDao): Int {
     var balance = 0
     val accounts = accountDao.loadAllAccounts()
     accounts?.let {
-        for (account in it) balance += account.sum
+        it.filter { it.needAllBalance && !it.isArchive }.forEach { balance += it.sum }
     }
     return balance
-}
-
-/** Math all user balance. */
-fun userBalanceChange(accList: List<AccountListModel>): Int {
-    var bal = 0
-    for (account in accList) bal += account.sum
-    return bal
 }

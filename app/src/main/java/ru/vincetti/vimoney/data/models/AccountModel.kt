@@ -29,7 +29,10 @@ data class AccountModel(
         var color: String = "#164fc6",
 
         @ColumnInfo(name = "archive")
-        var isArchive: Boolean = false
+        var isArchive: Boolean = false,
+
+        @ColumnInfo(name = "need_all_balance")
+        var needAllBalance: Boolean = true
 ) {
 
     companion object {
