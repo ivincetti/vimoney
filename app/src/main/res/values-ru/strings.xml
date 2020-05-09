@@ -20,8 +20,7 @@
     <string name="home_fragment_spending">0</string>
     <string name="home_fragment_spending_sample">11000</string>
     <string name="home_fragment_spending_title">Расходы</string>
-    <string name="home_fragment_transactions_link_title">посмотреть все</string>
-    <string name="home_fragment_stat_link_title">просмотреть</string>
+    <string name="home_fragment_link_to_all_title">показать все</string>
 
     <!--History Activity-->
     <string name="history_title_home">Транзакции</string>
