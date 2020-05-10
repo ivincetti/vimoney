@@ -26,6 +26,9 @@ data class TransactionModel(
 
         var sum: Float = 0f,
 
+        @ColumnInfo(name = "category_id")
+        val categoryId: Int = DEFAULT_ID,
+
         @ColumnInfo(name = "extra_key")
         var extraKey: String = "",
 

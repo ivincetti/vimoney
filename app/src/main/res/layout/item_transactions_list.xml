@@ -15,13 +15,15 @@
     >
 
     <!--Category-->
-    <ImageView
+    <TextView
         android:id="@+id/card_transactions_image"
-        android:layout_width="@dimen/icon_st_size"
-        android:layout_height="@dimen/icon_st_size"
-        android:textColor="@color/colorTextWhite"
-        android:contentDescription="@string/history_category_image_desc"
-        app:srcCompat="@drawable/ic_monetization_black"
+        android:layout_width="@dimen/category_icon_background_size"
+        android:layout_height="@dimen/category_icon_background_size"
+        android:layout_margin="@dimen/st_padding"
+        android:background="@drawable/bg_category"
+        android:gravity="center"
+        style="@style/categoryTextStyle"
+        tools:text="@string/sample_category_android"
         />
 
     <androidx.constraintlayout.widget.ConstraintLayout

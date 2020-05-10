@@ -16,6 +16,10 @@ class SettingsViewModel : ViewModel() {
     val need2Navigate2Home: LiveData<Boolean>
         get() = _need2Navigate2Home
 
+    private var _need2Navigate2Categories = MutableLiveData<Boolean>()
+    val need2Navigate2Categories: LiveData<Boolean>
+        get() = _need2Navigate2Categories
+
     private var _importButtonState = MutableLiveData<Boolean>()
     val importButtonState: LiveData<Boolean>
         get() = _importButtonState
@@ -26,12 +30,17 @@ class SettingsViewModel : ViewModel() {
 
     init {
         _need2Navigate2Home.value = false
+        _need2Navigate2Categories.value = false
         _importButtonState.value = true
         _exportButtonState.value = true
     }
 
-    fun homeButton() {
+    fun backButtonClicked() {
         _need2Navigate2Home.value = true
+    }
+
+    fun categoriesButtonClicked(){
+        _need2Navigate2Categories.value = true
     }
 
     fun saveJson() {

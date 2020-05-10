@@ -1,0 +1,28 @@
+package ru.vincetti.vimoney.ui.settings.category.symbol
+
+enum class Category(val symbol: String) {
+    ANCHOR("\uf13d"),
+    ANDROID("\uf544"),
+    AMBULANCE("\uf0f9"),
+    BABY("\uf77c"),
+    BICYCLE("\uf206"),
+    BOOK("\uf02d"),
+    BUS("\uf207"),
+    CAR("\uf1b9"),
+    COFFEE("\uf0f4"),
+    DOG("\uf6d3"),
+    FAUCET("\uf905"),
+    FEMALE("\uf182"),
+    FISH("\uf578"),
+    GAME("\uf11b"),
+    FOOTBALL("\uf1e3"),
+    GLASS("\uf79f"),
+    HAMBURGER("\uf805"),
+    HEADPHONES("\uf025"),
+    HOME("\uf015"),
+    LAPTOP("\uf109"),
+    MOBILE("\uf3cd"),
+    PAW("\uf1b0"),
+    PIGGY("\uf4d3"),
+    SHOPPING("\uf07a"),
+}

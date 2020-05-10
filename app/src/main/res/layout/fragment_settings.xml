@@ -66,6 +66,17 @@
             >
 
             <Button
+                android:id="@+id/btn_settings_categories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/st_padding"
+                android:text="@string/settings_categories_btn"
+                android:backgroundTint="@color/colorSecondaryDark"
+                android:textAllCaps="true"
+                />
+
+            <Button
                 android:id="@+id/btn_save_transactions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
