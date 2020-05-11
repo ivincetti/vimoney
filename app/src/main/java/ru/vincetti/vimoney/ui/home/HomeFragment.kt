@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home_content.view.*
-import kotlinx.android.synthetic.main.stat_income_exspence.view.*
+import kotlinx.android.synthetic.main.stat_income_expense.view.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter
 import ru.vincetti.vimoney.data.sqlite.AppDatabase

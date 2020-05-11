@@ -103,7 +103,7 @@
 
     </LinearLayout>
 
-    <include layout="@layout/stat_income_exspence" />
+    <include layout="@layout/stat_income_expense" />
 
     <!--Заголовок транзакций-->
     <LinearLayout
