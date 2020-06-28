@@ -5,6 +5,7 @@
     <string name="splash_nonetwork_string">No network detected.\ncan\'t download sample data</string>
     <string name="splash_nonetwork_negative">Exit</string>
     <string name="splash_nonetwork_positive">REPEAT</string>
+    <string name="splash_logo_description" translatable="false">Logo</string>
 
     <!--Home Activity-->
     <string name="home_title_acc_name">Visa</string>

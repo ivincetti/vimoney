@@ -8,8 +8,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_history_content.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.TransactionsRVAdapter
