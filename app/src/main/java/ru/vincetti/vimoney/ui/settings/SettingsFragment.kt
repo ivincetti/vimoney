@@ -2,12 +2,14 @@ package ru.vincetti.vimoney.ui.settings
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_settings.*
 import ru.vincetti.vimoney.R
+import ru.vincetti.vimoney.extensions.updateMargin
 
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
@@ -36,6 +38,15 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         btn_load_transactions.setOnClickListener {
             btn_load_transactions.isEnabled = false
             viewModel.loadJson()
+        }
+
+        insetsInit()
+    }
+
+    private fun insetsInit() {
+        ViewCompat.setOnApplyWindowInsetsListener(settings_toolbar) { _, insets ->
+            settings_toolbar.updateMargin(top = insets.systemWindowInsetTop)
+            insets
         }
     }
 }

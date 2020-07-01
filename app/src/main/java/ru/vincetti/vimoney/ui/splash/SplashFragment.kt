@@ -43,4 +43,5 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                 }
         builder.create().show()
     }
+
 }
