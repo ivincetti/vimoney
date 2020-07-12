@@ -6,24 +6,15 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="colorBackground" parent="@style/Theme.AppCompat">
+    <style name="colorBackground">
         <item name="colorAccent">@color/colorBackground</item>
     </style>
 
     <style name="FabStyle">
-        <item name="android:layout_gravity">bottom|end</item>
-        <item name="android:layout_margin">@dimen/big_padding</item>
         <item name="srcCompat">@drawable/ic_add_white</item>
         <item name="tint">@android:color/white</item>
         <item name="backgroundTint">@color/colorAccent</item>
@@ -46,6 +37,12 @@
     <style name="tabTextStyle">
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="categoryTextStyle">
+        <item name="android:textSize">@dimen/category_icon_size</item>
+        <item name="android:textColor">@color/colorTextWhite</item>
+        <item name="android:fontFamily">@font/font_awesome_solid</item>
     </style>
 
 </resources>

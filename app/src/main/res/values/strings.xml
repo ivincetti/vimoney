@@ -5,6 +5,7 @@
     <string name="splash_nonetwork_string">No network detected.\ncan\'t download sample data</string>
     <string name="splash_nonetwork_negative">Exit</string>
     <string name="splash_nonetwork_positive">REPEAT</string>
+    <string name="splash_logo_description" translatable="false">Logo</string>
 
     <!--Home Activity-->
     <string name="home_title_acc_name">Visa</string>
@@ -99,6 +100,7 @@
     <string name="channel_name" translatable="false">reminder</string>
     <string name="channel_description">Don\'t forget to record you expenses</string>
     <string name="back_icon_description">Back</string>
+    <string name="settings_categories_btn">Manage Categories</string>
     <string name="settings_save_transactions_btn">Save records</string>
     <string name="settings_load_transactions_btn">Load records</string>
 
@@ -112,5 +114,11 @@
     <string name="color_string">color</string>
     <string name="dashboard_prev"><![CDATA[<<]]></string>
     <string name="dashboard_next"><![CDATA[>>]]></string>
+
+    <!--Categories-->
+    <string name="sample_category_android" translatable="false">\uf544</string>
+    <string name="categories_title_home">Categories</string>
+    <string name="category_add_title">Add category</string>
+    <string name="category_name">Category</string>
 
 </resources>

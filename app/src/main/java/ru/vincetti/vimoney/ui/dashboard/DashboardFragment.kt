@@ -3,6 +3,7 @@ package ru.vincetti.vimoney.ui.dashboard
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -10,9 +11,10 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.android.synthetic.main.fragment_dashboard_content.*
 import kotlinx.android.synthetic.main.fragment_dashboard_content.view.*
-import kotlinx.android.synthetic.main.stat_income_exspence.view.*
+import kotlinx.android.synthetic.main.stat_income_expense.view.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
+import ru.vincetti.vimoney.extensions.updateMargin
 
 class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
@@ -28,6 +30,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         viewModelFactory = DashboardViewModelFactory(db.transactionDao())
 
         graphInit()
+        insetsInit()
 
         setting_navigation_back_btn.setOnClickListener {
             viewModel.homeButton()
@@ -69,8 +72,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     }
 
     private fun graphInit() {
-        dashboard_lineChart.gradientFillColors =
-                intArrayOf(
+        dashboard_lineChart.gradientFillColors = intArrayOf(
                         Color.parseColor("#81FFFFFF"),
                         Color.TRANSPARENT
                 )
@@ -84,6 +86,13 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         } else {
             dash_content.dashboard_progress.visibility = View.GONE
             dash_content.dashboard_container.visibility = View.VISIBLE
+        }
+    }
+
+    private fun insetsInit() {
+        ViewCompat.setOnApplyWindowInsetsListener(dashboard_toolbar) { _, insets ->
+            dashboard_toolbar.updateMargin(top = insets.systemWindowInsetTop)
+            insets
         }
     }
 

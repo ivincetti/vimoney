@@ -2,12 +2,14 @@ package ru.vincetti.vimoney.ui.settings
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_settings.*
 import ru.vincetti.vimoney.R
+import ru.vincetti.vimoney.extensions.updateMargin
 
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
@@ -19,6 +21,9 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         viewModel.need2Navigate2Home.observe(viewLifecycleOwner, Observer {
             if (it) findNavController().navigate(R.id.action_settingsFragment_to_homeFragment)
         })
+        viewModel.need2Navigate2Categories.observe(viewLifecycleOwner, Observer {
+            if (it) findNavController().navigate(R.id.action_settingsFragment_to_categoriesFragment)
+        })
         viewModel.importButtonState.observe(viewLifecycleOwner, Observer {
             btn_save_transactions.isEnabled = it
         })
@@ -27,7 +32,10 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         })
 
         setting_navigation_back_btn.setOnClickListener {
-            viewModel.homeButton()
+            viewModel.backButtonClicked()
+        }
+        btn_settings_categories.setOnClickListener {
+            viewModel.categoriesButtonClicked()
         }
         btn_save_transactions.setOnClickListener {
             btn_save_transactions.isEnabled = false
@@ -36,6 +44,15 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         btn_load_transactions.setOnClickListener {
             btn_load_transactions.isEnabled = false
             viewModel.loadJson()
+        }
+
+        insetsInit()
+    }
+
+    private fun insetsInit() {
+        ViewCompat.setOnApplyWindowInsetsListener(settings_toolbar) { _, insets ->
+            settings_toolbar.updateMargin(top = insets.systemWindowInsetTop)
+            insets
         }
     }
 }

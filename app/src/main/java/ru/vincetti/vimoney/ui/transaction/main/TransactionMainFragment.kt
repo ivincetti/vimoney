@@ -6,6 +6,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -19,6 +20,7 @@ import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.TabsFragmentPagerAdapter
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
+import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
 
 class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
@@ -61,6 +63,7 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
             }
         })
         initViews()
+        insetsInit()
     }
 
     override fun onResume() {
@@ -77,9 +80,8 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
         imm.hideSoftInputFromWindow(requireActivity().currentFocus!!.windowToken, 0)
     }
 
-
     private fun initViews() {
-        sliding_tabs.setupWithViewPager(view_pager)
+        transaction_tabs.setupWithViewPager(view_pager)
         transaction_navigation_delete_btn.setOnClickListener {
             showDeleteDialog()
         }
@@ -152,5 +154,12 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
                     dialogInterface?.dismiss()
                 }
         builder.create().show()
+    }
+
+    private fun insetsInit() {
+        ViewCompat.setOnApplyWindowInsetsListener(transaction_toolbar) { view, insets ->
+            view.updateMargin(top = insets.systemWindowInsetTop)
+            insets
+        }
     }
 }

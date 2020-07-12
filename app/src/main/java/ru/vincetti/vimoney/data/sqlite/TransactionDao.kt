@@ -12,7 +12,7 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions ORDER BY id DESC")
     suspend fun loadAllTransactions(): List<TransactionModel>?
 
-    @Query("SELECT * FROM transactions WHERE transactions.system == 0 ORDER BY id DESC LIMIT :num")
+    @Query("SELECT * FROM transactions WHERE transactions.system == 0 ORDER BY date DESC LIMIT :num")
     fun loadAllTransactionsCount(num: Int): LiveData<List<TransactionModel>>
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol, " +
@@ -22,7 +22,7 @@ interface TransactionDao {
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +
             "AND transactions.system == 0 " +
-            "ORDER BY transactions.id DESC")
+            "ORDER BY transactions.date DESC")
     fun loadAllTransactionsFull(): LiveData<List<TransactionListModel>>
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol, " +
@@ -32,10 +32,13 @@ interface TransactionDao {
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +
             "AND transactions.system == 0 " +
-            "ORDER BY transactions.id DESC LIMIT :num")
+            "ORDER BY transactions.date DESC LIMIT :num")
     fun loadAllTransactionsCountFull(num: Int): LiveData<List<TransactionListModel>>
 
-    @Query("SELECT * FROM transactions WHERE account_id = :id AND transactions.system == 0 ORDER BY id DESC LIMIT :num")
+    @Query("SELECT * FROM transactions " +
+            "WHERE account_id = :id " +
+            "AND transactions.system == 0 " +
+            "ORDER BY date DESC LIMIT :num")
     fun loadCheckTransactionsCount(id: Int, num: Int): LiveData<List<TransactionModel>>
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol," +
@@ -46,7 +49,7 @@ interface TransactionDao {
             "AND accounts.currency == currency.code " +
             "AND ((transactions.account_id == :id" + " AND transactions.system == 0) " +
             "OR transactions.id IN (SELECT id from transactions WHERE extra_value IN(SELECT id from transactions WHERE account_id = :id AND system=1))) " +
-            "ORDER BY transactions.id DESC")
+            "ORDER BY transactions.date DESC")
     fun loadCheckTransactionsFull(id: Int): LiveData<List<TransactionListModel>>
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol," +
@@ -57,10 +60,10 @@ interface TransactionDao {
             "AND accounts.currency == currency.code " +
             "AND ((transactions.account_id == :id" + " AND transactions.system == 0) " +
             "OR transactions.id IN (SELECT id from transactions WHERE extra_value IN(SELECT id from transactions WHERE account_id = :id AND system=1))) " +
-            "ORDER BY transactions.id DESC LIMIT :num")
+            "ORDER BY transactions.date DESC LIMIT :num")
     fun loadCheckTransactionsCountFull(id: Int, num: Int): LiveData<List<TransactionListModel>>
 
-    @Query("SELECT * FROM transactions WHERE id = :id")
+    @Query("SELECT * FROM transactions WHERE id = :id LIMIT 1")
     suspend fun loadTransactionById(id: Int): TransactionModel?
 
     @Query("SELECT IFNULL(Sum(sum),0) FROM transactions WHERE type ="

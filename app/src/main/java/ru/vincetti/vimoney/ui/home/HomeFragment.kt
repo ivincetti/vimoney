@@ -3,16 +3,21 @@ package ru.vincetti.vimoney.ui.home
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.marginBottom
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_home_content.*
 import kotlinx.android.synthetic.main.fragment_home_content.view.*
-import kotlinx.android.synthetic.main.stat_income_exspence.view.*
+import kotlinx.android.synthetic.main.stat_income_expense.view.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
+import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
 import java.text.SimpleDateFormat
@@ -65,6 +70,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         })
 
         viewInit()
+        insetsInit()
         showTransactionsHistory()
     }
 
@@ -91,6 +97,24 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         home_menu_update.setOnClickListener {
             viewModel.updateAllAccounts()
+        }
+    }
+
+    private fun insetsInit(){
+        val fabMargin = home_fab.marginBottom
+        ViewCompat.setOnApplyWindowInsetsListener(home_fab) { _, insets ->
+            home_fab.updateMargin(bottom = (insets.systemWindowInsetBottom + fabMargin))
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(top_toolbar) { _, insets ->
+            top_toolbar.updateMargin(top = insets.systemWindowInsetTop)
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(main_history_container_root) { _, insets ->
+            main_history_container_root.updatePadding(bottom = insets.systemWindowInsetBottom)
+            insets
         }
     }
 

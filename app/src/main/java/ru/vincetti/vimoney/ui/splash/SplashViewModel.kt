@@ -24,7 +24,9 @@ import ru.vincetti.vimoney.utils.accountBalanceUpdateById
 import ru.vincetti.vimoney.utils.isNetworkAvailable
 import java.util.*
 
-class SplashViewModel(val app: Application) : AndroidViewModel(app) {
+class SplashViewModel(
+        val app: Application
+) : AndroidViewModel(app) {
 
     private var _networkError = MutableLiveData<Boolean>()
     val networkError: LiveData<Boolean>
@@ -45,6 +47,7 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
                 .build()
                 .create(JsonDownloader::class.java)
     }
+
     private var mDb: AppDatabase = AppDatabase.getInstance(app)
 
     init {
@@ -143,4 +146,5 @@ class SplashViewModel(val app: Application) : AndroidViewModel(app) {
         mDb.accountDao().insertAccount(newAcc)
         accountBalanceUpdateById(mDb.transactionDao(), mDb.accountDao(), accId)
     }
+
 }

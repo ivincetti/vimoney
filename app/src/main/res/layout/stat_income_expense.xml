@@ -26,6 +26,7 @@
             android:layout_height="@dimen/icon_st_size"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:rotation="180"
             app:srcCompat="@drawable/ic_arrow_upward_black"
             android:contentDescription="@string/home_stat_income_icon"
             />
@@ -34,6 +35,7 @@
             android:id="@+id/home_stat_income_string"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/home_stat_income"
             app:layout_constraintEnd_toEndOf="parent"
             android:textColor="@color/colorPrimaryTextDark"
@@ -71,6 +73,7 @@
             android:layout_height="@dimen/icon_st_size"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:rotation="180"
             app:srcCompat="@drawable/ic_arrow_downward_black"
             android:contentDescription="@string/home_stat_spending_icon"
             />
@@ -79,6 +82,7 @@
             android:id="@+id/home_stat_spending_string"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/home_stat_spending"
             app:layout_constraintEnd_toEndOf="parent"
             android:textColor="@color/colorPrimaryTextDark"

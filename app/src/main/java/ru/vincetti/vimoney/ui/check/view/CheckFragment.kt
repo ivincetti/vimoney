@@ -4,14 +4,19 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.ViewCompat
+import androidx.core.view.marginBottom
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_check.*
+import kotlinx.android.synthetic.main.fragment_check_content.*
 import kotlinx.android.synthetic.main.fragment_check_content.view.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
+import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
@@ -35,6 +40,7 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
         }
         viewModelFactory = CheckViewModelFactory(db.transactionDao(), db.accountDao(), checkId)
         initViews()
+        insetsInit()
     }
 
     private fun initViews() {
@@ -118,6 +124,24 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
                     viewModel.delete()
                 }
         builder.create().show()
+    }
+
+    private fun insetsInit() {
+        val fabMargin = check_fab.marginBottom
+        ViewCompat.setOnApplyWindowInsetsListener(check_fab) { _, insets ->
+            check_fab.updateMargin(bottom = (insets.systemWindowInsetBottom + fabMargin))
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(check_toolbar) { _, insets ->
+            check_toolbar.updateMargin(top = insets.systemWindowInsetTop)
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(check_history_container_root) { _, insets ->
+            check_history_container_root.updatePadding(bottom = insets.systemWindowInsetBottom)
+            insets
+        }
     }
 
 }
