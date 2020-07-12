@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_settingsFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_categoriesFragment"
+            app:destination="@id/categoriesFragment" />
     </fragment>
     <fragment
         android:id="@+id/dashboardFragment"
@@ -155,4 +158,25 @@
             app:argType="integer"
             android:defaultValue="0" />
     </fragment><action android:id="@+id/action_global_transactionMainFragment" app:destination="@id/transactionMainFragment"/>
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="ru.vincetti.vimoney.ui.settings.category.list.CategoriesFragment"
+        android:label="fragment_categories_list"
+        tools:layout="@layout/fragment_categories_list" >
+        <action
+            android:id="@+id/action_categoriesFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_categoriesFragment_to_addCategoryFragment"
+            app:destination="@id/addCategoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addCategoryFragment"
+        android:name="ru.vincetti.vimoney.ui.settings.category.add.AddCategoryFragment"
+        android:label="fragment_add_category"
+        tools:layout="@layout/fragment_add_category" >
+        <action
+            android:id="@+id/action_addCategoryFragment_to_categoriesFragment"
+            app:destination="@id/categoriesFragment" />
+    </fragment>
 </navigation>

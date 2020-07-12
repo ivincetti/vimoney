@@ -8,18 +8,16 @@ import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import ru.vincetti.vimoney.data.DateConverter
-import ru.vincetti.vimoney.data.models.AccountModel
-import ru.vincetti.vimoney.data.models.ConfigModel
-import ru.vincetti.vimoney.data.models.CurrencyModel
-import ru.vincetti.vimoney.data.models.TransactionModel
+import ru.vincetti.vimoney.data.models.*
 
 @Database(entities = [
     AccountModel::class,
     TransactionModel::class,
     ConfigModel::class,
-    CurrencyModel::class
+    CurrencyModel::class,
+    CategoryModel::class
 ],
-        version = 9,
+        version = 10,
         exportSchema = false
 )
 @TypeConverters(DateConverter::class)
@@ -29,6 +27,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
     abstract fun configDao(): ConfigDao
     abstract fun currentDao(): CurrentDao
+    abstract fun categoryDao(): CategoryDao
 
     companion object {
         // Singleton prevents multiple instances of database
@@ -55,7 +54,8 @@ abstract class AppDatabase : RoomDatabase() {
                                         MIGRATION_5_6,
                                         MIGRATION_6_7,
                                         MIGRATION_7_8,
-                                        MIGRATION_8_9
+                                        MIGRATION_8_9,
+                                        MIGRATION_9_10
                                 )
                                 .build()
                 INSTANCE = instance
@@ -128,6 +128,14 @@ abstract class AppDatabase : RoomDatabase() {
         private val MIGRATION_8_9 = object : Migration(8, 9) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE accounts ADD COLUMN need_all_balance INTEGER DEFAULT 1 NOT NULL")
+            }
+        }
+
+        // new category option
+        private val MIGRATION_9_10 = object : Migration(9, 10) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE transactions ADD COLUMN category_id INTEGER DEFAULT 0 NOT NULL")
+                db.execSQL("CREATE TABLE category(id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, symbol TEXT NOT NULL)")
             }
         }
     }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/st_padding"
+    android:layout_marginBottom="@dimen/st_padding"
+    android:layout_marginStart="@dimen/big_padding"
+    android:layout_marginEnd="@dimen/big_padding"
+    android:minHeight="@dimen/icon_st_size"
+    android:orientation="horizontal"
+    tools:background="@color/colorBackgroundDark"
+    >
+
+    <!--Category-->
+    <TextView
+        android:id="@+id/item_category_icon"
+        android:layout_width="@dimen/category_icon_background_size"
+        android:layout_height="@dimen/category_icon_background_size"
+        android:layout_margin="@dimen/st_padding"
+        android:background="@drawable/bg_category"
+        android:gravity="center"
+        style="@style/categoryTextStyle"
+        tools:text="@string/sample_category_android"
+        />
+
+
+    <TextView
+        android:id="@+id/item_category_text"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/st_padding"
+        android:layout_marginEnd="@dimen/st_padding"
+        android:gravity="center_vertical"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/colorPrimaryTextDark"
+        android:textSize="@dimen/category_name_text_size"
+        android:textStyle="bold"
+        tools:text="@string/home_title_acc_name"
+        />
+
+</LinearLayout>

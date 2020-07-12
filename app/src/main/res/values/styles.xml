@@ -39,4 +39,10 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="categoryTextStyle">
+        <item name="android:textSize">@dimen/category_icon_size</item>
+        <item name="android:textColor">@color/colorTextWhite</item>
+        <item name="android:fontFamily">@font/font_awesome_solid</item>
+    </style>
+
 </resources>
