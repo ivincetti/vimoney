@@ -85,3 +85,9 @@
 # and replaces all potential values with null. Explicitly keeping the interfaces prevents this.
 -if interface * { @retrofit2.http.* <methods>; }
 -keep,allowobfuscation interface <1>
+
+#-------------------------------------------------
+# JetPack Navigation
+# This fixes: Caused by: androidx.fragment.app.Fragment$InstantiationException: Unable to instantiate fragment androidx.navigation.fragment.NavHostFragment: make sure class name exists
+#-------------------------------------------------
+-keepnames class androidx.navigation.fragment.NavHostFragment
