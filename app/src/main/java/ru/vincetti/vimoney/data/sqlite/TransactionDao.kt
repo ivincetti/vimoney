@@ -17,20 +17,22 @@ interface TransactionDao {
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol, " +
             "transactions.sum, transactions.type, transactions.date, transactions.description, " +
-            "transactions.extra_key, transactions.extra_value " +
-            "FROM transactions, accounts, currency " +
+            "category.symbol as category_icon, transactions.extra_key, transactions.extra_value " +
+            "FROM transactions, accounts, currency, category " +
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +
+            "AND transactions.category_id == category.id " +
             "AND transactions.system == 0 " +
             "ORDER BY transactions.date DESC")
     fun loadAllTransactionsFull(): LiveData<List<TransactionListModel>>
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol, " +
             "transactions.sum, transactions.type, transactions.date, transactions.description, " +
-            "transactions.extra_key, transactions.extra_value " +
-            "FROM transactions, accounts, currency " +
+            "category.symbol as category_icon, transactions.extra_key, transactions.extra_value " +
+            "FROM transactions, accounts, currency, category " +
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +
+            "AND transactions.category_id == category.id " +
             "AND transactions.system == 0 " +
             "ORDER BY transactions.date DESC LIMIT :num")
     fun loadAllTransactionsCountFull(num: Int): LiveData<List<TransactionListModel>>
@@ -41,12 +43,13 @@ interface TransactionDao {
             "ORDER BY date DESC LIMIT :num")
     fun loadCheckTransactionsCount(id: Int, num: Int): LiveData<List<TransactionModel>>
 
-    @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol," +
+    @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol, " +
             "transactions.sum, transactions.type, transactions.date, transactions.description, " +
-            "transactions.extra_key, transactions.extra_value " +
-            "FROM transactions, accounts, currency " +
+            "category.symbol as category_icon, transactions.extra_key, transactions.extra_value " +
+            "FROM transactions, accounts, currency, category " +
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +
+            "AND transactions.category_id == category.id " +
             "AND ((transactions.account_id == :id" + " AND transactions.system == 0) " +
             "OR transactions.id IN (SELECT id from transactions WHERE extra_value IN(SELECT id from transactions WHERE account_id = :id AND system=1))) " +
             "ORDER BY transactions.date DESC")
@@ -54,10 +57,11 @@ interface TransactionDao {
 
     @Query("SELECT transactions.id, accounts.name AS account_name, currency.symbol AS account_symbol," +
             "transactions.sum, transactions.type, transactions.date, transactions.description, " +
-            "transactions.extra_key, transactions.extra_value " +
-            "FROM transactions, accounts, currency " +
+            "category.symbol as category_icon, transactions.extra_key, transactions.extra_value " +
+            "FROM transactions, accounts, currency, category " +
             "WHERE transactions.account_id == accounts.id " +
             "AND accounts.currency == currency.code " +
+            "AND transactions.category_id == category.id " +
             "AND ((transactions.account_id == :id" + " AND transactions.system == 0) " +
             "OR transactions.id IN (SELECT id from transactions WHERE extra_value IN(SELECT id from transactions WHERE account_id = :id AND system=1))) " +
             "ORDER BY transactions.date DESC LIMIT :num")

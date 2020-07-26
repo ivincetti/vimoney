@@ -10,6 +10,9 @@ interface CategoryDao {
     @Query("Select * from category ORDER BY id ASC")
     fun loadAllCategories(): LiveData<List<CategoryModel>?>
 
+    @Query("Select * from category ORDER BY id ASC")
+    suspend fun loadCategories(): List<CategoryModel>?
+
     @Query("Select * from category WHERE id = :id LIMIT 1")
     suspend fun loadCategoryById(id: Int): CategoryModel?
 
@@ -21,4 +24,7 @@ interface CategoryDao {
 
     @Delete
     suspend fun deleteCategory(cat: CategoryModel)
+
+    @Query("Delete FROM category")
+    suspend fun deleteAllCategories()
 }

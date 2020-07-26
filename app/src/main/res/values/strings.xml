@@ -50,6 +50,7 @@
     <string name="add_spent_btn_text">expense</string>
     <string name="add_income_btn_text">income</string>
     <string name="add_no_account_text">choose account</string>
+    <string name="add_no_category_text">choose category</string>
     <string name="transaction_add_alert_question">Close without saving?</string>
     <string name="transaction_add_alert_negative">Exit</string>
     <string name="transaction_add_alert_positive">Close</string>
@@ -117,6 +118,8 @@
 
     <!--Categories-->
     <string name="sample_category_android" translatable="false">\uf544</string>
+    <string name="sample_category_name">unknown</string>
+    <string name="category_unknown" translatable="false">\?</string>
     <string name="categories_title_home">Categories</string>
     <string name="category_add_title">Add category</string>
     <string name="category_name">Category</string>

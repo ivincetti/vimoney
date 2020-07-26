@@ -19,6 +19,7 @@ class TransactionsRVAdapter(
             itemView: View,
             val listener: (Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        private val icon: TextView = itemView.findViewById(R.id.card_transactions_image)
         private val name: TextView = itemView.findViewById(R.id.home_transactions_name)
         private val date: TextView = itemView.findViewById(R.id.home_transactions_date)
         private val acc: TextView = itemView.findViewById(R.id.home_transactions_account)
@@ -36,6 +37,7 @@ class TransactionsRVAdapter(
         }
 
         fun bind(item: TransactionListModel) {
+            icon.text = item.symbol
             name.text = item.description
             date.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(item.date)
             sum.text = "${item.getTypeString()} ${item.sum}"

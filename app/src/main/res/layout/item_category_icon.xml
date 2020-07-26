@@ -13,29 +13,14 @@
         android:id="@+id/item_category_symbol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/item_category_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:fontFamily="@font/font_awesome_solid"
         android:textColor="@color/colorPrimaryTextDark"
         android:textSize="32dp"
         tools:text="@string/sample_category_android"
-        />
-
-    <TextView
-        android:id="@+id/item_category_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_category_symbol"
-        android:textColor="@color/colorPrimaryTextDark"
-        android:textSize="16dp"
-        tools:text="@string/sample_category_name"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,7 +20,7 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="3"
         tools:itemCount="7"
-        tools:listitem="@layout/item_category_icon"
+        tools:listitem="@layout/item_category"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

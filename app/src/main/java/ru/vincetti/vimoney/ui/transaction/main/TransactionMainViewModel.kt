@@ -1,19 +1,18 @@
 package ru.vincetti.vimoney.ui.transaction.main
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AccountDao
+import ru.vincetti.vimoney.data.sqlite.CategoryDao
 import ru.vincetti.vimoney.data.sqlite.TransactionDao
 import ru.vincetti.vimoney.utils.accountBalanceUpdateById
 import java.util.*
 
 class TransactionMainViewModel(
         private val transactionDao: TransactionDao,
-        private val accDao: AccountDao
+        private val accDao: AccountDao,
+        private val catDao: CategoryDao
 ) : ViewModel() {
 
     private var _transaction = MutableLiveData<TransactionModel>()
@@ -60,6 +59,15 @@ class TransactionMainViewModel(
     val sum
         get() = _sum
 
+    private val _categoryId = MutableLiveData<Int>()
+    val category = _categoryId.switchMap {
+        liveData {
+            emit(catDao.loadCategoryById(it))
+        }
+    }
+
+    val categoriesList = catDao.loadAllCategories()
+
     private val _description = MutableLiveData<String>()
     val description
         get() = _description
@@ -75,6 +83,7 @@ class TransactionMainViewModel(
         _nestedTransaction.value = TransactionModel()
         _accountId.value = TransactionModel.DEFAULT_ID
         _accountIdTo.value = TransactionModel.DEFAULT_ID
+        _categoryId.value = TransactionModel.DEFAULT_ID
         _needAccount.value = false
         _needToUpdate.value = false
         _needSum.value = false
@@ -91,6 +100,7 @@ class TransactionMainViewModel(
                 if (tmpTransaction.id != TransactionModel.DEFAULT_ID) {
                     _needToUpdate.value = true
                     _accountId.value = tmpTransaction.accountId
+                    _categoryId.value = tmpTransaction.categoryId
                     _sum.value = tmpTransaction.sum
                     _description.value = tmpTransaction.description
                     _date.value = tmpTransaction.date
@@ -136,6 +146,10 @@ class TransactionMainViewModel(
         _date.value = newDate
     }
 
+    fun setCategoryID(categoryID: Int) {
+        _categoryId.value = categoryID
+    }
+
     fun delete() {
         viewModelScope.launch {
             _transaction.value?.let {
@@ -166,6 +180,7 @@ class TransactionMainViewModel(
                     tmpTransaction.type = actionType
                     tmpTransaction.accountId = _accountId.value!!
                     tmpTransaction.sum = txtSum.toFloat()
+                    tmpTransaction.categoryId = _categoryId.value!!
                     if (tmpTransaction.id != TransactionModel.DEFAULT_ID) {
                         trUpdate(tmpTransaction)
                     } else {
@@ -258,11 +273,12 @@ class TransactionMainViewModel(
 
 class TransactionMainViewModelFactory(
         val transactionDao: TransactionDao,
-        private val accDao: AccountDao
+        private val accDao: AccountDao,
+        private val catDao: CategoryDao
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TransactionMainViewModel::class.java)) {
-            return TransactionMainViewModel(transactionDao, accDao) as T
+            return TransactionMainViewModel(transactionDao, accDao, catDao) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

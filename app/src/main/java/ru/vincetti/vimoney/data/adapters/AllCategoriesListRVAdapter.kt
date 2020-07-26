@@ -25,7 +25,7 @@ class AllCategoriesListRVAdapter(
         init {
             itemView.setOnClickListener {
                 data?.let {
-                    listener(it[adapterPosition].id)
+                    if (it[adapterPosition].id > 1) listener(it[adapterPosition].id)
                 }
             }
         }
