@@ -2,6 +2,7 @@ package ru.vincetti.vimoney.ui.transaction.main
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
@@ -31,13 +32,18 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
 
     private lateinit var viewModelFactory: TransactionMainViewModelFactory
     private lateinit var mainViewModelFactory: MainViewModelFactory
-
     private lateinit var date: Date
+
+    val dialogFrag = CategoryListDialog()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val application = requireNotNull(activity).application
         val mDb = AppDatabase.getInstance(application)
-        viewModelFactory = TransactionMainViewModelFactory(mDb.transactionDao(), mDb.accountDao())
+        viewModelFactory = TransactionMainViewModelFactory(
+                mDb.transactionDao(),
+                mDb.accountDao(),
+                mDb.categoryDao()
+        )
         mainViewModelFactory = MainViewModelFactory(mDb.accountDao())
 
         initFragmentViews()
@@ -50,9 +56,7 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
         add_sum.isFocusableInTouchMode = true
         add_sum.requestFocus()
 
-        // Show Keyboard
-        val imm: InputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+        showKeyboard()
     }
 
     override fun onPause() {
@@ -64,6 +68,11 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
 
     open fun initFragmentPlus() {
         /** Sample for transfer*/
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) setCategoryID(resultCode)
     }
 
     open fun loadAccounts(list: HashMap<Int, String>) {
@@ -82,7 +91,8 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
 
     fun popUpShow(
             list: HashMap<Int, String>,
-            view: View) {
+            view: View
+    ) {
         val popUp = PopupMenu(requireContext(), view)
         for (i in list.keys) {
             popUp.menu.add(Menu.NONE, i, i, list[i])
@@ -136,6 +146,11 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
         }
     }
 
+    private fun showKeyboard() {
+        val imm: InputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+    }
+
     private fun showNoSumToast() {
         Toast.makeText(activity,
                 getString(R.string.add_check_no_sum_warning),
@@ -154,17 +169,27 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
         val calendar = GregorianCalendar()
         calendar.time = date
 
-        val datePickerDialog = DatePickerDialog(requireContext(),
+        val datePickerDialog = DatePickerDialog(
+                requireContext(),
                 { _, year, month, day ->
                     viewModel.setDate(GregorianCalendar(year, month, day).time)
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH))
+                calendar.get(Calendar.DAY_OF_MONTH)
+        )
         datePickerDialog.show()
+    }
+
+    fun showCategoryDialog() {
+        dialogFrag.show(parentFragmentManager, "Categories")
     }
 
     private fun navigateUp() {
         findNavController().navigateUp()
+    }
+
+    private fun setCategoryID(categoryID: Int) {
+        viewModel.setCategoryID(categoryID)
     }
 }

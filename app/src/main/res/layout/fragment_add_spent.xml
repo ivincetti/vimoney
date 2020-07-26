@@ -98,6 +98,43 @@
 
         </LinearLayout>
 
+        <!--блок категории-->
+        <LinearLayout
+            android:id="@+id/add_acc_category_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/big_padding"
+            android:paddingEnd="@dimen/big_padding"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/add_acc_category_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                style="@style/categoryTextStyle"
+                tools:text="@string/category_unknown"
+                />
+
+            <TextView
+                android:id="@+id/add_acc_category_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/text_sm_numbers"
+                android:textColor="@color/colorPrimaryTextDark"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/add_no_category_text"
+                android:ellipsize="end"
+                android:padding="@dimen/big_padding"
+                android:maxLines="1"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                />
+
+        </LinearLayout>
+
         <include
             android:id="@+id/fragment_add_content"
             layout="@layout/fragment_add_all"/>

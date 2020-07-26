@@ -17,5 +17,8 @@ data class ConfigFile(
         val currency: List<CurrencyItem>,
 
         @SerializedName("transactions")
-        val transactions: List<TransactionsItem>
+        val transactions: List<TransactionsItem>,
+
+        @SerializedName("categories")
+        val categories: List<CategoriesItem>
 )

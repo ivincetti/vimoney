@@ -11,14 +11,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.JsonDownloader
-import ru.vincetti.vimoney.data.models.AccountModel
-import ru.vincetti.vimoney.data.models.ConfigModel
-import ru.vincetti.vimoney.data.models.CurrencyModel
-import ru.vincetti.vimoney.data.models.TransactionModel
-import ru.vincetti.vimoney.data.models.json.AccountsItem
-import ru.vincetti.vimoney.data.models.json.ConfigFile
-import ru.vincetti.vimoney.data.models.json.CurrencyItem
-import ru.vincetti.vimoney.data.models.json.TransactionsItem
+import ru.vincetti.vimoney.data.models.*
+import ru.vincetti.vimoney.data.models.json.*
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.utils.accountBalanceUpdateById
 import ru.vincetti.vimoney.utils.isNetworkAvailable
@@ -99,6 +93,7 @@ class SplashViewModel(
         transactionsImport(response.transactions)
         currencyImport(response.currency)
         accountsUpdate(response.accounts)
+        categoriesUpdate(response.categories)
     }
 
     private suspend fun configDbDateInsert(timeMillisLong: Long) {
@@ -141,10 +136,25 @@ class SplashViewModel(
         }
     }
 
+    private suspend fun categoriesUpdate(categoriesItems: List<CategoriesItem>) {
+        for (cat in categoriesItems) {
+            categoryUpdate(
+                    cat.categoryId,
+                    cat.name,
+                    cat.symbol
+            )
+        }
+    }
+
     private suspend fun accountUpdate(accId: Int, type: String, title: String, ins: Int, balance: Int) {
         val newAcc = AccountModel(accId, title, type, balance, 810)
         mDb.accountDao().insertAccount(newAcc)
         accountBalanceUpdateById(mDb.transactionDao(), mDb.accountDao(), accId)
+    }
+
+    private suspend fun categoryUpdate(catId: Int, name: String, symbol: String) {
+        val newCat = CategoryModel(catId, name, symbol)
+        mDb.categoryDao().insertCategory(newCat)
     }
 
 }

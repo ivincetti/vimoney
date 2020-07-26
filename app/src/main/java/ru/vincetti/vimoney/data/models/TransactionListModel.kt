@@ -11,6 +11,9 @@ data class TransactionListModel(
 
         val description: String,
 
+        @ColumnInfo(name = "category_icon")
+        val symbol: String,
+
         val date: Date,
 
         val type: Int,
