@@ -27,7 +27,7 @@ data class TransactionModel(
         var sum: Float = 0f,
 
         @ColumnInfo(name = "category_id")
-        val categoryId: Int = DEFAULT_ID,
+        var categoryId: Int = DEFAULT_CATEGORY,
 
         @ColumnInfo(name = "extra_key")
         var extraKey: String = "",
@@ -66,5 +66,6 @@ data class TransactionModel(
         const val TRANSACTION_TYPE_DEBT_TAB = 3
         const val TRANSACTION_TYPE_TRANSFER_KEY = "transfer_transaction_id"
         const val DEFAULT_ID = 0
+        const val DEFAULT_CATEGORY = 1
     }
 }

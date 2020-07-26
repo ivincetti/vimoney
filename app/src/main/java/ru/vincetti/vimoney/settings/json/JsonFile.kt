@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.vincetti.vimoney.data.models.AccountModel
+import ru.vincetti.vimoney.data.models.CategoryModel
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.utils.accountBalanceUpdateAll
@@ -17,6 +18,7 @@ object JsonFile {
 
     private const val FILE_NAME_TRANSACTIONS = "transactions.json"
     private const val FILE_NAME_ACCOUNTS = "accounts.json"
+    private const val FILE_NAME_CATEGORIES = "categories.json"
 
     suspend fun save(context: Context) {
         withContext(Dispatchers.IO) {
@@ -38,6 +40,14 @@ object JsonFile {
                 fos.write(transactionsJson.toByteArray())
                 fos.close()
             }
+            val categories = mDb.categoryDao().loadCategories()
+            categories?.let {
+                val catJson = gson.toJson(it)
+                val file = File(context.getExternalFilesDir(null), FILE_NAME_CATEGORIES)
+                val fos = FileOutputStream(file)
+                fos.write(catJson.toByteArray())
+                fos.close()
+            }
         }
     }
 
@@ -48,8 +58,10 @@ object JsonFile {
         withContext(Dispatchers.IO) {
             var fisTransactions: FileInputStream? = null
             var fisAccounts: FileInputStream? = null
+            var fisCategories: FileInputStream? = null
             val transactionsJsonBuilder = StringBuilder()
             val accountsJsonBuilder = StringBuilder()
+            val categoriesJsonBuilder = StringBuilder()
 
             try {
                 val file = File(context.getExternalFilesDir(null), FILE_NAME_TRANSACTIONS)
@@ -74,6 +86,17 @@ object JsonFile {
                     accountsJsonBuilder.append(text).append("\n")
                     text = br.readLine()
                 }
+
+                val fileCat = File(context.getExternalFilesDir(null), FILE_NAME_CATEGORIES)
+                fisCategories = FileInputStream(fileCat)
+                isr = InputStreamReader(fisCategories)
+                br = BufferedReader(isr)
+
+                text = br.readLine()
+                while (text != null) {
+                    categoriesJsonBuilder.append(text).append("\n")
+                    text = br.readLine()
+                }
             } catch (e: IOException) {
                 e.printStackTrace()
             } finally {
@@ -85,6 +108,12 @@ object JsonFile {
 
                 try {
                     fisAccounts?.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+
+                try {
+                    fisCategories?.close()
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -104,6 +133,13 @@ object JsonFile {
                         gson.fromJson(accountsJsonBuilder.toString(), listType1)
                 for (account in transactions1) {
                     db.accountDao().insertAccount(account)
+                }
+                db.categoryDao().deleteAllCategories()
+                val listType2 = object : TypeToken<ArrayList<CategoryModel>>() {}.type
+                val categories: List<CategoryModel> =
+                        gson.fromJson(categoriesJsonBuilder.toString(), listType2)
+                for (category in categories) {
+                    db.categoryDao().insertCategory(category)
                 }
             }
             accountBalanceUpdateAll(db.transactionDao(), db.accountDao())
