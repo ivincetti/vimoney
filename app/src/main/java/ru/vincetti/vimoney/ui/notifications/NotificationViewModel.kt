@@ -22,10 +22,9 @@ class NotificationViewModel : ViewModel() {
     }
 
     fun notifyButton() {
-        val context = App.context
-        context?.let {
-            context.startService(
-                    Intent(context, NotificationService::class.java)
+        App.context?.let {
+            it.startService(
+                    Intent(it, NotificationService::class.java)
                             .setAction(NotificationService.NOTIFICATION_ACTION))
         }
     }

@@ -76,9 +76,7 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
     }
 
     open fun loadAccounts(list: HashMap<Int, String>) {
-        add_acc_name.setOnClickListener {
-            popUpShow(list, it)
-        }
+        add_acc_name.setOnClickListener { popUpShow(list, it) }
     }
 
     open fun save(actionType: Int) {
@@ -89,10 +87,7 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
         )
     }
 
-    fun popUpShow(
-            list: HashMap<Int, String>,
-            view: View
-    ) {
+    fun popUpShow(list: HashMap<Int, String>, view: View) {
         val popUp = PopupMenu(requireContext(), view)
         for (i in list.keys) {
             popUp.menu.add(Menu.NONE, i, i, list[i])
@@ -134,16 +129,12 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
             fragment_add_content.add_desc.setText(it)
         })
         mainViewModel.accountNotArchiveNames.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                loadAccounts(it)
-            }
+            it?.let { loadAccounts(it) }
         })
         viewModel.needToNavigate.observe(viewLifecycleOwner, Observer {
             if (it) navigateUp()
         })
-        add_date_block.setOnClickListener {
-            showDateDialog()
-        }
+        add_date_block.setOnClickListener { showDateDialog() }
     }
 
     private fun showKeyboard() {
@@ -169,7 +160,7 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
         val calendar = GregorianCalendar()
         calendar.time = date
 
-        val datePickerDialog = DatePickerDialog(
+        DatePickerDialog(
                 requireContext(),
                 { _, year, month, day ->
                     viewModel.setDate(GregorianCalendar(year, month, day).time)
@@ -177,8 +168,7 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
-        )
-        datePickerDialog.show()
+        ).show()
     }
 
     fun showCategoryDialog() {

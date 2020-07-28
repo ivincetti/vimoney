@@ -28,7 +28,6 @@ class CheckViewModel(
         _updateButtonEnable.value = true
     }
 
-    /** Restore from archive account logic. */
     fun restore() {
         if (accountId != DEFAULT_CHECK_ID) {
             viewModelScope.launch {
@@ -37,10 +36,8 @@ class CheckViewModel(
         }
     }
 
-    /** Archive account logic. */
     fun delete() {
         if (accountId != DEFAULT_CHECK_ID) {
-            // delete query
             viewModelScope.launch {
                 accountDao.archiveAccountById(accountId)
             }

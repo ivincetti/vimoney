@@ -8,6 +8,7 @@ import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.dialog_category_list.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.CategoryModel
+import ru.vincetti.vimoney.ui.transaction.main.categorylist.CategoryListAdapter
 
 class CategoryListDialog : DialogFragment() {
 
@@ -26,7 +27,11 @@ class CategoryListDialog : DialogFragment() {
 
         categories?.let { list ->
             val categoriesAdapter = CategoryListAdapter(list) {
-                targetFragment?.onActivityResult(targetRequestCode, it, requireActivity().intent)
+                targetFragment?.onActivityResult(
+                        targetRequestCode,
+                        list[it].id,
+                        requireActivity().intent
+                )
                 dismiss()
             }
             categories_symbols_list_recycle_view.adapter = categoriesAdapter

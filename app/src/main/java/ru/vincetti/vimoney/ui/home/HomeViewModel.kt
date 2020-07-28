@@ -16,6 +16,7 @@ class HomeViewModel(
         private val accDao: AccountDao,
         private val trDao: TransactionDao
 ) : ViewModel() {
+
     val expenseSum = MutableLiveData<Int>()
     val incomeSum = MutableLiveData<Int>()
     var date: String = SimpleDateFormat("MM").format(Date())

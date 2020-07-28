@@ -1,18 +1,16 @@
-package ru.vincetti.vimoney.ui.settings.category.symbol
+package ru.vincetti.vimoney.ui.transaction.main.categorylist
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import ru.vincetti.vimoney.data.models.CategoryModel
 
-class CategorySymbolListAdapter(
-        private val data: List<String>,
+class CategoryListAdapter(
+        private val data: List<CategoryModel>,
         private val action: (Int) -> Unit
 ) : RecyclerView.Adapter<CategoryListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryListViewHolder {
-        return CategoryListViewHolder.create(
-                parent,
-                action
-        )
+        return CategoryListViewHolder.create(parent, action)
     }
 
     override fun onBindViewHolder(holder: CategoryListViewHolder, position: Int) {
@@ -20,5 +18,4 @@ class CategorySymbolListAdapter(
     }
 
     override fun getItemCount() = data.size
-
 }

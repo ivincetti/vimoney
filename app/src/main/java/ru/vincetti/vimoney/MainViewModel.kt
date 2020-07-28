@@ -13,6 +13,7 @@ import ru.vincetti.vimoney.data.sqlite.AccountDao
 import java.util.*
 import kotlin.collections.set
 
+@Deprecated("No need - To be deleted")
 class MainViewModel(
         private val accDao: AccountDao
 ) : ViewModel() {

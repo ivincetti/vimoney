@@ -36,9 +36,7 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
             if (it) findNavController().navigate(R.id.action_categoriesFragment_to_settingsFragment)
         })
 
-        categories_navigation_back_btn.setOnClickListener {
-            viewModel.backButtonClicked()
-        }
+        categories_navigation_back_btn.setOnClickListener { viewModel.backButtonClicked() }
         categories_list_fab.setOnClickListener {
             findNavController().navigate(R.id.action_categoriesFragment_to_addCategoryFragment)
         }

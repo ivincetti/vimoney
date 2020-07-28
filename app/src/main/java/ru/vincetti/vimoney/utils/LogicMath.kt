@@ -38,8 +38,8 @@ suspend fun accountBalanceUpdateAll(
 suspend fun userBalanceUpdate(accountDao: AccountDao): Int {
     var balance = 0
     val accounts = accountDao.loadAllAccounts()
-    accounts?.let {
-        it.filter { it.needAllBalance && !it.isArchive }.forEach { balance += it.sum }
+    accounts?.let { accs ->
+        accs.filter { it.needAllBalance && !it.isArchive }.forEach { balance += it.sum }
     }
     return balance
 }

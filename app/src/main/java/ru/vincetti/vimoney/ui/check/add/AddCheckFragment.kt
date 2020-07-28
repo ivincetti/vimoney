@@ -15,7 +15,6 @@ import androidx.navigation.fragment.findNavController
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import kotlinx.android.synthetic.main.fragment_add_check.*
-import kotlinx.android.synthetic.main.fragment_add_check.setting_navigation_back_btn
 import kotlinx.android.synthetic.main.fragment_add_check_content.*
 import kotlinx.android.synthetic.main.fragment_add_check_content.view.*
 import ru.vincetti.vimoney.R
@@ -48,27 +47,17 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
     }
 
     private fun viewInit() {
-        add_check_navigation_delete_btn.setOnClickListener {
-            showDeleteDialog()
-        }
-        add_check_navigation_from_archive_btn.setOnClickListener {
-            viewModel.restore()
-        }
-        add_check_navigation_add_btn.setOnClickListener {
-            save()
-        }
-        add_check_save_btn.setOnClickListener {
-            save()
-        }
-        add_check_content.add_check_color_view.setOnClickListener {
-            pickColor()
-        }
+        add_check_navigation_delete_btn.setOnClickListener { showDeleteDialog() }
+        add_check_navigation_from_archive_btn.setOnClickListener { viewModel.restore() }
+        add_check_navigation_add_btn.setOnClickListener { save() }
+        add_check_save_btn.setOnClickListener { save() }
+        add_check_content.add_check_color_view.setOnClickListener { pickColor() }
+        setting_navigation_back_btn.setOnClickListener { showUnsavedDialog() }
+
         add_check_all_balance_switch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setNeed2AllData(isChecked)
         }
-        setting_navigation_back_btn.setOnClickListener {
-            showUnsavedDialog()
-        }
+
         viewModel.isDefault.observe(viewLifecycleOwner, Observer {
             if (!it) add_check_save_btn.text = getString(R.string.add_btn_update)
         })
@@ -126,15 +115,12 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
                 .initialColor(getColor(requireContext(), R.color.colorPrimary))
                 .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
                 .density(12)
-                .setPositiveButton(R.string.check_add_alert_color_positive
-                ) { _, selectedColor, _ ->
-                    viewModel.setBackgroundColor(selectedColor)
-                }
-                .setNegativeButton(R.string.check_add_alert_color_negative
-                ) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .build().show()
+                .setPositiveButton(R.string.check_add_alert_color_positive)
+                { _, selectedColor, _ -> viewModel.setBackgroundColor(selectedColor) }
+                .setNegativeButton(R.string.check_add_alert_color_negative)
+                { dialog, _ -> dialog.dismiss() }
+                .build()
+                .show()
     }
 
     /** RadioButton clicked option selected. */
@@ -149,18 +135,18 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
     /** RadioButton option load. */
     private fun typeLoad(type: String) {
         add_check_content.radioGroup.apply {
-            when (type) {
-                AccountModel.ACCOUNT_TYPE_DEBIT -> check(R.id.add_check_type_debit)
-                AccountModel.ACCOUNT_TYPE_CREDIT -> check(R.id.add_check_type_credit)
-                else -> check(R.id.add_check_type_cash)
-            }
+            check(
+                    when (type) {
+                        AccountModel.ACCOUNT_TYPE_DEBIT -> R.id.add_check_type_debit
+                        AccountModel.ACCOUNT_TYPE_CREDIT -> R.id.add_check_type_credit
+                        else -> R.id.add_check_type_cash
+                    }
+            )
         }
     }
 
     private fun loadCurrency(list: List<CurrencyModel>, view: View) {
-        view.setOnClickListener {
-            popUpCurrencyShow(list, view)
-        }
+        view.setOnClickListener { popUpCurrencyShow(list, view) }
     }
 
     private fun popUpCurrencyShow(list: List<CurrencyModel>, view: View) {
@@ -176,40 +162,33 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
     }
 
     private fun showDeleteDialog() {
-        val builder = AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext())
                 .setMessage(R.string.check_delete_alert_question)
-                .setNegativeButton(R.string.check_delete_alert_negative) { dialogInterface, _ ->
-                    dialogInterface?.dismiss()
-                }
-                .setPositiveButton(R.string.check_delete_alert_positive) { _, _ ->
-                    viewModel.delete()
-                }
-        builder.create().show()
+                .setNegativeButton(R.string.check_delete_alert_negative) { dialogInterface, _ -> dialogInterface?.dismiss() }
+                .setPositiveButton(R.string.check_delete_alert_positive) { _, _ -> viewModel.delete() }
+                .create()
+                .show()
     }
 
-    /** Not saved transaction cancel dialog. */
     private fun showUnsavedDialog() {
-        val builder = AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext())
                 .setMessage(R.string.check_add_alert_question)
-                .setNegativeButton(R.string.check_add_alert_negative) { _, _ ->
-                    goBack()
-                }
-                .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
-                    dialogInterface?.dismiss()
-                }
-        builder.create().show()
+                .setNegativeButton(R.string.check_add_alert_negative) { _, _ -> goBack() }
+                .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ -> dialogInterface?.dismiss() }
+                .create()
+                .show()
     }
 
-    /** Not saved transaction cancel dialog. */
     private fun showNoDataDialog() {
-        val builder = AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext())
                 .setMessage(R.string.check_add_alert_no_data)
                 .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
                     // todo криво надо подумать
                     viewModel.need2AllData.value = false
                     dialogInterface?.dismiss()
                 }
-        builder.create().show()
+                .create()
+                .show()
     }
 
     private fun save() {
