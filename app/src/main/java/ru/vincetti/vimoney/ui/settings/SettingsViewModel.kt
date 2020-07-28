@@ -39,39 +39,32 @@ class SettingsViewModel : ViewModel() {
         _need2Navigate2Home.value = true
     }
 
-    fun categoriesButtonClicked(){
+    fun categoriesButtonClicked() {
         _need2Navigate2Categories.value = true
     }
 
     fun saveJson() {
+        _exportButtonState.value = false
         App.context?.let {
             viewModelScope.launch {
                 JsonFile.save(it)
                 withContext(Dispatchers.Main) {
-                    setImportButtonState(true)
+                    _exportButtonState.value = true
                 }
             }
         }
     }
 
     fun loadJson() {
+        _importButtonState.value = false
         val context = App.context
         context?.let {
             viewModelScope.launch {
                 JsonFile.load(it)
                 withContext(Dispatchers.Main) {
-                    setExportButtonState(true)
+                    _importButtonState.value = true
                 }
             }
         }
     }
-
-    private fun setImportButtonState(state: Boolean) {
-        _importButtonState.value = state
-    }
-
-    private fun setExportButtonState(state: Boolean) {
-        _exportButtonState.value = state
-    }
-
 }

@@ -52,8 +52,7 @@ class AddCategoryViewModel(
 
     fun loadCategory(id: Int) {
         viewModelScope.launch {
-            val tmp = categoryDao.loadCategoryById(id)
-            tmp?.let {
+            categoryDao.loadCategoryById(id)?.let {
                 categoryID = id
                 _categoryName.value = it.name
                 _categorySymbol.value = it.symbol

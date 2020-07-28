@@ -46,22 +46,14 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
     private fun initViews() {
         loadAccount()
 
-        check_navigation_delete_btn.setOnClickListener {
-            showDeleteDialog()
-        }
-        check_navigation_from_archive_btn.setOnClickListener {
-            viewModel.restore()
-        }
-        check_navigation_update_btn.setOnClickListener {
-            viewModel.update()
-        }
+        check_navigation_delete_btn.setOnClickListener { showDeleteDialog() }
+        check_navigation_from_archive_btn.setOnClickListener { viewModel.restore() }
+        check_navigation_update_btn.setOnClickListener { viewModel.update() }
+        setting_navigation_back_btn.setOnClickListener { findNavController().navigateUp() }
         check_navigation_edit_btn.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt(EXTRA_CHECK_ID, checkId)
             findNavController().navigate(R.id.action_checkFragment_to_addCheckFragment, bundle)
-        }
-        setting_navigation_back_btn.setOnClickListener {
-            findNavController().navigateUp()
         }
         check_fab.setOnClickListener {
             val bundle = Bundle()
@@ -115,15 +107,12 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
     }
 
     private fun showDeleteDialog() {
-        val builder = AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext())
                 .setMessage(R.string.check_delete_alert_question)
-                .setNegativeButton(R.string.check_delete_alert_negative) { dialog, _ ->
-                    dialog?.dismiss()
-                }
-                .setPositiveButton(R.string.check_delete_alert_positive) { _, _ ->
-                    viewModel.delete()
-                }
-        builder.create().show()
+                .setNegativeButton(R.string.check_delete_alert_negative) { dialog, _ -> dialog?.dismiss() }
+                .setPositiveButton(R.string.check_delete_alert_positive) { _, _ -> viewModel.delete() }
+                .create()
+                .show()
     }
 
     private fun insetsInit() {
@@ -143,5 +132,4 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
             insets
         }
     }
-
 }

@@ -29,32 +29,24 @@ class TransactionTransferFragment : TransactionFFFragment(R.layout.fragment_add_
             add_acc_name_to.text = mainViewModel.loadFromAccountNames(it)
             add_acc_cur_to.text = mainViewModel.loadFromCurSymbols(it)
         })
+
         add_sum.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                // do nothing
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // do nothing
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 add_sum_to.setText(s)
             }
         })
-        add_btn.setOnClickListener {
-            save(TransactionModel.TRANSACTION_TYPE_TRANSFER)
-        }
+        add_btn.setOnClickListener { save(TransactionModel.TRANSACTION_TYPE_TRANSFER) }
     }
 
     override fun loadAccounts(list: HashMap<Int, String>) {
-        add_acc_name.setOnClickListener {
-            popUpShow(list, it)
-        }
-
-        add_acc_name_to.setOnClickListener {
-            popUpShowTo(list, it)
-        }
+        add_acc_name.setOnClickListener { popUpShow(list, it) }
+        add_acc_name_to.setOnClickListener { popUpShowTo(list, it) }
     }
 
     private fun popUpShowTo(list: HashMap<Int, String>, view: View) {

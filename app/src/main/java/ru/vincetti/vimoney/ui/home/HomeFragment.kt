@@ -2,7 +2,6 @@ package ru.vincetti.vimoney.ui.home
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.marginBottom
 import androidx.core.view.updatePadding
@@ -32,8 +31,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        (requireActivity() as? AppCompatActivity)?.setSupportActionBar(top_toolbar)
 
         val application = requireActivity().application
         val db = AppDatabase.getInstance(application)
@@ -95,12 +92,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         home_menu_settings.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
         }
-        home_menu_update.setOnClickListener {
-            viewModel.updateAllAccounts()
-        }
+        home_menu_update.setOnClickListener { viewModel.updateAllAccounts() }
     }
 
-    private fun insetsInit(){
+    private fun insetsInit() {
         val fabMargin = home_fab.marginBottom
         ViewCompat.setOnApplyWindowInsetsListener(home_fab) { _, insets ->
             home_fab.updateMargin(bottom = (insets.systemWindowInsetBottom + fabMargin))

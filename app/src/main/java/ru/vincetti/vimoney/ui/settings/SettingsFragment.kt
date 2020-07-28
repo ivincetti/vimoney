@@ -24,27 +24,17 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         viewModel.need2Navigate2Categories.observe(viewLifecycleOwner, Observer {
             if (it) findNavController().navigate(R.id.action_settingsFragment_to_categoriesFragment)
         })
-        viewModel.importButtonState.observe(viewLifecycleOwner, Observer {
+        viewModel.exportButtonState.observe(viewLifecycleOwner, Observer {
             btn_save_transactions.isEnabled = it
         })
-        viewModel.exportButtonState.observe(viewLifecycleOwner, Observer {
+        viewModel.importButtonState.observe(viewLifecycleOwner, Observer {
             btn_load_transactions.isEnabled = it
         })
 
-        setting_navigation_back_btn.setOnClickListener {
-            viewModel.backButtonClicked()
-        }
-        btn_settings_categories.setOnClickListener {
-            viewModel.categoriesButtonClicked()
-        }
-        btn_save_transactions.setOnClickListener {
-            btn_save_transactions.isEnabled = false
-            viewModel.saveJson()
-        }
-        btn_load_transactions.setOnClickListener {
-            btn_load_transactions.isEnabled = false
-            viewModel.loadJson()
-        }
+        setting_navigation_back_btn.setOnClickListener { viewModel.backButtonClicked() }
+        btn_settings_categories.setOnClickListener { viewModel.categoriesButtonClicked() }
+        btn_save_transactions.setOnClickListener { viewModel.saveJson() }
+        btn_load_transactions.setOnClickListener { viewModel.loadJson() }
 
         insetsInit()
     }

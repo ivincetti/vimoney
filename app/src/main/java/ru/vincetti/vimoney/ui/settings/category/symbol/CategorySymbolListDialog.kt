@@ -26,7 +26,11 @@ class CategorySymbolListDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val categoriesAdapter = CategorySymbolListAdapter(categories) {
-            targetFragment?.onActivityResult(targetRequestCode, it, requireActivity().intent)
+            targetFragment?.onActivityResult(
+                    targetRequestCode,
+                    it,
+                    requireActivity().intent
+            )
             dismiss()
         }
         categories_symbols_list_recycle_view.adapter = categoriesAdapter

@@ -10,13 +10,8 @@ import ru.vincetti.vimoney.ui.transaction.main.TransactionFFFragment
 class TransactionSpentFragment : TransactionFFFragment(R.layout.fragment_add_spent) {
 
     override fun initFragmentPlus() {
-        add_acc_category_block.setOnClickListener {
-            showCategoryDialog()
-        }
-
-        add_btn.setOnClickListener {
-            save(TransactionModel.TRANSACTION_TYPE_SPENT)
-        }
+        add_acc_category_block.setOnClickListener { showCategoryDialog() }
+        add_btn.setOnClickListener { save(TransactionModel.TRANSACTION_TYPE_SPENT) }
 
         viewModel.category.observe(viewLifecycleOwner, Observer {
             it?.let {
