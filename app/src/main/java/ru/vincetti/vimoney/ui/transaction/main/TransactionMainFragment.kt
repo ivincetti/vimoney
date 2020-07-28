@@ -8,14 +8,11 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.fragment_transaction_main.*
-import ru.vincetti.vimoney.MainViewModel
-import ru.vincetti.vimoney.MainViewModelFactory
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.TabsFragmentPagerAdapter
 import ru.vincetti.vimoney.data.models.TransactionModel
@@ -26,10 +23,8 @@ import ru.vincetti.vimoney.ui.transaction.TransactionConst
 class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
 
     private val viewModel: TransactionMainViewModel by viewModels { viewModelFactory }
-    private val mainViewModel: MainViewModel by activityViewModels { mainViewModelFactory }
 
     private lateinit var viewModelFactory: TransactionMainViewModelFactory
-    private lateinit var mainViewModelFactory: MainViewModelFactory
     private lateinit var fragmentBundle: Bundle
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,7 +37,6 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
                 mDb.accountDao(),
                 mDb.categoryDao()
         )
-        mainViewModelFactory = MainViewModelFactory(mDb.accountDao())
 
         fragmentBundle = Bundle()
         arguments?.let { bundle ->
@@ -100,13 +94,10 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
     }
 
     fun setActivityTitle(position: Int) {
-        when (position) {
-            TransactionModel.TRANSACTION_TYPE_SPENT_TAB ->
-                transaction_navigation_txt.text = getString(R.string.add_title_home_spent)
-            TransactionModel.TRANSACTION_TYPE_INCOME_TAB ->
-                transaction_navigation_txt.text = getString(R.string.add_title_home_income)
-            TransactionModel.TRANSACTION_TYPE_TRANSFER_TAB ->
-                transaction_navigation_txt.text = getString(R.string.add_title_home_transfer)
+        transaction_navigation_txt.text = when (position) {
+            TransactionModel.TRANSACTION_TYPE_SPENT_TAB -> getString(R.string.add_title_home_spent)
+            TransactionModel.TRANSACTION_TYPE_TRANSFER_TAB -> getString(R.string.add_title_home_transfer)
+            else -> getString(R.string.add_title_home_income)
 //            TransactionModel.TRANSACTION_TYPE_DEBT_TAB ->
 //                transaction_navigation_txt.text = getString(R.string.add_title_home_debt)
         }
@@ -136,28 +127,22 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
 
     /** Delete transaction logic. */
     private fun showDeleteDialog() {
-        val builder = AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext())
                 .setMessage(R.string.transaction_delete_alert_question)
-                .setNegativeButton(R.string.transaction_delete_alert_negative) { dialogInterface, _ ->
-                    dialogInterface?.dismiss()
-                }
-                .setPositiveButton(R.string.transaction_delete_alert_positive) { _, _ ->
-                    viewModel.delete()
-                }
-        builder.create().show()
+                .setNegativeButton(R.string.transaction_delete_alert_negative) { dialogInterface, _ -> dialogInterface?.dismiss() }
+                .setPositiveButton(R.string.transaction_delete_alert_positive) { _, _ -> viewModel.delete() }
+                .create()
+                .show()
     }
 
     /** Not saved transaction cancel dialog. */
     private fun showUnsavedDialog() {
-        val builder = AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext())
                 .setMessage(R.string.transaction_add_alert_question)
-                .setNegativeButton(R.string.transaction_add_alert_negative) { _, _ ->
-                    findNavController().navigateUp()
-                }
-                .setPositiveButton(R.string.transaction_add_alert_positive) { dialogInterface, _ ->
-                    dialogInterface?.dismiss()
-                }
-        builder.create().show()
+                .setNegativeButton(R.string.transaction_add_alert_negative) { _, _ -> findNavController().navigateUp() }
+                .setPositiveButton(R.string.transaction_add_alert_positive) { dialogInterface, _ -> dialogInterface?.dismiss() }
+                .create()
+                .show()
     }
 
     private fun insetsInit() {

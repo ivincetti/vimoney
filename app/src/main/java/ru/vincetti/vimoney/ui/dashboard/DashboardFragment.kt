@@ -32,25 +32,15 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         graphInit()
         insetsInit()
 
-        setting_navigation_back_btn.setOnClickListener {
-            viewModel.homeButton()
-        }
+        setting_navigation_back_btn.setOnClickListener { viewModel.homeButton() }
+        dash_content.dashboard_month_next.setOnClickListener { viewModel.setMonthNext() }
+        dash_content.dashboard_month_previous.setOnClickListener { viewModel.setMonthPrev() }
+        dash_content.dashboard_year_next.setOnClickListener { viewModel.setYearNext() }
+        dash_content.dashboard_year_previous.setOnClickListener { viewModel.setYearPrev() }
 
-        dash_content.dashboard_month_next.setOnClickListener {
-            viewModel.setMonthNext()
-        }
-        dash_content.dashboard_month_previous.setOnClickListener {
-            viewModel.setMonthPrev()
-        }
         viewModel.monthString.observe(viewLifecycleOwner, Observer {
             dash_content.dashboard_month.text = it
         })
-        dash_content.dashboard_year_next.setOnClickListener {
-            viewModel.setYearNext()
-        }
-        dash_content.dashboard_year_previous.setOnClickListener {
-            viewModel.setYearPrev()
-        }
         viewModel.yearString.observe(viewLifecycleOwner, Observer {
             dash_content.dashboard_year.text = it
         })
@@ -73,9 +63,9 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
     private fun graphInit() {
         dashboard_lineChart.gradientFillColors = intArrayOf(
-                        Color.parseColor("#81FFFFFF"),
-                        Color.TRANSPARENT
-                )
+                Color.parseColor("#81FFFFFF"),
+                Color.TRANSPARENT
+        )
         dashboard_lineChart.animation.duration = 400L
     }
 
@@ -95,5 +85,4 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
             insets
         }
     }
-
 }

@@ -22,13 +22,8 @@ class NotificationFragment : Fragment(R.layout.fragment_notifications) {
             if (it) findNavController().navigate(R.id.action_notificationFragment_to_homeFragment)
         })
 
-        setting_navigation_back_btn.setOnClickListener {
-            viewModel.homeButton()
-        }
-
-        notification_notify_btn.setOnClickListener {
-            viewModel.notifyButton()
-        }
+        setting_navigation_back_btn.setOnClickListener { viewModel.homeButton() }
+        notification_notify_btn.setOnClickListener { viewModel.notifyButton() }
 
         insetsInit()
     }

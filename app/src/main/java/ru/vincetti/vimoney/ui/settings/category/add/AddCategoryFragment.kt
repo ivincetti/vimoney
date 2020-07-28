@@ -42,15 +42,6 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
     }
 
     private fun viewInit() {
-        category_add_navigation_add_btn.setOnClickListener {
-            save()
-        }
-        category_add_navigation_back_btn.setOnClickListener {
-            showUnsavedDialog()
-        }
-        add_category_save_btn.setOnClickListener {
-            save()
-        }
         viewModel.isDefault.observe(viewLifecycleOwner, Observer {
             if (!it) add_category_save_btn.text = getString(R.string.add_btn_update)
         })
@@ -67,6 +58,9 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
             add_category_symbol.text = it
         })
 
+        category_add_navigation_add_btn.setOnClickListener { save() }
+        category_add_navigation_back_btn.setOnClickListener { showUnsavedDialog() }
+        add_category_save_btn.setOnClickListener { save() }
         add_category_symbol.setOnClickListener {
             val dialogFrag = CategorySymbolListDialog()
             dialogFrag.setTargetFragment(this, 1)
@@ -88,15 +82,12 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
 
     /** Not saved category cancel dialog. */
     private fun showUnsavedDialog() {
-        val builder = AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext())
                 .setMessage(R.string.check_add_alert_question)
-                .setNegativeButton(R.string.check_add_alert_negative) { _, _ ->
-                    goBack()
-                }
-                .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
-                    dialogInterface?.dismiss()
-                }
-        builder.create().show()
+                .setNegativeButton(R.string.check_add_alert_negative) { _, _ -> goBack() }
+                .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ -> dialogInterface?.dismiss() }
+                .create()
+                .show()
     }
 
     /** Not saved transaction cancel dialog. */

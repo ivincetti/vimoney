@@ -39,17 +39,18 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
                 trCount = args.getInt(BUNDLE_TRANS_COUNT_NAME, HistoryViewModel.DEFAULT_TRANSACTIONS)
             }
             // уточнение счета
-            viewModelFactory = if (args.containsKey(BUNDLE_TRANS_CHECK_ID_NAME)) {
-                HistoryViewModelFactory(
-                        db.transactionDao(),
-                        trCount,
-                        args.getInt(BUNDLE_TRANS_CHECK_ID_NAME))
-            } else {
-                HistoryViewModelFactory(
-                        db.transactionDao(),
-                        trCount,
-                        null)
-            }
+            viewModelFactory =
+                    if (args.containsKey(BUNDLE_TRANS_CHECK_ID_NAME)) {
+                        HistoryViewModelFactory(
+                                db.transactionDao(),
+                                trCount,
+                                args.getInt(BUNDLE_TRANS_CHECK_ID_NAME))
+                    } else {
+                        HistoryViewModelFactory(
+                                db.transactionDao(),
+                                trCount,
+                                null)
+                    }
         } else {
             //TODO точно надо?
             viewModelFactory = HistoryViewModelFactory(

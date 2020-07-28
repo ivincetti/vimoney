@@ -34,7 +34,6 @@ class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
         val db = AppDatabase.getInstance(application)
         viewModelFactory = CheckListModelFactory(db.accountDao())
 
-        // список карт/счетов
         val adapter = AllCardsListRVAdapter {
             val bundle = Bundle()
             bundle.putInt(EXTRA_CHECK_ID, it)

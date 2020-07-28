@@ -32,16 +32,12 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     }
 
     private fun alertNetworkDialogShow() {
-        val builder = AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext())
                 .setMessage(resources.getString(R.string.splash_nonetwork_string))
                 .setCancelable(false)
-                .setPositiveButton(resources.getString(R.string.splash_nonetwork_positive)) { _, _ ->
-                    viewModel.resetNetworkStatus()
-                }
-                .setNegativeButton(resources.getString(R.string.splash_nonetwork_negative)) { _, _ ->
-                    activity?.finish()
-                }
-        builder.create().show()
+                .setPositiveButton(resources.getString(R.string.splash_nonetwork_positive)) { _, _ -> viewModel.resetNetworkStatus() }
+                .setNegativeButton(resources.getString(R.string.splash_nonetwork_negative)) { _, _ -> requireActivity().finish() }
+                .create()
+                .show()
     }
-
 }

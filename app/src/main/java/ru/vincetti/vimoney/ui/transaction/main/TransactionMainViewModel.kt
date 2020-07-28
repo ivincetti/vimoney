@@ -39,10 +39,6 @@ class TransactionMainViewModel(
     val needToNavigate
         get() = _needToNavigate
 
-    private val _error = MutableLiveData<Boolean>()
-    val error
-        get() = _error
-
     private val _date = MutableLiveData<Date>()
     val date
         get() = _date
@@ -87,7 +83,6 @@ class TransactionMainViewModel(
         _needAccount.value = false
         _needToUpdate.value = false
         _needSum.value = false
-        _error.value = false
         _needToNavigate.value = false
         _date.value = Date()
     }
@@ -195,9 +190,7 @@ class TransactionMainViewModel(
     fun saveTransactionTo(actionType: Int, txtName: String, txtSum: String, txtSumTo: String) {
         val tmpTransaction = _transaction.value
         val tmpToTransaction = _nestedTransaction.value
-        if (tmpTransaction == null || tmpToTransaction == null) {
-            _error.value = true
-        } else {
+        if (tmpTransaction != null && tmpToTransaction != null) {
             if (_accountId.value != TransactionModel.DEFAULT_ID
                     && _accountIdTo.value != TransactionModel.DEFAULT_ID) {
                 if (txtSumTo == "" || txtSum == "") {
@@ -234,17 +227,8 @@ class TransactionMainViewModel(
     private fun updateBalance(vararg trans: TransactionModel) {
         viewModelScope.launch {
             for (transaction in trans) {
-                // update balance for current (accId) account
                 accountBalanceUpdateById(transactionDao, accDao, transaction.accountId)
             }
-            // update balance for account updated
-            // TODO бред надо автоматизировать
-//            if (oldTransactionAccountID != TransactionModel.DEFAULT_ID && tmpTransaction.accountId != oldTransactionAccountID) {
-//                LogicMath.accountBalanceUpdateById(transactionDao, accountDao, oldTransactionAccountID)
-//            }
-//            if (oldTransactionAccountToID != TransactionModel.DEFAULT_ID && tmpToTransaction.accountId != oldTransactionAccountToID) {
-//                LogicMath.accountBalanceUpdateById(transactionDao, accountDao, oldTransactionAccountToID)
-//            }
         }
     }
 

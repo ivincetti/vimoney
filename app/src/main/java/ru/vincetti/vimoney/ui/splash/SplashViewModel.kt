@@ -136,6 +136,12 @@ class SplashViewModel(
         }
     }
 
+    private suspend fun accountUpdate(accId: Int, type: String, title: String, ins: Int, balance: Int) {
+        val newAcc = AccountModel(accId, title, type, balance, 810)
+        mDb.accountDao().insertAccount(newAcc)
+        accountBalanceUpdateById(mDb.transactionDao(), mDb.accountDao(), accId)
+    }
+
     private suspend fun categoriesUpdate(categoriesItems: List<CategoriesItem>) {
         for (cat in categoriesItems) {
             categoryUpdate(
@@ -144,12 +150,6 @@ class SplashViewModel(
                     cat.symbol
             )
         }
-    }
-
-    private suspend fun accountUpdate(accId: Int, type: String, title: String, ins: Int, balance: Int) {
-        val newAcc = AccountModel(accId, title, type, balance, 810)
-        mDb.accountDao().insertAccount(newAcc)
-        accountBalanceUpdateById(mDb.transactionDao(), mDb.accountDao(), accId)
     }
 
     private suspend fun categoryUpdate(catId: Int, name: String, symbol: String) {
