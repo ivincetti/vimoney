@@ -3,10 +3,8 @@ package ru.vincetti.vimoney.ui.check.add
 import android.app.Application
 import android.graphics.Color
 import android.text.TextUtils
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
-import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.AccountModel
 import ru.vincetti.vimoney.data.models.CurrencyModel
 import ru.vincetti.vimoney.data.sqlite.AccountDao
@@ -54,6 +52,7 @@ class AddCheckViewModel(
         _need2Navigate.value = false
         _needAllBalance.value = true
         _check.value = AccountModel()
+        _color.value = Color.parseColor(_check.value!!.color)
     }
 
     fun loadAccount(id: Int) {
@@ -73,7 +72,8 @@ class AddCheckViewModel(
     fun save(name: String, type: String) {
         if (TextUtils.isEmpty(name)
                 || TextUtils.isEmpty(type)
-                || requireNotNull(color.value) > 0
+                || currency.value == null
+                || color.value!! > 0
         ) {
             need2AllData.value = true
         } else {
@@ -88,11 +88,9 @@ class AddCheckViewModel(
                         accDao.updateAccount(it)
                     }
                 } else {
-                    it.sum = 0
                     // new transaction
-                    it.color = java.lang.String.format("#%06x",
-                            (ContextCompat.getColor(app, R.color.colorPrimary) and 0xffffff))
-
+                    it.sum = 0
+                    it.color = java.lang.String.format("#%06x", (_color.value!! and 0xffffff))
                     viewModelScope.launch {
                         accDao.insertAccount(it)
                     }

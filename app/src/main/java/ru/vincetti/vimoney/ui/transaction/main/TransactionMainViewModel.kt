@@ -79,7 +79,7 @@ class TransactionMainViewModel(
         _nestedTransaction.value = TransactionModel()
         _accountId.value = TransactionModel.DEFAULT_ID
         _accountIdTo.value = TransactionModel.DEFAULT_ID
-        _categoryId.value = TransactionModel.DEFAULT_ID
+        _categoryId.value = TransactionModel.DEFAULT_CATEGORY
         _needAccount.value = false
         _needToUpdate.value = false
         _needSum.value = false
