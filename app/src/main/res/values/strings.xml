@@ -123,5 +123,6 @@
     <string name="categories_title_home">Categories</string>
     <string name="category_add_title">Add category</string>
     <string name="category_name">Category</string>
+    <string name="categories_symbols_list_tip_string">You can manage categories in settings</string>
 
 </resources>
