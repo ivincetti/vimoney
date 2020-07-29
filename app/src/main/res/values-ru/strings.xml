@@ -118,5 +118,6 @@
     <string name="category_add_title">Добавить категорию</string>
     <string name="category_name">Категория</string>
     <string name="sample_category_name">другое</string>
+    <string name="categories_symbols_list_tip_string">Управление категориями осущестляется в настройках</string>
 
 </resources>
