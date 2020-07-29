@@ -5,6 +5,7 @@ import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AccountDao
 import ru.vincetti.vimoney.data.sqlite.CategoryDao
+import ru.vincetti.vimoney.data.sqlite.CurrentDao
 import ru.vincetti.vimoney.data.sqlite.TransactionDao
 import ru.vincetti.vimoney.utils.accountBalanceUpdateById
 import java.util.*
@@ -12,7 +13,8 @@ import java.util.*
 class TransactionMainViewModel(
         private val transactionDao: TransactionDao,
         private val accDao: AccountDao,
-        private val catDao: CategoryDao
+        private val catDao: CategoryDao,
+        private val curDao: CurrentDao
 ) : ViewModel() {
 
     private var _transaction = MutableLiveData<TransactionModel>()
@@ -44,12 +46,28 @@ class TransactionMainViewModel(
         get() = _date
 
     private val _accountId = MutableLiveData<Int>()
-    val accountId
-        get() = _accountId
+    val account = _accountId.switchMap {
+        liveData {
+            emit(accDao.loadAccountById(it))
+        }
+    }
+    val currency = _accountId.switchMap {
+        liveData {
+            emit(curDao.loadCurrencyByCode(it))
+        }
+    }
 
     private val _accountIdTo = MutableLiveData<Int>()
-    val accountIdTo
-        get() = _accountIdTo
+    val accountTo = _accountIdTo.switchMap {
+        liveData {
+            emit(accDao.loadAccountById(it))
+        }
+    }
+    val currencyTo = _accountIdTo.switchMap {
+        liveData {
+            emit(curDao.loadCurrencyByCode(it))
+        }
+    }
 
     private val _sum = MutableLiveData<Float>()
     val sum
@@ -63,6 +81,7 @@ class TransactionMainViewModel(
     }
 
     val categoriesList = catDao.loadAllCategories()
+    val accountNotArchiveNames = accDao.loadNotArchiveAccounts()
 
     private val _description = MutableLiveData<String>()
     val description
@@ -168,7 +187,7 @@ class TransactionMainViewModel(
         tmpTransaction?.let {
             when {
                 txtSum == "" -> _needSum.value = true
-                accountId.value!! < 1 -> _needAccount.value = true
+                _accountId.value!! < 1 -> _needAccount.value = true
                 else -> {
                     tmpTransaction.description = txtName
                     tmpTransaction.date = date.value!!
@@ -256,13 +275,14 @@ class TransactionMainViewModel(
 }
 
 class TransactionMainViewModelFactory(
-        val transactionDao: TransactionDao,
+        private val transactionDao: TransactionDao,
         private val accDao: AccountDao,
-        private val catDao: CategoryDao
+        private val catDao: CategoryDao,
+        private val curDao: CurrentDao
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TransactionMainViewModel::class.java)) {
-            return TransactionMainViewModel(transactionDao, accDao, catDao) as T
+            return TransactionMainViewModel(transactionDao, accDao, catDao, curDao) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

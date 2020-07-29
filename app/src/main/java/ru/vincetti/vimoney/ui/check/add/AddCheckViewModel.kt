@@ -57,14 +57,15 @@ class AddCheckViewModel(
 
     fun loadAccount(id: Int) {
         viewModelScope.launch {
-            val tmp = accDao.loadAccountById(id)
-            checkID = id
-            _color.value = Color.parseColor(tmp.color)
-            _check.value = tmp
-            _currency.value = curDao.loadCurrencyByCode(tmp.currency)
-            _needAllBalance.value = tmp.needAllBalance
-            isDefault.value = false
-            isDefaultBool = false
+            accDao.loadAccountById(id)?.let {
+                checkID = id
+                _color.value = Color.parseColor(it.color)
+                _check.value = it
+                _currency.value = curDao.loadCurrencyByCode(it.currency)
+                _needAllBalance.value = it.needAllBalance
+                isDefault.value = false
+                isDefaultBool = false
+            }
         }
     }
 
