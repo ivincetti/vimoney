@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.fragment_add_all.*
 import kotlinx.android.synthetic.main.fragment_add_all.view.*
 import kotlinx.android.synthetic.main.fragment_add_transfer.*
 import ru.vincetti.vimoney.R
+import ru.vincetti.vimoney.data.models.AccountListModel
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.ui.transaction.main.TransactionFFFragment
 
@@ -19,15 +20,13 @@ class TransactionTransferFragment : TransactionFFFragment(R.layout.fragment_add_
         viewModel.nestedTransaction.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it?.let {
                 if (it.sum > 0) add_sum_to.setText(it.sum.toString())
-                if (it.accountId != TransactionModel.DEFAULT_ID) {
-                    add_acc_name_to.text = mainViewModel.loadFromAccountNotArchiveNames(it.accountId)
-                    add_acc_cur_to.text = mainViewModel.loadFromCurSymbols(it.accountId)
-                }
             }
         })
-        viewModel.accountIdTo.observe(viewLifecycleOwner, Observer {
-            add_acc_name_to.text = mainViewModel.loadFromAccountNames(it)
-            add_acc_cur_to.text = mainViewModel.loadFromCurSymbols(it)
+        viewModel.accountTo.observe(viewLifecycleOwner, Observer {
+            it?.let { add_acc_name_to.text = it.name }
+        })
+        viewModel.currencyTo.observe(viewLifecycleOwner, Observer {
+            it?.let { add_acc_cur_to.text = it.symbol }
         })
 
         add_sum.addTextChangedListener(object : TextWatcher {
@@ -44,15 +43,15 @@ class TransactionTransferFragment : TransactionFFFragment(R.layout.fragment_add_
         add_btn.setOnClickListener { save(TransactionModel.TRANSACTION_TYPE_TRANSFER) }
     }
 
-    override fun loadAccounts(list: HashMap<Int, String>) {
+    override fun loadAccounts(list: List<AccountListModel>) {
         add_acc_name.setOnClickListener { popUpShow(list, it) }
         add_acc_name_to.setOnClickListener { popUpShowTo(list, it) }
     }
 
-    private fun popUpShowTo(list: HashMap<Int, String>, view: View) {
+    private fun popUpShowTo(list: List<AccountListModel>, view: View) {
         val popUp = PopupMenu(requireContext(), view)
-        for (i in list.keys) {
-            popUp.menu.add(Menu.NONE, i, i, list[i])
+        for (acc in list) {
+            popUp.menu.add(Menu.NONE, acc.id, acc.id, acc.name)
         }
         popUp.setOnMenuItemClickListener {
             viewModel.setAccountTo(it.itemId)

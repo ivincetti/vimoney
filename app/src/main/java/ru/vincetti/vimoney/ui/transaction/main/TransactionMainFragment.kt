@@ -31,11 +31,12 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
         super.onViewCreated(view, savedInstanceState)
 
         val application = requireNotNull(activity).application
-        val mDb = AppDatabase.getInstance(application)
+        val db = AppDatabase.getInstance(application)
         viewModelFactory = TransactionMainViewModelFactory(
-                mDb.transactionDao(),
-                mDb.accountDao(),
-                mDb.categoryDao()
+                db.transactionDao(),
+                db.accountDao(),
+                db.categoryDao(),
+                db.currentDao()
         )
 
         fragmentBundle = Bundle()

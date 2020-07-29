@@ -10,17 +10,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_add_all.*
 import kotlinx.android.synthetic.main.fragment_add_all.view.*
 import kotlinx.android.synthetic.main.fragment_add_spent.*
-import ru.vincetti.vimoney.MainViewModel
-import ru.vincetti.vimoney.MainViewModelFactory
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.models.TransactionModel
+import ru.vincetti.vimoney.data.models.AccountListModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import java.text.DateFormat
 import java.util.*
@@ -28,24 +25,21 @@ import java.util.*
 open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutId) {
 
     val viewModel: TransactionMainViewModel by viewModels({ requireParentFragment() }) { viewModelFactory }
-    val mainViewModel: MainViewModel by activityViewModels { mainViewModelFactory }
 
     private lateinit var viewModelFactory: TransactionMainViewModelFactory
-    private lateinit var mainViewModelFactory: MainViewModelFactory
     private lateinit var date: Date
 
     val dialogFrag = CategoryListDialog()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val application = requireNotNull(activity).application
-        val mDb = AppDatabase.getInstance(application)
+        val db = AppDatabase.getInstance(application)
         viewModelFactory = TransactionMainViewModelFactory(
-                mDb.transactionDao(),
-                mDb.accountDao(),
-                mDb.categoryDao()
+                db.transactionDao(),
+                db.accountDao(),
+                db.categoryDao(),
+                db.currentDao()
         )
-        mainViewModelFactory = MainViewModelFactory(mDb.accountDao())
-
         initFragmentViews()
         initFragmentPlus()
     }
@@ -75,7 +69,7 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
         if (requestCode == 1) setCategoryID(resultCode)
     }
 
-    open fun loadAccounts(list: HashMap<Int, String>) {
+    open fun loadAccounts(list: List<AccountListModel>) {
         add_acc_name.setOnClickListener { popUpShow(list, it) }
     }
 
@@ -87,10 +81,10 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
         )
     }
 
-    fun popUpShow(list: HashMap<Int, String>, view: View) {
+    fun popUpShow(list: List<AccountListModel>, view: View) {
         val popUp = PopupMenu(requireContext(), view)
-        for (i in list.keys) {
-            popUp.menu.add(Menu.NONE, i, i, list[i])
+        for (acc in list) {
+            popUp.menu.add(Menu.NONE, acc.id, acc.id, acc.name)
         }
         popUp.setOnMenuItemClickListener {
             viewModel.setAccount(it.itemId)
@@ -109,10 +103,14 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
         viewModel.needToUpdate.observe(viewLifecycleOwner, Observer {
             if (it) add_btn.text = getString(R.string.add_btn_update)
         })
-        viewModel.accountId.observe(viewLifecycleOwner, Observer {
-            if (it != TransactionModel.DEFAULT_ID) {
-                add_acc_name.text = mainViewModel.loadFromAccountNames(it)
-                add_acc_cur.text = mainViewModel.loadFromCurSymbols(it)
+        viewModel.account.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                add_acc_name.text = it.name
+            }
+        })
+        viewModel.currency.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                add_acc_cur.text = it.symbol
             }
         })
         viewModel.sum.observe(viewLifecycleOwner, Observer {
@@ -128,7 +126,7 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
         viewModel.description.observe(viewLifecycleOwner, Observer {
             fragment_add_content.add_desc.setText(it)
         })
-        mainViewModel.accountNotArchiveNames.observe(viewLifecycleOwner, Observer {
+        viewModel.accountNotArchiveNames.observe(viewLifecycleOwner, Observer {
             it?.let { loadAccounts(it) }
         })
         viewModel.needToNavigate.observe(viewLifecycleOwner, Observer {
