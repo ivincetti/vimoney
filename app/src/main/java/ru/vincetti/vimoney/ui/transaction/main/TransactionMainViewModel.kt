@@ -51,9 +51,13 @@ class TransactionMainViewModel(
             emit(accDao.loadAccountById(it))
         }
     }
-    val currency = _accountId.switchMap {
+    val currency = account.switchMap {
         liveData {
-            emit(curDao.loadCurrencyByCode(it))
+            it?.let {
+                emit(curDao.loadCurrencyByCode(it.currency))
+            } ?: run {
+                emit(null)
+            }
         }
     }
 
@@ -63,9 +67,13 @@ class TransactionMainViewModel(
             emit(accDao.loadAccountById(it))
         }
     }
-    val currencyTo = _accountIdTo.switchMap {
+    val currencyTo = accountTo.switchMap {
         liveData {
-            emit(curDao.loadCurrencyByCode(it))
+            it?.let {
+                emit(curDao.loadCurrencyByCode(it.currency))
+            } ?: run {
+                emit(null)
+            }
         }
     }
 
@@ -124,9 +132,11 @@ class TransactionMainViewModel(
                 if (tmpTransaction.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
                         && tmpTransaction.extraValue.toInt() > 0) {
                     nestedId = tmpTransaction.extraValue.toInt()
-                    _nestedTransaction.value = loadNestedTransaction(nestedId)
-                    oldTransactionAccountToID =
-                            _nestedTransaction.value?.accountId ?: TransactionModel.DEFAULT_ID
+                    loadNestedTransaction(nestedId)?.let {
+                        _nestedTransaction.value = it
+                        _accountIdTo.value = it.accountId
+                        oldTransactionAccountToID = it.accountId
+                    }
                 }
             }
         }
