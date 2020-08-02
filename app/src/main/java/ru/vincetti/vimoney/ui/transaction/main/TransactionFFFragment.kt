@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_add_all.*
 import kotlinx.android.synthetic.main.fragment_add_all.view.*
@@ -34,12 +33,7 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
-        viewModelFactory = TransactionMainViewModelFactory(
-            db.transactionDao(),
-            db.accountDao(),
-            db.categoryDao(),
-            db.currentDao()
-        )
+        viewModelFactory = TransactionMainViewModelFactory(db)
         initFragmentViews()
         initFragmentPlus()
     }
@@ -94,51 +88,39 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
     }
 
     private fun initFragmentViews() {
-        viewModel.needSum.observe(
-            viewLifecycleOwner,
-            Observer { if (it) showNoSumToast() }
-        )
-        viewModel.needAccount.observe(
-            viewLifecycleOwner,
-            Observer { if (it) showNoAccountToast() }
-        )
-        viewModel.needToUpdate.observe(
-            viewLifecycleOwner,
-            Observer { if (it) add_btn.text = getString(R.string.add_btn_update) }
-        )
-        viewModel.account.observe(
-            viewLifecycleOwner,
-            Observer { it?.let { add_acc_name.text = it.name } }
-        )
-        viewModel.currency.observe(
-            viewLifecycleOwner,
-            Observer { it?.let { add_acc_cur.text = it.symbol } }
-        )
-        viewModel.sum.observe(
-            viewLifecycleOwner,
-            Observer { if (it > 0) add_sum.setText(it.toString()) }
-        )
-        viewModel.date.observe(
-            viewLifecycleOwner,
-            Observer {
-                it?.let {
-                    date = it
-                    add_date_txt.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)
-                }
+        viewModel.needSum.observe(viewLifecycleOwner) {
+            if (it) showNoSumToast()
+        }
+        viewModel.needAccount.observe(viewLifecycleOwner) {
+            if (it) showNoAccountToast()
+        }
+        viewModel.needToUpdate.observe(viewLifecycleOwner) {
+            if (it) add_btn.text = getString(R.string.add_btn_update)
+        }
+        viewModel.account.observe(viewLifecycleOwner) {
+            it?.let { add_acc_name.text = it.name }
+        }
+        viewModel.currency.observe(viewLifecycleOwner) {
+            it?.let { add_acc_cur.text = it.symbol }
+        }
+        viewModel.sum.observe(viewLifecycleOwner) {
+            if (it > 0) add_sum.setText(it.toString())
+        }
+        viewModel.date.observe(viewLifecycleOwner) {
+            it?.let {
+                date = it
+                add_date_txt.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)
             }
-        )
-        viewModel.description.observe(
-            viewLifecycleOwner,
-            Observer { fragment_add_content.add_desc.setText(it) }
-        )
-        viewModel.accountNotArchiveNames.observe(
-            viewLifecycleOwner,
-            Observer { it?.let { loadAccounts(it) } }
-        )
-        viewModel.needToNavigate.observe(
-            viewLifecycleOwner,
-            Observer { if (it) navigateUp() }
-        )
+        }
+        viewModel.description.observe(viewLifecycleOwner) {
+            fragment_add_content.add_desc.setText(it)
+        }
+        viewModel.accountNotArchiveNames.observe(viewLifecycleOwner) {
+            it?.let { loadAccounts(it) }
+        }
+        viewModel.needToNavigate.observe(viewLifecycleOwner) {
+            if (it) navigateUp()
+        }
         add_date_block.setOnClickListener { showDateDialog() }
     }
 

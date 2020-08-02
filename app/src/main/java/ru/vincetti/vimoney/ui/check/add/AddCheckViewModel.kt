@@ -69,7 +69,6 @@ class AddCheckViewModel(
         }
     }
 
-    /** Save account logic. */
     fun save(name: String, type: String) {
         if (
             TextUtils.isEmpty(name)
@@ -102,7 +101,6 @@ class AddCheckViewModel(
         }
     }
 
-    /** Restore from archive account logic. */
     fun restore() {
         if (!isDefaultBool) {
             viewModelScope.launch {
@@ -112,7 +110,6 @@ class AddCheckViewModel(
         }
     }
 
-    /** Archive account logic. */
     fun delete() {
         if (!isDefaultBool) {
             viewModelScope.launch {
@@ -122,8 +119,12 @@ class AddCheckViewModel(
         }
     }
 
-    fun setNeed2AllData(isChecked: Boolean) {
+    fun setNeedAllBalance(isChecked: Boolean) {
         _needAllBalance.value = isChecked
+    }
+
+    fun noDataDialogClosed() {
+        need2AllData.value = false
     }
 
     fun setCurrency(checkCurrency: Int) {

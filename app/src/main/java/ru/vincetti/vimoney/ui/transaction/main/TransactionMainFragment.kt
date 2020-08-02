@@ -9,7 +9,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.fragment_transaction_main.*
@@ -32,12 +31,7 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
 
         val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
-        viewModelFactory = TransactionMainViewModelFactory(
-            db.transactionDao(),
-            db.accountDao(),
-            db.categoryDao(),
-            db.currentDao()
-        )
+        viewModelFactory = TransactionMainViewModelFactory(db)
 
         fragmentBundle = Bundle()
         arguments?.let { bundle ->
@@ -87,10 +81,9 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
         setting_navigation_back_btn.setOnClickListener {
             showUnsavedDialog()
         }
-        viewModel.transaction.observe(
-            viewLifecycleOwner,
-            Observer { it?.let { typeLoad(it.type) } }
-        )
+        viewModel.transaction.observe(viewLifecycleOwner) {
+            it?.let { typeLoad(it.type) }
+        }
     }
 
     fun setActivityTitle(position: Int) {
@@ -103,7 +96,6 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
         }
     }
 
-    /** RadioButton option load. */
     private fun typeLoad(type: Int) {
         when (type) {
             TransactionModel.TRANSACTION_TYPE_INCOME -> {
@@ -125,7 +117,6 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
         }
     }
 
-    /** Delete transaction logic. */
     private fun showDeleteDialog() {
         AlertDialog.Builder(requireContext())
             .setMessage(R.string.transaction_delete_alert_question)
@@ -139,7 +130,6 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
             .show()
     }
 
-    /** Not saved transaction cancel dialog. */
     private fun showUnsavedDialog() {
         AlertDialog.Builder(requireContext())
             .setMessage(R.string.transaction_add_alert_question)

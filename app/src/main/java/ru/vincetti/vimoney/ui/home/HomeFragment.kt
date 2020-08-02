@@ -7,7 +7,6 @@ import androidx.core.view.marginBottom
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home_content.*
@@ -19,6 +18,7 @@ import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
+import ru.vincetti.vimoney.ui.history.filter.Filter
 import ru.vincetti.vimoney.utils.DatesFormat
 import java.time.LocalDate
 
@@ -35,7 +35,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val db = AppDatabase.getInstance(application)
         viewModelFactory = HomeViewModelFactory(db)
 
-        /** Список карт/счетов. */
         val mAdapter = CardsListRVAdapter {
             val bundle = Bundle()
             bundle.putInt(EXTRA_CHECK_ID, it)
@@ -45,30 +44,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val recycler = fragment_home_content.home_cards_recycle_view
         recycler.adapter = mAdapter
 
-        viewModel.userBalance.observe(
-            viewLifecycleOwner,
-            Observer { home_user_balance.text = it.toString() }
-        )
-        viewModel.accounts.observe(
-            viewLifecycleOwner,
-            Observer { mAdapter.setList(it) }
-        )
-        viewModel.homeButtonEnabled.observe(
-            viewLifecycleOwner,
-            Observer { home_menu_update.isEnabled = it }
-        )
-        viewModel.incomeSum.observe(
-            viewLifecycleOwner,
-            Observer {
-                it?.let { fragment_home_content.home_stat_income_txt.text = it.toString() }
-            }
-        )
-        viewModel.expenseSum.observe(
-            viewLifecycleOwner,
-            Observer {
-                it?.let { fragment_home_content.home_stat_expense_txt.text = it.toString() }
-            }
-        )
+        viewModel.userBalance.observe(viewLifecycleOwner) {
+            home_user_balance.text = it.toString()
+        }
+        viewModel.accounts.observe(viewLifecycleOwner) {
+            mAdapter.setList(it)
+        }
+        viewModel.homeButtonEnabled.observe(viewLifecycleOwner) {
+            home_menu_update.isEnabled = it
+        }
+        viewModel.incomeSum.observe(viewLifecycleOwner) {
+            it?.let { fragment_home_content.home_stat_income_txt.text = it.toString() }
+        }
+        viewModel.expenseSum.observe(viewLifecycleOwner) {
+            it?.let { fragment_home_content.home_stat_expense_txt.text = it.toString() }
+        }
 
         viewInit()
         insetsInit()
@@ -117,10 +107,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    /** Show historyFragment. */
     private fun showTransactionsHistory() {
+        val historyFragment = HistoryFragment()
+
+        val args = Filter().apply {
+            count = HistoryFragment.DEFAULT_CHECK_COUNT
+        }.createBundle()
+
+        historyFragment.arguments = args
         childFragmentManager.beginTransaction()
-            .replace(R.id.main_history_container, HistoryFragment())
+            .replace(R.id.main_history_container, historyFragment)
             .commit()
     }
 }

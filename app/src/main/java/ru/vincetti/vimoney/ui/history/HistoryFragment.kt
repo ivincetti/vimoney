@@ -1,17 +1,18 @@
 package ru.vincetti.vimoney.ui.history
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import kotlinx.android.synthetic.main.fragment_history_content.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.TransactionsRVAdapter
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
+import ru.vincetti.vimoney.ui.history.filter.Filter
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
 
 class HistoryFragment : Fragment(R.layout.fragment_history_content) {
@@ -21,47 +22,24 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
     private lateinit var viewModelFactory: HistoryViewModelFactory
 
     companion object {
-        const val BUNDLE_TRANS_COUNT_NAME = "ru.vincetti.vimoney.transhistory_count"
-        const val BUNDLE_TRANS_CHECK_ID_NAME = "ru.vincetti.vimoney.transhistory_check_id"
+        const val DEFAULT_CHECK_COUNT = 20
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val application = requireNotNull(activity).application
-        val db = AppDatabase.getInstance(application)
-        // TODO вынести!
-        var trCount = HistoryViewModel.DEFAULT_TRANSACTIONS
-        val args = arguments
-        if (args !== null) {
-            // количество элементов
-            if (args.containsKey(BUNDLE_TRANS_COUNT_NAME)) {
-                trCount = args.getInt(BUNDLE_TRANS_COUNT_NAME, HistoryViewModel.DEFAULT_TRANSACTIONS)
-            }
-            // уточнение счета
-            viewModelFactory =
-                if (args.containsKey(BUNDLE_TRANS_CHECK_ID_NAME)) {
-                    HistoryViewModelFactory(
-                        db.transactionDao(),
-                        trCount,
-                        args.getInt(BUNDLE_TRANS_CHECK_ID_NAME)
-                    )
-                } else {
-                    HistoryViewModelFactory(
-                        db.transactionDao(),
-                        trCount,
-                        null
-                    )
-                }
-        } else {
-            // TODO точно надо?
-            viewModelFactory = HistoryViewModelFactory(
-                db.transactionDao(),
-                trCount,
-                null
-            )
-        }
+        val db = AppDatabase.getInstance(requireNotNull(activity).application)
+        val filter = arguments?.let { Filter.createFromBundle(it) } ?: Filter()
+        viewModelFactory = HistoryViewModelFactory(db, filter)
 
+        transactionsListInit()
+    }
+
+    fun setHistoryIntent(intent: Intent) {
+        viewModel.filter(Filter.createFromIntent(intent))
+    }
+
+    private fun transactionsListInit() {
         val transactionsRVAdapter = TransactionsRVAdapter { itemId ->
             val bundle = Bundle()
             bundle.putInt(TransactionConst.EXTRA_TRANS_ID, itemId)
@@ -70,7 +48,19 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
                 bundle
             )
         }
-        home_transactions_recycle_view.setHasFixedSize(true)
+
+        home_transactions_recycle_view.apply {
+            setHasFixedSize(true)
+            addItemDecoration(createDivider())
+            adapter = transactionsRVAdapter
+        }
+
+        viewModel.transList.observe(viewLifecycleOwner) {
+            it?.let { trList -> transactionsRVAdapter.setTransaction(trList) }
+        }
+    }
+
+    private fun createDivider(): DividerItemDecoration {
         val lineDivider = DividerItemDecoration(
             requireContext(),
             DividerItemDecoration.VERTICAL
@@ -81,15 +71,6 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
                 R.drawable.light_divider
             )!!
         )
-        home_transactions_recycle_view.apply {
-            addItemDecoration(lineDivider)
-            adapter = transactionsRVAdapter
-        }
-        viewModel.transList.observe(
-            viewLifecycleOwner,
-            Observer {
-                it?.let { trList -> transactionsRVAdapter.setTransaction(trList) }
-            }
-        )
+        return lineDivider
     }
 }

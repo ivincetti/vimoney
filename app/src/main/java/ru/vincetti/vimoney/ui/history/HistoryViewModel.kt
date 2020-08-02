@@ -1,37 +1,40 @@
 package ru.vincetti.vimoney.ui.history
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import ru.vincetti.vimoney.data.models.TransactionListModel
-import ru.vincetti.vimoney.data.sqlite.TransactionDao
+import ru.vincetti.vimoney.data.repository.TransactionRepo
+import ru.vincetti.vimoney.data.sqlite.AppDatabase
+import ru.vincetti.vimoney.ui.history.filter.Filter
 
 class HistoryViewModel(
-    trDao: TransactionDao,
-    count: Int,
-    checkID: Int?
+    db: AppDatabase,
+    filter: Filter
 ) : ViewModel() {
 
-    val transList: LiveData<List<TransactionListModel>> =
-        if (checkID != null) {
-            trDao.loadCheckTransactionsCountFull(checkID, count)
-        } else {
-            trDao.loadAllTransactionsCountFull(count)
-        }
+    private val repo: TransactionRepo = TransactionRepo(db)
 
-    companion object {
-        const val DEFAULT_TRANSACTIONS = 10
+    private var _filter = MutableLiveData<Filter>().apply { value = filter }
+    val filter: LiveData<Filter>
+        get() = _filter
+
+    private var _transList = _filter.switchMap {
+        repo.loadFilterTransactions(it)
+    }
+    val transList: LiveData<List<TransactionListModel>>
+        get() = _transList
+
+    fun filter(newFilter: Filter) {
+        _filter.value = newFilter
     }
 }
 
 class HistoryViewModelFactory(
-    private val trDao: TransactionDao,
-    private val count: Int,
-    private val checkID: Int?
+    private val db: AppDatabase,
+    private val filter: Filter
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HistoryViewModel::class.java)) {
-            return HistoryViewModel(trDao, count, checkID) as T
+            return HistoryViewModel(db, filter) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

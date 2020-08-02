@@ -3,22 +3,18 @@ package ru.vincetti.vimoney.ui.check.view
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.AccountListModel
-import ru.vincetti.vimoney.data.sqlite.AccountDao
-import ru.vincetti.vimoney.data.sqlite.TransactionDao
+import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 import ru.vincetti.vimoney.utils.accountBalanceUpdateById
 
 class CheckViewModel(
-    private val transactionDao: TransactionDao,
-    private val accountDao: AccountDao,
+    private val database: AppDatabase,
     private val accountId: Int
 ) : ViewModel() {
 
-    companion object {
-        const val DEFAULT_CHECK_COUNT = 20
-    }
+    private val accountDao = database.accountDao()
 
-    val model: LiveData<AccountListModel> = accountDao.loadAccountByIdFull(accountId)
+    val accounts: LiveData<AccountListModel> = accountDao.loadAccountByIdFull(accountId)
 
     private var _updateButtonEnable = MutableLiveData<Boolean>()
     val updateButtonEnable
@@ -47,20 +43,19 @@ class CheckViewModel(
     fun update() {
         _updateButtonEnable.value = false
         viewModelScope.launch {
-            accountBalanceUpdateById(transactionDao, accountDao, accountId)
+            accountBalanceUpdateById(database, accountId)
             _updateButtonEnable.value = true
         }
     }
 }
 
 class CheckViewModelFactory(
-    private val transactionDao: TransactionDao,
-    private val accountDao: AccountDao,
+    private val database: AppDatabase,
     private val id: Int
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CheckViewModel::class.java)) {
-            return CheckViewModel(transactionDao, accountDao, id) as T
+            return CheckViewModel(database, id) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

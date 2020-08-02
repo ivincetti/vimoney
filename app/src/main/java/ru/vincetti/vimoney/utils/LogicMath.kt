@@ -5,17 +5,15 @@ import kotlinx.coroutines.withContext
 import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.data.sqlite.AccountDao
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.data.sqlite.TransactionDao
 
 /** Set correct account (accID) balance. */
 suspend fun accountBalanceUpdateById(
-    transactionDao: TransactionDao,
-    accountDao: AccountDao,
+    db: AppDatabase,
     accId: Int
 ) {
     withContext(Dispatchers.IO) {
-        val sum = transactionDao.loadSumByCheckId(accId)
-        accountDao.updateSumByAccId(accId, sum)
+        val sum = TransactionRepo(db).loadCheckSum(accId)
+        db.accountDao().updateSumByAccId(accId, sum)
     }
 }
 

@@ -7,7 +7,6 @@ import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.android.synthetic.main.fragment_dashboard_content.*
@@ -46,36 +45,27 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     }
 
     private fun viewObserversInit() {
-        viewModel.monthString.observe(
-            viewLifecycleOwner,
-            Observer { dash_content.dashboard_month.text = it }
-        )
-        viewModel.yearString.observe(
-            viewLifecycleOwner,
-            Observer { dash_content.dashboard_year.text = it }
-        )
-        viewModel.dataSet.observe(
-            viewLifecycleOwner,
-            Observer { dashboard_lineChart.animate(it) }
-        )
-        viewModel.isShowProgress.observe(
-            viewLifecycleOwner,
-            Observer { showProgress(it) }
-        )
-        viewModel.need2Navigate2Home.observe(
-            viewLifecycleOwner,
-            Observer {
-                if (it) findNavController().navigate(R.id.action_dashboardFragment_to_homeFragment)
-            }
-        )
-        viewModel.income.observe(
-            viewLifecycleOwner,
-            Observer { dash_content.home_stat_income_txt.text = it.toString() }
-        )
-        viewModel.expense.observe(
-            viewLifecycleOwner,
-            Observer { dash_content.home_stat_expense_txt.text = it.toString() }
-        )
+        viewModel.monthString.observe(viewLifecycleOwner) {
+            dash_content.dashboard_month.text = it
+        }
+        viewModel.yearString.observe(viewLifecycleOwner) {
+            dash_content.dashboard_year.text = it
+        }
+        viewModel.dataSet.observe(viewLifecycleOwner) {
+            dashboard_lineChart.animate(it)
+        }
+        viewModel.isShowProgress.observe(viewLifecycleOwner) {
+            showProgress(it)
+        }
+        viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
+            if (it) findNavController().navigate(R.id.action_dashboardFragment_to_homeFragment)
+        }
+        viewModel.income.observe(viewLifecycleOwner) {
+            dash_content.home_stat_income_txt.text = it.toString()
+        }
+        viewModel.expense.observe(viewLifecycleOwner) {
+            dash_content.home_stat_expense_txt.text = it.toString()
+        }
     }
 
     @SuppressLint("Range")
