@@ -27,11 +27,11 @@ class AllHistoryFragment : Fragment(R.layout.fragment_history) {
     private fun showTransactionsHistory() {
         val historyFragment = HistoryFragment()
         childFragmentManager.beginTransaction()
-                .replace(R.id.history_main_container, historyFragment)
-                .commit()
+            .replace(R.id.history_main_container, historyFragment)
+            .commit()
     }
 
-    private fun insetsInit(){
+    private fun insetsInit() {
         ViewCompat.setOnApplyWindowInsetsListener(history_top_toolbar) { _, insets ->
             history_top_toolbar.updateMargin(top = insets.systemWindowInsetTop)
             insets

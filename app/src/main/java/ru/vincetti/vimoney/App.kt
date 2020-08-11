@@ -3,9 +3,9 @@ package ru.vincetti.vimoney
 import android.app.Application
 import android.content.Context
 
-class App : Application(){
+class App : Application() {
 
-    companion object{
+    companion object {
         var context: Context? = null
     }
 

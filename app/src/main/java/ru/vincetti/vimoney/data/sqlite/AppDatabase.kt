@@ -10,15 +10,16 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import ru.vincetti.vimoney.data.DateConverter
 import ru.vincetti.vimoney.data.models.*
 
-@Database(entities = [
-    AccountModel::class,
-    TransactionModel::class,
-    ConfigModel::class,
-    CurrencyModel::class,
-    CategoryModel::class
-],
-        version = 12,
-        exportSchema = false
+@Database(
+    entities = [
+        AccountModel::class,
+        TransactionModel::class,
+        ConfigModel::class,
+        CurrencyModel::class,
+        CategoryModel::class
+    ],
+    version = 12,
+    exportSchema = false
 )
 @TypeConverters(DateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -42,24 +43,23 @@ abstract class AppDatabase : RoomDatabase() {
 
             synchronized(this) {
                 val instance =
-                        Room.databaseBuilder(
-                                context.applicationContext,
-                                AppDatabase::class.java,
-                                DB_NAME)
-                                .addMigrations(
-                                        MIGRATION_1_2,
-                                        MIGRATION_2_3,
-                                        MIGRATION_3_4,
-                                        MIGRATION_4_5,
-                                        MIGRATION_5_6,
-                                        MIGRATION_6_7,
-                                        MIGRATION_7_8,
-                                        MIGRATION_8_9,
-                                        MIGRATION_9_10,
-                                        MIGRATION_10_11,
-                                        MIGRATION_11_12
-                                )
-                                .build()
+                    Room.databaseBuilder(
+                        context.applicationContext,
+                        AppDatabase::class.java,
+                        DB_NAME
+                    ).addMigrations(
+                        MIGRATION_1_2,
+                        MIGRATION_2_3,
+                        MIGRATION_3_4,
+                        MIGRATION_4_5,
+                        MIGRATION_5_6,
+                        MIGRATION_6_7,
+                        MIGRATION_7_8,
+                        MIGRATION_8_9,
+                        MIGRATION_9_10,
+                        MIGRATION_10_11,
+                        MIGRATION_11_12
+                    ).build()
                 INSTANCE = instance
                 return instance
             }
@@ -69,8 +69,18 @@ abstract class AppDatabase : RoomDatabase() {
         private val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("BEGIN TRANSACTION")
-                db.execSQL("CREATE TABLE acc_backup(id INTEGER PRIMARY KEY NOT NULL, name TEXT, type TEXT, sum INTEGER NOT NULL)")
-                db.execSQL("INSERT INTO acc_backup (id, name, type, sum) SELECT id, name, type, sum FROM accounts")
+                db.execSQL(
+                    "CREATE TABLE acc_backup(" +
+                        "id INTEGER PRIMARY KEY NOT NULL, " +
+                        "name TEXT, " +
+                        "type TEXT, " +
+                        "sum INTEGER NOT NULL" +
+                        ")"
+                )
+                db.execSQL(
+                    "INSERT INTO acc_backup (id, name, type, sum) " +
+                        "SELECT id, name, type, sum FROM accounts"
+                )
                 db.execSQL("DROP TABLE accounts")
                 db.execSQL("ALTER TABLE acc_backup RENAME TO accounts")
                 db.execSQL("COMMIT")
@@ -80,7 +90,7 @@ abstract class AppDatabase : RoomDatabase() {
         // add archive account column
         private val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(db: SupportSQLiteDatabase) {
-                db.execSQL("ALTER TABLE accounts ADD COLUMN archive INTEGER DEFAULT 0 NOT NULL");
+                db.execSQL("ALTER TABLE accounts ADD COLUMN archive INTEGER DEFAULT 0 NOT NULL")
             }
         }
 
@@ -136,8 +146,16 @@ abstract class AppDatabase : RoomDatabase() {
         // new category option
         private val MIGRATION_9_10 = object : Migration(9, 10) {
             override fun migrate(db: SupportSQLiteDatabase) {
-                db.execSQL("ALTER TABLE transactions ADD COLUMN category_id INTEGER DEFAULT 0 NOT NULL")
-                db.execSQL("CREATE TABLE category(id INTEGER PRIMARY KEY NOT NULL, name TEXT NOT NULL, symbol TEXT NOT NULL)")
+                db.execSQL(
+                    "ALTER TABLE transactions ADD COLUMN category_id INTEGER DEFAULT 0 NOT NULL"
+                )
+                db.execSQL(
+                    "CREATE TABLE category(" +
+                        "id INTEGER PRIMARY KEY NOT NULL, " +
+                        "name TEXT NOT NULL, " +
+                        "symbol TEXT NOT NULL" +
+                        ")"
+                )
             }
         }
 

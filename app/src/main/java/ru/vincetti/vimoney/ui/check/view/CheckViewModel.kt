@@ -9,9 +9,9 @@ import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 import ru.vincetti.vimoney.utils.accountBalanceUpdateById
 
 class CheckViewModel(
-        private val transactionDao: TransactionDao,
-        private val accountDao: AccountDao,
-        private val accountId: Int
+    private val transactionDao: TransactionDao,
+    private val accountDao: AccountDao,
+    private val accountId: Int
 ) : ViewModel() {
 
     companion object {
@@ -54,9 +54,9 @@ class CheckViewModel(
 }
 
 class CheckViewModelFactory(
-        private val transactionDao: TransactionDao,
-        private val accountDao: AccountDao,
-        private val id: Int
+    private val transactionDao: TransactionDao,
+    private val accountDao: AccountDao,
+    private val id: Int
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CheckViewModel::class.java)) {

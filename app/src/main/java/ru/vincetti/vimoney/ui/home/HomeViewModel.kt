@@ -68,7 +68,7 @@ class HomeViewModel(private val db: AppDatabase) : ViewModel() {
 }
 
 class HomeViewModelFactory(
-        private val db: AppDatabase
+    private val db: AppDatabase
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {

@@ -5,8 +5,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.vincetti.vimoney.data.models.CategoryModel
 
 class CategoryListAdapter(
-        private val data: List<CategoryModel>,
-        private val action: (Int) -> Unit
+    private val data: List<CategoryModel>,
+    private val action: (Int) -> Unit
 ) : RecyclerView.Adapter<CategoryListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryListViewHolder {

@@ -7,19 +7,22 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "currency")
 data class CurrencyModel(
 
-        @PrimaryKey(autoGenerate = true)
-        var id: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
 
-        val code: Int,
+    val code: Int,
 
-        val name: String?,
+    val name: String?,
 
-        val symbol: String
+    val symbol: String
 ) {
 
     @Ignore
-    constructor(_code: Int, _name: String, _symbol: String)
-            : this(code = _code, name = _name, symbol = _symbol)
+    constructor(
+        newCode: Int,
+        newName: String,
+        newSymbol: String
+    ) : this(code = newCode, name = newName, symbol = newSymbol)
 
     override fun toString(): String {
         return symbol

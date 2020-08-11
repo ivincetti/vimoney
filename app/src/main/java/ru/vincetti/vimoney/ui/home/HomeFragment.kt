@@ -45,25 +45,30 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val recycler = fragment_home_content.home_cards_recycle_view
         recycler.adapter = mAdapter
 
-        viewModel.userBalance.observe(viewLifecycleOwner, Observer {
-            home_user_balance.text = it.toString()
-        })
-        viewModel.accounts.observe(viewLifecycleOwner, Observer {
-            mAdapter.setList(it)
-        })
-        viewModel.homeButtonEnabled.observe(viewLifecycleOwner, Observer {
-            home_menu_update.isEnabled = it
-        })
-        viewModel.incomeSum.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                fragment_home_content.home_stat_income_txt.text = it.toString()
+        viewModel.userBalance.observe(
+            viewLifecycleOwner,
+            Observer { home_user_balance.text = it.toString() }
+        )
+        viewModel.accounts.observe(
+            viewLifecycleOwner,
+            Observer { mAdapter.setList(it) }
+        )
+        viewModel.homeButtonEnabled.observe(
+            viewLifecycleOwner,
+            Observer { home_menu_update.isEnabled = it }
+        )
+        viewModel.incomeSum.observe(
+            viewLifecycleOwner,
+            Observer {
+                it?.let { fragment_home_content.home_stat_income_txt.text = it.toString() }
             }
-        })
-        viewModel.expenseSum.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                fragment_home_content.home_stat_expense_txt.text = it.toString()
+        )
+        viewModel.expenseSum.observe(
+            viewLifecycleOwner,
+            Observer {
+                it?.let { fragment_home_content.home_stat_expense_txt.text = it.toString() }
             }
-        })
+        )
 
         viewInit()
         insetsInit()
@@ -115,7 +120,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     /** Show historyFragment. */
     private fun showTransactionsHistory() {
         childFragmentManager.beginTransaction()
-                .replace(R.id.main_history_container, HistoryFragment())
-                .commit()
+            .replace(R.id.main_history_container, HistoryFragment())
+            .commit()
     }
 }

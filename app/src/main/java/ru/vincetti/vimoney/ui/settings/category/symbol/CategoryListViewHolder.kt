@@ -4,22 +4,22 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class CategoryListViewHolder(
-        private val viewWrapper: CategoryListViewWrapper,
-        action: (Int) -> Unit
+    private val viewWrapper: CategoryListViewWrapper,
+    action: (Int) -> Unit
 ) : RecyclerView.ViewHolder(viewWrapper.itemView) {
-    
+
     init {
-        viewWrapper.actions = object : CategoryListViewWrapper.Actions{
+        viewWrapper.actions = object : CategoryListViewWrapper.Actions {
             override fun iconChosen() {
                 val adapterPosition = adapterPosition
-                if (adapterPosition != RecyclerView.NO_POSITION){
+                if (adapterPosition != RecyclerView.NO_POSITION) {
                     action(adapterPosition)
                 }
             }
         }
     }
-    
-    fun bind(symbol: String){
+
+    fun bind(symbol: String) {
         viewWrapper.bind(symbol)
     }
 
@@ -27,8 +27,8 @@ class CategoryListViewHolder(
 
         fun create(parent: ViewGroup, action: (Int) -> Unit): CategoryListViewHolder {
             return CategoryListViewHolder(
-                    CategoryListViewWrapper.create(parent),
-                    action
+                CategoryListViewWrapper.create(parent),
+                action
             )
         }
     }

@@ -58,47 +58,51 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
             viewModel.setNeed2AllData(isChecked)
         }
 
-        viewModel.isDefault.observe(viewLifecycleOwner, Observer {
-            if (!it) add_check_save_btn.text = getString(R.string.add_btn_update)
-        })
-        viewModel.needAllBalance.observe(viewLifecycleOwner, Observer {
-            add_check_all_balance_switch.isChecked = it
-        })
-        viewModel.need2Navigate.observe(viewLifecycleOwner, Observer {
-            if (it) goBack()
-        })
-        viewModel.need2AllData.observe(viewLifecycleOwner, Observer {
-            if (it) showNoDataDialog()
-        })
-        viewModel.color.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                add_check_content.add_check_color_view.setBackgroundColor(it)
-            }
-        })
-        viewModel.check.observe(viewLifecycleOwner, Observer {
-            it.type?.let { type ->
-                add_check_content.add_check_name.setText(it.name)
-                typeLoad(type)
+        viewModel.isDefault.observe(
+            viewLifecycleOwner,
+            Observer { if (!it) add_check_save_btn.text = getString(R.string.add_btn_update) }
+        )
+        viewModel.needAllBalance.observe(
+            viewLifecycleOwner,
+            Observer { add_check_all_balance_switch.isChecked = it }
+        )
+        viewModel.need2Navigate.observe(
+            viewLifecycleOwner,
+            Observer { if (it) goBack() }
+        )
+        viewModel.need2AllData.observe(
+            viewLifecycleOwner,
+            Observer { if (it) showNoDataDialog() }
+        )
+        viewModel.color.observe(
+            viewLifecycleOwner,
+            Observer { it?.let { add_check_content.add_check_color_view.setBackgroundColor(it) } }
+        )
+        viewModel.check.observe(
+            viewLifecycleOwner,
+            Observer {
+                it.type?.let { type ->
+                    add_check_content.add_check_name.setText(it.name)
+                    typeLoad(type)
 
-                if (it.isArchive) {
-                    add_check_navigation_from_archive_btn.visibility = View.VISIBLE
-                    add_check_navigation_delete_btn.visibility = View.GONE
-                } else {
-                    add_check_navigation_from_archive_btn.visibility = View.GONE
-                    add_check_navigation_delete_btn.visibility = View.VISIBLE
+                    if (it.isArchive) {
+                        add_check_navigation_from_archive_btn.visibility = View.VISIBLE
+                        add_check_navigation_delete_btn.visibility = View.GONE
+                    } else {
+                        add_check_navigation_from_archive_btn.visibility = View.GONE
+                        add_check_navigation_delete_btn.visibility = View.VISIBLE
+                    }
                 }
             }
-        })
-        viewModel.currency.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                add_check_currency.text = it.symbol
-            }
-        })
-        viewModel.currencyList.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                loadCurrency(it, add_check_currency)
-            }
-        })
+        )
+        viewModel.currency.observe(
+            viewLifecycleOwner,
+            Observer { it?.let { add_check_currency.text = it.symbol } }
+        )
+        viewModel.currencyList.observe(
+            viewLifecycleOwner,
+            Observer { it?.let { loadCurrency(it, add_check_currency) } }
+        )
     }
 
     override fun onResume() {
@@ -110,17 +114,19 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
 
     private fun pickColor() {
         ColorPickerDialogBuilder
-                .with(requireContext())
-                .setTitle(getString(R.string.check_add_alert_color_header))
-                .initialColor(getColor(requireContext(), R.color.colorPrimary))
-                .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
-                .density(12)
-                .setPositiveButton(R.string.check_add_alert_color_positive)
-                { _, selectedColor, _ -> viewModel.setBackgroundColor(selectedColor) }
-                .setNegativeButton(R.string.check_add_alert_color_negative)
-                { dialog, _ -> dialog.dismiss() }
-                .build()
-                .show()
+            .with(requireContext())
+            .setTitle(getString(R.string.check_add_alert_color_header))
+            .initialColor(getColor(requireContext(), R.color.colorPrimary))
+            .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
+            .density(12)
+            .setPositiveButton(R.string.check_add_alert_color_positive) { _, selectedColor, _ ->
+                viewModel.setBackgroundColor(selectedColor)
+            }
+            .setNegativeButton(R.string.check_add_alert_color_negative) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .build()
+            .show()
     }
 
     /** RadioButton clicked option selected. */
@@ -134,15 +140,13 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
 
     /** RadioButton option load. */
     private fun typeLoad(type: String) {
-        add_check_content.radioGroup.apply {
-            check(
-                    when (type) {
-                        AccountModel.ACCOUNT_TYPE_DEBIT -> R.id.add_check_type_debit
-                        AccountModel.ACCOUNT_TYPE_CREDIT -> R.id.add_check_type_credit
-                        else -> R.id.add_check_type_cash
-                    }
-            )
-        }
+        add_check_content.radioGroup.check(
+            when (type) {
+                AccountModel.ACCOUNT_TYPE_DEBIT -> R.id.add_check_type_debit
+                AccountModel.ACCOUNT_TYPE_CREDIT -> R.id.add_check_type_credit
+                else -> R.id.add_check_type_cash
+            }
+        )
     }
 
     private fun loadCurrency(list: List<CurrencyModel>, view: View) {
@@ -163,38 +167,46 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
 
     private fun showDeleteDialog() {
         AlertDialog.Builder(requireContext())
-                .setMessage(R.string.check_delete_alert_question)
-                .setNegativeButton(R.string.check_delete_alert_negative) { dialogInterface, _ -> dialogInterface?.dismiss() }
-                .setPositiveButton(R.string.check_delete_alert_positive) { _, _ -> viewModel.delete() }
-                .create()
-                .show()
+            .setMessage(R.string.check_delete_alert_question)
+            .setNegativeButton(R.string.check_delete_alert_negative) { dialogInterface, _ ->
+                dialogInterface?.dismiss()
+            }
+            .setPositiveButton(R.string.check_delete_alert_positive) { _, _ ->
+                viewModel.delete()
+            }
+            .create()
+            .show()
     }
 
     private fun showUnsavedDialog() {
         AlertDialog.Builder(requireContext())
-                .setMessage(R.string.check_add_alert_question)
-                .setNegativeButton(R.string.check_add_alert_negative) { _, _ -> goBack() }
-                .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ -> dialogInterface?.dismiss() }
-                .create()
-                .show()
+            .setMessage(R.string.check_add_alert_question)
+            .setNegativeButton(R.string.check_add_alert_negative) { _, _ ->
+                goBack()
+            }
+            .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
+                dialogInterface?.dismiss()
+            }
+            .create()
+            .show()
     }
 
     private fun showNoDataDialog() {
         AlertDialog.Builder(requireContext())
-                .setMessage(R.string.check_add_alert_no_data)
-                .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
-                    // todo криво надо подумать
-                    viewModel.need2AllData.value = false
-                    dialogInterface?.dismiss()
-                }
-                .create()
-                .show()
+            .setMessage(R.string.check_add_alert_no_data)
+            .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
+                // todo криво надо подумать
+                viewModel.need2AllData.value = false
+                dialogInterface?.dismiss()
+            }
+            .create()
+            .show()
     }
 
     private fun save() {
         viewModel.save(
-                add_check_content.add_check_name.text.toString(),
-                typeEntered()
+            add_check_content.add_check_name.text.toString(),
+            typeEntered()
         )
     }
 

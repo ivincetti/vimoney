@@ -2,6 +2,7 @@ package ru.vincetti.vimoney.settings.json
 
 import android.content.Context
 import android.text.TextUtils
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -74,42 +75,42 @@ object JsonFile {
     }
 
     private suspend fun importCategories(
-            db: AppDatabase,
-            gson: Gson, categoriesJsonBuilder:
-            StringBuilder
+        db: AppDatabase,
+        gson: Gson,
+        categoriesJsonBuilder: StringBuilder
     ) {
         db.categoryDao().deleteAllCategories()
         val listType2 = object : TypeToken<ArrayList<CategoryModel>>() {}.type
         val categories: List<CategoryModel> =
-                gson.fromJson(categoriesJsonBuilder.toString(), listType2)
+            gson.fromJson(categoriesJsonBuilder.toString(), listType2)
         for (category in categories) {
             db.categoryDao().insertCategory(category)
         }
     }
 
     private suspend fun importAccounts(
-            db: AppDatabase,
-            gson: Gson,
-            accountsJsonBuilder: StringBuilder
+        db: AppDatabase,
+        gson: Gson,
+        accountsJsonBuilder: StringBuilder
     ) {
         db.accountDao().deleteAllAccounts()
         val listType1 = object : TypeToken<ArrayList<AccountModel>>() {}.type
         val transactions1: List<AccountModel> =
-                gson.fromJson(accountsJsonBuilder.toString(), listType1)
+            gson.fromJson(accountsJsonBuilder.toString(), listType1)
         for (account in transactions1) {
             db.accountDao().insertAccount(account)
         }
     }
 
     private suspend fun importTransactions(
-            db: AppDatabase,
-            gson: Gson,
-            transactionsJsonBuilder: StringBuilder
+        db: AppDatabase,
+        gson: Gson,
+        transactionsJsonBuilder: StringBuilder
     ) {
         db.transactionDao().deleteAllTransactions()
         val listType = object : TypeToken<ArrayList<TransactionModel>>() {}.type
         val transactions: List<TransactionModel> =
-                gson.fromJson(transactionsJsonBuilder.toString(), listType)
+            gson.fromJson(transactionsJsonBuilder.toString(), listType)
         for (transaction in transactions) {
             db.transactionDao().insertTransaction(transaction)
         }
@@ -130,10 +131,9 @@ object JsonFile {
         try {
             fis.close()
         } catch (e: IOException) {
-            e.printStackTrace()
+            Log.d("TAG", "read from file error ${e.message}")
         }
 
         return stringBuilder
     }
-
 }

@@ -11,29 +11,37 @@ interface AccountDao {
     @Query("SELECT * FROM accounts ORDER BY id ASC")
     suspend fun loadAllAccounts(): List<AccountModel>?
 
-    @Query("SELECT accounts.*, c.symbol FROM accounts " +
+    @Query(
+        "SELECT accounts.*, c.symbol FROM accounts " +
             "JOIN currency c ON c.code = accounts.currency " +
-            "ORDER BY accounts.archive ASC, accounts.name ASC")
+            "ORDER BY accounts.archive ASC, accounts.name ASC"
+    )
     fun loadAllAccountsFull(): LiveData<List<AccountListModel>>
 
-    @Query("SELECT accounts.*, c.symbol FROM accounts " +
+    @Query(
+        "SELECT accounts.*, c.symbol FROM accounts " +
             "JOIN currency c ON c.code = accounts.currency " +
-            "WHERE archive = 0 ORDER BY name ASC")
+            "WHERE archive = 0 ORDER BY name ASC"
+    )
     fun loadNotArchiveAccounts(): LiveData<List<AccountListModel>?>
 
-    @Query("SELECT accounts.*, c.symbol FROM accounts " +
+    @Query(
+        "SELECT accounts.*, c.symbol FROM accounts " +
             "JOIN currency c ON c.code = accounts.currency " +
             "WHERE accounts.archive = 0 " +
-            "ORDER BY accounts.name ASC")
+            "ORDER BY accounts.name ASC"
+    )
     fun loadNotArchiveAccountsFull(): List<AccountListModel>
 
     @Query("SELECT * FROM accounts WHERE id = :accId")
     suspend fun loadAccountById(accId: Int): AccountModel?
 
-    @Query("SELECT accounts.*, c.symbol FROM accounts " +
+    @Query(
+        "SELECT accounts.*, c.symbol FROM accounts " +
             "JOIN currency c ON c.code = accounts.currency " +
             "AND  accounts.id = :accId " +
-            "ORDER BY accounts.name ASC")
+            "ORDER BY accounts.name ASC"
+    )
     fun loadAccountByIdFull(accId: Int): LiveData<AccountListModel>
 
     @Query("UPDATE accounts SET sum = :sum WHERE id = :accId")

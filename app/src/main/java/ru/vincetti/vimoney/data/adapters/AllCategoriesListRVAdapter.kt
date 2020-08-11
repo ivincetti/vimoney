@@ -9,14 +9,14 @@ import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.CategoryModel
 
 class AllCategoriesListRVAdapter(
-        private val listener: (Int) -> Unit
+    private val listener: (Int) -> Unit
 ) : RecyclerView.Adapter<AllCategoriesListRVAdapter.CardsViewHolder>() {
 
     private var data: List<CategoryModel>? = null
 
     inner class CardsViewHolder(
-            itemView: View,
-            val listener: (Int) -> Unit
+        itemView: View,
+        val listener: (Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
         val categorySymbol: TextView = itemView.findViewById(R.id.item_category_icon)
@@ -33,7 +33,7 @@ class AllCategoriesListRVAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardsViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_categories_list, parent, false)
+            .inflate(R.layout.item_categories_list, parent, false)
         return CardsViewHolder(view, listener)
     }
 
@@ -51,5 +51,4 @@ class AllCategoriesListRVAdapter(
         data = accList
         notifyDataSetChanged()
     }
-
 }
