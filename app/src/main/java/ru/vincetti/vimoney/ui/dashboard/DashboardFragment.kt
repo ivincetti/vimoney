@@ -1,5 +1,6 @@
 package ru.vincetti.vimoney.ui.dashboard
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -27,7 +28,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
         val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
-        viewModelFactory = DashboardViewModelFactory(db.transactionDao())
+        viewModelFactory = DashboardViewModelFactory(db)
 
         graphInit()
         insetsInit()
@@ -61,6 +62,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         })
     }
 
+    @SuppressLint("Range")
     private fun graphInit() {
         dashboard_lineChart.gradientFillColors = intArrayOf(
                 Color.parseColor("#81FFFFFF"),

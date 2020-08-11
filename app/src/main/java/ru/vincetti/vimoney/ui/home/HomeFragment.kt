@@ -19,22 +19,21 @@ import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
-import java.text.SimpleDateFormat
-import java.util.*
+import ru.vincetti.vimoney.utils.DatesFormat
+import java.time.LocalDate
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val viewModel: HomeViewModel by viewModels { viewModelFactory }
 
     private lateinit var viewModelFactory: HomeViewModelFactory
-    private var date = Date()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val application = requireActivity().application
         val db = AppDatabase.getInstance(application)
-        viewModelFactory = HomeViewModelFactory(db.accountDao(), db.transactionDao())
+        viewModelFactory = HomeViewModelFactory(db)
 
         /** Список карт/счетов. */
         val mAdapter = CardsListRVAdapter {
@@ -72,7 +71,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun viewInit() {
-        fragment_home_content.home_month.text = SimpleDateFormat("MMM").format(date)
+        fragment_home_content.home_month.text = DatesFormat.getMonthName(LocalDate.now())
 
         home_fab.setOnClickListener {
             findNavController().navigate(R.id.action_global_transactionMainFragment)
