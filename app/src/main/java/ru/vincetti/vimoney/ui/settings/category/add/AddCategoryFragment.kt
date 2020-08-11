@@ -38,26 +38,11 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
         }
 
         insetsInit()
-        viewInit()
+        viewModelObserversInit()
+        viewsInit()
     }
 
-    private fun viewInit() {
-        viewModel.isDefault.observe(viewLifecycleOwner, Observer {
-            if (!it) add_category_save_btn.text = getString(R.string.add_btn_update)
-        })
-        viewModel.need2Navigate.observe(viewLifecycleOwner, Observer {
-            if (it) goBack()
-        })
-        viewModel.need2AllData.observe(viewLifecycleOwner, Observer {
-            if (it) showNoDataDialog()
-        })
-        viewModel.categoryName.observe(viewLifecycleOwner, Observer {
-            add_category_name.setText(it)
-        })
-        viewModel.categorySymbol.observe(viewLifecycleOwner, Observer {
-            add_category_symbol.text = it
-        })
-
+    private fun viewsInit() {
         category_add_navigation_add_btn.setOnClickListener { save() }
         category_add_navigation_back_btn.setOnClickListener { showUnsavedDialog() }
         add_category_save_btn.setOnClickListener { save() }
@@ -66,6 +51,31 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
             dialogFrag.setTargetFragment(this, 1)
             dialogFrag.show(parentFragmentManager, "Icons")
         }
+    }
+
+    private fun viewModelObserversInit() {
+        viewModel.isDefault.observe(
+            viewLifecycleOwner,
+            Observer {
+                if (!it) add_category_save_btn.text = getString(R.string.add_btn_update)
+            }
+        )
+        viewModel.need2Navigate.observe(
+            viewLifecycleOwner,
+            Observer { if (it) goBack() }
+        )
+        viewModel.need2AllData.observe(
+            viewLifecycleOwner,
+            Observer { if (it) showNoDataDialog() }
+        )
+        viewModel.categoryName.observe(
+            viewLifecycleOwner,
+            Observer { add_category_name.setText(it) }
+        )
+        viewModel.categorySymbol.observe(
+            viewLifecycleOwner,
+            Observer { add_category_symbol.text = it }
+        )
     }
 
     override fun onResume() {
@@ -83,19 +93,23 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
     /** Not saved category cancel dialog. */
     private fun showUnsavedDialog() {
         AlertDialog.Builder(requireContext())
-                .setMessage(R.string.check_add_alert_question)
-                .setNegativeButton(R.string.check_add_alert_negative) { _, _ -> goBack() }
-                .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ -> dialogInterface?.dismiss() }
-                .create()
-                .show()
+            .setMessage(R.string.check_add_alert_question)
+            .setNegativeButton(R.string.check_add_alert_negative) { _, _ ->
+                goBack()
+            }
+            .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
+                dialogInterface?.dismiss()
+            }
+            .create()
+            .show()
     }
 
     /** Not saved transaction cancel dialog. */
     private fun showNoDataDialog() {
         Toast.makeText(
-                requireContext(),
-                R.string.check_add_alert_no_data,
-                Toast.LENGTH_SHORT
+            requireContext(),
+            R.string.check_add_alert_no_data,
+            Toast.LENGTH_SHORT
         ).show()
         viewModel.need2AllData.value = false
     }
@@ -106,8 +120,8 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
 
     private fun save() {
         viewModel.save(
-                add_category_name.text.toString(),
-                add_category_symbol.text.toString()
+            add_category_name.text.toString(),
+            add_category_symbol.text.toString()
         )
     }
 

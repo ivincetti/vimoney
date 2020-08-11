@@ -27,7 +27,7 @@ class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViews()
+        viewsInit()
         insetsInit()
 
         val application = requireNotNull(activity).application
@@ -40,27 +40,26 @@ class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
             findNavController().navigate(R.id.action_checksListFragment_to_checkFragment, bundle)
         }
         val lineDivider = DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
+            requireContext(),
+            DividerItemDecoration.VERTICAL
         )
         lineDivider.setDrawable(
-                ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.light_divider
-                )!!
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.light_divider
+            )!!
         )
         check_list_recycle_view.apply {
             addItemDecoration(lineDivider)
             setAdapter(adapter)
         }
-        viewModel.accList.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                adapter.setList(it)
-            }
-        })
+        viewModel.accList.observe(
+            viewLifecycleOwner,
+            Observer { it?.let { adapter.setList(it) } }
+        )
     }
 
-    private fun initViews() {
+    private fun viewsInit() {
         setting_navigation_back_btn.setOnClickListener {
             findNavController().navigate(R.id.action_checksListFragment_to_homeFragment)
         }

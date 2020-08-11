@@ -18,26 +18,35 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
 
         viewModel.setNetwork(requireContext())
 
-        viewModel.networkError.observe(viewLifecycleOwner, Observer {
-            if (it) alertNetworkDialogShow()
-        })
-
-        viewModel.need2Navigate2Home.observe(viewLifecycleOwner, Observer {
-            if (it) findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
-        })
-
-        viewModel.need2Navigate2Self.observe(viewLifecycleOwner, Observer {
-            if (it) findNavController().navigate(R.id.action_splashFragment_self)
-        })
+        viewModel.networkError.observe(
+            viewLifecycleOwner,
+            Observer { if (it) alertNetworkDialogShow() }
+        )
+        viewModel.need2Navigate2Home.observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it) findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+            }
+        )
+        viewModel.need2Navigate2Self.observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it) findNavController().navigate(R.id.action_splashFragment_self)
+            }
+        )
     }
 
     private fun alertNetworkDialogShow() {
         AlertDialog.Builder(requireContext())
-                .setMessage(resources.getString(R.string.splash_nonetwork_string))
-                .setCancelable(false)
-                .setPositiveButton(resources.getString(R.string.splash_nonetwork_positive)) { _, _ -> viewModel.resetNetworkStatus() }
-                .setNegativeButton(resources.getString(R.string.splash_nonetwork_negative)) { _, _ -> requireActivity().finish() }
-                .create()
-                .show()
+            .setMessage(resources.getString(R.string.splash_nonetwork_string))
+            .setCancelable(false)
+            .setPositiveButton(resources.getString(R.string.splash_nonetwork_positive)) { _, _ ->
+                viewModel.resetNetworkStatus()
+            }
+            .setNegativeButton(resources.getString(R.string.splash_nonetwork_negative)) { _, _ ->
+                requireActivity().finish()
+            }
+            .create()
+            .show()
     }
 }

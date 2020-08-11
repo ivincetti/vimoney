@@ -6,10 +6,10 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "category")
 data class CategoryModel(
 
-        @PrimaryKey(autoGenerate = true)
-        var id: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
 
-        val name: String,
+    val name: String,
 
-        val symbol: String
+    val symbol: String
 )

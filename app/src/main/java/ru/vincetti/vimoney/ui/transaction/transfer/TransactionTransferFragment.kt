@@ -17,17 +17,20 @@ import ru.vincetti.vimoney.ui.transaction.main.TransactionFFFragment
 class TransactionTransferFragment : TransactionFFFragment(R.layout.fragment_add_transfer) {
 
     override fun initFragmentPlus() {
-        viewModel.nestedTransaction.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-            it?.let {
-                if (it.sum > 0) add_sum_to.setText(it.sum.toString())
+        viewModel.nestedTransaction.observe(
+            viewLifecycleOwner,
+            Observer {
+                it?.let { if (it.sum > 0) add_sum_to.setText(it.sum.toString()) }
             }
-        })
-        viewModel.accountTo.observe(viewLifecycleOwner, Observer {
-            it?.let { add_acc_name_to.text = it.name }
-        })
-        viewModel.currencyTo.observe(viewLifecycleOwner, Observer {
-            it?.let { add_acc_cur_to.text = it.symbol }
-        })
+        )
+        viewModel.accountTo.observe(
+            viewLifecycleOwner,
+            Observer { it?.let { add_acc_name_to.text = it.name } }
+        )
+        viewModel.currencyTo.observe(
+            viewLifecycleOwner,
+            Observer { it?.let { add_acc_cur_to.text = it.symbol } }
+        )
 
         add_sum.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -62,10 +65,10 @@ class TransactionTransferFragment : TransactionFFFragment(R.layout.fragment_add_
 
     override fun save(actionType: Int) {
         viewModel.saveTransactionTo(
-                actionType,
-                fragment_add_content.add_desc.text.toString(),
-                add_sum.text.toString(),
-                add_sum_to.text.toString()
+            actionType,
+            fragment_add_content.add_desc.text.toString(),
+            add_sum.text.toString(),
+            add_sum_to.text.toString()
         )
     }
 }

@@ -11,10 +11,10 @@ import ru.vincetti.vimoney.utils.accountBalanceUpdateById
 import java.util.*
 
 class TransactionMainViewModel(
-        private val transactionDao: TransactionDao,
-        private val accDao: AccountDao,
-        private val catDao: CategoryDao,
-        private val curDao: CurrentDao
+    private val transactionDao: TransactionDao,
+    private val accDao: AccountDao,
+    private val catDao: CategoryDao,
+    private val curDao: CurrentDao
 ) : ViewModel() {
 
     private var _transaction = MutableLiveData<TransactionModel>()
@@ -129,8 +129,10 @@ class TransactionMainViewModel(
                     mTransId = tmpTransaction.id
                     oldTransactionAccountID = tmpTransaction.id
                 }
-                if (tmpTransaction.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
-                        && tmpTransaction.extraValue.toInt() > 0) {
+                if (
+                    tmpTransaction.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
+                    && tmpTransaction.extraValue.toInt() > 0
+                ) {
                     nestedId = tmpTransaction.extraValue.toInt()
                     loadNestedTransaction(nestedId)?.let {
                         _nestedTransaction.value = it
@@ -178,8 +180,10 @@ class TransactionMainViewModel(
         viewModelScope.launch {
             _transaction.value?.let {
                 if (it.id != TransactionModel.DEFAULT_ID) {
-                    if (it.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
-                            && nestedId > 0) {
+                    if (
+                        it.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
+                        && nestedId > 0
+                    ) {
                         // delete nested
                         transactionDao.deleteTransactionById(nestedId)
                         accountBalanceUpdateById(transactionDao, accDao, _accountIdTo.value!!)
@@ -217,38 +221,40 @@ class TransactionMainViewModel(
     }
 
     fun saveTransactionTo(actionType: Int, txtName: String, txtSum: String, txtSumTo: String) {
-        val tmpTransaction = _transaction.value
-        val tmpToTransaction = _nestedTransaction.value
-        if (tmpTransaction != null && tmpToTransaction != null) {
-            if (_accountId.value != TransactionModel.DEFAULT_ID
-                    && _accountIdTo.value != TransactionModel.DEFAULT_ID) {
-                if (txtSumTo == "" || txtSum == "") {
-                    _needSum.value = true
-                } else {
-                    tmpTransaction.description = txtName
-                    tmpTransaction.date = date.value!!
-                    tmpTransaction.accountId = _accountId.value!!
-                    tmpTransaction.type = actionType
-                    tmpTransaction.sum = txtSum.toFloat()
-                    tmpTransaction.extraKey = TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
-
-                    tmpToTransaction.sum = txtSumTo.toFloat()
-                    tmpToTransaction.accountId = _accountIdTo.value!!
-                    tmpToTransaction.extraKey = TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
-                    tmpToTransaction.extraValue = tmpTransaction.id.toString()
-                    tmpToTransaction.date = date.value!!
-                    tmpToTransaction.type = TransactionModel.TRANSACTION_TYPE_INCOME
-                    tmpToTransaction.system = true
-
-                    if (tmpTransaction.id != TransactionModel.DEFAULT_ID) {
-                        trUpdate(tmpTransaction, tmpToTransaction)
+        _transaction.value?.let { tmpTransaction ->
+            _nestedTransaction.value?.let { tmpToTransaction ->
+                if (
+                    _accountId.value != TransactionModel.DEFAULT_ID
+                    && _accountIdTo.value != TransactionModel.DEFAULT_ID
+                ) {
+                    if (txtSumTo == "" || txtSum == "") {
+                        _needSum.value = true
                     } else {
-                        trInsert(tmpTransaction, tmpToTransaction)
+                        tmpTransaction.description = txtName
+                        tmpTransaction.date = date.value!!
+                        tmpTransaction.accountId = _accountId.value!!
+                        tmpTransaction.type = actionType
+                        tmpTransaction.sum = txtSum.toFloat()
+                        tmpTransaction.extraKey = TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
+
+                        tmpToTransaction.sum = txtSumTo.toFloat()
+                        tmpToTransaction.accountId = _accountIdTo.value!!
+                        tmpToTransaction.extraKey = TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
+                        tmpToTransaction.extraValue = tmpTransaction.id.toString()
+                        tmpToTransaction.date = date.value!!
+                        tmpToTransaction.type = TransactionModel.TRANSACTION_TYPE_INCOME
+                        tmpToTransaction.system = true
+
+                        if (tmpTransaction.id != TransactionModel.DEFAULT_ID) {
+                            trUpdate(tmpTransaction, tmpToTransaction)
+                        } else {
+                            trInsert(tmpTransaction, tmpToTransaction)
+                        }
+                        updateBalance(tmpTransaction, tmpToTransaction)
                     }
-                    updateBalance(tmpTransaction, tmpToTransaction)
+                } else {
+                    _needAccount.value = true
                 }
-            } else {
-                _needAccount.value = true
             }
         }
     }
@@ -285,10 +291,10 @@ class TransactionMainViewModel(
 }
 
 class TransactionMainViewModelFactory(
-        private val transactionDao: TransactionDao,
-        private val accDao: AccountDao,
-        private val catDao: CategoryDao,
-        private val curDao: CurrentDao
+    private val transactionDao: TransactionDao,
+    private val accDao: AccountDao,
+    private val catDao: CategoryDao,
+    private val curDao: CurrentDao
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TransactionMainViewModel::class.java)) {

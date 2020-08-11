@@ -64,32 +64,35 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
 
     /** Account data to UI. */
     private fun loadAccount() {
-        viewModel.model.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                fragment_check_content.check_acc_name.text = it.name
-                fragment_check_content.check_acc_type.text = it.type
-                fragment_check_content.check_acc_balance.text = it.sum.toString()
-                fragment_check_content.check_acc_label
+        viewModel.model.observe(
+            viewLifecycleOwner,
+            Observer {
+                it?.let {
+                    fragment_check_content.check_acc_name.text = it.name
+                    fragment_check_content.check_acc_type.text = it.type
+                    fragment_check_content.check_acc_balance.text = it.sum.toString()
+                    fragment_check_content.check_acc_label
                         .setBackgroundColor(Color.parseColor(it.color))
 
-                if (it.isArchive) {
-                    fragment_check_content.check_acc_archive.visibility = View.VISIBLE
-                    fragment_check_content.check_acc_archive.text = getString(R.string.check_arсhive_txt)
-                    check_navigation_from_archive_btn.visibility = View.VISIBLE
-                    check_navigation_delete_btn.visibility = View.GONE
-                } else {
-                    fragment_check_content.check_acc_archive.visibility = View.INVISIBLE
-                    check_navigation_from_archive_btn.visibility = View.GONE
-                    check_navigation_delete_btn.visibility = View.VISIBLE
-
+                    if (it.isArchive) {
+                        fragment_check_content.check_acc_archive.visibility = View.VISIBLE
+                        fragment_check_content.check_acc_archive.text = getString(R.string.check_arсhive_txt)
+                        check_navigation_from_archive_btn.visibility = View.VISIBLE
+                        check_navigation_delete_btn.visibility = View.GONE
+                    } else {
+                        fragment_check_content.check_acc_archive.visibility = View.INVISIBLE
+                        check_navigation_from_archive_btn.visibility = View.GONE
+                        check_navigation_delete_btn.visibility = View.VISIBLE
+                    }
+                    fragment_check_content.check_acc_symbol.text = it.curSymbol
+                    showTransactionsHistory(it.id)
                 }
-                fragment_check_content.check_acc_symbol.text = it.curSymbol
-                showTransactionsHistory(it.id)
             }
-        })
-        viewModel.updateButtonEnable.observe(viewLifecycleOwner, Observer {
-            check_navigation_update_btn.isEnabled = it
-        })
+        )
+        viewModel.updateButtonEnable.observe(
+            viewLifecycleOwner,
+            Observer { check_navigation_update_btn.isEnabled = it }
+        )
     }
 
     /** Show transaction for this account. */
@@ -101,18 +104,22 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
         historyFragment.arguments = args
 
         childFragmentManager
-                .beginTransaction()
-                .replace(R.id.check_history_container, historyFragment)
-                .commit()
+            .beginTransaction()
+            .replace(R.id.check_history_container, historyFragment)
+            .commit()
     }
 
     private fun showDeleteDialog() {
         AlertDialog.Builder(requireContext())
-                .setMessage(R.string.check_delete_alert_question)
-                .setNegativeButton(R.string.check_delete_alert_negative) { dialog, _ -> dialog?.dismiss() }
-                .setPositiveButton(R.string.check_delete_alert_positive) { _, _ -> viewModel.delete() }
-                .create()
-                .show()
+            .setMessage(R.string.check_delete_alert_question)
+            .setNegativeButton(R.string.check_delete_alert_negative) { dialog, _ ->
+                dialog?.dismiss()
+            }
+            .setPositiveButton(R.string.check_delete_alert_positive) { _, _ ->
+                viewModel.delete()
+            }
+            .create()
+            .show()
     }
 
     private fun insetsInit() {

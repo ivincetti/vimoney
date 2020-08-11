@@ -15,9 +15,9 @@ class CategoryListDialog : DialogFragment() {
     private var categories: List<CategoryModel>? = null
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.dialog_category_grid, null)
     }
@@ -28,9 +28,9 @@ class CategoryListDialog : DialogFragment() {
         categories?.let { list ->
             val categoriesAdapter = CategoryListAdapter(list) {
                 targetFragment?.onActivityResult(
-                        targetRequestCode,
-                        list[it].id,
-                        requireActivity().intent
+                    targetRequestCode,
+                    list[it].id,
+                    requireActivity().intent
                 )
                 dismiss()
             }

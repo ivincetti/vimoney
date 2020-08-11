@@ -16,11 +16,11 @@ private suspend fun generate(transactionDao: TransactionDao, count: Int) {
     withContext(Dispatchers.IO) {
         for (i in 0..count) {
             val tmp = TransactionModel(
-                    Date(),
-                    (Random().nextInt(SAMPLE_ACC_COUNT) + 1),
-                    SAMPLE_DESC,
-                    (i % 2 + 1),
-                    SAMPLE_SUM
+                Date(),
+                (Random().nextInt(SAMPLE_ACC_COUNT) + 1),
+                SAMPLE_DESC,
+                (i % 2 + 1),
+                SAMPLE_SUM
             )
             transactionDao.insertTransaction(tmp)
         }

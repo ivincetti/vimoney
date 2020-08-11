@@ -9,50 +9,50 @@ import java.util.*
 @Entity(tableName = "transactions")
 data class TransactionModel(
 
-        @PrimaryKey(autoGenerate = true)
-        var id: Int = DEFAULT_ID,
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = DEFAULT_ID,
 
-        @ColumnInfo(name = "account_id")
-        var accountId: Int = DEFAULT_ID,
+    @ColumnInfo(name = "account_id")
+    var accountId: Int = DEFAULT_ID,
 
-        var description: String? = "",
+    var description: String? = "",
 
-        var date: Date? = Date(),
+    var date: Date? = Date(),
 
-        @ColumnInfo(name = "updated_at")
-        var updatedAt: Date? = Date(),
+    @ColumnInfo(name = "updated_at")
+    var updatedAt: Date? = Date(),
 
-        var type: Int = TRANSACTION_TYPE_SPENT,
+    var type: Int = TRANSACTION_TYPE_SPENT,
 
-        var sum: Float = 0f,
+    var sum: Float = 0f,
 
-        @ColumnInfo(name = "category_id")
-        var categoryId: Int = DEFAULT_CATEGORY,
+    @ColumnInfo(name = "category_id")
+    var categoryId: Int = DEFAULT_CATEGORY,
 
-        @ColumnInfo(name = "extra_key")
-        var extraKey: String = "",
+    @ColumnInfo(name = "extra_key")
+    var extraKey: String = "",
 
-        @ColumnInfo(name = "extra_value")
-        var extraValue: String = "",
+    @ColumnInfo(name = "extra_value")
+    var extraValue: String = "",
 
-        var system: Boolean = false,
+    var system: Boolean = false,
 
-        var deleted: Boolean = false
+    var deleted: Boolean = false
 ) {
 
     @Ignore
     constructor(
-            _date: Date,
-            _accountId: Int,
-            _description: String,
-            _type: Int,
-            _sum: Float
+        newDate: Date,
+        newAccountId: Int,
+        newDescription: String,
+        newType: Int,
+        newSum: Float
     ) : this(
-            date = _date,
-            accountId = _accountId,
-            description = _description,
-            type = _type,
-            sum = _sum
+        date = newDate,
+        accountId = newAccountId,
+        description = newDescription,
+        type = newType,
+        sum = newSum
     )
 
     companion object {

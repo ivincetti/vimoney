@@ -32,10 +32,6 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
 
         insetsInit()
 
-        viewModel.need2Navigate2Home.observe(viewLifecycleOwner, Observer {
-            if (it) findNavController().navigate(R.id.action_categoriesFragment_to_settingsFragment)
-        })
-
         categories_navigation_back_btn.setOnClickListener { viewModel.backButtonClicked() }
         categories_list_fab.setOnClickListener {
             findNavController().navigate(R.id.action_categoriesFragment_to_addCategoryFragment)
@@ -47,24 +43,31 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
             findNavController().navigate(R.id.action_categoriesFragment_to_addCategoryFragment, bundle)
         }
         val lineDivider = DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
+            requireContext(),
+            DividerItemDecoration.VERTICAL
         )
         lineDivider.setDrawable(
-                ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.light_divider
-                )!!
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.light_divider
+            )!!
         )
         categories_list_recycle_view.apply {
             addItemDecoration(lineDivider)
             setAdapter(adapter)
         }
-        viewModel.categories.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                adapter.setList(it)
+
+        viewModel.need2Navigate2Home.observe(
+            viewLifecycleOwner,
+            Observer {
+                if (it) findNavController()
+                    .navigate(R.id.action_categoriesFragment_to_settingsFragment)
             }
-        })
+        )
+        viewModel.categories.observe(
+            viewLifecycleOwner,
+            Observer { it?.let { adapter.setList(it) } }
+        )
     }
 
     private fun insetsInit() {
@@ -78,5 +81,4 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
             insets
         }
     }
-
 }

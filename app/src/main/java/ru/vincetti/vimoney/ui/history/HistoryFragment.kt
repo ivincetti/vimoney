@@ -40,51 +40,56 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
             }
             // уточнение счета
             viewModelFactory =
-                    if (args.containsKey(BUNDLE_TRANS_CHECK_ID_NAME)) {
-                        HistoryViewModelFactory(
-                                db.transactionDao(),
-                                trCount,
-                                args.getInt(BUNDLE_TRANS_CHECK_ID_NAME))
-                    } else {
-                        HistoryViewModelFactory(
-                                db.transactionDao(),
-                                trCount,
-                                null)
-                    }
+                if (args.containsKey(BUNDLE_TRANS_CHECK_ID_NAME)) {
+                    HistoryViewModelFactory(
+                        db.transactionDao(),
+                        trCount,
+                        args.getInt(BUNDLE_TRANS_CHECK_ID_NAME)
+                    )
+                } else {
+                    HistoryViewModelFactory(
+                        db.transactionDao(),
+                        trCount,
+                        null
+                    )
+                }
         } else {
-            //TODO точно надо?
+            // TODO точно надо?
             viewModelFactory = HistoryViewModelFactory(
-                    db.transactionDao(),
-                    trCount,
-                    null)
+                db.transactionDao(),
+                trCount,
+                null
+            )
         }
 
         val transactionsRVAdapter = TransactionsRVAdapter { itemId ->
             val bundle = Bundle()
             bundle.putInt(TransactionConst.EXTRA_TRANS_ID, itemId)
             findNavController().navigate(
-                    R.id.action_global_transactionMainFragment,
-                    bundle)
+                R.id.action_global_transactionMainFragment,
+                bundle
+            )
         }
         home_transactions_recycle_view.setHasFixedSize(true)
         val lineDivider = DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
+            requireContext(),
+            DividerItemDecoration.VERTICAL
         )
         lineDivider.setDrawable(
-                ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.light_divider
-                )!!
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.light_divider
+            )!!
         )
         home_transactions_recycle_view.apply {
             addItemDecoration(lineDivider)
             adapter = transactionsRVAdapter
         }
-        viewModel.transList.observe(viewLifecycleOwner, Observer { trList ->
-            trList?.let {
-                transactionsRVAdapter.setTransaction(trList)
+        viewModel.transList.observe(
+            viewLifecycleOwner,
+            Observer {
+                it?.let { trList -> transactionsRVAdapter.setTransaction(trList) }
             }
-        })
+        )
     }
 }

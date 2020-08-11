@@ -35,10 +35,10 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
         val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
         viewModelFactory = TransactionMainViewModelFactory(
-                db.transactionDao(),
-                db.accountDao(),
-                db.categoryDao(),
-                db.currentDao()
+            db.transactionDao(),
+            db.accountDao(),
+            db.categoryDao(),
+            db.currentDao()
         )
         initFragmentViews()
         initFragmentPlus()
@@ -75,9 +75,9 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
 
     open fun save(actionType: Int) {
         viewModel.saveTransaction(
-                actionType,
-                fragment_add_content.add_desc.text.toString(),
-                add_sum.text.toString()
+            actionType,
+            fragment_add_content.add_desc.text.toString(),
+            add_sum.text.toString()
         )
     }
 
@@ -94,64 +94,74 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
     }
 
     private fun initFragmentViews() {
-        viewModel.needSum.observe(viewLifecycleOwner, Observer {
-            if (it) showNoSumToast()
-        })
-        viewModel.needAccount.observe(viewLifecycleOwner, Observer {
-            if (it) showNoAccountToast()
-        })
-        viewModel.needToUpdate.observe(viewLifecycleOwner, Observer {
-            if (it) add_btn.text = getString(R.string.add_btn_update)
-        })
-        viewModel.account.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                add_acc_name.text = it.name
+        viewModel.needSum.observe(
+            viewLifecycleOwner,
+            Observer { if (it) showNoSumToast() }
+        )
+        viewModel.needAccount.observe(
+            viewLifecycleOwner,
+            Observer { if (it) showNoAccountToast() }
+        )
+        viewModel.needToUpdate.observe(
+            viewLifecycleOwner,
+            Observer { if (it) add_btn.text = getString(R.string.add_btn_update) }
+        )
+        viewModel.account.observe(
+            viewLifecycleOwner,
+            Observer { it?.let { add_acc_name.text = it.name } }
+        )
+        viewModel.currency.observe(
+            viewLifecycleOwner,
+            Observer { it?.let { add_acc_cur.text = it.symbol } }
+        )
+        viewModel.sum.observe(
+            viewLifecycleOwner,
+            Observer { if (it > 0) add_sum.setText(it.toString()) }
+        )
+        viewModel.date.observe(
+            viewLifecycleOwner,
+            Observer {
+                it?.let {
+                    date = it
+                    add_date_txt.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)
+                }
             }
-        })
-        viewModel.currency.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                add_acc_cur.text = it.symbol
-            }
-        })
-        viewModel.sum.observe(viewLifecycleOwner, Observer {
-            if (it > 0) add_sum.setText(it.toString())
-        })
-        viewModel.date.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                date = it
-                add_date_txt.text = DateFormat
-                        .getDateInstance(DateFormat.MEDIUM).format(it)
-            }
-        })
-        viewModel.description.observe(viewLifecycleOwner, Observer {
-            fragment_add_content.add_desc.setText(it)
-        })
-        viewModel.accountNotArchiveNames.observe(viewLifecycleOwner, Observer {
-            it?.let { loadAccounts(it) }
-        })
-        viewModel.needToNavigate.observe(viewLifecycleOwner, Observer {
-            if (it) navigateUp()
-        })
+        )
+        viewModel.description.observe(
+            viewLifecycleOwner,
+            Observer { fragment_add_content.add_desc.setText(it) }
+        )
+        viewModel.accountNotArchiveNames.observe(
+            viewLifecycleOwner,
+            Observer { it?.let { loadAccounts(it) } }
+        )
+        viewModel.needToNavigate.observe(
+            viewLifecycleOwner,
+            Observer { if (it) navigateUp() }
+        )
         add_date_block.setOnClickListener { showDateDialog() }
     }
 
     private fun showKeyboard() {
-        val imm: InputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm: InputMethodManager = requireActivity()
+            .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
 
     private fun showNoSumToast() {
-        Toast.makeText(activity,
-                getString(R.string.add_check_no_sum_warning),
-                Toast.LENGTH_SHORT)
-                .show()
+        Toast.makeText(
+            activity,
+            getString(R.string.add_check_no_sum_warning),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun showNoAccountToast() {
-        Toast.makeText(activity,
-                getString(R.string.add_check_no_account_warning),
-                Toast.LENGTH_SHORT)
-                .show()
+        Toast.makeText(
+            activity,
+            getString(R.string.add_check_no_account_warning),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun showDateDialog() {
@@ -159,13 +169,13 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
         calendar.time = date
 
         DatePickerDialog(
-                requireContext(),
-                { _, year, month, day ->
-                    viewModel.setDate(GregorianCalendar(year, month, day).time)
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
+            requireContext(),
+            { _, year, month, day ->
+                viewModel.setDate(GregorianCalendar(year, month, day).time)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
         ).show()
     }
 

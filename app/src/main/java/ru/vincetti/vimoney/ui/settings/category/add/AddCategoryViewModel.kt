@@ -8,7 +8,7 @@ import ru.vincetti.vimoney.data.sqlite.CategoryDao
 import ru.vincetti.vimoney.ui.settings.category.symbol.Category
 
 class AddCategoryViewModel(
-        private val categoryDao: CategoryDao
+    private val categoryDao: CategoryDao
 ) : ViewModel() {
 
     companion object {
@@ -82,7 +82,7 @@ class AddCategoryViewModel(
 }
 
 class AddCategoryViewModelFactory(
-        private val categoryDao: CategoryDao
+    private val categoryDao: CategoryDao
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AddCategoryViewModel::class.java)) {

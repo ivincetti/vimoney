@@ -4,14 +4,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class CategorySymbolListAdapter(
-        private val data: List<String>,
-        private val action: (Int) -> Unit
+    private val data: List<String>,
+    private val action: (Int) -> Unit
 ) : RecyclerView.Adapter<CategoryListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryListViewHolder {
         return CategoryListViewHolder.create(
-                parent,
-                action
+            parent,
+            action
         )
     }
 
@@ -20,5 +20,4 @@ class CategorySymbolListAdapter(
     }
 
     override fun getItemCount() = data.size
-
 }

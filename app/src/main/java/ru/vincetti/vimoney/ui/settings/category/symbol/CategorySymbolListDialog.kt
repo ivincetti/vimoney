@@ -15,9 +15,9 @@ class CategorySymbolListDialog : DialogFragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.dialog_category_list, null)
     }
@@ -27,9 +27,9 @@ class CategorySymbolListDialog : DialogFragment() {
 
         val categoriesAdapter = CategorySymbolListAdapter(categories) {
             targetFragment?.onActivityResult(
-                    targetRequestCode,
-                    it,
-                    requireActivity().intent
+                targetRequestCode,
+                it,
+                requireActivity().intent
             )
             dismiss()
         }

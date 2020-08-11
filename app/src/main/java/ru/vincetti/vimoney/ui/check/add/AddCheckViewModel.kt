@@ -12,9 +12,9 @@ import ru.vincetti.vimoney.data.sqlite.CurrentDao
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 
 class AddCheckViewModel(
-        private val accDao: AccountDao,
-        private val curDao: CurrentDao,
-        val app: Application
+    private val accDao: AccountDao,
+    private val curDao: CurrentDao,
+    val app: Application
 ) : AndroidViewModel(app) {
 
     private var checkID = DEFAULT_CHECK_ID
@@ -71,10 +71,11 @@ class AddCheckViewModel(
 
     /** Save account logic. */
     fun save(name: String, type: String) {
-        if (TextUtils.isEmpty(name)
-                || TextUtils.isEmpty(type)
-                || currency.value == null
-                || color.value!! > 0
+        if (
+            TextUtils.isEmpty(name)
+            || TextUtils.isEmpty(type)
+            || currency.value == null
+            || color.value!! > 0
         ) {
             need2AllData.value = true
         } else {
@@ -140,9 +141,9 @@ class AddCheckViewModel(
 }
 
 class AddCheckModelFactory(
-        private val accDao: AccountDao,
-        private val curDao: CurrentDao,
-        private val app: Application
+    private val accDao: AccountDao,
+    private val curDao: CurrentDao,
+    private val app: Application
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AddCheckViewModel::class.java)) {

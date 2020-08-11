@@ -21,7 +21,6 @@ class CategoriesViewModel(categoriesDao: CategoryDao) : ViewModel() {
     fun backButtonClicked() {
         _need2Navigate2Home.value = true
     }
-
 }
 
 class CategoriesModelFactory(private val dao: CategoryDao) : ViewModelProvider.Factory {

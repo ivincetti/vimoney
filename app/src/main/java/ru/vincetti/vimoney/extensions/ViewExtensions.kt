@@ -9,8 +9,8 @@ import androidx.core.view.*
  * You don't need to specify each value explicitly: use Kotlin named parameters.
  */
 fun View.updateMargin(
-        left: Int = marginLeft,
-        top: Int = marginTop,
-        right: Int = marginRight,
-        bottom: Int = marginBottom
+    left: Int = marginLeft,
+    top: Int = marginTop,
+    right: Int = marginRight,
+    bottom: Int = marginBottom
 ) = updateLayoutParams<ViewGroup.MarginLayoutParams> { updateMargins(left, top, right, bottom) }
