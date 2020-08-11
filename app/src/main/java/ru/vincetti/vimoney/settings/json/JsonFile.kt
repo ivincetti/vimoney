@@ -69,7 +69,7 @@ object JsonFile {
                 importAccounts(db, gson, accountsJsonBuilder)
                 importCategories(db, gson, categoriesJsonBuilder)
             }
-            accountBalanceUpdateAll(db.transactionDao(), db.accountDao())
+            accountBalanceUpdateAll(db)
         }
     }
 
