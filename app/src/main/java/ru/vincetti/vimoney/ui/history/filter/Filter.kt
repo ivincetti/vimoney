@@ -73,8 +73,8 @@ class Filter {
             category $categoryID
             sum $sumFrom
             comment $comment
-            dateFrom ${dateFrom?.let{DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)}}
-            dateTo ${dateTo?.let{DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)}}
+            dateFrom ${dateFrom?.let { DateFormat.getDateInstance(DateFormat.MEDIUM).format(it) }}
+            dateTo ${dateTo?.let { DateFormat.getDateInstance(DateFormat.MEDIUM).format(it) }}
             """
     }
 

@@ -1,6 +1,6 @@
 package ru.vincetti.vimoney.data.sqlite
 
-import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import androidx.room.*
 import ru.vincetti.vimoney.data.models.TransactionListModel
 import ru.vincetti.vimoney.data.models.TransactionModel
@@ -48,7 +48,7 @@ interface TransactionDao {
         dateFrom: Date?,
         dateTo: Date?,
         sumFrom: Int
-    ): LiveData<List<TransactionListModel>>
+    ): DataSource.Factory<Int, TransactionListModel>
 
     @Query("""
             SELECT tr.id, acc.name AS account_name, cur.symbol AS account_symbol,
@@ -77,7 +77,7 @@ interface TransactionDao {
         dateTo: Date?,
         sumFrom: Int,
         count: Int
-    ): LiveData<List<TransactionListModel>>
+    ): DataSource.Factory<Int, TransactionListModel>
 
     @Query("SELECT * FROM transactions WHERE id = :id LIMIT 1")
     suspend fun loadTransactionById(id: Int): TransactionModel?

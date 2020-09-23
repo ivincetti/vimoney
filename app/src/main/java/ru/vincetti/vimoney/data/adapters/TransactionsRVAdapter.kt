@@ -1,69 +1,41 @@
 package ru.vincetti.vimoney.data.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.TransactionListModel
-import java.text.DateFormat
 
 class TransactionsRVAdapter(
     private val mListener: (Int) -> Unit
-) : RecyclerView.Adapter<TransactionsRVAdapter.ViewHolder>() {
+) : PagedListAdapter<TransactionListModel, TransactionsViewHolder>(DIFF_CALLBACK) {
 
-    private var data: List<TransactionListModel>? = null
-
-    inner class ViewHolder(
-        itemView: View,
-        val listener: (Int) -> Unit
-    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        private val icon: TextView = itemView.findViewById(R.id.card_transactions_image)
-        private val name: TextView = itemView.findViewById(R.id.home_transactions_name)
-        private val date: TextView = itemView.findViewById(R.id.home_transactions_date)
-        private val acc: TextView = itemView.findViewById(R.id.home_transactions_account)
-        private val sum: TextView = itemView.findViewById(R.id.home_transactions_balance)
-        private val cur: TextView = itemView.findViewById(R.id.home_transactions_currency)
-
-        init {
-            itemView.setOnClickListener(this)
-        }
-
-        override fun onClick(view: View) {
-            data?.let {
-                listener(it[adapterPosition].id)
-            }
-        }
-
-        fun bind(item: TransactionListModel) {
-            icon.text = item.symbol
-            name.text = item.description
-            date.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(item.date)
-            sum.text = "${item.getTypeString()} ${item.sum}"
-            acc.text = item.accountName
-            cur.text = item.curSymbol
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionsViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_transactions_list, parent, false)
-        return ViewHolder(view, mListener)
+        return TransactionsViewHolder(view, mListener)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        data?.let {
-            holder.bind(it[position])
+    override fun onBindViewHolder(holder: TransactionsViewHolder, position: Int) {
+        getItem(position)?.let {
+            holder.bind(it)
         }
     }
 
-    override fun getItemCount(): Int {
-        return data?.size ?: 0
-    }
+    companion object {
+        private val DIFF_CALLBACK =
+            object : DiffUtil.ItemCallback<TransactionListModel>() {
 
-    fun setTransaction(transList: List<TransactionListModel>) {
-        data = transList
-        notifyDataSetChanged()
+                override fun areItemsTheSame(
+                    old: TransactionListModel,
+                    new: TransactionListModel
+                ) = old.id == new.id
+
+                override fun areContentsTheSame(
+                    old: TransactionListModel,
+                    new: TransactionListModel
+                ) = old.id == new.id
+            }
     }
 }

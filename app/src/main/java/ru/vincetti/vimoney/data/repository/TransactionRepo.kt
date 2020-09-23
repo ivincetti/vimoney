@@ -1,6 +1,6 @@
 package ru.vincetti.vimoney.data.repository
 
-import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import ru.vincetti.vimoney.data.models.TransactionListModel
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.models.TransactionStatDayModel
@@ -52,7 +52,7 @@ class TransactionRepo(db: AppDatabase) {
 
     suspend fun loadCheckSum(checkID: Int) = transactionDao.loadSumByCheckId(checkID)
 
-    fun loadFilterTransactions(filter: Filter): LiveData<List<TransactionListModel>> {
+    fun loadFilterTransactions(filter: Filter): DataSource.Factory<Int, TransactionListModel> {
         return if (filter.count > 0) {
             transactionDao.loadFilterTransactionsFullLimit(
                 filter.accountID,

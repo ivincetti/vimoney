@@ -50,13 +50,12 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
         }
 
         home_transactions_recycle_view.apply {
-            setHasFixedSize(true)
             addItemDecoration(createDivider())
             adapter = transactionsRVAdapter
         }
 
-        viewModel.transList.observe(viewLifecycleOwner) {
-            it?.let { trList -> transactionsRVAdapter.setTransaction(trList) }
+        viewModel.transList.observe(viewLifecycleOwner) { list ->
+            transactionsRVAdapter.submitList(list)
         }
     }
 
