@@ -5,9 +5,9 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.marginBottom
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import kotlinx.android.synthetic.main.fragment_categories_list.*
@@ -57,17 +57,14 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
             setAdapter(adapter)
         }
 
-        viewModel.need2Navigate2Home.observe(
-            viewLifecycleOwner,
-            Observer {
-                if (it) findNavController()
-                    .navigate(R.id.action_categoriesFragment_to_settingsFragment)
+        viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigate(R.id.action_categoriesFragment_to_settingsFragment)
             }
-        )
-        viewModel.categories.observe(
-            viewLifecycleOwner,
-            Observer { it?.let { adapter.setList(it) } }
-        )
+        }
+        viewModel.categories.observe(viewLifecycleOwner) {
+            it?.let { adapter.setList(it) }
+        }
     }
 
     private fun insetsInit() {
@@ -78,6 +75,10 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
         }
         ViewCompat.setOnApplyWindowInsetsListener(categories_toolbar) { view, insets ->
             view.updateMargin(top = insets.systemWindowInsetTop)
+            insets
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(categories_list_recycle_view) { view, insets ->
+            view.updatePadding(bottom = insets.systemWindowInsetBottom)
             insets
         }
     }

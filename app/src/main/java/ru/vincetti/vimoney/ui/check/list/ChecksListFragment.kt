@@ -8,7 +8,6 @@ import androidx.core.view.marginBottom
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import kotlinx.android.synthetic.main.fragment_checks_list.*
@@ -53,10 +52,9 @@ class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
             addItemDecoration(lineDivider)
             setAdapter(adapter)
         }
-        viewModel.accList.observe(
-            viewLifecycleOwner,
-            Observer { it?.let { adapter.setList(it) } }
-        )
+        viewModel.accList.observe(viewLifecycleOwner) {
+            it?.let { adapter.setList(it) }
+        }
     }
 
     private fun viewsInit() {

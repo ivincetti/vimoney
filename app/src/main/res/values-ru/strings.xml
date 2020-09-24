@@ -60,6 +60,7 @@
     <string name="transaction_import_sample_desc">пример</string>
     <string name="add_desc_sample">комментарий</string>
     <string name="add_sum_sample">0.0</string>
+    <string name="add_sum_filter_sample">сумма от</string>
     <string name="add_date_sample_txt">12/11/2018</string>
 
     <!--Settings Activity-->
@@ -96,6 +97,7 @@
     <!--Sys-->
     <string name="channel_description">не забудьте внести транзакции</string>
     <string name="back_icon_description">кнопка назад</string>
+    <string name="filter_icon_description">Фильтр</string>
     <string name="settings_categories_btn">Управление категориями</string>
     <string name="settings_save_transactions_btn">Сохранить операции</string>
     <string name="settings_load_transactions_btn">Загрузить операции</string>

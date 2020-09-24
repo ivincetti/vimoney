@@ -37,11 +37,13 @@ class AddCategoryViewModel(
     val categorySymbol: LiveData<String>
         get() = _categorySymbol
 
-    var need2AllData = MutableLiveData<Boolean>()
+    private var _need2AllData = MutableLiveData<Boolean>()
+    val need2AllData: LiveData<Boolean>
+        get() = _need2AllData
 
     init {
         isDefault.value = isDefaultBool
-        need2AllData.value = false
+        _need2AllData.value = false
         _need2Navigate.value = false
         _categorySymbol.value = "\uf544"
     }
@@ -62,11 +64,10 @@ class AddCategoryViewModel(
         }
     }
 
-    /** Save category logic. */
     fun save(name: String, symbol: String) {
         viewModelScope.launch {
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(symbol)) {
-                need2AllData.value = true
+                _need2AllData.value = true
             } else {
                 val tmpCategory = CategoryModel(name = name, symbol = symbol)
                 if (!isDefaultBool) {
@@ -78,6 +79,10 @@ class AddCategoryViewModel(
                 _need2Navigate.value = true
             }
         }
+    }
+
+    fun noDataDialogClosed() {
+        _need2AllData.value = false
     }
 }
 

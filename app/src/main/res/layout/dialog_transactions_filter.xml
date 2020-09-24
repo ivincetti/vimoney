@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorBackgroundDark"
+    tools:layout_gravity="bottom"
+    >
+
+    <LinearLayout
+        android:id="@+id/fragment_filter_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fragment_filter_acc_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:id="@+id/fragment_filter_acc_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingStart="@dimen/big_padding"
+                android:paddingEnd="@dimen/big_padding"
+                app:srcCompat="@drawable/ic_account_dark"
+                />
+
+            <TextView
+                android:id="@+id/fragment_filter_acc_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/fragment_filter_acc_icon"
+                app:layout_constraintEnd_toStartOf="@id/fragment_filter_acc_reset"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="@dimen/text_sm_numbers"
+                android:textColor="@color/colorPrimaryTextDark"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/add_no_account_text"
+                android:ellipsize="end"
+                android:padding="@dimen/big_padding"
+                android:maxLines="1"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                />
+
+            <ImageView
+                android:id="@+id/fragment_filter_acc_reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingStart="@dimen/big_padding"
+                android:paddingEnd="@dimen/big_padding"
+                app:srcCompat="@drawable/ic_close"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fragment_filter_category_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:id="@+id/fragment_filter_category_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingStart="@dimen/big_padding"
+                android:paddingEnd="@dimen/big_padding"
+                android:text="@string/category_unknown"
+                style="@style/categoryTextStyle"
+                />
+
+            <TextView
+                android:id="@+id/fragment_filter_category_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/fragment_filter_category_icon"
+                app:layout_constraintEnd_toStartOf="@id/fragment_filter_category_reset"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="@dimen/text_sm_numbers"
+                android:textColor="@color/colorPrimaryTextDark"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/add_no_category_text"
+                android:ellipsize="end"
+                android:padding="@dimen/big_padding"
+                android:maxLines="1"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                />
+
+            <ImageView
+                android:id="@+id/fragment_filter_category_reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingStart="@dimen/big_padding"
+                android:paddingEnd="@dimen/big_padding"
+                app:srcCompat="@drawable/ic_close"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fragment_filter_sum_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <ImageView
+                android:id="@+id/fragment_filter_sum_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingStart="@dimen/big_padding"
+                android:paddingEnd="@dimen/big_padding"
+                app:srcCompat="@drawable/ic_arrow_forward"
+                />
+
+            <EditText
+                android:id="@+id/fragment_filter_sum_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/fragment_filter_sum_reset"
+                app:layout_constraintStart_toEndOf="@id/fragment_filter_sum_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                android:hint="@string/add_sum_filter_sample"
+                android:inputType="text"
+                android:fontFamily="sans-serif-medium"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+                android:textColor="@color/colorPrimaryTextDark"
+                android:textColorHint="@color/colorSecondaryTextDark"
+                />
+
+            <ImageView
+                android:id="@+id/fragment_filter_sum_reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingStart="@dimen/big_padding"
+                android:paddingEnd="@dimen/big_padding"
+                app:srcCompat="@drawable/ic_close"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fragment_filter_description_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <ImageView
+                android:id="@+id/fragment_filter_desc_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingStart="@dimen/big_padding"
+                android:paddingEnd="@dimen/big_padding"
+                app:srcCompat="@drawable/ic_comment_dark"
+                />
+
+            <EditText
+                android:id="@+id/fragment_filter_desc_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/fragment_filter_desc_reset"
+                app:layout_constraintStart_toEndOf="@id/fragment_filter_desc_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                android:hint="@string/add_desc_sample"
+                android:inputType="text"
+                android:fontFamily="sans-serif-medium"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+                android:textColor="@color/colorPrimaryTextDark"
+                android:textColorHint="@color/colorSecondaryTextDark"
+                />
+
+            <ImageView
+                android:id="@+id/fragment_filter_desc_reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingStart="@dimen/big_padding"
+                android:paddingEnd="@dimen/big_padding"
+                app:srcCompat="@drawable/ic_close"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fragment_filter_date_from_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <ImageView
+                android:id="@+id/fragment_filter_date_from_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingStart="@dimen/big_padding"
+                android:paddingEnd="@dimen/big_padding"
+                app:srcCompat="@drawable/ic_calendar_dark"
+                />
+
+            <TextView
+                android:id="@+id/fragment_filter_date_from_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/fragment_filter_date_from_icon"
+                app:layout_constraintEnd_toStartOf="@id/fragment_filter_date_from_reset"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:padding="@dimen/big_padding"
+                android:textColor="@color/colorPrimaryTextDark"
+                android:fontFamily="sans-serif-medium"
+                />
+
+            <ImageView
+                android:id="@+id/fragment_filter_date_from_reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingStart="@dimen/big_padding"
+                android:paddingEnd="@dimen/big_padding"
+                app:srcCompat="@drawable/ic_close"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fragment_filter_date_to_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <ImageView
+                android:id="@+id/fragment_filter_date_to_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingStart="@dimen/big_padding"
+                android:paddingEnd="@dimen/big_padding"
+                app:srcCompat="@drawable/ic_calendar_dark"
+                />
+
+            <TextView
+                android:id="@+id/fragment_filter_date_to_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/fragment_filter_date_to_icon"
+                app:layout_constraintEnd_toStartOf="@id/fragment_filter_date_to_reset"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:padding="@dimen/big_padding"
+                android:textColor="@color/colorPrimaryTextDark"
+                android:fontFamily="sans-serif-medium"
+                />
+
+            <ImageView
+                android:id="@+id/fragment_filter_date_to_reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingStart="@dimen/big_padding"
+                android:paddingEnd="@dimen/big_padding"
+                app:srcCompat="@drawable/ic_close"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <Button
+                android:id="@+id/fragment_filter_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/fragment_reset_btn"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_margin="@dimen/big_padding"
+                android:text="Filter"
+                />
+
+            <ImageView
+                android:id="@+id/fragment_reset_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingStart="@dimen/big_padding"
+                android:paddingEnd="@dimen/big_padding"
+                app:srcCompat="@drawable/ic_close"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

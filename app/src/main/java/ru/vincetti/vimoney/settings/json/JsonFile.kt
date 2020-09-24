@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 import ru.vincetti.vimoney.data.models.AccountModel
 import ru.vincetti.vimoney.data.models.CategoryModel
 import ru.vincetti.vimoney.data.models.TransactionModel
+import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.utils.accountBalanceUpdateAll
 import java.io.*
@@ -30,7 +31,7 @@ object JsonFile {
                 val accountJson: String = gson.toJson(it)
                 json2FileSave(context, accountJson, FILE_NAME_ACCOUNTS)
             }
-            db.transactionDao().loadAllTransactions().let {
+            TransactionRepo(db).loadAllTransactions().let {
                 val transactionsJson = gson.toJson(it)
                 json2FileSave(context, transactionsJson, FILE_NAME_TRANSACTIONS)
             }
@@ -95,9 +96,9 @@ object JsonFile {
     ) {
         db.accountDao().deleteAllAccounts()
         val listType1 = object : TypeToken<ArrayList<AccountModel>>() {}.type
-        val transactions1: List<AccountModel> =
+        val accounts: List<AccountModel> =
             gson.fromJson(accountsJsonBuilder.toString(), listType1)
-        for (account in transactions1) {
+        for (account in accounts) {
             db.accountDao().insertAccount(account)
         }
     }
@@ -107,13 +108,11 @@ object JsonFile {
         gson: Gson,
         transactionsJsonBuilder: StringBuilder
     ) {
-        db.transactionDao().deleteAllTransactions()
+        TransactionRepo(db).deleteAllTransactions()
         val listType = object : TypeToken<ArrayList<TransactionModel>>() {}.type
         val transactions: List<TransactionModel> =
             gson.fromJson(transactionsJsonBuilder.toString(), listType)
-        for (transaction in transactions) {
-            db.transactionDao().insertTransaction(transaction)
-        }
+        TransactionRepo(db).addTransaction(transactions)
     }
 
     private fun readFromFile(context: Context, filename: String): StringBuilder {

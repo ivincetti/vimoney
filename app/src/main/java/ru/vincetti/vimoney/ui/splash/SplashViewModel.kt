@@ -1,7 +1,6 @@
 package ru.vincetti.vimoney.ui.splash
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -14,6 +13,7 @@ import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.JsonDownloader
 import ru.vincetti.vimoney.data.models.*
 import ru.vincetti.vimoney.data.models.json.*
+import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.utils.accountBalanceUpdateById
 import ru.vincetti.vimoney.utils.isNetworkAvailable
@@ -52,13 +52,14 @@ class SplashViewModel(
         checkDb()
     }
 
-    /** Check not empty DB. */
     private fun checkDb() {
         viewModelScope.launch {
             val config = mDb.configDao().loadConfigByKey(AppDatabase.CONFIG_KEY_NAME_DATE_EDIT)
             if (config == null) {
-                if (!_networkError.value!!) {
+                if (isNetworkAvailable(app.applicationContext)) {
                     loadJsonFromServer()
+                } else {
+                    _networkError.value = false
                 }
             } else {
                 _need2Navigate2Home.value = true
@@ -66,12 +67,6 @@ class SplashViewModel(
         }
     }
 
-    /** No network. */
-    fun setNetwork(context: Context) {
-        if (!isNetworkAvailable(context)) _networkError.value = true
-    }
-
-    /** Reload fragment from scratch. */
     fun resetNetworkStatus() {
         _networkError.value = false
         _need2Navigate2Self.value = true
@@ -107,17 +102,20 @@ class SplashViewModel(
     }
 
     private suspend fun transactionsImport(transactionItems: List<TransactionsItem>) {
-        for (tr in transactionItems) {
-            mDb.transactionDao().insertTransaction(
+        val transactions = mutableListOf<TransactionModel>()
+        transactionItems.map {
+            transactions.add(
                 TransactionModel(
-                    Date(tr.date),
-                    tr.accountId,
+                    Date(it.date),
+                    it.accountId,
                     app.getString(R.string.transaction_import_sample_desc),
-                    tr.type,
-                    tr.sum.toFloat()
+                    it.type,
+                    it.sum.toFloat()
                 )
             )
         }
+
+        TransactionRepo(mDb).addTransaction(transactions)
     }
 
     private suspend fun currencyImport(currencyItems: List<CurrencyItem>) {
@@ -142,7 +140,7 @@ class SplashViewModel(
     private suspend fun accountUpdate(accId: Int, type: String, title: String, balance: Int) {
         val newAcc = AccountModel(accId, title, type, balance, 810)
         mDb.accountDao().insertAccount(newAcc)
-        accountBalanceUpdateById(mDb.transactionDao(), mDb.accountDao(), accId)
+        accountBalanceUpdateById(mDb, accId)
     }
 
     private suspend fun categoriesUpdate(categoriesItems: List<CategoriesItem>) {

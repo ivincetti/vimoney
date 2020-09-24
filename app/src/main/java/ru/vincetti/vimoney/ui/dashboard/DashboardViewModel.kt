@@ -59,7 +59,6 @@ class DashboardViewModel(db: AppDatabase) : ViewModel() {
         }
     }
 
-    /** Получение статистики. */
     private fun getGraphStat() {
         viewModelScope.launch {
             val stat = transRepo.loadTransactionStatMonth(localDate)

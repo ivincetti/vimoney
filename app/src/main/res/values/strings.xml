@@ -61,6 +61,7 @@
     <string name="transaction_import_sample_desc">sample</string>
     <string name="add_desc_sample">comment</string>
     <string name="add_sum_sample">0.0</string>
+    <string name="add_sum_filter_sample">sum from</string>
     <string name="add_date_sample_txt">12/11/2018</string>
 
     <!--Settings Activity-->
@@ -101,6 +102,7 @@
     <string name="channel_name" translatable="false">reminder</string>
     <string name="channel_description">Don\'t forget to record you expenses</string>
     <string name="back_icon_description">Back</string>
+    <string name="filter_icon_description">Filter</string>
     <string name="settings_categories_btn">Manage Categories</string>
     <string name="settings_save_transactions_btn">Save records</string>
     <string name="settings_load_transactions_btn">Load records</string>

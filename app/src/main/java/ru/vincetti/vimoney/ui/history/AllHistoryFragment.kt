@@ -1,5 +1,6 @@
 package ru.vincetti.vimoney.ui.history
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.ViewCompat
@@ -9,36 +10,52 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_history.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.extensions.updateMargin
+import ru.vincetti.vimoney.ui.history.filter.FilterDialog
 
 class AllHistoryFragment : Fragment(R.layout.fragment_history) {
+
+    private val dialogFrag = FilterDialog()
+    private val historyFragment = HistoryFragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setting_navigation_back_btn.setOnClickListener {
+        records_navigation_back_btn.setOnClickListener {
             findNavController().navigate(R.id.action_allHistoryFragment_to_homeFragment)
+        }
+
+        records_filter_btn.setOnClickListener {
+            dialogFrag.setTargetFragment(this, 1)
+            dialogFrag.show(parentFragmentManager, "Filter")
         }
 
         showTransactionsHistory()
         insetsInit()
     }
 
-    /** Show historyFragment. */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) {
+            data?.let {
+                historyFragment.setHistoryIntent(it)
+            }
+        }
+    }
+
     private fun showTransactionsHistory() {
-        val historyFragment = HistoryFragment()
         childFragmentManager.beginTransaction()
-            .replace(R.id.history_main_container, historyFragment)
+            .replace(R.id.history_container, historyFragment)
             .commit()
     }
 
     private fun insetsInit() {
-        ViewCompat.setOnApplyWindowInsetsListener(history_top_toolbar) { _, insets ->
-            history_top_toolbar.updateMargin(top = insets.systemWindowInsetTop)
+        ViewCompat.setOnApplyWindowInsetsListener(history_top_toolbar) { view, insets ->
+            view.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(history_container_root) { _, insets ->
-            history_container_root.updatePadding(bottom = insets.systemWindowInsetBottom)
+        ViewCompat.setOnApplyWindowInsetsListener(history_container) { view, insets ->
+            view.updatePadding(bottom = insets.systemWindowInsetBottom)
             insets
         }
     }

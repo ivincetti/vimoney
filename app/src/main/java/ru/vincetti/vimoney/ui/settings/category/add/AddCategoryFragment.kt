@@ -9,7 +9,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_add_category.*
 import kotlinx.android.synthetic.main.fragment_add_category_content.*
@@ -54,28 +53,21 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
     }
 
     private fun viewModelObserversInit() {
-        viewModel.isDefault.observe(
-            viewLifecycleOwner,
-            Observer {
-                if (!it) add_category_save_btn.text = getString(R.string.add_btn_update)
-            }
-        )
-        viewModel.need2Navigate.observe(
-            viewLifecycleOwner,
-            Observer { if (it) goBack() }
-        )
-        viewModel.need2AllData.observe(
-            viewLifecycleOwner,
-            Observer { if (it) showNoDataDialog() }
-        )
-        viewModel.categoryName.observe(
-            viewLifecycleOwner,
-            Observer { add_category_name.setText(it) }
-        )
-        viewModel.categorySymbol.observe(
-            viewLifecycleOwner,
-            Observer { add_category_symbol.text = it }
-        )
+        viewModel.isDefault.observe(viewLifecycleOwner) {
+            if (!it) add_category_save_btn.text = getString(R.string.add_btn_update)
+        }
+        viewModel.need2Navigate.observe(viewLifecycleOwner) {
+            if (it) goBack()
+        }
+        viewModel.need2AllData.observe(viewLifecycleOwner) {
+            if (it) showNoDataDialog()
+        }
+        viewModel.categoryName.observe(viewLifecycleOwner) {
+            add_category_name.setText(it)
+        }
+        viewModel.categorySymbol.observe(viewLifecycleOwner) {
+            add_category_symbol.text = it
+        }
     }
 
     override fun onResume() {
@@ -90,7 +82,6 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
         if (requestCode == 1) setCategorySymbol(resultCode)
     }
 
-    /** Not saved category cancel dialog. */
     private fun showUnsavedDialog() {
         AlertDialog.Builder(requireContext())
             .setMessage(R.string.check_add_alert_question)
@@ -104,14 +95,13 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
             .show()
     }
 
-    /** Not saved transaction cancel dialog. */
     private fun showNoDataDialog() {
         Toast.makeText(
             requireContext(),
             R.string.check_add_alert_no_data,
             Toast.LENGTH_SHORT
         ).show()
-        viewModel.need2AllData.value = false
+        viewModel.noDataDialogClosed()
     }
 
     private fun setCategorySymbol(position: Int) {
