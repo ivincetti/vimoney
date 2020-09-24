@@ -17,8 +17,12 @@ class NotificationViewModel : ViewModel() {
         _need2Navigate2Home.value = false
     }
 
-    fun homeButton() {
+    fun backButtonClicked() {
         _need2Navigate2Home.value = true
+    }
+
+    fun navigatedBack() {
+        _need2Navigate2Home.value = false
     }
 
     fun notifyButton() {

@@ -72,6 +72,10 @@ class SplashViewModel(
         _need2Navigate2Self.value = true
     }
 
+    fun navigated2Home(){
+        _need2Navigate2Home.value = false
+    }
+
     private fun loadJsonFromServer() {
         viewModelScope.launch {
             try {
