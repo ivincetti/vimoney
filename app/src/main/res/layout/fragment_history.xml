@@ -36,16 +36,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:paddingStart="@dimen/st_padding"
-                android:paddingEnd="@dimen/st_padding"
-                android:text="@string/history_title_home"
-                android:textColor="@color/colorPrimaryTextDark"
-                android:textSize="@dimen/text_st_numbers"
-                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/records_navigation_back_btn"
                 app:layout_constraintTop_toTopOf="parent"
+                android:fontFamily="sans-serif-medium"
+                android:paddingStart="@dimen/st_padding"
+                android:paddingEnd="@dimen/st_padding"
+                android:textColor="@color/colorPrimaryTextDark"
+                android:textSize="@dimen/text_st_numbers"
+                android:textStyle="bold"
+                android:text="@string/history_title_home"
                 />
 
             <ImageView

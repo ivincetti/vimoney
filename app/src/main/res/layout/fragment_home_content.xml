@@ -68,6 +68,7 @@
         >
 
         <TextView
+            android:id="@+id/home_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -75,18 +76,6 @@
             android:fontFamily="sans-serif-medium"
             android:textSize="@dimen/text_st_numbers"
             android:textStyle="bold"
-            android:text="@string/home_fragment_stat_title"
-            />
-
-        <TextView
-            android:id="@+id/home_month"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingStart="@dimen/st_padding"
-            android:paddingEnd="@dimen/st_padding"
-            android:textColor="@color/colorPrimaryTextDark"
-            android:fontFamily="sans-serif-medium"
             tools:text="@string/home_fragment_stat_month_sample"
             />
 

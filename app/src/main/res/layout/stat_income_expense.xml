@@ -26,7 +26,6 @@
             android:layout_height="@dimen/icon_st_size"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:rotation="180"
             app:srcCompat="@drawable/ic_arrow_upward_black"
             android:contentDescription="@string/home_stat_income_icon"
             />
@@ -73,7 +72,6 @@
             android:layout_height="@dimen/icon_st_size"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:rotation="180"
             app:srcCompat="@drawable/ic_arrow_downward_black"
             android:contentDescription="@string/home_stat_spending_icon"
             />
