@@ -42,7 +42,15 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
         }
 
         viewInit()
+        observersInit()
         insetsInit()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            showUnsavedDialog()
+        }
     }
 
     private fun viewInit() {
@@ -56,15 +64,20 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
         add_check_all_balance_switch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setNeedAllBalance(isChecked)
         }
+    }
 
+    private fun observersInit() {
         viewModel.isDefault.observe(viewLifecycleOwner) {
             if (!it) add_check_save_btn.text = getString(R.string.add_btn_update)
         }
         viewModel.needAllBalance.observe(viewLifecycleOwner) {
             add_check_all_balance_switch.isChecked = it
         }
-        viewModel.need2Navigate.observe(viewLifecycleOwner) {
-            if (it) goBack()
+        viewModel.need2NavigateBack.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigateUp()
+                viewModel.navigatedBack()
+            }
         }
         viewModel.need2AllData.observe(viewLifecycleOwner) {
             if (it) showNoDataDialog()
@@ -91,13 +104,6 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
         }
         viewModel.currencyList.observe(viewLifecycleOwner) {
             it?.let { loadCurrency(it, add_check_currency) }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            showUnsavedDialog()
         }
     }
 
@@ -169,7 +175,7 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
         AlertDialog.Builder(requireContext())
             .setMessage(R.string.check_add_alert_question)
             .setNegativeButton(R.string.check_add_alert_negative) { _, _ ->
-                goBack()
+                viewModel.need2NavigateBack()
             }
             .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
                 dialogInterface?.dismiss()
@@ -194,10 +200,6 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
             add_check_content.add_check_name.text.toString(),
             typeEntered()
         )
-    }
-
-    private fun goBack() {
-        findNavController().navigateUp()
     }
 
     private fun insetsInit() {

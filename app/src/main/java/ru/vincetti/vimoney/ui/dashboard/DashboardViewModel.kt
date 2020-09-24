@@ -95,8 +95,12 @@ class DashboardViewModel(db: AppDatabase) : ViewModel() {
         getGraphData()
     }
 
-    fun homeButton() {
+    fun backButtonClicked() {
         _need2Navigate2Home.value = true
+    }
+
+    fun navigatedBack(){
+        _need2Navigate2Home.value = false
     }
 }
 

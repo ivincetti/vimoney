@@ -30,21 +30,20 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         viewModelFactory = DashboardViewModelFactory(db)
 
         graphInit()
-        insetsInit()
-
         viewsInit()
-        viewObserversInit()
+        observersInit()
+        insetsInit()
     }
 
     private fun viewsInit() {
-        setting_navigation_back_btn.setOnClickListener { viewModel.homeButton() }
+        setting_navigation_back_btn.setOnClickListener { viewModel.backButtonClicked() }
         dash_content.dashboard_month_next.setOnClickListener { viewModel.setMonthNext() }
         dash_content.dashboard_month_previous.setOnClickListener { viewModel.setMonthPrev() }
         dash_content.dashboard_year_next.setOnClickListener { viewModel.setYearNext() }
         dash_content.dashboard_year_previous.setOnClickListener { viewModel.setYearPrev() }
     }
 
-    private fun viewObserversInit() {
+    private fun observersInit() {
         viewModel.monthString.observe(viewLifecycleOwner) {
             dash_content.dashboard_month.text = it
         }
@@ -58,7 +57,10 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
             showProgress(it)
         }
         viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigate(R.id.action_dashboardFragment_to_homeFragment)
+            if (it) {
+                findNavController().navigateUp()
+                viewModel.navigatedBack()
+            }
         }
         viewModel.income.observe(viewLifecycleOwner) {
             dash_content.home_stat_income_txt.text = it.toString()

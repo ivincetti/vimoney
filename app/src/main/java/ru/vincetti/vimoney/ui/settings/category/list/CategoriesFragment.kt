@@ -22,6 +22,7 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
     val viewModel: CategoriesViewModel by viewModels { viewModelFactory }
 
     private lateinit var viewModelFactory: CategoriesModelFactory
+    private lateinit var recyclerAdapter: AllCategoriesListRVAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,14 +31,37 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
         val db = AppDatabase.getInstance(application)
         viewModelFactory = CategoriesModelFactory(db.categoryDao())
 
+        viewsInit()
+        observersInit()
+        recyclerInit()
         insetsInit()
+    }
 
+    private fun viewsInit() {
         categories_navigation_back_btn.setOnClickListener { viewModel.backButtonClicked() }
-        categories_list_fab.setOnClickListener {
-            findNavController().navigate(R.id.action_categoriesFragment_to_addCategoryFragment)
-        }
+        categories_list_fab.setOnClickListener { viewModel.addCategoryClicked() }
+    }
 
-        val adapter = AllCategoriesListRVAdapter {
+    private fun observersInit() {
+        viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigateUp()
+                viewModel.navigated2Home()
+            }
+        }
+        viewModel.need2Navigate2AddCategory.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigate(R.id.action_categoriesFragment_to_addCategoryFragment)
+                viewModel.navigated2AddCategory()
+            }
+        }
+        viewModel.categories.observe(viewLifecycleOwner) {
+            it?.let { recyclerAdapter.setList(it) }
+        }
+    }
+
+    private fun recyclerInit() {
+        recyclerAdapter = AllCategoriesListRVAdapter {
             val bundle = Bundle()
             bundle.putInt(EXTRA_CATEGORY_ID, it)
             findNavController().navigate(R.id.action_categoriesFragment_to_addCategoryFragment, bundle)
@@ -54,16 +78,7 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
         )
         categories_list_recycle_view.apply {
             addItemDecoration(lineDivider)
-            setAdapter(adapter)
-        }
-
-        viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
-            if (it) {
-                findNavController().navigate(R.id.action_categoriesFragment_to_settingsFragment)
-            }
-        }
-        viewModel.categories.observe(viewLifecycleOwner) {
-            it?.let { adapter.setList(it) }
+            adapter = recyclerAdapter
         }
     }
 

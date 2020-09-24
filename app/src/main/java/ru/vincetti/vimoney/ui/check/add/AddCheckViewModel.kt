@@ -22,9 +22,9 @@ class AddCheckViewModel(
     val isDefault = MutableLiveData<Boolean>()
     private var isDefaultBool = true
 
-    private var _need2Navigate = MutableLiveData<Boolean>()
-    val need2Navigate: LiveData<Boolean>
-        get() = _need2Navigate
+    private var _need2NavigateBack = MutableLiveData<Boolean>()
+    val need2NavigateBack: LiveData<Boolean>
+        get() = _need2NavigateBack
 
     private var _needAllBalance = MutableLiveData<Boolean>()
     val needAllBalance: LiveData<Boolean>
@@ -49,7 +49,7 @@ class AddCheckViewModel(
     init {
         isDefault.value = true
         need2AllData.value = false
-        _need2Navigate.value = false
+        _need2NavigateBack.value = false
         _needAllBalance.value = true
         _check.value = AccountModel()
         _color.value = Color.parseColor(_check.value!!.color)
@@ -96,7 +96,7 @@ class AddCheckViewModel(
                         accDao.insertAccount(it)
                     }
                 }
-                _need2Navigate.value = true
+                _need2NavigateBack.value = true
             }
         }
     }
@@ -105,7 +105,7 @@ class AddCheckViewModel(
         if (!isDefaultBool) {
             viewModelScope.launch {
                 accDao.fromArchiveAccountById(checkID)
-                _need2Navigate.value = true
+                _need2NavigateBack.value = true
             }
         }
     }
@@ -114,7 +114,7 @@ class AddCheckViewModel(
         if (!isDefaultBool) {
             viewModelScope.launch {
                 accDao.archiveAccountById(checkID)
-                _need2Navigate.value = true
+                _need2NavigateBack.value = true
             }
         }
     }
@@ -125,6 +125,14 @@ class AddCheckViewModel(
 
     fun noDataDialogClosed() {
         need2AllData.value = false
+    }
+
+    fun need2NavigateBack(){
+        _need2NavigateBack.value = true
+    }
+
+    fun navigatedBack(){
+        _need2NavigateBack.value = false
     }
 
     fun setCurrency(checkCurrency: Int) {

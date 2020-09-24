@@ -25,9 +25,9 @@ class AddCategoryViewModel(
     val isDefault = MutableLiveData<Boolean>()
     private var isDefaultBool = true
 
-    private var _need2Navigate = MutableLiveData<Boolean>()
-    val need2Navigate: LiveData<Boolean>
-        get() = _need2Navigate
+    private var _need2NavigateBack = MutableLiveData<Boolean>()
+    val need2NavigateBack: LiveData<Boolean>
+        get() = _need2NavigateBack
 
     private var _categoryName = MutableLiveData<String>()
     val categoryName: LiveData<String>
@@ -44,7 +44,7 @@ class AddCategoryViewModel(
     init {
         isDefault.value = isDefaultBool
         _need2AllData.value = false
-        _need2Navigate.value = false
+        _need2NavigateBack.value = false
         _categorySymbol.value = "\uf544"
     }
 
@@ -76,9 +76,17 @@ class AddCategoryViewModel(
                 } else {
                     categoryDao.insertCategory(tmpCategory)
                 }
-                _need2Navigate.value = true
+                _need2NavigateBack.value = true
             }
         }
+    }
+
+    fun need2navigateBack(){
+        _need2NavigateBack.value = true
+    }
+
+    fun navigatedBack(){
+        _need2NavigateBack.value = false
     }
 
     fun noDataDialogClosed() {

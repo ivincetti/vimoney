@@ -40,12 +40,11 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
         }
         viewModelFactory = CheckViewModelFactory(db, checkId)
         initViews()
+        observersInit()
         insetsInit()
     }
 
     private fun initViews() {
-        loadAccount()
-
         check_navigation_delete_btn.setOnClickListener { showDeleteDialog() }
         check_navigation_from_archive_btn.setOnClickListener { viewModel.restore() }
         check_navigation_update_btn.setOnClickListener { viewModel.update() }
@@ -62,7 +61,7 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
         }
     }
 
-    private fun loadAccount() {
+    private fun observersInit() {
         viewModel.accounts.observe(viewLifecycleOwner) {
             it?.let {
                 fragment_check_content.check_acc_name.text = it.name

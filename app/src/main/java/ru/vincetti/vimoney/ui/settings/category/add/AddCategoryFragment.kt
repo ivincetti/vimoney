@@ -36,9 +36,9 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
             if (extraCategory > 0) viewModel.loadCategory(extraCategory)
         }
 
-        insetsInit()
-        viewModelObserversInit()
         viewsInit()
+        observersInit()
+        insetsInit()
     }
 
     private fun viewsInit() {
@@ -52,12 +52,15 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
         }
     }
 
-    private fun viewModelObserversInit() {
+    private fun observersInit() {
         viewModel.isDefault.observe(viewLifecycleOwner) {
             if (!it) add_category_save_btn.text = getString(R.string.add_btn_update)
         }
-        viewModel.need2Navigate.observe(viewLifecycleOwner) {
-            if (it) goBack()
+        viewModel.need2NavigateBack.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigateUp()
+                viewModel.navigatedBack()
+            }
         }
         viewModel.need2AllData.observe(viewLifecycleOwner) {
             if (it) showNoDataDialog()
@@ -86,7 +89,7 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
         AlertDialog.Builder(requireContext())
             .setMessage(R.string.check_add_alert_question)
             .setNegativeButton(R.string.check_add_alert_negative) { _, _ ->
-                goBack()
+                viewModel.need2navigateBack()
             }
             .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
                 dialogInterface?.dismiss()
@@ -113,10 +116,6 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
             add_category_name.text.toString(),
             add_category_symbol.text.toString()
         )
-    }
-
-    private fun goBack() {
-        findNavController().navigateUp()
     }
 
     private fun insetsInit() {

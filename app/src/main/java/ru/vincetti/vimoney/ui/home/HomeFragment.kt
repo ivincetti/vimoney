@@ -27,6 +27,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val viewModel: HomeViewModel by viewModels { viewModelFactory }
 
     private lateinit var viewModelFactory: HomeViewModelFactory
+    private lateinit var mAdapter: CardsListRVAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,32 +36,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val db = AppDatabase.getInstance(application)
         viewModelFactory = HomeViewModelFactory(db)
 
-        val mAdapter = CardsListRVAdapter {
+        mAdapter = CardsListRVAdapter {
             val bundle = Bundle()
             bundle.putInt(EXTRA_CHECK_ID, it)
             findNavController().navigate(R.id.action_homeFragment_to_checkFragment, bundle)
         }
 
-        val recycler = fragment_home_content.home_cards_recycle_view
-        recycler.adapter = mAdapter
-
-        viewModel.userBalance.observe(viewLifecycleOwner) {
-            home_user_balance.text = it.toString()
-        }
-        viewModel.accounts.observe(viewLifecycleOwner) {
-            mAdapter.setList(it)
-        }
-        viewModel.homeButtonEnabled.observe(viewLifecycleOwner) {
-            home_menu_update.isEnabled = it
-        }
-        viewModel.incomeSum.observe(viewLifecycleOwner) {
-            it?.let { fragment_home_content.home_stat_income_txt.text = it.toString() }
-        }
-        viewModel.expenseSum.observe(viewLifecycleOwner) {
-            it?.let { fragment_home_content.home_stat_expense_txt.text = it.toString() }
-        }
+        fragment_home_content.home_cards_recycle_view.adapter = mAdapter
 
         viewInit()
+        observersInit()
         insetsInit()
         showTransactionsHistory()
     }
@@ -89,20 +74,36 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         home_menu_update.setOnClickListener { viewModel.updateAllAccounts() }
     }
 
+    private fun observersInit() {
+        viewModel.userBalance.observe(viewLifecycleOwner) {
+            home_user_balance.text = it.toString()
+        }
+        viewModel.accounts.observe(viewLifecycleOwner) {
+            mAdapter.setList(it)
+        }
+        viewModel.homeButtonEnabled.observe(viewLifecycleOwner) {
+            home_menu_update.isEnabled = it
+        }
+        viewModel.incomeSum.observe(viewLifecycleOwner) {
+            it?.let { fragment_home_content.home_stat_income_txt.text = it.toString() }
+        }
+        viewModel.expenseSum.observe(viewLifecycleOwner) {
+            it?.let { fragment_home_content.home_stat_expense_txt.text = it.toString() }
+        }
+    }
+
     private fun insetsInit() {
         val fabMargin = home_fab.marginBottom
-        ViewCompat.setOnApplyWindowInsetsListener(home_fab) { _, insets ->
-            home_fab.updateMargin(bottom = (insets.systemWindowInsetBottom + fabMargin))
+        ViewCompat.setOnApplyWindowInsetsListener(home_fab) { view, insets ->
+            view.updateMargin(bottom = (insets.systemWindowInsetBottom + fabMargin))
             insets
         }
-
-        ViewCompat.setOnApplyWindowInsetsListener(top_toolbar) { _, insets ->
-            top_toolbar.updateMargin(top = insets.systemWindowInsetTop)
+        ViewCompat.setOnApplyWindowInsetsListener(top_toolbar) { view, insets ->
+            view.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
-
-        ViewCompat.setOnApplyWindowInsetsListener(main_history_container_root) { _, insets ->
-            main_history_container_root.updatePadding(bottom = insets.systemWindowInsetBottom)
+        ViewCompat.setOnApplyWindowInsetsListener(main_history_container_root) { view, insets ->
+            view.updatePadding(bottom = insets.systemWindowInsetBottom)
             insets
         }
     }
