@@ -1,12 +1,12 @@
 package ru.vincetti.vimoney.ui.dashboard
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.android.synthetic.main.fragment_dashboard_content.*
@@ -27,44 +27,54 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
         val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
-        viewModelFactory = DashboardViewModelFactory(db.transactionDao())
+        viewModelFactory = DashboardViewModelFactory(db)
 
         graphInit()
+        viewsInit()
+        observersInit()
         insetsInit()
+    }
 
-        setting_navigation_back_btn.setOnClickListener { viewModel.homeButton() }
+    private fun viewsInit() {
+        setting_navigation_back_btn.setOnClickListener { viewModel.backButtonClicked() }
         dash_content.dashboard_month_next.setOnClickListener { viewModel.setMonthNext() }
         dash_content.dashboard_month_previous.setOnClickListener { viewModel.setMonthPrev() }
         dash_content.dashboard_year_next.setOnClickListener { viewModel.setYearNext() }
         dash_content.dashboard_year_previous.setOnClickListener { viewModel.setYearPrev() }
-
-        viewModel.monthString.observe(viewLifecycleOwner, Observer {
-            dash_content.dashboard_month.text = it
-        })
-        viewModel.yearString.observe(viewLifecycleOwner, Observer {
-            dash_content.dashboard_year.text = it
-        })
-        viewModel.dataSet.observe(viewLifecycleOwner, Observer {
-            dashboard_lineChart.animate(it)
-        })
-        viewModel.isShowProgress.observe(viewLifecycleOwner, Observer {
-            showProgress(it)
-        })
-        viewModel.need2Navigate2Home.observe(viewLifecycleOwner, Observer {
-            if (it) findNavController().navigate(R.id.action_dashboardFragment_to_homeFragment)
-        })
-        viewModel.income.observe(viewLifecycleOwner, Observer {
-            dash_content.home_stat_income_txt.text = it.toString()
-        })
-        viewModel.expense.observe(viewLifecycleOwner, Observer {
-            dash_content.home_stat_expense_txt.text = it.toString()
-        })
     }
 
+    private fun observersInit() {
+        viewModel.monthString.observe(viewLifecycleOwner) {
+            dash_content.dashboard_month.text = it
+        }
+        viewModel.yearString.observe(viewLifecycleOwner) {
+            dash_content.dashboard_year.text = it
+        }
+        viewModel.dataSet.observe(viewLifecycleOwner) {
+            dashboard_lineChart.animate(it)
+        }
+        viewModel.isShowProgress.observe(viewLifecycleOwner) {
+            showProgress(it)
+        }
+        viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigateUp()
+                viewModel.navigatedBack()
+            }
+        }
+        viewModel.income.observe(viewLifecycleOwner) {
+            dash_content.home_stat_income_txt.text = it.toString()
+        }
+        viewModel.expense.observe(viewLifecycleOwner) {
+            dash_content.home_stat_expense_txt.text = it.toString()
+        }
+    }
+
+    @SuppressLint("Range")
     private fun graphInit() {
         dashboard_lineChart.gradientFillColors = intArrayOf(
-                Color.parseColor("#81FFFFFF"),
-                Color.TRANSPARENT
+            Color.parseColor("#81FFFFFF"),
+            Color.TRANSPARENT
         )
         dashboard_lineChart.animation.duration = 400L
     }

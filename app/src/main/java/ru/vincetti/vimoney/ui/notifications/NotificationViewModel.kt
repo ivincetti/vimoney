@@ -17,15 +17,20 @@ class NotificationViewModel : ViewModel() {
         _need2Navigate2Home.value = false
     }
 
-    fun homeButton() {
+    fun backButtonClicked() {
         _need2Navigate2Home.value = true
+    }
+
+    fun navigatedBack() {
+        _need2Navigate2Home.value = false
     }
 
     fun notifyButton() {
         App.context?.let {
             it.startService(
-                    Intent(it, NotificationService::class.java)
-                            .setAction(NotificationService.NOTIFICATION_ACTION))
+                Intent(it, NotificationService::class.java)
+                    .setAction(NotificationService.NOTIFICATION_ACTION)
+            )
         }
     }
 }

@@ -15,6 +15,7 @@ enum class Category(val symbol: String) {
     FEMALE("\uf182"),
     FISH("\uf578"),
     GAME("\uf11b"),
+    GIFT("\uf06b"),
     FOOTBALL("\uf1e3"),
     GLASS("\uf79f"),
     HAMBURGER("\uf805"),
@@ -25,4 +26,5 @@ enum class Category(val symbol: String) {
     PAW("\uf1b0"),
     PIGGY("\uf4d3"),
     SHOPPING("\uf07a"),
+    TSHIRT("\uf553"),
 }

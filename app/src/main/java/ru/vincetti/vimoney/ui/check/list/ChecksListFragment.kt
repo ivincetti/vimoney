@@ -8,7 +8,6 @@ import androidx.core.view.marginBottom
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import kotlinx.android.synthetic.main.fragment_checks_list.*
@@ -23,66 +22,67 @@ class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
     private val viewModel: CheckListViewModel by viewModels { viewModelFactory }
 
     private lateinit var viewModelFactory: CheckListModelFactory
+    private lateinit var recyclerAdapter: AllCardsListRVAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        initViews()
-        insetsInit()
 
         val application = requireNotNull(activity).application
         val db = AppDatabase.getInstance(application)
         viewModelFactory = CheckListModelFactory(db.accountDao())
 
-        val adapter = AllCardsListRVAdapter {
+        viewsInit()
+        insetsInit()
+
+        viewModel.accList.observe(viewLifecycleOwner) {
+            it?.let { recyclerAdapter.setList(it) }
+        }
+    }
+
+    private fun viewsInit() {
+        setting_navigation_back_btn.setOnClickListener {
+            findNavController().navigateUp()
+        }
+        check_list_fab.setOnClickListener {
+            findNavController().navigate(R.id.action_checksListFragment_to_addCheckFragment)
+        }
+        recyclerInit()
+    }
+
+    private fun recyclerInit() {
+        recyclerAdapter = AllCardsListRVAdapter {
             val bundle = Bundle()
             bundle.putInt(EXTRA_CHECK_ID, it)
             findNavController().navigate(R.id.action_checksListFragment_to_checkFragment, bundle)
         }
         val lineDivider = DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
+            requireContext(),
+            DividerItemDecoration.VERTICAL
         )
         lineDivider.setDrawable(
-                ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.light_divider
-                )!!
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.light_divider
+            )!!
         )
         check_list_recycle_view.apply {
             addItemDecoration(lineDivider)
-            setAdapter(adapter)
-        }
-        viewModel.accList.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                adapter.setList(it)
-            }
-        })
-    }
-
-    private fun initViews() {
-        setting_navigation_back_btn.setOnClickListener {
-            findNavController().navigate(R.id.action_checksListFragment_to_homeFragment)
-        }
-        check_list_fab.setOnClickListener {
-            findNavController().navigate(R.id.action_checksListFragment_to_addCheckFragment)
+            adapter = recyclerAdapter
         }
     }
 
     private fun insetsInit() {
         val fabMargin = check_list_fab.marginBottom
-        ViewCompat.setOnApplyWindowInsetsListener(check_list_fab) { _, insets ->
-            check_list_fab.updateMargin(bottom = (insets.systemWindowInsetBottom + fabMargin))
+        ViewCompat.setOnApplyWindowInsetsListener(check_list_fab) { view, insets ->
+            view.updateMargin(bottom = (insets.systemWindowInsetBottom + fabMargin))
             insets
         }
-
-        ViewCompat.setOnApplyWindowInsetsListener(check_list_toolbar) { _, insets ->
-            check_list_toolbar.updateMargin(top = insets.systemWindowInsetTop)
+        ViewCompat.setOnApplyWindowInsetsListener(check_list_toolbar) { view, insets ->
+            view.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
-
-        ViewCompat.setOnApplyWindowInsetsListener(check_list_recycle_view) { _, insets ->
-            check_list_recycle_view.updatePadding(bottom = insets.systemWindowInsetBottom)
+        ViewCompat.setOnApplyWindowInsetsListener(check_list_recycle_view) { view, insets ->
+            view.updatePadding(bottom = insets.systemWindowInsetBottom)
             insets
         }
     }

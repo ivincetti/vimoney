@@ -5,8 +5,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.vincetti.vimoney.data.models.CategoryModel
 
 class CategoryListViewHolder private constructor(
-        private val viewWrapper: CategoryListViewWrapper,
-        private val action: (Int) -> Unit
+    private val viewWrapper: CategoryListViewWrapper,
+    private val action: (Int) -> Unit
 ) : RecyclerView.ViewHolder(viewWrapper.itemView) {
 
     init {
@@ -26,12 +26,12 @@ class CategoryListViewHolder private constructor(
 
     companion object {
         fun create(
-                parent: ViewGroup,
-                action: (Int) -> Unit
+            parent: ViewGroup,
+            action: (Int) -> Unit
         ): CategoryListViewHolder {
             return CategoryListViewHolder(
-                    CategoryListViewWrapper.create(parent),
-                    action
+                CategoryListViewWrapper.create(parent),
+                action
             )
         }
     }

@@ -8,7 +8,7 @@ import ru.vincetti.vimoney.data.sqlite.CategoryDao
 import ru.vincetti.vimoney.ui.settings.category.symbol.Category
 
 class AddCategoryViewModel(
-        private val categoryDao: CategoryDao
+    private val categoryDao: CategoryDao
 ) : ViewModel() {
 
     companion object {
@@ -25,9 +25,9 @@ class AddCategoryViewModel(
     val isDefault = MutableLiveData<Boolean>()
     private var isDefaultBool = true
 
-    private var _need2Navigate = MutableLiveData<Boolean>()
-    val need2Navigate: LiveData<Boolean>
-        get() = _need2Navigate
+    private var _need2NavigateBack = MutableLiveData<Boolean>()
+    val need2NavigateBack: LiveData<Boolean>
+        get() = _need2NavigateBack
 
     private var _categoryName = MutableLiveData<String>()
     val categoryName: LiveData<String>
@@ -37,12 +37,14 @@ class AddCategoryViewModel(
     val categorySymbol: LiveData<String>
         get() = _categorySymbol
 
-    var need2AllData = MutableLiveData<Boolean>()
+    private var _need2AllData = MutableLiveData<Boolean>()
+    val need2AllData: LiveData<Boolean>
+        get() = _need2AllData
 
     init {
         isDefault.value = isDefaultBool
-        need2AllData.value = false
-        _need2Navigate.value = false
+        _need2AllData.value = false
+        _need2NavigateBack.value = false
         _categorySymbol.value = "\uf544"
     }
 
@@ -62,11 +64,10 @@ class AddCategoryViewModel(
         }
     }
 
-    /** Save category logic. */
     fun save(name: String, symbol: String) {
         viewModelScope.launch {
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(symbol)) {
-                need2AllData.value = true
+                _need2AllData.value = true
             } else {
                 val tmpCategory = CategoryModel(name = name, symbol = symbol)
                 if (!isDefaultBool) {
@@ -75,14 +76,26 @@ class AddCategoryViewModel(
                 } else {
                     categoryDao.insertCategory(tmpCategory)
                 }
-                _need2Navigate.value = true
+                _need2NavigateBack.value = true
             }
         }
+    }
+
+    fun need2navigateBack(){
+        _need2NavigateBack.value = true
+    }
+
+    fun navigatedBack(){
+        _need2NavigateBack.value = false
+    }
+
+    fun noDataDialogClosed() {
+        _need2AllData.value = false
     }
 }
 
 class AddCategoryViewModelFactory(
-        private val categoryDao: CategoryDao
+    private val categoryDao: CategoryDao
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AddCategoryViewModel::class.java)) {

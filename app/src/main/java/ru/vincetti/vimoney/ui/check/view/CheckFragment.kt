@@ -9,7 +9,6 @@ import androidx.core.view.marginBottom
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_check.*
 import kotlinx.android.synthetic.main.fragment_check_content.*
@@ -20,6 +19,7 @@ import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
+import ru.vincetti.vimoney.ui.history.filter.Filter
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
 
 class CheckFragment : Fragment(R.layout.fragment_check) {
@@ -38,14 +38,13 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
             val extraCheck = bundle.getInt(EXTRA_CHECK_ID)
             if (extraCheck > 0) checkId = extraCheck
         }
-        viewModelFactory = CheckViewModelFactory(db.transactionDao(), db.accountDao(), checkId)
+        viewModelFactory = CheckViewModelFactory(db, checkId)
         initViews()
+        observersInit()
         insetsInit()
     }
 
     private fun initViews() {
-        loadAccount()
-
         check_navigation_delete_btn.setOnClickListener { showDeleteDialog() }
         check_navigation_from_archive_btn.setOnClickListener { viewModel.restore() }
         check_navigation_update_btn.setOnClickListener { viewModel.update() }
@@ -62,15 +61,14 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
         }
     }
 
-    /** Account data to UI. */
-    private fun loadAccount() {
-        viewModel.model.observe(viewLifecycleOwner, Observer {
+    private fun observersInit() {
+        viewModel.accounts.observe(viewLifecycleOwner) {
             it?.let {
                 fragment_check_content.check_acc_name.text = it.name
                 fragment_check_content.check_acc_type.text = it.type
                 fragment_check_content.check_acc_balance.text = it.sum.toString()
                 fragment_check_content.check_acc_label
-                        .setBackgroundColor(Color.parseColor(it.color))
+                    .setBackgroundColor(Color.parseColor(it.color))
 
                 if (it.isArchive) {
                     fragment_check_content.check_acc_archive.visibility = View.VISIBLE
@@ -81,38 +79,40 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
                     fragment_check_content.check_acc_archive.visibility = View.INVISIBLE
                     check_navigation_from_archive_btn.visibility = View.GONE
                     check_navigation_delete_btn.visibility = View.VISIBLE
-
                 }
                 fragment_check_content.check_acc_symbol.text = it.curSymbol
                 showTransactionsHistory(it.id)
             }
-        })
-        viewModel.updateButtonEnable.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.updateButtonEnable.observe(viewLifecycleOwner) {
             check_navigation_update_btn.isEnabled = it
-        })
+        }
     }
 
-    /** Show transaction for this account. */
     private fun showTransactionsHistory(checkId: Int) {
         val historyFragment = HistoryFragment()
-        val args = Bundle()
-        args.putInt(HistoryFragment.BUNDLE_TRANS_COUNT_NAME, CheckViewModel.DEFAULT_CHECK_COUNT)
-        args.putInt(HistoryFragment.BUNDLE_TRANS_CHECK_ID_NAME, checkId)
+        val args = Filter().apply {
+            accountID = checkId
+        }.createBundle()
         historyFragment.arguments = args
 
         childFragmentManager
-                .beginTransaction()
-                .replace(R.id.check_history_container, historyFragment)
-                .commit()
+            .beginTransaction()
+            .replace(R.id.check_history_container, historyFragment)
+            .commit()
     }
 
     private fun showDeleteDialog() {
         AlertDialog.Builder(requireContext())
-                .setMessage(R.string.check_delete_alert_question)
-                .setNegativeButton(R.string.check_delete_alert_negative) { dialog, _ -> dialog?.dismiss() }
-                .setPositiveButton(R.string.check_delete_alert_positive) { _, _ -> viewModel.delete() }
-                .create()
-                .show()
+            .setMessage(R.string.check_delete_alert_question)
+            .setNegativeButton(R.string.check_delete_alert_negative) { dialog, _ ->
+                dialog?.dismiss()
+            }
+            .setPositiveButton(R.string.check_delete_alert_positive) { _, _ ->
+                viewModel.delete()
+            }
+            .create()
+            .show()
     }
 
     private fun insetsInit() {
@@ -121,12 +121,10 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
             check_fab.updateMargin(bottom = (insets.systemWindowInsetBottom + fabMargin))
             insets
         }
-
         ViewCompat.setOnApplyWindowInsetsListener(check_toolbar) { _, insets ->
             check_toolbar.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
-
         ViewCompat.setOnApplyWindowInsetsListener(check_history_container_root) { _, insets ->
             check_history_container_root.updatePadding(bottom = insets.systemWindowInsetBottom)
             insets

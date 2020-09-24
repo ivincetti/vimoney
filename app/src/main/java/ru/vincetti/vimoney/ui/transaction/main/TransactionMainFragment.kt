@@ -9,7 +9,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.fragment_transaction_main.*
@@ -31,12 +30,8 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
         super.onViewCreated(view, savedInstanceState)
 
         val application = requireNotNull(activity).application
-        val mDb = AppDatabase.getInstance(application)
-        viewModelFactory = TransactionMainViewModelFactory(
-                mDb.transactionDao(),
-                mDb.accountDao(),
-                mDb.categoryDao()
-        )
+        val db = AppDatabase.getInstance(application)
+        viewModelFactory = TransactionMainViewModelFactory(db)
 
         fragmentBundle = Bundle()
         arguments?.let { bundle ->
@@ -86,11 +81,9 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
         setting_navigation_back_btn.setOnClickListener {
             showUnsavedDialog()
         }
-        viewModel.transaction.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                typeLoad(it.type)
-            }
-        })
+        viewModel.transaction.observe(viewLifecycleOwner) {
+            it?.let { typeLoad(it.type) }
+        }
     }
 
     fun setActivityTitle(position: Int) {
@@ -103,7 +96,6 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
         }
     }
 
-    /** RadioButton option load. */
     private fun typeLoad(type: Int) {
         when (type) {
             TransactionModel.TRANSACTION_TYPE_INCOME -> {
@@ -125,24 +117,30 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
         }
     }
 
-    /** Delete transaction logic. */
     private fun showDeleteDialog() {
         AlertDialog.Builder(requireContext())
-                .setMessage(R.string.transaction_delete_alert_question)
-                .setNegativeButton(R.string.transaction_delete_alert_negative) { dialogInterface, _ -> dialogInterface?.dismiss() }
-                .setPositiveButton(R.string.transaction_delete_alert_positive) { _, _ -> viewModel.delete() }
-                .create()
-                .show()
+            .setMessage(R.string.transaction_delete_alert_question)
+            .setNegativeButton(R.string.transaction_delete_alert_negative) { dialogInterface, _ ->
+                dialogInterface?.dismiss()
+            }
+            .setPositiveButton(R.string.transaction_delete_alert_positive) { _, _ ->
+                viewModel.delete()
+            }
+            .create()
+            .show()
     }
 
-    /** Not saved transaction cancel dialog. */
     private fun showUnsavedDialog() {
         AlertDialog.Builder(requireContext())
-                .setMessage(R.string.transaction_add_alert_question)
-                .setNegativeButton(R.string.transaction_add_alert_negative) { _, _ -> findNavController().navigateUp() }
-                .setPositiveButton(R.string.transaction_add_alert_positive) { dialogInterface, _ -> dialogInterface?.dismiss() }
-                .create()
-                .show()
+            .setMessage(R.string.transaction_add_alert_question)
+            .setNegativeButton(R.string.transaction_add_alert_negative) { _, _ ->
+                findNavController().navigateUp()
+            }
+            .setPositiveButton(R.string.transaction_add_alert_positive) { dialogInterface, _ ->
+                dialogInterface?.dismiss()
+            }
+            .create()
+            .show()
     }
 
     private fun insetsInit() {

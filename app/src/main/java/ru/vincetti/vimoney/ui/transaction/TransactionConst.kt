@@ -1,6 +1,6 @@
 package ru.vincetti.vimoney.ui.transaction
 
-class TransactionConst {
+class TransactionConst private constructor() {
 
     companion object {
         const val EXTRA_TRANS_ID = "Extra_transaction_id"

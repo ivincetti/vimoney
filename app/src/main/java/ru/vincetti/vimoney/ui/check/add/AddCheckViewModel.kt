@@ -12,9 +12,9 @@ import ru.vincetti.vimoney.data.sqlite.CurrentDao
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 
 class AddCheckViewModel(
-        private val accDao: AccountDao,
-        private val curDao: CurrentDao,
-        val app: Application
+    private val accDao: AccountDao,
+    private val curDao: CurrentDao,
+    val app: Application
 ) : AndroidViewModel(app) {
 
     private var checkID = DEFAULT_CHECK_ID
@@ -22,9 +22,9 @@ class AddCheckViewModel(
     val isDefault = MutableLiveData<Boolean>()
     private var isDefaultBool = true
 
-    private var _need2Navigate = MutableLiveData<Boolean>()
-    val need2Navigate: LiveData<Boolean>
-        get() = _need2Navigate
+    private var _need2NavigateBack = MutableLiveData<Boolean>()
+    val need2NavigateBack: LiveData<Boolean>
+        get() = _need2NavigateBack
 
     private var _needAllBalance = MutableLiveData<Boolean>()
     val needAllBalance: LiveData<Boolean>
@@ -49,7 +49,7 @@ class AddCheckViewModel(
     init {
         isDefault.value = true
         need2AllData.value = false
-        _need2Navigate.value = false
+        _need2NavigateBack.value = false
         _needAllBalance.value = true
         _check.value = AccountModel()
         _color.value = Color.parseColor(_check.value!!.color)
@@ -57,23 +57,24 @@ class AddCheckViewModel(
 
     fun loadAccount(id: Int) {
         viewModelScope.launch {
-            val tmp = accDao.loadAccountById(id)
-            checkID = id
-            _color.value = Color.parseColor(tmp.color)
-            _check.value = tmp
-            _currency.value = curDao.loadCurrencyByCode(tmp.currency)
-            _needAllBalance.value = tmp.needAllBalance
-            isDefault.value = false
-            isDefaultBool = false
+            accDao.loadAccountById(id)?.let {
+                checkID = id
+                _color.value = Color.parseColor(it.color)
+                _check.value = it
+                _currency.value = curDao.loadCurrencyByCode(it.currency)
+                _needAllBalance.value = it.needAllBalance
+                isDefault.value = false
+                isDefaultBool = false
+            }
         }
     }
 
-    /** Save account logic. */
     fun save(name: String, type: String) {
-        if (TextUtils.isEmpty(name)
-                || TextUtils.isEmpty(type)
-                || currency.value == null
-                || color.value!! > 0
+        if (
+            TextUtils.isEmpty(name)
+            || TextUtils.isEmpty(type)
+            || currency.value == null
+            || color.value!! > 0
         ) {
             need2AllData.value = true
         } else {
@@ -95,33 +96,43 @@ class AddCheckViewModel(
                         accDao.insertAccount(it)
                     }
                 }
-                _need2Navigate.value = true
+                _need2NavigateBack.value = true
             }
         }
     }
 
-    /** Restore from archive account logic. */
     fun restore() {
         if (!isDefaultBool) {
             viewModelScope.launch {
                 accDao.fromArchiveAccountById(checkID)
-                _need2Navigate.value = true
+                _need2NavigateBack.value = true
             }
         }
     }
 
-    /** Archive account logic. */
     fun delete() {
         if (!isDefaultBool) {
             viewModelScope.launch {
                 accDao.archiveAccountById(checkID)
-                _need2Navigate.value = true
+                _need2NavigateBack.value = true
             }
         }
     }
 
-    fun setNeed2AllData(isChecked: Boolean) {
+    fun setNeedAllBalance(isChecked: Boolean) {
         _needAllBalance.value = isChecked
+    }
+
+    fun noDataDialogClosed() {
+        need2AllData.value = false
+    }
+
+    fun need2NavigateBack(){
+        _need2NavigateBack.value = true
+    }
+
+    fun navigatedBack(){
+        _need2NavigateBack.value = false
     }
 
     fun setCurrency(checkCurrency: Int) {
@@ -139,9 +150,9 @@ class AddCheckViewModel(
 }
 
 class AddCheckModelFactory(
-        private val accDao: AccountDao,
-        private val curDao: CurrentDao,
-        private val app: Application
+    private val accDao: AccountDao,
+    private val curDao: CurrentDao,
+    private val app: Application
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AddCheckViewModel::class.java)) {

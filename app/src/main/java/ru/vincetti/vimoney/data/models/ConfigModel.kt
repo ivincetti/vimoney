@@ -7,11 +7,11 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "config")
 data class ConfigModel(
 
-        @PrimaryKey(autoGenerate = true)
-        var id: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
 
-        @ColumnInfo(name = "key_name")
-        val keyName: String?,
+    @ColumnInfo(name = "key_name")
+    val keyName: String?,
 
-        val value: String?
+    val value: String?
 )

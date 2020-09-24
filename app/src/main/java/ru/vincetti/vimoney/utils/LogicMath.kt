@@ -2,34 +2,30 @@ package ru.vincetti.vimoney.utils
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ru.vincetti.vimoney.data.models.AccountListModel
+import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.data.sqlite.AccountDao
-import ru.vincetti.vimoney.data.sqlite.TransactionDao
+import ru.vincetti.vimoney.data.sqlite.AppDatabase
 
 /** Set correct account (accID) balance. */
 suspend fun accountBalanceUpdateById(
-        transactionDao: TransactionDao,
-        accountDao: AccountDao,
-        accId: Int
+    db: AppDatabase,
+    accId: Int
 ) {
     withContext(Dispatchers.IO) {
-        val sum = transactionDao.loadSumByCheckId(accId)
-        accountDao.updateSumByAccId(accId, sum)
+        val sum = TransactionRepo(db).loadCheckSum(accId)
+        db.accountDao().updateSumByAccId(accId, sum)
     }
 }
 
 /** Set correct all account balance. */
-suspend fun accountBalanceUpdateAll(
-        transactionDao: TransactionDao,
-        accountDao: AccountDao
-) {
+suspend fun accountBalanceUpdateAll(db: AppDatabase) {
     withContext(Dispatchers.IO) {
-        val accounts = accountDao.loadAllAccounts()
-        accounts?.let {
-            for (account in it) {
-                val sum = transactionDao.loadSumByCheckId(account.id)
-                accountDao.updateSumByAccId(account.id, sum)
-            }
+        val accDao = db.accountDao()
+        val accounts = accDao.loadAllAccounts()
+        val transRepo = TransactionRepo(db)
+        accounts?.forEach {
+            val sum = transRepo.loadCheckSum(it.id)
+            accDao.updateSumByAccId(it.id, sum)
         }
     }
 }

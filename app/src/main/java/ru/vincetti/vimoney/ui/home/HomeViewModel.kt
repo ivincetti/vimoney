@@ -5,22 +5,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.vincetti.vimoney.data.models.AccountListModel
+import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.data.sqlite.AccountDao
-import ru.vincetti.vimoney.data.sqlite.TransactionDao
+import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.utils.accountBalanceUpdateAll
 import ru.vincetti.vimoney.utils.userBalanceUpdate
-import java.text.SimpleDateFormat
-import java.util.*
 
-class HomeViewModel(
-        private val accDao: AccountDao,
-        private val trDao: TransactionDao
-) : ViewModel() {
+class HomeViewModel(private val db: AppDatabase) : ViewModel() {
+
+    private val accDao: AccountDao = db.accountDao()
+    private val transRepo: TransactionRepo = TransactionRepo(db)
 
     val expenseSum = MutableLiveData<Int>()
     val incomeSum = MutableLiveData<Int>()
-    var date: String = SimpleDateFormat("MM").format(Date())
-    var year: String = SimpleDateFormat("yyyy").format(Date())
 
     private var _homeButtonEnabled = MutableLiveData<Boolean>()
     val homeButtonEnabled: LiveData<Boolean>
@@ -38,8 +35,10 @@ class HomeViewModel(
         _homeButtonEnabled.value = true
         _userBalance.value = 0
         viewModelScope.launch {
-            incomeSum.value = trDao.loadSumTransactionIncomeMonth(date, year)
-            expenseSum.value = trDao.loadSumTransactionExpenseMonth(date, year)
+            val incomeExpense = transRepo.loadIncomeExpenseActual()
+            incomeSum.value = incomeExpense.first
+            expenseSum.value = incomeExpense.second
+
             getNotArchiveAccountsFull()
             updateBalance()
         }
@@ -48,7 +47,7 @@ class HomeViewModel(
     fun updateAllAccounts() {
         _homeButtonEnabled.value = false
         viewModelScope.launch {
-            accountBalanceUpdateAll(trDao, accDao)
+            accountBalanceUpdateAll(db)
             _userBalance.value = userBalanceUpdate(accDao)
             _homeButtonEnabled.value = true
         }
@@ -69,12 +68,11 @@ class HomeViewModel(
 }
 
 class HomeViewModelFactory(
-        private val accDao: AccountDao,
-        private val trDao: TransactionDao
+    private val db: AppDatabase
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-            return HomeViewModel(accDao, trDao) as T
+            return HomeViewModel(db) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

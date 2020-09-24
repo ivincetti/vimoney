@@ -12,16 +12,32 @@ class CategoriesViewModel(categoriesDao: CategoryDao) : ViewModel() {
     val need2Navigate2Home: LiveData<Boolean>
         get() = _need2Navigate2Home
 
+    private var _need2Navigate2AddCategory = MutableLiveData<Boolean>()
+    val need2Navigate2AddCategory: LiveData<Boolean>
+        get() = _need2Navigate2AddCategory
+
     val categories = categoriesDao.loadAllCategories()
 
     init {
         _need2Navigate2Home.value = false
+        _need2Navigate2AddCategory.value = false
     }
 
     fun backButtonClicked() {
         _need2Navigate2Home.value = true
     }
 
+    fun navigated2Home() {
+        _need2Navigate2Home.value = false
+    }
+
+    fun addCategoryClicked() {
+        _need2Navigate2AddCategory.value = true
+    }
+
+    fun navigated2AddCategory() {
+        _need2Navigate2AddCategory.value = false
+    }
 }
 
 class CategoriesModelFactory(private val dao: CategoryDao) : ViewModelProvider.Factory {

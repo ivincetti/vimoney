@@ -4,18 +4,18 @@ import com.google.gson.annotations.SerializedName
 
 data class TransactionsItem(
 
-        @SerializedName("date")
-        val date: Long,
+    @SerializedName("date")
+    val date: Long,
 
-        @SerializedName("accountId")
-        val accountId: Int,
+    @SerializedName("accountId")
+    val accountId: Int,
 
-        @SerializedName("description")
-        val description: String,
+    @SerializedName("description")
+    val description: String,
 
-        @SerializedName("sum")
-        val sum: Int,
+    @SerializedName("sum")
+    val sum: Int,
 
-        @SerializedName("type")
-        val type: Int
+    @SerializedName("type")
+    val type: Int
 )

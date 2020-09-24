@@ -39,8 +39,16 @@ class SettingsViewModel : ViewModel() {
         _need2Navigate2Home.value = true
     }
 
+    fun navigated2Home() {
+        _need2Navigate2Home.value = false
+    }
+
     fun categoriesButtonClicked() {
         _need2Navigate2Categories.value = true
+    }
+
+    fun navigated2Categories() {
+        _need2Navigate2Categories.value = false
     }
 
     fun saveJson() {

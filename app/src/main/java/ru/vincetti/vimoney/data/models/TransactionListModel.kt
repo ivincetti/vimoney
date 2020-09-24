@@ -4,30 +4,30 @@ import androidx.room.ColumnInfo
 import java.util.*
 
 data class TransactionListModel(
-        val id: Int = 0,
+    val id: Int = 0,
 
-        @ColumnInfo(name = "account_name")
-        val accountName: String,
+    @ColumnInfo(name = "account_name")
+    val accountName: String,
 
-        val description: String,
+    val description: String,
 
-        @ColumnInfo(name = "category_icon")
-        val symbol: String,
+    @ColumnInfo(name = "category_icon")
+    val symbol: String,
 
-        val date: Date,
+    val date: Date,
 
-        val type: Int,
+    val type: Int,
 
-        val sum: Float,
+    val sum: Float,
 
-        @ColumnInfo(name = "account_symbol")
-        val curSymbol: String,
+    @ColumnInfo(name = "account_symbol")
+    val curSymbol: String,
 
-        @ColumnInfo(name = "extra_key")
-        val extraKey: String,
+    @ColumnInfo(name = "extra_key")
+    val extraKey: String,
 
-        @ColumnInfo(name = "extra_value")
-        val extraValue: String
+    @ColumnInfo(name = "extra_value")
+    val extraValue: String
 ) {
 
     fun getTypeString(): String {

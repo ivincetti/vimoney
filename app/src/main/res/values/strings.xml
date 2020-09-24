@@ -13,7 +13,6 @@
     <string name="home_title_acc_balance">10000</string>
     <string name="home_stat_income_icon">home_stat_income_icon</string>
     <string name="home_stat_spending_icon">home_stat_spending_icon</string>
-    <string name="home_fragment_stat_title">Statistics</string>
     <string name="home_accounts_title">Accounts</string>
     <string name="home_fragment_stat_month_sample">September</string>
     <string name="home_fragment_income_title">Income</string>
@@ -61,6 +60,7 @@
     <string name="transaction_import_sample_desc">sample</string>
     <string name="add_desc_sample">comment</string>
     <string name="add_sum_sample">0.0</string>
+    <string name="add_sum_filter_sample">sum from</string>
     <string name="add_date_sample_txt">12/11/2018</string>
 
     <!--Settings Activity-->
@@ -101,6 +101,7 @@
     <string name="channel_name" translatable="false">reminder</string>
     <string name="channel_description">Don\'t forget to record you expenses</string>
     <string name="back_icon_description">Back</string>
+    <string name="filter_icon_description">Filter</string>
     <string name="settings_categories_btn">Manage Categories</string>
     <string name="settings_save_transactions_btn">Save records</string>
     <string name="settings_load_transactions_btn">Load records</string>
@@ -123,5 +124,6 @@
     <string name="categories_title_home">Categories</string>
     <string name="category_add_title">Add category</string>
     <string name="category_name">Category</string>
+    <string name="categories_symbols_list_tip_string">You can manage categories in settings</string>
 
 </resources>

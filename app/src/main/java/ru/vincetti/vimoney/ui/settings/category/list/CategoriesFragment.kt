@@ -5,9 +5,9 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.marginBottom
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import kotlinx.android.synthetic.main.fragment_categories_list.*
@@ -22,6 +22,7 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
     val viewModel: CategoriesViewModel by viewModels { viewModelFactory }
 
     private lateinit var viewModelFactory: CategoriesModelFactory
+    private lateinit var recyclerAdapter: AllCategoriesListRVAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,41 +31,55 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
         val db = AppDatabase.getInstance(application)
         viewModelFactory = CategoriesModelFactory(db.categoryDao())
 
+        viewsInit()
+        observersInit()
+        recyclerInit()
         insetsInit()
+    }
 
-        viewModel.need2Navigate2Home.observe(viewLifecycleOwner, Observer {
-            if (it) findNavController().navigate(R.id.action_categoriesFragment_to_settingsFragment)
-        })
-
+    private fun viewsInit() {
         categories_navigation_back_btn.setOnClickListener { viewModel.backButtonClicked() }
-        categories_list_fab.setOnClickListener {
-            findNavController().navigate(R.id.action_categoriesFragment_to_addCategoryFragment)
-        }
+        categories_list_fab.setOnClickListener { viewModel.addCategoryClicked() }
+    }
 
-        val adapter = AllCategoriesListRVAdapter {
+    private fun observersInit() {
+        viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigateUp()
+                viewModel.navigated2Home()
+            }
+        }
+        viewModel.need2Navigate2AddCategory.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigate(R.id.action_categoriesFragment_to_addCategoryFragment)
+                viewModel.navigated2AddCategory()
+            }
+        }
+        viewModel.categories.observe(viewLifecycleOwner) {
+            it?.let { recyclerAdapter.setList(it) }
+        }
+    }
+
+    private fun recyclerInit() {
+        recyclerAdapter = AllCategoriesListRVAdapter {
             val bundle = Bundle()
             bundle.putInt(EXTRA_CATEGORY_ID, it)
             findNavController().navigate(R.id.action_categoriesFragment_to_addCategoryFragment, bundle)
         }
         val lineDivider = DividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
+            requireContext(),
+            DividerItemDecoration.VERTICAL
         )
         lineDivider.setDrawable(
-                ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.light_divider
-                )!!
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.light_divider
+            )!!
         )
         categories_list_recycle_view.apply {
             addItemDecoration(lineDivider)
-            setAdapter(adapter)
+            adapter = recyclerAdapter
         }
-        viewModel.categories.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                adapter.setList(it)
-            }
-        })
     }
 
     private fun insetsInit() {
@@ -77,6 +92,9 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
             view.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
+        ViewCompat.setOnApplyWindowInsetsListener(categories_list_recycle_view) { view, insets ->
+            view.updatePadding(bottom = insets.systemWindowInsetBottom)
+            insets
+        }
     }
-
 }

@@ -2,13 +2,16 @@ package ru.vincetti.vimoney.ui.dashboard
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
-import ru.vincetti.vimoney.data.sqlite.TransactionDao
-import java.text.SimpleDateFormat
+import ru.vincetti.vimoney.data.repository.TransactionRepo
+import ru.vincetti.vimoney.data.sqlite.AppDatabase
+import ru.vincetti.vimoney.utils.DatesFormat
+import java.time.LocalDate
 import java.util.*
 
-class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
+class DashboardViewModel(db: AppDatabase) : ViewModel() {
 
-    private val cal: Calendar = Calendar.getInstance()
+    private val transRepo = TransactionRepo(db)
+    private var localDate = LocalDate.now()
 
     val income = MutableLiveData<Int>()
     val expense = MutableLiveData<Int>()
@@ -34,7 +37,6 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
         get() = _need2Navigate2Home
 
     init {
-        cal.time = Date()
         income.value = 0
         expense.value = 0
         _isShowProgress.value = true
@@ -43,32 +45,24 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
     }
 
     private fun getGraphData() {
-        _monthString.value = SimpleDateFormat("MMM").format(cal.time)
-        _yearString.value = SimpleDateFormat("yyyy").format(cal.time)
+        _monthString.value = DatesFormat.getMonthName(localDate)
+        _yearString.value = DatesFormat.getYear0000(localDate)
         getAmountData()
         getGraphStat()
     }
 
     private fun getAmountData() {
         viewModelScope.launch {
-            income.value = dao.loadSumTransactionIncomeMonth(
-                    SimpleDateFormat("MM").format(cal.time),
-                    SimpleDateFormat("yyyy").format(cal.time)
-            )
-            expense.value = dao.loadSumTransactionExpenseMonth(
-                    SimpleDateFormat("MM").format(cal.time),
-                    SimpleDateFormat("yyyy").format(cal.time)
-            )
+            val incomeExpense = transRepo.loadIncomeExpenseMonth(localDate)
+            income.value = incomeExpense.first
+            expense.value = incomeExpense.second
         }
     }
 
-    /** Получение статистики. */
     private fun getGraphStat() {
         viewModelScope.launch {
-            val stat = dao.loadTransactionStatByMonth(
-                    SimpleDateFormat("MM").format(cal.time),
-                    SimpleDateFormat("yyyy").format(cal.time)
-            )
+            val stat = transRepo.loadTransactionStatMonth(localDate)
+
             var sum = 0f
             val entries = LinkedHashMap<String, Float>()
             entries["0"] = sum
@@ -82,34 +76,38 @@ class DashboardViewModel(private val dao: TransactionDao) : ViewModel() {
     }
 
     fun setMonthPrev() {
-        cal.add(Calendar.MONTH, -1)
+        localDate = localDate.minusMonths(1)
         getGraphData()
     }
 
     fun setMonthNext() {
-        cal.add(Calendar.MONTH, 1)
+        localDate = localDate.plusMonths(1)
         getGraphData()
     }
 
     fun setYearPrev() {
-        cal.add(Calendar.YEAR, -1)
+        localDate = localDate.minusYears(1)
         getGraphData()
     }
 
     fun setYearNext() {
-        cal.add(Calendar.YEAR, 1)
+        localDate = localDate.plusYears(1)
         getGraphData()
     }
 
-    fun homeButton() {
+    fun backButtonClicked() {
         _need2Navigate2Home.value = true
+    }
+
+    fun navigatedBack(){
+        _need2Navigate2Home.value = false
     }
 }
 
-class DashboardViewModelFactory(private val dao: TransactionDao) : ViewModelProvider.Factory {
+class DashboardViewModelFactory(private val db: AppDatabase) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DashboardViewModel::class.java)) {
-            return DashboardViewModel(dao) as T
+            return DashboardViewModel(db) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -41,7 +41,6 @@
 
     </LinearLayout>
 
-    <!--блок календаря-->
     <LinearLayout
         android:id="@+id/add_date_block"
         android:layout_width="match_parent"

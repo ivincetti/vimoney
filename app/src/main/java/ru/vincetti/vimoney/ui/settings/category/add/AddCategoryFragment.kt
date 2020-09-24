@@ -9,7 +9,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_add_category.*
 import kotlinx.android.synthetic.main.fragment_add_category_content.*
@@ -37,27 +36,12 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
             if (extraCategory > 0) viewModel.loadCategory(extraCategory)
         }
 
+        viewsInit()
+        observersInit()
         insetsInit()
-        viewInit()
     }
 
-    private fun viewInit() {
-        viewModel.isDefault.observe(viewLifecycleOwner, Observer {
-            if (!it) add_category_save_btn.text = getString(R.string.add_btn_update)
-        })
-        viewModel.need2Navigate.observe(viewLifecycleOwner, Observer {
-            if (it) goBack()
-        })
-        viewModel.need2AllData.observe(viewLifecycleOwner, Observer {
-            if (it) showNoDataDialog()
-        })
-        viewModel.categoryName.observe(viewLifecycleOwner, Observer {
-            add_category_name.setText(it)
-        })
-        viewModel.categorySymbol.observe(viewLifecycleOwner, Observer {
-            add_category_symbol.text = it
-        })
-
+    private fun viewsInit() {
         category_add_navigation_add_btn.setOnClickListener { save() }
         category_add_navigation_back_btn.setOnClickListener { showUnsavedDialog() }
         add_category_save_btn.setOnClickListener { save() }
@@ -65,6 +49,27 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
             val dialogFrag = CategorySymbolListDialog()
             dialogFrag.setTargetFragment(this, 1)
             dialogFrag.show(parentFragmentManager, "Icons")
+        }
+    }
+
+    private fun observersInit() {
+        viewModel.isDefault.observe(viewLifecycleOwner) {
+            if (!it) add_category_save_btn.text = getString(R.string.add_btn_update)
+        }
+        viewModel.need2NavigateBack.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigateUp()
+                viewModel.navigatedBack()
+            }
+        }
+        viewModel.need2AllData.observe(viewLifecycleOwner) {
+            if (it) showNoDataDialog()
+        }
+        viewModel.categoryName.observe(viewLifecycleOwner) {
+            add_category_name.setText(it)
+        }
+        viewModel.categorySymbol.observe(viewLifecycleOwner) {
+            add_category_symbol.text = it
         }
     }
 
@@ -80,24 +85,26 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
         if (requestCode == 1) setCategorySymbol(resultCode)
     }
 
-    /** Not saved category cancel dialog. */
     private fun showUnsavedDialog() {
         AlertDialog.Builder(requireContext())
-                .setMessage(R.string.check_add_alert_question)
-                .setNegativeButton(R.string.check_add_alert_negative) { _, _ -> goBack() }
-                .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ -> dialogInterface?.dismiss() }
-                .create()
-                .show()
+            .setMessage(R.string.check_add_alert_question)
+            .setNegativeButton(R.string.check_add_alert_negative) { _, _ ->
+                viewModel.need2navigateBack()
+            }
+            .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
+                dialogInterface?.dismiss()
+            }
+            .create()
+            .show()
     }
 
-    /** Not saved transaction cancel dialog. */
     private fun showNoDataDialog() {
         Toast.makeText(
-                requireContext(),
-                R.string.check_add_alert_no_data,
-                Toast.LENGTH_SHORT
+            requireContext(),
+            R.string.check_add_alert_no_data,
+            Toast.LENGTH_SHORT
         ).show()
-        viewModel.need2AllData.value = false
+        viewModel.noDataDialogClosed()
     }
 
     private fun setCategorySymbol(position: Int) {
@@ -106,13 +113,9 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
 
     private fun save() {
         viewModel.save(
-                add_category_name.text.toString(),
-                add_category_symbol.text.toString()
+            add_category_name.text.toString(),
+            add_category_symbol.text.toString()
         )
-    }
-
-    private fun goBack() {
-        findNavController().navigateUp()
     }
 
     private fun insetsInit() {

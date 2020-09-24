@@ -1,7 +1,7 @@
 package ru.vincetti.vimoney.ui.splash
 
 import android.app.Application
-import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,13 +13,14 @@ import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.JsonDownloader
 import ru.vincetti.vimoney.data.models.*
 import ru.vincetti.vimoney.data.models.json.*
+import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.utils.accountBalanceUpdateById
 import ru.vincetti.vimoney.utils.isNetworkAvailable
 import java.util.*
 
 class SplashViewModel(
-        val app: Application
+    val app: Application
 ) : AndroidViewModel(app) {
 
     private var _networkError = MutableLiveData<Boolean>()
@@ -36,10 +37,10 @@ class SplashViewModel(
 
     private val jsonDownloader by lazy {
         Retrofit.Builder()
-                .baseUrl("https://vincetti.ru/vimoney/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(JsonDownloader::class.java)
+            .baseUrl("https://vincetti.ru/vimoney/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(JsonDownloader::class.java)
     }
 
     private var mDb: AppDatabase = AppDatabase.getInstance(app)
@@ -51,13 +52,14 @@ class SplashViewModel(
         checkDb()
     }
 
-    /** Check not empty DB. */
     private fun checkDb() {
         viewModelScope.launch {
             val config = mDb.configDao().loadConfigByKey(AppDatabase.CONFIG_KEY_NAME_DATE_EDIT)
             if (config == null) {
-                if (!_networkError.value!!) {
+                if (isNetworkAvailable(app.applicationContext)) {
                     loadJsonFromServer()
+                } else {
+                    _networkError.value = false
                 }
             } else {
                 _need2Navigate2Home.value = true
@@ -65,15 +67,13 @@ class SplashViewModel(
         }
     }
 
-    /** No network. */
-    fun setNetwork(context: Context) {
-        if (!isNetworkAvailable(context)) _networkError.value = true
-    }
-
-    /** Reload fragment from scratch. */
     fun resetNetworkStatus() {
         _networkError.value = false
         _need2Navigate2Self.value = true
+    }
+
+    fun navigated2Home(){
+        _need2Navigate2Home.value = false
     }
 
     private fun loadJsonFromServer() {
@@ -83,13 +83,14 @@ class SplashViewModel(
                 configDbUpdate(configModel)
                 _need2Navigate2Home.value = true
             } catch (e: Exception) {
+                Log.d("TAG", " load from json error ${e.message}")
                 _networkError.value = true
             }
         }
     }
 
     private suspend fun configDbUpdate(response: ConfigFile) {
-        configDbDateInsert(response.date_edit)
+        configDbDateInsert(response.dateEdit)
         transactionsImport(response.transactions)
         currencyImport(response.currency)
         accountsUpdate(response.accounts)
@@ -98,56 +99,60 @@ class SplashViewModel(
 
     private suspend fun configDbDateInsert(timeMillisLong: Long) {
         val newConfig = ConfigModel(
-                keyName = AppDatabase.CONFIG_KEY_NAME_DATE_EDIT,
-                value = timeMillisLong.toString()
+            keyName = AppDatabase.CONFIG_KEY_NAME_DATE_EDIT,
+            value = timeMillisLong.toString()
         )
         mDb.configDao().insertConfig(newConfig)
     }
 
     private suspend fun transactionsImport(transactionItems: List<TransactionsItem>) {
-        for (tr in transactionItems) {
-            mDb.transactionDao().insertTransaction(
-                    TransactionModel(
-                            Date(tr.date),
-                            tr.accountId,
-                            app.getString(R.string.transaction_import_sample_desc),
-                            tr.type,
-                            tr.sum.toFloat()
-                    )
+        val transactions = mutableListOf<TransactionModel>()
+        transactionItems.map {
+            transactions.add(
+                TransactionModel(
+                    Date(it.date),
+                    it.accountId,
+                    app.getString(R.string.transaction_import_sample_desc),
+                    it.type,
+                    it.sum.toFloat()
+                )
             )
         }
+
+        TransactionRepo(mDb).addTransaction(transactions)
     }
 
     private suspend fun currencyImport(currencyItems: List<CurrencyItem>) {
         for (cur in currencyItems) {
             mDb.currentDao().insertCurrency(
-                    CurrencyModel(cur.code, cur.name, cur.symbol))
+                CurrencyModel(cur.code, cur.name, cur.symbol)
+            )
         }
     }
 
     private suspend fun accountsUpdate(accountsItems: List<AccountsItem>) {
         for (acc in accountsItems) {
             accountUpdate(
-                    acc.id,
-                    acc.type,
-                    acc.title,
-                    acc.instrument,
-                    acc.balance)
+                acc.id,
+                acc.type,
+                acc.title,
+                acc.balance
+            )
         }
     }
 
-    private suspend fun accountUpdate(accId: Int, type: String, title: String, ins: Int, balance: Int) {
+    private suspend fun accountUpdate(accId: Int, type: String, title: String, balance: Int) {
         val newAcc = AccountModel(accId, title, type, balance, 810)
         mDb.accountDao().insertAccount(newAcc)
-        accountBalanceUpdateById(mDb.transactionDao(), mDb.accountDao(), accId)
+        accountBalanceUpdateById(mDb, accId)
     }
 
     private suspend fun categoriesUpdate(categoriesItems: List<CategoriesItem>) {
         for (cat in categoriesItems) {
             categoryUpdate(
-                    cat.categoryId,
-                    cat.name,
-                    cat.symbol
+                cat.categoryId,
+                cat.name,
+                cat.symbol
             )
         }
     }
@@ -156,5 +161,4 @@ class SplashViewModel(
         val newCat = CategoryModel(catId, name, symbol)
         mDb.categoryDao().insertCategory(newCat)
     }
-
 }

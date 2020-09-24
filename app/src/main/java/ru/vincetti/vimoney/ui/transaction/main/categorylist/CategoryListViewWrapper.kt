@@ -25,11 +25,11 @@ class CategoryListViewWrapper private constructor(val itemView: View) {
     companion object {
         fun create(parent: ViewGroup): CategoryListViewWrapper {
             return CategoryListViewWrapper(
-                    LayoutInflater.from(parent.context).inflate(
-                            R.layout.item_category,
-                            parent,
-                            false
-                    )
+                LayoutInflater.from(parent.context).inflate(
+                    R.layout.item_category,
+                    parent,
+                    false
+                )
             )
         }
     }
