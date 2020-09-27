@@ -28,7 +28,9 @@ class TransactionRepo(db: AppDatabase) {
         transactionDao.updateTransaction(transactionModel)
     }
 
-    suspend fun deleteTransaction(id: Int) = transactionDao.deleteTransactionById(id)
+    suspend fun deleteTransaction(id: Int) {
+        transactionDao.deleteTransactionById(id)
+    }
 
     suspend fun loadIncomeExpenseMonth(localDate: LocalDate): Pair<Int, Int> {
         val month: String = DatesFormat.getMonth00(localDate)
@@ -75,9 +77,7 @@ class TransactionRepo(db: AppDatabase) {
         }
     }
 
-    suspend fun loadAllTransactions() {
-        transactionDao.loadAllTransactionsFull()
-    }
+    suspend fun loadAllTransactions() = transactionDao.loadAllTransactions()
 
     suspend fun deleteAllTransactions() {
         transactionDao.deleteAllTransactions()

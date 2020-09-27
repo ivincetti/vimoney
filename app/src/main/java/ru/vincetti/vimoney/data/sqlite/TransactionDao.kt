@@ -11,17 +11,9 @@ import java.util.*
 interface TransactionDao {
 
     @Query("""
-            SELECT tr.id, acc.name AS account_name, cur.symbol AS account_symbol,
-            tr.sum, tr.type, tr.date, tr.description, cat.symbol as category_icon, 
-            tr.extra_key, tr.extra_value
-            FROM transactions as tr
-            JOIN accounts acc ON acc.id = tr.account_id
-            JOIN category cat ON cat.id = tr.category_id
-            JOIN currency cur ON cur.code = acc.currency
-            WHERE tr.system == 0
-            ORDER BY tr.date DESC
+            SELECT * FROM transactions ORDER BY id ASC
             """)
-    suspend fun loadAllTransactionsFull(): List<TransactionListModel>
+    suspend fun loadAllTransactions(): List<TransactionModel>
 
     @Query("""
             SELECT tr.id, acc.name AS account_name, cur.symbol AS account_symbol,
