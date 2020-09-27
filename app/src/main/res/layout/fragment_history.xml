@@ -64,21 +64,13 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/history_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/history_top_toolbar"
-        >
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/history_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-
-    </androidx.core.widget.NestedScrollView>
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/all_history_fab"
