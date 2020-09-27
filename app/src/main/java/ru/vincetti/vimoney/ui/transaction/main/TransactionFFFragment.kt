@@ -119,7 +119,10 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
             it?.let { loadAccounts(it) }
         }
         viewModel.needToNavigate.observe(viewLifecycleOwner) {
-            if (it) navigateUp()
+            if (it) {
+                findNavController().navigateUp()
+                viewModel.navigatedBack()
+            }
         }
         add_date_block.setOnClickListener { showDateDialog() }
     }
@@ -163,10 +166,6 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
 
     fun showCategoryDialog() {
         dialogFrag.show(parentFragmentManager, "Categories")
-    }
-
-    private fun navigateUp() {
-        findNavController().navigateUp()
     }
 
     private fun setCategoryID(categoryID: Int) {
