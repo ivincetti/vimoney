@@ -1,9 +1,10 @@
 package ru.vincetti.vimoney.ui.history
 
-import androidx.lifecycle.*
-import androidx.paging.PagedList
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.switchMap
 import androidx.paging.toLiveData
-import ru.vincetti.vimoney.data.models.TransactionListModel
 import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.ui.history.filter.Filter
@@ -15,14 +16,11 @@ class HistoryViewModel(
 
     private val repo: TransactionRepo = TransactionRepo(db)
 
-    private var filter = MutableLiveData<Filter>()
-        .apply { value = initFilter }
+    private var filter = MutableLiveData(initFilter)
 
-    private var _transList = filter.switchMap {
-        repo.loadFilterTransactions(it).toLiveData(pageSize = HistoryFragment.DEFAULT_CHECK_COUNT)
+    val transList = filter.switchMap {
+        repo.loadFilterTransactions(it).toLiveData(pageSize = 20)
     }
-    val transList: LiveData<PagedList<TransactionListModel>>
-        get() = _transList
 
     fun filter(newFilter: Filter) {
         filter.value = newFilter
