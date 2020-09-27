@@ -258,6 +258,10 @@ class TransactionMainViewModel(
         }
     }
 
+    fun navigatedBack(){
+        _needToNavigate.value = false
+    }
+
     private fun updateBalance(vararg trans: TransactionModel) {
         viewModelScope.launch {
             for (transaction in trans) {
