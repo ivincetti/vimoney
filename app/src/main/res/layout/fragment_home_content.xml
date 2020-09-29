@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:background="@color/colorBackgroundDark"
+    android:background="@color/colorBackgroundDark"
     >
 
     <!--Заголовок Счетов-->
