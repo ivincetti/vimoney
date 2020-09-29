@@ -20,6 +20,10 @@ class CheckViewModel(
         it.isArchive
     }
 
+    val isNeedOnMain: LiveData<Boolean> = account.map {
+        it.needOnMain
+    }
+
     private var _updateButtonEnable = MutableLiveData<Boolean>()
     val updateButtonEnable: LiveData<Boolean>
         get() = _updateButtonEnable

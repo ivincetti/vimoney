@@ -85,6 +85,9 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
                 check_navigation_delete_btn.visibility = View.VISIBLE
             }
         }
+        viewModel.isNeedOnMain.observe(viewLifecycleOwner) {
+            if (!it) fragment_check_content.check_acc_visible.visibility = View.VISIBLE
+        }
         viewModel.updateButtonEnable.observe(viewLifecycleOwner) {
             check_navigation_update_btn.isEnabled = it
         }

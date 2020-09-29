@@ -92,19 +92,13 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.core.widget.NestedScrollView
+    <include
+        android:id="@+id/add_check_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/check_add_toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
-
-        <include
-            android:id="@+id/add_check_content"
-            layout="@layout/fragment_add_check_content"
-            />
-
-    </androidx.core.widget.NestedScrollView>
+        layout="@layout/fragment_add_check_content"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

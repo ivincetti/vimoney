@@ -30,6 +30,10 @@ class AddCheckViewModel(
     val needAllBalance: LiveData<Boolean>
         get() = _needAllBalance
 
+    private var _needOnMain = MutableLiveData<Boolean>()
+    val needOnMain: LiveData<Boolean>
+        get() = _needOnMain
+
     var need2AllData = MutableLiveData<Boolean>()
 
     private var _currency = MutableLiveData<CurrencyModel>()
@@ -49,6 +53,7 @@ class AddCheckViewModel(
     init {
         isDefault.value = true
         need2AllData.value = false
+        _needOnMain.value = true
         _need2NavigateBack.value = false
         _needAllBalance.value = true
         _check.value = AccountModel()
@@ -63,6 +68,7 @@ class AddCheckViewModel(
                 _check.value = it
                 _currency.value = curDao.loadCurrencyByCode(it.currency)
                 _needAllBalance.value = it.needAllBalance
+                _needOnMain.value = it.needOnMain
                 isDefault.value = false
                 isDefaultBool = false
             }
@@ -83,6 +89,7 @@ class AddCheckViewModel(
                 it.name = name
                 it.type = type
                 it.needAllBalance = _needAllBalance.value!!
+                it.needOnMain = _needOnMain.value!!
                 if (!isDefaultBool) {
                     // update logic
                     viewModelScope.launch {
@@ -121,6 +128,10 @@ class AddCheckViewModel(
 
     fun setNeedAllBalance(isChecked: Boolean) {
         _needAllBalance.value = isChecked
+    }
+
+    fun setNeedOnMain(isChecked: Boolean) {
+        _needOnMain.value = isChecked
     }
 
     fun noDataDialogClosed() {

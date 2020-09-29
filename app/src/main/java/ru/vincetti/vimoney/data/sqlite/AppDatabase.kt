@@ -18,7 +18,7 @@ import ru.vincetti.vimoney.data.models.*
         CurrencyModel::class,
         CategoryModel::class
     ],
-    version = 12,
+    version = 13,
     exportSchema = false
 )
 @TypeConverters(DateConverter::class)
@@ -58,7 +58,8 @@ abstract class AppDatabase : RoomDatabase() {
                         MIGRATION_8_9,
                         MIGRATION_9_10,
                         MIGRATION_10_11,
-                        MIGRATION_11_12
+                        MIGRATION_11_12,
+                        MIGRATION_12_13
                     ).build()
                 INSTANCE = instance
                 return instance
@@ -172,6 +173,13 @@ abstract class AppDatabase : RoomDatabase() {
         private val MIGRATION_11_12 = object : Migration(11, 12) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("UPDATE transactions SET category_id = 1 WHERE category_id = 0")
+            }
+        }
+
+        // new need on main screen feature
+        private val MIGRATION_12_13 = object : Migration(12, 13) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE accounts ADD COLUMN need_on_main_screen INTEGER DEFAULT 1 NOT NULL")
             }
         }
     }

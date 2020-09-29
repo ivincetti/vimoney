@@ -75,6 +75,7 @@
     <string name="add_check_no_account_warning">Please, choose account</string>
     <string name="add_check_no_sum_warning">Please, set the amount</string>
     <string name="add_check_all_balance_need">balance include</string>
+    <string name="add_check_show_main_need">show on main</string>
     <string name="check_delete_alert_question">Are you sure want to delete?</string>
     <string name="check_delete_alert_negative">Keep</string>
     <string name="check_delete_alert_positive">Delete</string>

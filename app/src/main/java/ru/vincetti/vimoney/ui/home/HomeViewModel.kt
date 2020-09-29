@@ -55,7 +55,7 @@ class HomeViewModel(private val db: AppDatabase) : ViewModel() {
 
     private suspend fun getNotArchiveAccountsFull() {
         withContext(Dispatchers.IO) {
-            _accounts.postValue(accDao.loadNotArchiveAccountsFull())
+            _accounts.postValue(accDao.loadMainAccountsFull())
         }
     }
 
