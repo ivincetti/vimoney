@@ -21,6 +21,7 @@ import ru.vincetti.vimoney.ui.history.HistoryFragment
 import ru.vincetti.vimoney.ui.history.filter.Filter
 import ru.vincetti.vimoney.utils.DatesFormat
 import java.time.LocalDate
+import java.util.*
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -51,7 +52,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun viewInit() {
-        fragment_home_content.home_month.text = DatesFormat.getMonthName(LocalDate.now())
+        fragment_home_content.home_month.text = DatesFormat
+            .getMonthName(LocalDate.now())
+            .capitalize(Locale.getDefault())
 
         home_fab.setOnClickListener {
             findNavController().navigate(R.id.action_global_transactionMainFragment)

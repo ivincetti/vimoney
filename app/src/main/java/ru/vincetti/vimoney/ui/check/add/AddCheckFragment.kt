@@ -64,6 +64,10 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
         add_check_all_balance_switch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setNeedAllBalance(isChecked)
         }
+
+        add_check_show_main_switch.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.setNeedOnMain(isChecked)
+        }
     }
 
     private fun observersInit() {
@@ -72,6 +76,9 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
         }
         viewModel.needAllBalance.observe(viewLifecycleOwner) {
             add_check_all_balance_switch.isChecked = it
+        }
+        viewModel.needOnMain.observe(viewLifecycleOwner) {
+            add_check_show_main_switch.isChecked = it
         }
         viewModel.need2NavigateBack.observe(viewLifecycleOwner) {
             if (it) {

@@ -62,27 +62,31 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
     }
 
     private fun observersInit() {
-        viewModel.accounts.observe(viewLifecycleOwner) {
+        viewModel.account.observe(viewLifecycleOwner) {
             it?.let {
                 fragment_check_content.check_acc_name.text = it.name
                 fragment_check_content.check_acc_type.text = it.type
                 fragment_check_content.check_acc_balance.text = it.sum.toString()
                 fragment_check_content.check_acc_label
                     .setBackgroundColor(Color.parseColor(it.color))
-
-                if (it.isArchive) {
-                    fragment_check_content.check_acc_archive.visibility = View.VISIBLE
-                    fragment_check_content.check_acc_archive.text = getString(R.string.check_arсhive_txt)
-                    check_navigation_from_archive_btn.visibility = View.VISIBLE
-                    check_navigation_delete_btn.visibility = View.GONE
-                } else {
-                    fragment_check_content.check_acc_archive.visibility = View.INVISIBLE
-                    check_navigation_from_archive_btn.visibility = View.GONE
-                    check_navigation_delete_btn.visibility = View.VISIBLE
-                }
                 fragment_check_content.check_acc_symbol.text = it.curSymbol
                 showTransactionsHistory(it.id)
             }
+        }
+        viewModel.isArchive.observe(viewLifecycleOwner) {
+            if (it) {
+                fragment_check_content.check_acc_archive.visibility = View.VISIBLE
+                fragment_check_content.check_acc_archive.text = getString(R.string.check_arсhive_txt)
+                check_navigation_from_archive_btn.visibility = View.VISIBLE
+                check_navigation_delete_btn.visibility = View.GONE
+            } else {
+                fragment_check_content.check_acc_archive.visibility = View.INVISIBLE
+                check_navigation_from_archive_btn.visibility = View.GONE
+                check_navigation_delete_btn.visibility = View.VISIBLE
+            }
+        }
+        viewModel.isNeedOnMain.observe(viewLifecycleOwner) {
+            if (!it) fragment_check_content.check_acc_visible.visibility = View.VISIBLE
         }
         viewModel.updateButtonEnable.observe(viewLifecycleOwner) {
             check_navigation_update_btn.isEnabled = it

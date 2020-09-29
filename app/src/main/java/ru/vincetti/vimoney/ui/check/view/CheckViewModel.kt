@@ -14,10 +14,18 @@ class CheckViewModel(
 
     private val accountDao = database.accountDao()
 
-    val accounts: LiveData<AccountListModel> = accountDao.loadAccountByIdFull(accountId)
+    val account: LiveData<AccountListModel> = accountDao.loadAccountByIdFull(accountId)
+
+    val isArchive: LiveData<Boolean> = account.map {
+        it.isArchive
+    }
+
+    val isNeedOnMain: LiveData<Boolean> = account.map {
+        it.needOnMain
+    }
 
     private var _updateButtonEnable = MutableLiveData<Boolean>()
-    val updateButtonEnable
+    val updateButtonEnable: LiveData<Boolean>
         get() = _updateButtonEnable
 
     init {

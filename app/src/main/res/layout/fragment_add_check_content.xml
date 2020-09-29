@@ -101,25 +101,29 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/add_check_all_balance_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/sm_padding"
-        android:orientation="horizontal"
-        >
+        android:layout_marginEnd="@dimen/sm_padding"
+        android:textColor="@color/colorSecondaryTextDark"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="@dimen/text_st_numbers"
+        android:text="@string/add_check_all_balance_need"
+        />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/add_check_all_balance_switch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/sm_padding"
-            android:textColor="@color/colorSecondaryTextDark"
-            android:fontFamily="sans-serif-medium"
-            android:textSize="@dimen/text_st_numbers"
-            android:text="@string/add_check_all_balance_need"
-            />
-
-    </LinearLayout>
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/add_check_show_main_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sm_padding"
+        android:layout_marginEnd="@dimen/sm_padding"
+        android:textColor="@color/colorSecondaryTextDark"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="@dimen/text_st_numbers"
+        android:text="@string/add_check_show_main_need"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"

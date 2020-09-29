@@ -7,7 +7,7 @@ object DatesFormat {
 
     @JvmStatic
     fun getMonthName(localDate: LocalDate): String {
-        return DateTimeFormatter.ofPattern("MMMM").format(localDate)
+        return DateTimeFormatter.ofPattern("LLLL").format(localDate)
     }
 
     @JvmStatic

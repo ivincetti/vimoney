@@ -32,7 +32,10 @@ data class AccountModel(
     var isArchive: Boolean = false,
 
     @ColumnInfo(name = "need_all_balance")
-    var needAllBalance: Boolean = true
+    var needAllBalance: Boolean = true,
+
+    @ColumnInfo(name = "need_on_main_screen")
+    var needOnMain: Boolean = true
 ) {
 
     companion object {
