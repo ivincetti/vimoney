@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.View
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.ViewCompat
@@ -22,6 +23,7 @@ import ru.vincetti.vimoney.data.models.CurrencyModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
+
 
 class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
 
@@ -110,7 +112,11 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
             it?.let { add_check_currency.text = it.symbol }
         }
         viewModel.currencyList.observe(viewLifecycleOwner) {
-            it?.let { loadCurrency(it, add_check_currency) }
+            it?.let { list ->
+                add_check_currency_container.setOnClickListener {
+                    popUpCurrencyShow(list, add_check_currency)
+                }
+            }
         }
     }
 
@@ -149,10 +155,6 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
         )
     }
 
-    private fun loadCurrency(list: List<CurrencyModel>, view: View) {
-        view.setOnClickListener { popUpCurrencyShow(list, view) }
-    }
-
     private fun popUpCurrencyShow(list: List<CurrencyModel>, view: View) {
         val popUp = PopupMenu(requireContext(), view)
         for (i in list.indices) {
@@ -166,7 +168,7 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
     }
 
     private fun showDeleteDialog() {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             .setMessage(R.string.check_delete_alert_question)
             .setNegativeButton(R.string.check_delete_alert_negative) { dialogInterface, _ ->
                 dialogInterface?.dismiss()
@@ -179,7 +181,7 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
     }
 
     private fun showUnsavedDialog() {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             .setMessage(R.string.check_add_alert_question)
             .setNegativeButton(R.string.check_add_alert_negative) { _, _ ->
                 viewModel.need2NavigateBack()
@@ -192,7 +194,7 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
     }
 
     private fun showNoDataDialog() {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             .setMessage(R.string.check_add_alert_no_data)
             .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
                 viewModel.noDataDialogClosed()

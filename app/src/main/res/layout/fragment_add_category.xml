@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackgroundDark"
+    android:background="@color/colorPrimaryBackground"
     tools:context=".ui.settings.category.add.AddCategoryFragment"
     >
 
@@ -26,58 +26,49 @@
                 android:id="@+id/category_add_navigation_back_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/back_icon_description"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_arrow_back_dark"
+                android:contentDescription="@string/back_icon_description"
                 />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/category_add_navigation_back_btn"
                 android:paddingStart="@dimen/st_padding"
                 android:paddingEnd="@dimen/st_padding"
                 android:text="@string/category_add_title"
-                android:textColor="@color/colorPrimaryTextDark"
-                android:textSize="@dimen/text_st_numbers"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/category_add_navigation_back_btn"
-                app:layout_constraintTop_toTopOf="parent"
+                android:fontFamily="sans-serif-medium"
+                style="@style/textHeader2"
                 />
 
             <ImageView
                 android:id="@+id/category_add_navigation_add_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/category_add_title"
-                android:paddingStart="@dimen/big_padding"
-                android:paddingEnd="@dimen/big_padding"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:paddingStart="@dimen/big_padding"
+                android:paddingEnd="@dimen/big_padding"
                 app:srcCompat="@drawable/ic_done_dark"
+                android:contentDescription="@string/category_add_title"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.core.widget.NestedScrollView
+    <include
+        android:id="@+id/category_add_content"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/add_category_toolbar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
-
-        <include
-            android:id="@+id/category_add_content"
-            layout="@layout/fragment_add_category_content"
-            />
-
-    </androidx.core.widget.NestedScrollView>
+        layout="@layout/fragment_add_category_content"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

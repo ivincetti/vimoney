@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackgroundDark"
+    android:background="@color/colorPrimaryBackground"
     tools:context=".ui.dashboard.DashboardFragment"
     >
 
@@ -42,7 +42,7 @@
                 android:paddingEnd="@dimen/st_padding"
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/dashboard_title_home"
-                android:textColor="@color/colorPrimaryTextDark"
+                android:textColor="@color/colorPrimaryText"
                 android:textSize="@dimen/text_st_numbers"
                 android:textStyle="bold"
                 />

@@ -6,7 +6,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackgroundDark"
+    android:background="@color/colorPrimaryBackground"
     tools:context=".ui.notifications.NotificationFragment"
     >
 
@@ -42,10 +42,7 @@
                 android:paddingStart="@dimen/st_padding"
                 android:paddingEnd="@dimen/st_padding"
                 android:text="@string/notification_title_home"
-                android:textColor="@color/colorPrimaryTextDark"
-                android:fontFamily="sans-serif-medium"
-                android:textSize="@dimen/text_st_numbers"
-                android:textStyle="bold"
+                style="@style/textHeader2"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -65,10 +62,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:backgroundTint="@color/colorSecondaryDark"
             android:layout_margin="@dimen/sm_padding"
             android:text="@string/notification_notify_btn_text"
-            android:textAllCaps="true"
             />
 
     </androidx.core.widget.NestedScrollView>

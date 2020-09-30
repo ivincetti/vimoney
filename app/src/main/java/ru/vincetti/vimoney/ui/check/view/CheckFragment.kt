@@ -107,7 +107,7 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
     }
 
     private fun showDeleteDialog() {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             .setMessage(R.string.check_delete_alert_question)
             .setNegativeButton(R.string.check_delete_alert_negative) { dialog, _ ->
                 dialog?.dismiss()

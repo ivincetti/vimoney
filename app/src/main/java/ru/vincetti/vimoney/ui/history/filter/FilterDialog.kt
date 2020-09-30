@@ -102,7 +102,10 @@ class FilterDialog : BottomSheetDialogFragment() {
         fragment_filter_date_to_container.setOnClickListener { showDateDialog(viewModel::setDateTo) }
 
         fragment_filter_btn.setOnClickListener { closeDialog(createFilter()) }
-        fragment_reset_btn.setOnClickListener { closeDialog(Filter()) }
+        fragment_reset_btn.setOnClickListener {
+            resetAllFields()
+            closeDialog(Filter())
+        }
     }
 
     private fun showDateDialog(save: (newDate: Date) -> Unit) {
@@ -129,6 +132,13 @@ class FilterDialog : BottomSheetDialogFragment() {
         dateFrom?.let { filter.dateFrom = it }
         dateTo?.let { filter.dateTo = it }
         return filter
+    }
+
+    private fun resetAllFields() {
+        fragment_filter_sum_name.setText("")
+        fragment_filter_desc_name.setText("")
+        fragment_filter_date_from_name.text = ""
+        fragment_filter_date_to_name.text = ""
     }
 
     private fun closeDialog(filter: Filter) {

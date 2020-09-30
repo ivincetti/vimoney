@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:paddingStart="@dimen/activity_horizontal_margin"
     android:paddingEnd="@dimen/activity_horizontal_margin"
-    tools:background="@color/colorBackgroundDark"
+    tools:background="@color/colorPrimaryBackground"
     >
 
     <EditText
@@ -17,12 +17,9 @@
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/big_padding"
         android:hint="@string/add_check_name_hint"
-        android:textColorHint="@color/colorSecondaryTextDark"
         android:inputType="text"
-        android:textColor="@color/colorPrimaryTextDark"
-        android:fontFamily="sans-serif-medium"
-        android:textSize="@dimen/text_big_numbers"
-        android:textStyle="bold"
+        android:textColorHint="@color/colorPrimaryTextDark"
+        style="@style/textHeader1"
         />
 
     <RadioGroup
@@ -71,6 +68,7 @@
     </RadioGroup>
 
     <LinearLayout
+        android:id="@+id/add_check_currency_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/sm_padding"
@@ -81,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/currency_name"
-            android:textColor="@color/colorSecondaryTextDark"
+            android:textColor="@color/colorPrimaryTextDark"
             android:fontFamily="sans-serif-medium"
             android:textSize="@dimen/text_st_numbers"
             />
@@ -91,11 +89,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="end"
-            android:textSize="@dimen/text_st_numbers"
             android:layout_marginEnd="@dimen/big_padding"
             android:layout_marginStart="@dimen/big_padding"
-            android:textColor="@color/colorPrimaryTextDark"
-            android:fontFamily="sans-serif-medium"
+            style="@style/textHeader2"
             tools:text="@string/currency_ruble_symbol"
             />
 
@@ -107,7 +103,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/sm_padding"
         android:layout_marginEnd="@dimen/sm_padding"
-        android:textColor="@color/colorSecondaryTextDark"
+        android:textColor="@color/colorPrimaryTextDark"
         android:fontFamily="sans-serif-medium"
         android:textSize="@dimen/text_st_numbers"
         android:text="@string/add_check_all_balance_need"
@@ -119,7 +115,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/sm_padding"
         android:layout_marginEnd="@dimen/sm_padding"
-        android:textColor="@color/colorSecondaryTextDark"
+        android:textColor="@color/colorPrimaryTextDark"
         android:fontFamily="sans-serif-medium"
         android:textSize="@dimen/text_st_numbers"
         android:text="@string/add_check_show_main_need"
@@ -138,7 +134,7 @@
             android:layout_weight="1"
             android:text="@string/color_string"
             android:textSize="@dimen/text_st_numbers"
-            android:textColor="@color/colorSecondaryTextDark"
+            android:textColor="@color/colorPrimaryTextDark"
             android:fontFamily="sans-serif-medium"
             />
 
@@ -160,7 +156,6 @@
         android:layout_margin="@dimen/sm_padding"
         android:text="@string/add_btn_save"
         android:textAllCaps="true"
-        android:backgroundTint="@color/colorSecondaryDark"
         />
 
 </LinearLayout>

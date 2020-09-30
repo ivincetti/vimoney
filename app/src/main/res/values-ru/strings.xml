@@ -122,4 +122,6 @@
     <string name="sample_category_name">другое</string>
     <string name="categories_symbols_list_tip_string">Управление категориями осущестляется в настройках</string>
 
+    <string name="filter_dialog_button">Применить</string>
+
 </resources>

@@ -6,7 +6,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackgroundDark"
+    android:background="@color/colorPrimaryBackground"
     tools:context=".ui.check.view.CheckFragment"
     >
 
@@ -41,10 +41,7 @@
                 app:layout_constraintStart_toEndOf="@id/setting_navigation_back_btn"
                 android:paddingStart="@dimen/st_padding"
                 android:paddingEnd="@dimen/st_padding"
-                android:textColor="@color/colorPrimaryTextDark"
-                android:fontFamily="sans-serif-medium"
-                android:textSize="@dimen/text_st_numbers"
-                android:textStyle="bold"
+                style="@style/textHeader2"
                 android:text="@string/check_title_home"
                 />
 

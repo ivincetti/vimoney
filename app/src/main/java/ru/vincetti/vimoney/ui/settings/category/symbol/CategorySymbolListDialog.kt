@@ -14,6 +14,11 @@ class CategorySymbolListDialog : DialogFragment() {
         it.symbol
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NO_TITLE, R.style.AlertDialog)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

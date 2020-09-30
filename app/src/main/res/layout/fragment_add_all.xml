@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:background="@color/colorBackgroundDark"
+    tools:background="@color/colorPrimaryBackground"
     >
 
     <!--блок комментария-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:paddingStart="@dimen/big_padding"
         android:paddingEnd="@dimen/big_padding"
+        android:orientation="horizontal"
         >
 
         <ImageView
@@ -30,13 +30,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:hint="@string/add_desc_sample"
-            android:textColorHint="@color/colorSecondaryTextDark"
-            android:inputType="text"
             android:paddingStart="@dimen/activity_horizontal_margin"
             android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:textColor="@color/colorPrimaryTextDark"
+            android:textColorHint="@color/colorPrimaryTextDark"
+            android:textColor="@color/colorPrimaryText"
             android:fontFamily="sans-serif-medium"
+            android:hint="@string/add_desc_sample"
+            android:inputType="text"
             />
 
     </LinearLayout>
@@ -45,9 +45,9 @@
         android:id="@+id/add_date_block"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:paddingStart="@dimen/big_padding"
         android:paddingEnd="@dimen/big_padding"
+        android:orientation="horizontal"
         >
 
         <ImageView
@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/big_padding"
-            android:textColor="@color/colorPrimaryTextDark"
+            android:textColor="@color/colorPrimaryText"
             android:fontFamily="sans-serif-medium"
             tools:text="@string/add_date_sample_txt"
             />
@@ -71,10 +71,10 @@
 
     <Button
         android:id="@+id/add_btn"
-        style="@style/mainButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add_btn_save"
+        style="@style/mainButtonStyle"
         />
 
 </LinearLayout>
