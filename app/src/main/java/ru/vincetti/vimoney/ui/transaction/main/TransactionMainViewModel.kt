@@ -273,7 +273,7 @@ class TransactionMainViewModel(
     private fun trInsert(transaction: TransactionModel, toTransaction: TransactionModel? = null) {
         viewModelScope.launch {
             toTransaction?.let {
-                val idTo = transactionRepo.addTransaction(it)
+                val idTo: Long = transactionRepo.addTransaction(it)
                 transaction.extraValue = idTo.toString()
             }
             transactionRepo.addTransaction(transaction)

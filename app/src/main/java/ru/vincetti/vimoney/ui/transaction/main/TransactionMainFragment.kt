@@ -69,8 +69,10 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
     override fun onPause() {
         super.onPause()
 
-        val imm = (requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager)
-        imm.hideSoftInputFromWindow(requireActivity().currentFocus!!.windowToken, 0)
+        val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+        requireActivity().currentFocus?.let {
+            imm?.hideSoftInputFromWindow(it.windowToken, 0)
+        }
     }
 
     private fun initViews() {
