@@ -14,8 +14,8 @@ class TransactionRepo(db: AppDatabase) {
 
     private val transactionDao: TransactionDao = db.transactionDao()
 
-    suspend fun addTransaction(transaction: TransactionModel) {
-        transactionDao.insertTransaction(transaction)
+    suspend fun addTransaction(transaction: TransactionModel): Long {
+        return transactionDao.insertTransaction(transaction)
     }
 
     suspend fun addTransaction(transactions: List<TransactionModel>) {
