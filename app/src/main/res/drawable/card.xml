@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle"
     >
-
     <corners android:radius="8dp" />
-    <solid android:color="#110325" />
-    <size android:height="180dp"
-        android:width="300dp" />
-
+    <solid android:color="@color/colorSecondaryBackgroundItemFill" />
+    <size
+        android:height="180dp"
+        android:width="300dp"
+        />
 </shape>

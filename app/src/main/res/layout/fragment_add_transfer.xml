@@ -5,8 +5,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:background="@color/colorBackgroundDark"
+    tools:background="@color/colorPrimaryBackground"
     >
+
+    <ProgressBar
+        android:id="@+id/fragment_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:theme="@style/progressBar"
+        />
 
     <LinearLayout
         android:id="@+id/fragment_container"
@@ -49,7 +59,7 @@
                         app:layout_constraintEnd_toStartOf="@id/add_acc_cur"
                         android:gravity="end"
                         android:hint="@string/add_sum_sample"
-                        android:textColorHint="@color/colorSecondaryTextDark"
+                        android:textColorHint="@color/colorPrimaryTextDark"
                         android:inputType="numberDecimal"
                         android:paddingStart="@dimen/activity_horizontal_margin"
                         android:paddingEnd="@dimen/activity_horizontal_margin"
@@ -140,11 +150,11 @@
                         app:layout_constraintEnd_toStartOf="@id/add_acc_cur_to"
                         android:gravity="end"
                         android:hint="@string/add_sum_sample"
-                        android:textColorHint="@color/colorSecondaryTextDark"
                         android:inputType="numberDecimal"
                         android:paddingStart="@dimen/activity_horizontal_margin"
                         android:paddingEnd="@dimen/activity_horizontal_margin"
                         android:textColor="@color/colorPrimaryTextDark"
+                        android:textColorHint="@color/colorPrimaryTextDark"
                         android:fontFamily="sans-serif-medium"
                         android:textSize="@dimen/text_big_numbers"
                         android:textStyle="bold"
@@ -213,13 +223,5 @@
             />
 
     </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/fragment_progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        />
 
 </FrameLayout>

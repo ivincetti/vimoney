@@ -35,7 +35,7 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     }
 
     private fun alertNetworkDialogShow() {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             .setMessage(resources.getString(R.string.splash_nonetwork_string))
             .setCancelable(false)
             .setPositiveButton(resources.getString(R.string.splash_nonetwork_positive)) { _, _ ->

@@ -127,4 +127,6 @@
     <string name="category_name">Category</string>
     <string name="categories_symbols_list_tip_string">You can manage categories in settings</string>
 
+    <string name="filter_dialog_button">Filter</string>
+
 </resources>

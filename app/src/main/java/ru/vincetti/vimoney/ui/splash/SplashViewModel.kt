@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -59,7 +60,7 @@ class SplashViewModel(
                 if (isNetworkAvailable(app.applicationContext)) {
                     loadJsonFromServer()
                 } else {
-                    _networkError.value = false
+                    _networkError.value = true
                 }
             } else {
                 _need2Navigate2Home.value = true

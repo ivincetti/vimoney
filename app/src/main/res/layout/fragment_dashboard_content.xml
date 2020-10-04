@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:background="@color/colorBackgroundDark"
+    tools:background="@color/colorPrimaryBackground"
     >
 
     <ProgressBar
@@ -16,6 +16,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:theme="@style/progressBar"
         />
 
     <LinearLayout
@@ -32,8 +33,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/colorSecondaryTextDark"
             android:layout_margin="@dimen/big_padding"
+            android:background="@color/lightDivider"
             />
 
         <com.db.williamchart.view.LineChartView
@@ -42,23 +43,24 @@
             android:layout_height="@dimen/graph_height"
             android:padding="@dimen/big_padding"
             app:chart_axis="y"
+            app:chart_labelsColor="@color/colorPrimaryTextDark"
+            app:chart_labelsSize="@dimen/chart_labels_size"
             app:chart_lineColor="@color/colorPrimaryTextDark"
             app:chart_lineThickness="@dimen/chart_line_thickness"
             app:chart_smoothLine="true"
-            app:chart_labelsSize="@dimen/chart_labels_size"
-            app:chart_labelsColor="@color/colorPrimaryTextDark"
             />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/colorSecondaryTextDark"
             android:layout_margin="@dimen/big_padding"
+            android:background="@color/lightDivider"
             />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:orientation="horizontal"
             >
 
@@ -79,8 +81,8 @@
                     android:layout_margin="@dimen/st_padding"
                     android:textSize="@dimen/text_big_numbers"
                     android:textColor="@color/colorPrimaryTextDark"
-                    android:fontFamily="sans-serif-medium"
                     android:text="@string/dashboard_prev"
+                    android:fontFamily="sans-serif-medium"
                     />
 
                 <TextView
@@ -91,8 +93,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:textColor="@color/colorPrimaryTextDark"
-                    android:fontFamily="sans-serif-medium"
+                    style="@style/textHeader2"
                     tools:text="year"
                     />
 
@@ -106,8 +107,8 @@
                     android:layout_margin="@dimen/st_padding"
                     android:textSize="@dimen/text_big_numbers"
                     android:textColor="@color/colorPrimaryTextDark"
-                    android:fontFamily="sans-serif-medium"
                     android:text="@string/dashboard_next"
+                    android:fontFamily="sans-serif-medium"
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -129,8 +130,8 @@
                     android:layout_margin="@dimen/st_padding"
                     android:textSize="@dimen/text_big_numbers"
                     android:textColor="@color/colorPrimaryTextDark"
-                    android:fontFamily="sans-serif-medium"
                     android:text="@string/dashboard_prev"
+                    android:fontFamily="sans-serif-medium"
                     />
 
                 <TextView
@@ -141,8 +142,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:textColor="@color/colorPrimaryTextDark"
-                    android:fontFamily="sans-serif-medium"
+                    style="@style/textHeader2"
                     tools:text="month"
                     />
 
@@ -156,8 +156,8 @@
                     android:layout_margin="@dimen/st_padding"
                     android:textSize="@dimen/text_big_numbers"
                     android:textColor="@color/colorPrimaryTextDark"
-                    android:fontFamily="sans-serif-medium"
                     android:text="@string/dashboard_next"
+                    android:fontFamily="sans-serif-medium"
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

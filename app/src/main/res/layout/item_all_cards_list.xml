@@ -10,19 +10,18 @@
     android:layout_marginBottom="@dimen/sm_padding"
     android:layout_marginStart="@dimen/big_padding"
     android:layout_marginEnd="@dimen/big_padding"
-    android:minHeight="@dimen/icon_st_size"
     android:paddingEnd="@dimen/big_padding"
-    tools:background="@color/colorBackgroundDark"
+    android:minHeight="@dimen/icon_st_size"
     >
 
     <FrameLayout
         android:id="@+id/acc_label"
         android:layout_width="12dp"
         android:layout_height="64dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/acc_name"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/acc_name"
         android:background="@drawable/card_label"
         />
 
@@ -34,9 +33,7 @@
         app:layout_constraintBottom_toTopOf="@+id/acc_type"
         app:layout_constraintStart_toEndOf="@id/acc_label"
         android:layout_marginStart="@dimen/st_padding"
-        android:fontFamily="sans-serif-medium"
-        android:textColor="@color/colorPrimaryTextDark"
-        android:textSize="@dimen/text_st_numbers"
+        style="@style/textHeader2"
         tools:text="@string/home_title_acc_name"
         />
 
@@ -44,13 +41,11 @@
         android:id="@+id/acc_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/acc_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/acc_name"
-        app:layout_constraintTop_toBottomOf="@+id/acc_name"
         android:layout_marginBottom="@dimen/sm_padding"
-        android:layout_below="@id/acc_name"
-        android:fontFamily="sans-serif-medium"
-        android:textColor="@color/colorSecondaryTextDark"
+        style="@style/textSub"
         tools:text="@string/home_title_acc_type"
         />
 
@@ -62,11 +57,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/acc_name"
         app:layout_constraintEnd_toStartOf="@+id/acc_balance"
-        android:fontFamily="sans-serif-medium"
         android:paddingStart="@dimen/big_padding"
         android:paddingEnd="@dimen/sm_padding"
-        android:textColor="@color/colorSecondaryTextDark"
         android:text="@string/check_arсhive_txt"
+        style="@style/textSub"
         />
 
     <TextView
@@ -76,10 +70,7 @@
         app:layout_constraintTop_toTopOf="@+id/acc_symbol"
         app:layout_constraintBottom_toBottomOf="@+id/acc_symbol"
         app:layout_constraintEnd_toStartOf="@id/acc_symbol"
-        android:fontFamily="sans-serif-medium"
-        android:textColor="@color/colorPrimaryTextDark"
-        android:textSize="@dimen/text_big_numbers"
-        android:textStyle="bold"
+        style="@style/textHeader1"
         tools:text="@string/home_title_acc_balance"
         />
 
@@ -90,11 +81,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:fontFamily="sans-serif-medium"
-        android:textColor="@color/colorPrimaryTextDark"
-        android:textSize="@dimen/text_big_numbers"
-        android:textStyle="bold"
         android:paddingStart="@dimen/st_padding"
+        style="@style/textHeader1"
         tools:text="@string/currency_ruble_symbol"
         />
 

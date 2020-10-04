@@ -5,12 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/card_view_width"
     android:layout_height="@dimen/card_view_height"
-    android:layout_marginEnd="@dimen/big_padding"
     android:layout_marginTop="@dimen/sm_padding"
-    android:background="@color/colorBackgroundDark"
+    android:layout_marginEnd="@dimen/big_padding"
     app:cardCornerRadius="@dimen/st_padding"
-    app:cardPreventCornerOverlap="false"
     app:cardElevation="@dimen/st_padding"
+    app:cardPreventCornerOverlap="false"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,25 +23,22 @@
             android:id="@+id/home_acc_label"
             android:layout_width="12dp"
             android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/card_label"
             />
 
         <TextView
             android:id="@+id/home_acc_name"
-            style="@style/textBlackShadow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/home_acc_balance"
             app:layout_constraintStart_toEndOf="@+id/home_acc_label"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:textColor="@color/colorTextWhite"
-            android:textSize="@dimen/text_st_numbers"
-            android:textStyle="bold"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            style="@style/textHeader2"
             tools:text="@string/home_title_acc_name"
             />
 
@@ -52,9 +48,9 @@
             android:layout_height="wrap_content"
             app:layout_constraintBaseline_toBaselineOf="@+id/home_acc_name"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_alignBaseline="@id/home_acc_name"
             android:layout_marginEnd="@dimen/big_padding"
-            android:textColor="@color/colorTextWhite"
+            android:layout_alignBaseline="@id/home_acc_name"
+            style="@style/textSub"
             tools:text="@string/home_title_acc_type"
             />
 
@@ -62,13 +58,10 @@
             android:id="@+id/home_acc_balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/home_acc_name"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/home_acc_name"
-            app:layout_constraintTop_toBottomOf="@+id/home_acc_name"
-            android:textColor="@color/colorTextWhite"
-            android:textSize="@dimen/text_big_numbers"
-            android:textStyle="bold"
-            style="@style/textBlackShadow"
+            style="@style/textHeader1"
             tools:text="@string/home_title_acc_balance"
             />
 
@@ -76,13 +69,10 @@
             android:id="@+id/home_acc_symbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@+id/home_acc_balance"
             app:layout_constraintTop_toTopOf="@+id/home_acc_balance"
+            app:layout_constraintStart_toEndOf="@+id/home_acc_balance"
             android:layout_marginStart="@dimen/sm_padding"
-            android:textColor="@color/colorTextWhite"
-            android:textSize="@dimen/text_big_numbers"
-            android:textStyle="bold"
-            style="@style/textBlackShadow"
+            style="@style/textHeader1"
             tools:text="@string/currency_ruble_symbol"
             />
 

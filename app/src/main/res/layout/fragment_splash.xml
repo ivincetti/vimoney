@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     android:orientation="vertical"
+    android:background="@color/colorPrimaryBackground"
     tools:context=".ui.splash.SplashFragment"
     >
 
@@ -32,8 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/splash_content_logo"
         android:layout_margin="8dp"
-        android:progressBackgroundTint="@color/colorTextSecondary"
-        android:theme="@style/colorBackground"
+        android:theme="@style/progressBar"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

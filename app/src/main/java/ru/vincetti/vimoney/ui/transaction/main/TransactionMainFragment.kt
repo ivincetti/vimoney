@@ -120,7 +120,7 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
     }
 
     private fun showDeleteDialog() {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             .setMessage(R.string.transaction_delete_alert_question)
             .setNegativeButton(R.string.transaction_delete_alert_negative) { dialogInterface, _ ->
                 dialogInterface?.dismiss()
@@ -133,7 +133,7 @@ class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
     }
 
     private fun showUnsavedDialog() {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             .setMessage(R.string.transaction_add_alert_question)
             .setNegativeButton(R.string.transaction_add_alert_negative) { _, _ ->
                 findNavController().navigateUp()

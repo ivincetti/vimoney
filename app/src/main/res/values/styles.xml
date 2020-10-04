@@ -3,15 +3,19 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorSecondaryBackgroundItemFill</item>
+        <item name="colorPrimaryDark">@android:color/holo_green_light</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="popupMenuStyle">@style/popupMenuStyle</item>
+        <item name="textAppearanceLargePopupMenu">@style/popupMenuTextAppearanceLarge</item>
+        <item name="textAppearanceSmallPopupMenu">@style/popupMenuTextAppearanceSmall</item>
     </style>
 
-    <style name="colorBackground">
-        <item name="colorAccent">@color/colorBackground</item>
+    <style name="progressBar">
+        <item name="colorAccent">@color/colorPrimaryElementsDark</item>
     </style>
 
     <style name="FabStyle">
@@ -39,10 +43,53 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="textHeader1">
+        <item name="android:textSize">@dimen/text_big_numbers</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="textHeader2">
+        <item name="android:textSize">@dimen/text_st_numbers</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="textSub">
+        <item name="android:textColor">@color/colorPrimaryTextDark</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="textBold">
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@null</item>
+    </style>
+
     <style name="categoryTextStyle">
         <item name="android:textSize">@dimen/category_icon_size</item>
-        <item name="android:textColor">@color/colorTextWhite</item>
+        <item name="android:textColor">@color/colorPrimaryTextDark</item>
         <item name="android:fontFamily">@font/font_awesome_solid</item>
+    </style>
+
+    <style name="AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/colorPrimaryTextDark</item>
+        <item name="android:background">@color/colorPrimaryBackground</item>
+        <item name="android:backgroundDimAmount">0.5</item>
+    </style>
+
+    <style name="popupMenuStyle" parent="@style/Widget.MaterialComponents.PopupMenu">
+        <item name="android:popupBackground">@color/colorSecondaryBackground</item>
+    </style>
+
+    <style name="popupMenuTextAppearanceSmall" parent="TextAppearance.AppCompat.Widget.PopupMenu.Small">
+        <item name="android:textColor">@color/colorPrimaryText</item>
+    </style>
+
+    <style name="popupMenuTextAppearanceLarge" parent="TextAppearance.AppCompat.Widget.PopupMenu.Large">
+        <item name="android:textColor">@color/colorPrimaryText</item>
     </style>
 
 </resources>
