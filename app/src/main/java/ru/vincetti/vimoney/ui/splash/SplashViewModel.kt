@@ -60,7 +60,7 @@ class SplashViewModel(
                 if (isNetworkAvailable(app.applicationContext)) {
                     loadJsonFromServer()
                 } else {
-                    _networkError.value = false
+                    _networkError.value = true
                 }
             } else {
                 _need2Navigate2Home.value = true
