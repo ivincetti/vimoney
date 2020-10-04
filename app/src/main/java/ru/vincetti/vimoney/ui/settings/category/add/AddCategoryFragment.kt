@@ -86,7 +86,7 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
     }
 
     private fun showUnsavedDialog() {
-        AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             .setMessage(R.string.check_add_alert_question)
             .setNegativeButton(R.string.check_add_alert_negative) { _, _ ->
                 viewModel.need2navigateBack()

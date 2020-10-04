@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackgroundDark"
+    android:background="@color/colorPrimaryBackground"
     tools:context=".ui.settings.SettingsFragment"
     >
 
@@ -25,9 +25,9 @@
                 android:id="@+id/setting_navigation_back_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/ic_arrow_back_dark"
                 android:contentDescription="@string/back_icon_description"
                 />
@@ -41,10 +41,10 @@
                 android:paddingStart="@dimen/st_padding"
                 android:paddingEnd="@dimen/st_padding"
                 android:text="@string/settings_title_home"
-                android:textColor="@color/colorPrimaryTextDark"
-                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/colorPrimaryText"
                 android:textSize="@dimen/text_st_numbers"
                 android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -72,8 +72,6 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/st_padding"
                 android:text="@string/settings_categories_btn"
-                android:backgroundTint="@color/colorSecondaryDark"
-                android:textAllCaps="true"
                 />
 
             <Button
@@ -83,8 +81,6 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/st_padding"
                 android:text="@string/settings_save_transactions_btn"
-                android:backgroundTint="@color/colorSecondaryDark"
-                android:textAllCaps="true"
                 />
 
             <Button
@@ -93,9 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/st_padding"
-                android:backgroundTint="@color/colorSecondaryDark"
                 android:text="@string/settings_load_transactions_btn"
-                android:textAllCaps="true"
                 />
 
         </LinearLayout>

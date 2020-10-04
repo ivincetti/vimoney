@@ -5,11 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_transactions_recycle_view"
     android:layout_width="match_parent"
-    android:layout_marginTop="@dimen/st_padding"
     android:layout_height="wrap_content"
-    android:clipToPadding="false"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    android:background="@color/colorSecondaryBackground"
+    android:clipToPadding="false"
     tools:listitem="@layout/item_transactions_list"
     tools:itemCount="3"
-    tools:background="@color/colorBackgroundDark"
     />

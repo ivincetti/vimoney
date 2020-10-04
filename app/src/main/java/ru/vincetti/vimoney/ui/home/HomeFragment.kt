@@ -105,7 +105,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             view.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
-        ViewCompat.setOnApplyWindowInsetsListener(main_history_container_root) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(main_history_container) { view, insets ->
             view.updatePadding(bottom = insets.systemWindowInsetBottom)
             insets
         }

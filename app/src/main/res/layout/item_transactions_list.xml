@@ -1,112 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_transactions_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/big_padding"
     android:layout_marginTop="@dimen/st_padding"
-    android:layout_marginEnd="@dimen/big_padding"
     android:layout_marginBottom="@dimen/st_padding"
+    android:layout_marginStart="@dimen/big_padding"
+    android:layout_marginEnd="@dimen/big_padding"
+    android:background="@color/colorSecondaryBackground"
     android:minHeight="@dimen/icon_st_size"
     android:orientation="horizontal"
-    tools:background="@color/colorBackgroundDark"
     >
 
-    <!--Category-->
     <TextView
         android:id="@+id/card_transactions_image"
         android:layout_width="@dimen/category_icon_background_size"
         android:layout_height="@dimen/category_icon_background_size"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="@dimen/st_padding"
-        android:background="@drawable/bg_category"
         android:gravity="center"
+        android:background="@drawable/bg_category"
         style="@style/categoryTextStyle"
         tools:text="@string/sample_category_android"
         />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+    <TextView
+        android:id="@+id/home_transactions_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/home_transactions_account"
+        app:layout_constraintStart_toStartOf="@id/home_transactions_account"
+        style="@style/textSub"
+        tools:text="@string/add_date_sample_txt"
+        />
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:orientation="vertical"
-            android:paddingStart="@dimen/st_padding"
-            android:paddingEnd="@dimen/st_padding"
-            android:fontFamily="sans-serif-medium"
-            android:textColor="@color/colorSecondaryTextDark"
-            >
+    <TextView
+        android:id="@+id/home_transactions_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/card_transactions_image"
+        android:layout_marginStart="@dimen/st_padding"
+        android:layout_marginEnd="@dimen/st_padding"
+        style="@style/textBold"
+        tools:text="@string/home_title_acc_name"
+        />
 
-            <TextView
-                android:id="@+id/home_transactions_date"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:textColor="@android:color/darker_gray"
-                tools:text="@string/add_date_sample_txt"
-                />
+    <TextView
+        android:id="@+id/home_transactions_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/home_transactions_account"
+        app:layout_constraintStart_toStartOf="@id/home_transactions_account"
+        style="@style/textSub"
+        tools:text="@string/add_desc_sample"
+        />
 
-            <TextView
-                android:id="@+id/home_transactions_account"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif-medium"
-                android:textColor="@color/colorPrimaryTextDark"
-                android:textStyle="bold"
-                tools:text="@string/home_title_acc_name"
-                />
+    <TextView
+        android:id="@+id/home_transactions_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/home_transactions_currency"
+        style="@style/textHeader2"
+        tools:text="@string/home_fragment_income_sample"
+        />
 
-            <TextView
-                android:id="@+id/home_transactions_name"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif-medium"
-                android:textColor="@color/colorSecondaryTextDark"
-                tools:text="@string/add_desc_sample"
-                />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/home_transactions_balance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/home_transactions_currency"
-            app:layout_constraintEnd_toStartOf="@+id/home_transactions_currency"
-            app:layout_constraintTop_toTopOf="@+id/home_transactions_currency"
-            android:fontFamily="sans-serif-medium"
-            android:textColor="@color/colorPrimaryTextDark"
-            android:textSize="@dimen/text_st_numbers"
-            android:textStyle="bold"
-            tools:text="@string/home_fragment_income_sample"
-            />
-
-        <TextView
-            android:id="@+id/home_transactions_currency"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:paddingStart="@dimen/st_padding"
-            android:paddingEnd="@dimen/big_padding"
-            android:fontFamily="sans-serif-medium"
-            android:textColor="@color/colorPrimaryTextDark"
-            android:textSize="@dimen/text_st_numbers"
-            android:textStyle="bold"
-            tools:text="@string/currency_ruble_symbol"
-            />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</LinearLayout>
+    <TextView
+        android:id="@+id/home_transactions_currency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@id/home_transactions_balance"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingStart="@dimen/st_padding"
+        style="@style/textHeader2"
+        tools:text="@string/currency_ruble_symbol"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

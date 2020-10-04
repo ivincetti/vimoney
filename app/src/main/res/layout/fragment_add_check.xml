@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackgroundDark"
+    android:background="@color/colorPrimaryBackground"
     tools:context=".ui.check.add.AddCheckFragment"
     >
 
@@ -25,9 +25,9 @@
                 android:id="@+id/setting_navigation_back_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/ic_arrow_back_dark"
                 android:contentDescription="@string/back_icon_description"
                 />
@@ -40,11 +40,8 @@
                 app:layout_constraintStart_toEndOf="@id/setting_navigation_back_btn"
                 android:paddingStart="@dimen/st_padding"
                 android:paddingEnd="@dimen/st_padding"
-                android:textColor="@color/colorPrimaryTextDark"
-                android:fontFamily="sans-serif-medium"
-                android:textSize="@dimen/text_st_numbers"
-                android:textStyle="bold"
                 android:text="@string/add_check_title_home"
+                style="@style/textHeader2"
                 />
 
             <ImageView
@@ -56,9 +53,9 @@
                 app:layout_constraintEnd_toStartOf="@id/add_check_navigation_add_btn"
                 android:paddingStart="@dimen/big_padding"
                 android:paddingEnd="@dimen/big_padding"
-                android:visibility="gone"
                 app:srcCompat="@drawable/ic_delete_dark"
                 android:contentDescription="@string/add_transaction_button_desc"
+                android:visibility="gone"
                 />
 
             <ImageView
@@ -70,9 +67,9 @@
                 app:layout_constraintEnd_toStartOf="@id/add_check_navigation_add_btn"
                 android:paddingStart="@dimen/big_padding"
                 android:paddingEnd="@dimen/big_padding"
-                android:visibility="gone"
                 app:srcCompat="@drawable/ic_restore_dark"
                 android:contentDescription="@string/add_transaction_button_desc"
+                android:visibility="gone"
                 />
 
             <ImageView

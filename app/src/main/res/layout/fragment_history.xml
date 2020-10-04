@@ -6,7 +6,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackgroundDark"
+    android:background="@color/colorPrimaryBackground"
     tools:context=".ui.history.AllHistoryFragment"
     >
 
@@ -42,7 +42,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:paddingStart="@dimen/st_padding"
                 android:paddingEnd="@dimen/st_padding"
-                android:textColor="@color/colorPrimaryTextDark"
+                android:textColor="@color/colorPrimaryText"
                 android:textSize="@dimen/text_st_numbers"
                 android:textStyle="bold"
                 android:text="@string/history_title_home"
@@ -67,9 +67,8 @@
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/history_container"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/history_top_toolbar"
-        app:layout_constraintBottom_toBottomOf="parent"
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
