@@ -155,7 +155,6 @@
         android:layout_gravity="center"
         android:layout_margin="@dimen/sm_padding"
         android:text="@string/add_btn_save"
-        android:textAllCaps="true"
         />
 
 </LinearLayout>

@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@string/default_font</item>
         <item name="popupMenuStyle">@style/popupMenuStyle</item>
         <item name="textAppearanceLargePopupMenu">@style/popupMenuTextAppearanceLarge</item>
         <item name="textAppearanceSmallPopupMenu">@style/popupMenuTextAppearanceSmall</item>
