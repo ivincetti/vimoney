@@ -135,7 +135,7 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
 
     private fun showNoSumToast() {
         Toast.makeText(
-            activity,
+            requireContext(),
             getString(R.string.add_check_no_sum_warning),
             Toast.LENGTH_SHORT
         ).show()
@@ -143,7 +143,7 @@ open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutI
 
     private fun showNoAccountToast() {
         Toast.makeText(
-            activity,
+            requireContext(),
             getString(R.string.add_check_no_account_warning),
             Toast.LENGTH_SHORT
         ).show()
