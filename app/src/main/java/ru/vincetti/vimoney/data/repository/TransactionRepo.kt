@@ -10,6 +10,7 @@ import ru.vincetti.vimoney.ui.history.filter.Filter
 import ru.vincetti.vimoney.utils.DatesFormat
 import java.time.LocalDate
 
+@Suppress("TooManyFunctions")
 class TransactionRepo(db: AppDatabase) {
 
     private val transactionDao: TransactionDao = db.transactionDao()

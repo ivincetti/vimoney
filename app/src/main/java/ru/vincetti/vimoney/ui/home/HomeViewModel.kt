@@ -8,8 +8,7 @@ import ru.vincetti.vimoney.data.models.AccountListModel
 import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.data.sqlite.AccountDao
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.utils.accountBalanceUpdateAll
-import ru.vincetti.vimoney.utils.userBalanceUpdate
+import ru.vincetti.vimoney.utils.BalanceMathUtils
 
 class HomeViewModel(private val db: AppDatabase) : ViewModel() {
 
@@ -47,8 +46,8 @@ class HomeViewModel(private val db: AppDatabase) : ViewModel() {
     fun updateAllAccounts() {
         _homeButtonEnabled.value = false
         viewModelScope.launch {
-            accountBalanceUpdateAll(db)
-            _userBalance.value = userBalanceUpdate(accDao)
+            BalanceMathUtils.accountBalanceUpdateAll(db)
+            _userBalance.value = BalanceMathUtils.userBalanceUpdate(accDao)
             _homeButtonEnabled.value = true
         }
     }
@@ -61,7 +60,7 @@ class HomeViewModel(private val db: AppDatabase) : ViewModel() {
 
     private suspend fun updateBalance() {
         withContext(Dispatchers.IO) {
-            val newBalance = userBalanceUpdate(accDao)
+            val newBalance = BalanceMathUtils.userBalanceUpdate(accDao)
             _userBalance.postValue(newBalance)
         }
     }

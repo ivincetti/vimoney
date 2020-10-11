@@ -11,6 +11,7 @@ import ru.vincetti.vimoney.data.sqlite.AccountDao
 import ru.vincetti.vimoney.data.sqlite.CurrentDao
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 
+@Suppress("TooManyFunctions")
 class AddCheckViewModel(
     private val accDao: AccountDao,
     private val curDao: CurrentDao,
@@ -77,10 +78,10 @@ class AddCheckViewModel(
 
     fun save(name: String, type: String) {
         if (
-            TextUtils.isEmpty(name)
-            || TextUtils.isEmpty(type)
-            || currency.value == null
-            || color.value!! > 0
+            TextUtils.isEmpty(name) ||
+            TextUtils.isEmpty(type) ||
+            currency.value == null ||
+            color.value!! > 0
         ) {
             need2AllData.value = true
         } else {
@@ -138,11 +139,11 @@ class AddCheckViewModel(
         need2AllData.value = false
     }
 
-    fun need2NavigateBack(){
+    fun need2NavigateBack() {
         _need2NavigateBack.value = true
     }
 
-    fun navigatedBack(){
+    fun navigatedBack() {
         _need2NavigateBack.value = false
     }
 

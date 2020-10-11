@@ -81,11 +81,11 @@ class AddCategoryViewModel(
         }
     }
 
-    fun need2navigateBack(){
+    fun need2navigateBack() {
         _need2NavigateBack.value = true
     }
 
-    fun navigatedBack(){
+    fun navigatedBack() {
         _need2NavigateBack.value = false
     }
 

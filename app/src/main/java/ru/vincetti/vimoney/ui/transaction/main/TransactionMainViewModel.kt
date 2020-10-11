@@ -5,9 +5,10 @@ import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.utils.accountBalanceUpdateById
+import ru.vincetti.vimoney.utils.BalanceMathUtils
 import java.util.*
 
+@Suppress("TooManyFunctions")
 class TransactionMainViewModel(
     private val database: AppDatabase
 ) : ViewModel() {
@@ -130,8 +131,8 @@ class TransactionMainViewModel(
                     oldTransactionAccountID = tmpTransaction.id
                 }
                 if (
-                    tmpTransaction.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
-                    && tmpTransaction.extraValue.toInt() > 0
+                    tmpTransaction.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY &&
+                    tmpTransaction.extraValue.toInt() > 0
                 ) {
                     nestedId = tmpTransaction.extraValue.toInt()
                     loadNestedTransaction(nestedId)?.let {
@@ -181,14 +182,14 @@ class TransactionMainViewModel(
             _transaction.value?.let {
                 if (it.id != TransactionModel.DEFAULT_ID) {
                     if (
-                        it.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
-                        && nestedId > 0
+                        it.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY &&
+                        nestedId > 0
                     ) {
                         transactionRepo.deleteTransaction(nestedId)
-                        accountBalanceUpdateById(database, _accountIdTo.value!!)
+                        BalanceMathUtils.accountBalanceUpdateById(database, _accountIdTo.value!!)
                     }
                     transactionRepo.deleteTransaction(mTransId)
-                    accountBalanceUpdateById(database, _accountId.value!!)
+                    BalanceMathUtils.accountBalanceUpdateById(database, _accountId.value!!)
                     _needToNavigate.value = true
                 }
             }
@@ -223,8 +224,8 @@ class TransactionMainViewModel(
         _transaction.value?.let { tmpTransaction ->
             _nestedTransaction.value?.let { tmpToTransaction ->
                 if (
-                    _accountId.value != TransactionModel.DEFAULT_ID
-                    && _accountIdTo.value != TransactionModel.DEFAULT_ID
+                    _accountId.value != TransactionModel.DEFAULT_ID &&
+                    _accountIdTo.value != TransactionModel.DEFAULT_ID
                 ) {
                     if (txtSumTo == "" || txtSum == "") {
                         _needSum.value = true
@@ -258,14 +259,14 @@ class TransactionMainViewModel(
         }
     }
 
-    fun navigatedBack(){
+    fun navigatedBack() {
         _needToNavigate.value = false
     }
 
     private fun updateBalance(vararg trans: TransactionModel) {
         viewModelScope.launch {
             for (transaction in trans) {
-                accountBalanceUpdateById(database, transaction.accountId)
+                BalanceMathUtils.accountBalanceUpdateById(database, transaction.accountId)
             }
         }
     }

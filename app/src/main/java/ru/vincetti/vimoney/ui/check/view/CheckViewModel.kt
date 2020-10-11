@@ -5,7 +5,7 @@ import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.AccountListModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
-import ru.vincetti.vimoney.utils.accountBalanceUpdateById
+import ru.vincetti.vimoney.utils.BalanceMathUtils
 
 class CheckViewModel(
     private val database: AppDatabase,
@@ -51,7 +51,7 @@ class CheckViewModel(
     fun update() {
         _updateButtonEnable.value = false
         viewModelScope.launch {
-            accountBalanceUpdateById(database, accountId)
+            BalanceMathUtils.accountBalanceUpdateById(database, accountId)
             _updateButtonEnable.value = true
         }
     }

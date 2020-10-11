@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,8 +15,8 @@ import ru.vincetti.vimoney.data.models.*
 import ru.vincetti.vimoney.data.models.json.*
 import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.utils.accountBalanceUpdateById
-import ru.vincetti.vimoney.utils.isNetworkAvailable
+import ru.vincetti.vimoney.utils.BalanceMathUtils
+import ru.vincetti.vimoney.utils.NetworkUtils
 import java.util.*
 
 class SplashViewModel(
@@ -57,7 +56,7 @@ class SplashViewModel(
         viewModelScope.launch {
             val config = mDb.configDao().loadConfigByKey(AppDatabase.CONFIG_KEY_NAME_DATE_EDIT)
             if (config == null) {
-                if (isNetworkAvailable(app.applicationContext)) {
+                if (NetworkUtils.isNetworkAvailable(app.applicationContext)) {
                     loadJsonFromServer()
                 } else {
                     _networkError.value = true
@@ -73,7 +72,7 @@ class SplashViewModel(
         _need2Navigate2Self.value = true
     }
 
-    fun navigated2Home(){
+    fun navigated2Home() {
         _need2Navigate2Home.value = false
     }
 
@@ -145,7 +144,7 @@ class SplashViewModel(
     private suspend fun accountUpdate(accId: Int, type: String, title: String, balance: Int) {
         val newAcc = AccountModel(accId, title, type, balance, 810)
         mDb.accountDao().insertAccount(newAcc)
-        accountBalanceUpdateById(mDb, accId)
+        BalanceMathUtils.accountBalanceUpdateById(mDb, accId)
     }
 
     private suspend fun categoriesUpdate(categoriesItems: List<CategoriesItem>) {

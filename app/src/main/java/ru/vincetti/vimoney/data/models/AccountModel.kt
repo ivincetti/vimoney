@@ -16,8 +16,7 @@ data class AccountModel(
 
     var sum: Int = 0,
 
-    // TODO проверить валюту
-    var currency: Int = 812,
+    var currency: Int = DEFAULT_CURRENCY,
 
     @ColumnInfo(name = "extra_key")
     var extraKey: String = "",
@@ -25,8 +24,7 @@ data class AccountModel(
     @ColumnInfo(name = "extra_value")
     var extraValue: String = "",
 
-    // TODO загружать из ресурсов или придумать другой вариант
-    var color: String = "#164fc6",
+    var color: String = DEFAULT_COLOR,
 
     @ColumnInfo(name = "archive")
     var isArchive: Boolean = false,
@@ -42,5 +40,8 @@ data class AccountModel(
         const val ACCOUNT_TYPE_CASH = "cash"
         const val ACCOUNT_TYPE_DEBIT = "debit"
         const val ACCOUNT_TYPE_CREDIT = "credit"
+
+        const val DEFAULT_COLOR = "#164fc6"
+        const val DEFAULT_CURRENCY = 812
     }
 }

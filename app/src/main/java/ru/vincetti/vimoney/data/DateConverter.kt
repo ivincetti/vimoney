@@ -7,10 +7,9 @@ class DateConverter {
 
     @TypeConverter
     fun toDate(timestamp: Long?): Date? {
-        timestamp?.let {
-            return Date(timestamp)
+        return timestamp?.let {
+            Date(timestamp)
         }
-        return null
     }
 
     @TypeConverter

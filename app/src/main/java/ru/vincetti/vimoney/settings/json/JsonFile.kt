@@ -13,7 +13,7 @@ import ru.vincetti.vimoney.data.models.CategoryModel
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.utils.accountBalanceUpdateAll
+import ru.vincetti.vimoney.utils.BalanceMathUtils
 import java.io.*
 import java.util.*
 
@@ -71,7 +71,7 @@ object JsonFile {
                 importAccounts(db, gson, accountsJsonBuilder)
                 importCategories(db, gson, categoriesJsonBuilder)
             }
-            accountBalanceUpdateAll(db)
+            BalanceMathUtils.accountBalanceUpdateAll(db)
         }
     }
 
