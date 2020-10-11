@@ -8,7 +8,6 @@ import ru.vincetti.vimoney.data.sqlite.AppDatabase
 
 object BalanceMathUtils {
 
-    @JvmStatic
     suspend fun accountBalanceUpdateById(
         db: AppDatabase,
         accId: Int
@@ -19,7 +18,6 @@ object BalanceMathUtils {
         }
     }
 
-    @JvmStatic
     suspend fun accountBalanceUpdateAll(db: AppDatabase) {
         withContext(Dispatchers.IO) {
             val accDao = db.accountDao()
@@ -32,7 +30,6 @@ object BalanceMathUtils {
         }
     }
 
-    @JvmStatic
     suspend fun userBalanceUpdate(accountDao: AccountDao): Int {
         var balance = 0
         val accounts = accountDao.loadAllAccounts()
