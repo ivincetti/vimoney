@@ -62,8 +62,7 @@ class FilterDialog : BottomSheetDialogFragment() {
             }
         }
         viewModel.dateFrom.observe(viewLifecycleOwner) {
-            fragment_filter_date_from_name.text = DateFormat
-                .getDateInstance(DateFormat.MEDIUM).format(it)
+            fragment_filter_date_from_name.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)
             dateFrom = it
         }
         viewModel.dateFromReset.observe(viewLifecycleOwner) {
@@ -73,8 +72,7 @@ class FilterDialog : BottomSheetDialogFragment() {
             }
         }
         viewModel.dateTo.observe(viewLifecycleOwner) {
-            fragment_filter_date_to_name.text = DateFormat
-                .getDateInstance(DateFormat.MEDIUM).format(it)
+            fragment_filter_date_to_name.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)
             dateTo = it
         }
         viewModel.dateToReset.observe(viewLifecycleOwner) {
@@ -110,7 +108,7 @@ class FilterDialog : BottomSheetDialogFragment() {
 
     private fun showDateDialog(save: (newDate: Date) -> Unit) {
         val calendar = GregorianCalendar()
-        calendar.time = Date()
+//        calendar.time = Date()
 
         DatePickerDialog(
             requireContext(),
@@ -124,10 +122,10 @@ class FilterDialog : BottomSheetDialogFragment() {
     private fun createFilter(): Filter {
         val filter = Filter()
         fragment_filter_desc_name.text?.let {
-            if (!it.isBlank()) filter.comment = it.toString()
+            if (it.isNotBlank()) filter.comment = it.toString()
         }
         fragment_filter_sum_name.text?.let {
-            if (!it.isBlank()) filter.sumFrom = it.toString().toInt()
+            if (it.isNotBlank()) filter.sumFrom = it.toString().toInt()
         }
         dateFrom?.let { filter.dateFrom = it }
         dateTo?.let { filter.dateTo = it }

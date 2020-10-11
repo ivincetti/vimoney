@@ -1,11 +1,13 @@
 package ru.vincetti.vimoney.ui.history.filter
 
+import android.util.Log
 import androidx.lifecycle.*
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.sqlite.AccountDao
 import ru.vincetti.vimoney.data.sqlite.CategoryDao
 import java.util.*
 
+@Suppress("TooManyFunctions")
 class FilterViewModel(
     private val accDao: AccountDao,
     private val catDao: CategoryDao
@@ -90,9 +92,11 @@ class FilterViewModel(
     }
 
     fun showAccounts() {
+        Log.d("Vimoney FilterViewModel", "showAccounts")
     }
 
     fun showCategories() {
+        Log.d("Vimoney FilterViewModel", "showCategories")
     }
 
     fun resetAccount() {

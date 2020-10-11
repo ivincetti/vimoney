@@ -27,4 +27,8 @@ data class CurrencyModel(
     override fun toString(): String {
         return symbol
     }
+
+    companion object {
+        const val DEFAULT_CURRENCY_SYMBOL = "₽"
+    }
 }

@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.View
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.ViewCompat
@@ -23,7 +22,6 @@ import ru.vincetti.vimoney.data.models.CurrencyModel
 import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
-
 
 class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
 

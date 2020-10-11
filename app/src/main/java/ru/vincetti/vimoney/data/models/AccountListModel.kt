@@ -12,16 +12,15 @@ data class AccountListModel(
 
     val sum: Int,
 
-    // TODO подумать над сохранением/ресурсами
     @ColumnInfo(name = "symbol")
-    val curSymbol: String = "\u20BD",
+    val curSymbol: String = CurrencyModel.DEFAULT_CURRENCY_SYMBOL,
 
     val color: String,
 
     @ColumnInfo(name = "archive")
     val isArchive: Boolean,
 
-    var currency: Int = 812,
+    var currency: Int = AccountModel.DEFAULT_CURRENCY,
 
     @ColumnInfo(name = "extra_key")
     var extraKey: String = "",
