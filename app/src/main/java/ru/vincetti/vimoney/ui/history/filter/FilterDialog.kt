@@ -108,7 +108,6 @@ class FilterDialog : BottomSheetDialogFragment() {
 
     private fun showDateDialog(save: (newDate: Date) -> Unit) {
         val calendar = GregorianCalendar()
-//        calendar.time = Date()
 
         DatePickerDialog(
             requireContext(),

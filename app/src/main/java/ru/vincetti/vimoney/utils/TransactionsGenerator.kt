@@ -13,7 +13,6 @@ object TransactionsGenerator {
     private const val SAMPLE_DESC = "Sample"
     private const val SAMPLE_SUM = 150F
 
-    @JvmStatic
     private suspend fun generate(transactionRepo: TransactionRepo, count: Int) {
         withContext(Dispatchers.IO) {
             for (i in 0..count) {
@@ -29,7 +28,6 @@ object TransactionsGenerator {
         }
     }
 
-    @JvmStatic
     suspend fun generateSample(transactionRepo: TransactionRepo) {
         generate(transactionRepo, SAMPLE_COUNT)
     }
