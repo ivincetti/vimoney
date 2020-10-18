@@ -35,7 +35,6 @@ android {
             signingConfig signingConfigs.release
         }
     }
-    buildToolsVersion = '29.0.3'
     compileOptions {
         coreLibraryDesugaringEnabled true
 
