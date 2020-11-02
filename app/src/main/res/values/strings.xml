@@ -67,6 +67,10 @@
     <!--Settings Activity-->
     <string name="settings_title_home">Settings</string>
 
+    <!--Login Fragment-->
+    <string name="login_title_home">Pin setup</string>
+    <string name="login_delete_text" translatable="false"><![CDATA[<]]></string>
+
     <!--Add Check Activity-->
     <string name="add_check_title_home">Add account</string>
     <string name="add_check_type_cash_txt">cash</string>
@@ -104,6 +108,7 @@
     <string name="channel_description">Don\'t forget to record you expenses</string>
     <string name="back_icon_description">Back</string>
     <string name="filter_icon_description">Filter</string>
+    <string name="settings_security_switch_text">Use Pin lock</string>
     <string name="settings_categories_btn">Manage Categories</string>
     <string name="settings_save_transactions_btn">Save records</string>
     <string name="settings_load_transactions_btn">Load records</string>

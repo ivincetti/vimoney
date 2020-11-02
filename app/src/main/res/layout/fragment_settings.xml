@@ -59,11 +59,23 @@
         >
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:orientation="vertical"
+            android:layout_margin="@dimen/big_padding"
             >
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switch_settings_security"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/st_padding"
+                android:text="@string/settings_security_switch_text"
+                android:textColor="@color/colorPrimaryText"
+                android:textAllCaps="true"
+                />
 
             <Button
                 android:id="@+id/btn_settings_categories"

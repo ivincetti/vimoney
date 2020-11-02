@@ -23,7 +23,7 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         }
         viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
             if (it) {
-                findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+                findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
                 viewModel.navigated2Home()
             }
         }

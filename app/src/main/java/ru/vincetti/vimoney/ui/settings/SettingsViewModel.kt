@@ -1,16 +1,14 @@
 package ru.vincetti.vimoney.ui.settings
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.vincetti.vimoney.App
+import ru.vincetti.vimoney.data.repository.PrefsRepo
 import ru.vincetti.vimoney.settings.json.JsonFile
 
-class SettingsViewModel : ViewModel() {
+class SettingsViewModel(private val prefsRepo: PrefsRepo) : ViewModel() {
 
     private var _need2Navigate2Home = MutableLiveData<Boolean>()
     val need2Navigate2Home: LiveData<Boolean>
@@ -19,6 +17,14 @@ class SettingsViewModel : ViewModel() {
     private var _need2Navigate2Categories = MutableLiveData<Boolean>()
     val need2Navigate2Categories: LiveData<Boolean>
         get() = _need2Navigate2Categories
+
+    private var _need2Navigate2Pin = MutableLiveData<Boolean>()
+    val need2Navigate2Pin: LiveData<Boolean>
+        get() = _need2Navigate2Pin
+
+    private var _pinSwitchState = MutableLiveData<Boolean>()
+    val pinSwitchState: LiveData<Boolean>
+        get() = _pinSwitchState
 
     private var _importButtonState = MutableLiveData<Boolean>()
     val importButtonState: LiveData<Boolean>
@@ -31,8 +37,10 @@ class SettingsViewModel : ViewModel() {
     init {
         _need2Navigate2Home.value = false
         _need2Navigate2Categories.value = false
+        _need2Navigate2Pin.value = false
         _importButtonState.value = true
         _exportButtonState.value = true
+        _pinSwitchState.value = false
     }
 
     fun backButtonClicked() {
@@ -49,6 +57,18 @@ class SettingsViewModel : ViewModel() {
 
     fun navigated2Categories() {
         _need2Navigate2Categories.value = false
+    }
+
+    fun securitySwitchClicked() {
+        if (prefsRepo.isPinSet) {
+            prefsRepo.resetPin()
+        } else {
+            _need2Navigate2Pin.value = true
+        }
+    }
+
+    fun navigated2Pin() {
+        _need2Navigate2Pin.value = false
     }
 
     fun saveJson() {
@@ -74,5 +94,20 @@ class SettingsViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    fun checkNonObservablesState() {
+        _pinSwitchState.value = prefsRepo.isPinSet
+    }
+}
+
+class SettingsViewModelFactory(
+    private val prefsRepo: PrefsRepo
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
+            return SettingsViewModel(prefsRepo) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

@@ -8,18 +8,28 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_settings.*
 import ru.vincetti.vimoney.R
+import ru.vincetti.vimoney.data.repository.PrefsRepo
 import ru.vincetti.vimoney.extensions.updateMargin
 
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
-    val viewModel: SettingsViewModel by viewModels()
+    private val viewModel: SettingsViewModel by viewModels { viewModelFactory }
+    private lateinit var viewModelFactory: SettingsViewModelFactory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val prefsRepo = PrefsRepo(requireContext())
+        viewModelFactory = SettingsViewModelFactory(prefsRepo)
 
         viewsInit()
         observersInit()
         insetsInit()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.checkNonObservablesState()
     }
 
     private fun viewsInit() {
@@ -27,6 +37,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         btn_settings_categories.setOnClickListener { viewModel.categoriesButtonClicked() }
         btn_save_transactions.setOnClickListener { viewModel.saveJson() }
         btn_load_transactions.setOnClickListener { viewModel.loadJson() }
+        switch_settings_security.setOnClickListener { viewModel.securitySwitchClicked() }
     }
 
     private fun observersInit() {
@@ -41,6 +52,15 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                 findNavController().navigate(R.id.action_settingsFragment_to_categoriesFragment)
                 viewModel.navigated2Categories()
             }
+        }
+        viewModel.need2Navigate2Pin.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigate(R.id.action_settingsFragment_to_setPinFragment)
+                viewModel.navigated2Pin()
+            }
+        }
+        viewModel.pinSwitchState.observe(viewLifecycleOwner) {
+            switch_settings_security.isChecked = it
         }
         viewModel.exportButtonState.observe(viewLifecycleOwner) {
             btn_save_transactions.isEnabled = it

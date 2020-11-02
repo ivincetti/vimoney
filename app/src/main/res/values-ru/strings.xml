@@ -66,6 +66,9 @@
     <!--Settings Activity-->
     <string name="settings_title_home">Настройки</string>
 
+    <!--Login Fragment-->
+    <string name="login_title_home">Установка Pin</string>
+
     <!--Add Check Activity-->
     <string name="add_check_title_home">Добавить счет</string>
     <string name="add_check_type_cash_txt">cash</string>
@@ -98,6 +101,7 @@
     <string name="channel_description">не забудьте внести транзакции</string>
     <string name="back_icon_description">кнопка назад</string>
     <string name="filter_icon_description">Фильтр</string>
+    <string name="settings_security_switch_text">Защитить пин-кодом</string>
     <string name="settings_categories_btn">Управление категориями</string>
     <string name="settings_save_transactions_btn">Сохранить операции</string>
     <string name="settings_load_transactions_btn">Загрузить операции</string>
