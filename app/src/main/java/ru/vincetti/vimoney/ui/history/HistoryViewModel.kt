@@ -6,15 +6,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.switchMap
 import androidx.paging.toLiveData
 import ru.vincetti.vimoney.data.repository.TransactionRepo
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.ui.history.filter.Filter
 
 class HistoryViewModel(
-    db: AppDatabase,
+    private val repo: TransactionRepo,
     initFilter: Filter
 ) : ViewModel() {
-
-    private val repo: TransactionRepo = TransactionRepo(db)
 
     private var filter = MutableLiveData(initFilter)
 
@@ -28,12 +25,12 @@ class HistoryViewModel(
 }
 
 class HistoryViewModelFactory(
-    private val db: AppDatabase,
+    private val repo: TransactionRepo,
     private val filter: Filter
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HistoryViewModel::class.java)) {
-            return HistoryViewModel(db, filter) as T
+            return HistoryViewModel(repo, filter) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

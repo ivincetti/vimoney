@@ -10,14 +10,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_categories_list.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.AllCategoriesListRVAdapter
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
+import ru.vincetti.vimoney.data.repository.CategoryRepo
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.settings.category.add.AddCategoryViewModel.Companion.EXTRA_CATEGORY_ID
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
+
+    @Inject
+    lateinit var categoryRepo: CategoryRepo
 
     val viewModel: CategoriesViewModel by viewModels { viewModelFactory }
 
@@ -27,9 +33,7 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val application = requireNotNull(activity).application
-        val db = AppDatabase.getInstance(application)
-        viewModelFactory = CategoriesModelFactory(db.categoryDao())
+        viewModelFactory = CategoriesModelFactory(categoryRepo)
 
         viewsInit()
         observersInit()

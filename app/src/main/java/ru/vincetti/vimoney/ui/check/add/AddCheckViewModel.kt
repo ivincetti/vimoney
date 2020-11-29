@@ -1,22 +1,21 @@
 package ru.vincetti.vimoney.ui.check.add
 
-import android.app.Application
 import android.graphics.Color
 import android.text.TextUtils
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.AccountModel
 import ru.vincetti.vimoney.data.models.CurrencyModel
-import ru.vincetti.vimoney.data.sqlite.AccountDao
-import ru.vincetti.vimoney.data.sqlite.CurrentDao
+import ru.vincetti.vimoney.data.repository.AccountRepo
+import ru.vincetti.vimoney.data.repository.CurrencyRepo
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 
 @Suppress("TooManyFunctions")
-class AddCheckViewModel(
-    private val accDao: AccountDao,
-    private val curDao: CurrentDao,
-    val app: Application
-) : AndroidViewModel(app) {
+class AddCheckViewModel @ViewModelInject constructor(
+    private val accountRepo: AccountRepo,
+    private val currencyRepo: CurrencyRepo
+) : ViewModel() {
 
     private var checkID = DEFAULT_CHECK_ID
 
@@ -45,7 +44,9 @@ class AddCheckViewModel(
     val color
         get() = _color
 
-    val currencyList = curDao.loadAllCurrency()
+    val currencyList = liveData {
+        emit(currencyRepo.loadAll())
+    }
 
     private var _check = MutableLiveData<AccountModel>()
     val check: LiveData<AccountModel>
@@ -63,11 +64,11 @@ class AddCheckViewModel(
 
     fun loadAccount(id: Int) {
         viewModelScope.launch {
-            accDao.loadAccountById(id)?.let {
+            accountRepo.loadById(id)?.let {
                 checkID = id
                 _color.value = Color.parseColor(it.color)
                 _check.value = it
-                _currency.value = curDao.loadCurrencyByCode(it.currency)
+                _currency.value = currencyRepo.loadByCode(it.currency)
                 _needAllBalance.value = it.needAllBalance
                 _needOnMain.value = it.needOnMain
                 isDefault.value = false
@@ -92,16 +93,14 @@ class AddCheckViewModel(
                 it.needAllBalance = _needAllBalance.value!!
                 it.needOnMain = _needOnMain.value!!
                 if (!isDefaultBool) {
-                    // update logic
                     viewModelScope.launch {
-                        accDao.updateAccount(it)
+                        accountRepo.update(it)
                     }
                 } else {
-                    // new transaction
                     it.sum = 0
                     it.color = java.lang.String.format("#%06x", (_color.value!! and 0xffffff))
                     viewModelScope.launch {
-                        accDao.insertAccount(it)
+                        accountRepo.add(it)
                     }
                 }
                 _need2NavigateBack.value = true
@@ -112,7 +111,7 @@ class AddCheckViewModel(
     fun restore() {
         if (!isDefaultBool) {
             viewModelScope.launch {
-                accDao.fromArchiveAccountById(checkID)
+                accountRepo.unArchiveById(checkID)
                 _need2NavigateBack.value = true
             }
         }
@@ -121,7 +120,7 @@ class AddCheckViewModel(
     fun delete() {
         if (!isDefaultBool) {
             viewModelScope.launch {
-                accDao.archiveAccountById(checkID)
+                accountRepo.archiveById(checkID)
                 _need2NavigateBack.value = true
             }
         }
@@ -150,7 +149,7 @@ class AddCheckViewModel(
     fun setCurrency(checkCurrency: Int) {
         _check.value?.currency = checkCurrency
         viewModelScope.launch {
-            _currency.value = curDao.loadCurrencyByCode(checkCurrency)
+            _currency.value = currencyRepo.loadByCode(checkCurrency)
         }
     }
 
@@ -158,18 +157,5 @@ class AddCheckViewModel(
         _color.value = selectedColor
         val hexColor = java.lang.String.format("#%06x", (selectedColor and 0xffffff))
         _check.value?.color = hexColor
-    }
-}
-
-class AddCheckModelFactory(
-    private val accDao: AccountDao,
-    private val curDao: CurrentDao,
-    private val app: Application
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AddCheckViewModel::class.java)) {
-            return AddCheckViewModel(accDao, curDao, app) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

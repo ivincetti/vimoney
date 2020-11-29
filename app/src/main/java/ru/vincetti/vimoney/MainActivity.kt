@@ -3,9 +3,11 @@ package ru.vincetti.vimoney
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.vincetti.vimoney.utils.NotificationsUtils
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -10,26 +10,22 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_checks_list.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.AllCardsListRVAdapter
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 
+@AndroidEntryPoint
 class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
 
-    private val viewModel: CheckListViewModel by viewModels { viewModelFactory }
+    private val viewModel: CheckListViewModel by viewModels()
 
-    private lateinit var viewModelFactory: CheckListModelFactory
     private lateinit var recyclerAdapter: AllCardsListRVAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val application = requireNotNull(activity).application
-        val db = AppDatabase.getInstance(application)
-        viewModelFactory = CheckListModelFactory(db.accountDao())
 
         viewsInit()
         insetsInit()

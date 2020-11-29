@@ -17,23 +17,18 @@ import kotlinx.android.synthetic.main.fragment_add_all.view.*
 import kotlinx.android.synthetic.main.fragment_add_spent.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.AccountListModel
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import java.text.DateFormat
 import java.util.*
 
 open class TransactionFFFragment(contentLayoutId: Int) : Fragment(contentLayoutId) {
 
-    val viewModel: TransactionMainViewModel by viewModels({ requireParentFragment() }) { viewModelFactory }
+    val viewModel: TransactionMainViewModel by viewModels({ requireParentFragment() })
 
-    private lateinit var viewModelFactory: TransactionMainViewModelFactory
     private lateinit var date: Date
 
     val dialogFrag = CategoryListDialog()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val application = requireNotNull(activity).application
-        val db = AppDatabase.getInstance(application)
-        viewModelFactory = TransactionMainViewModelFactory(db)
         initFragmentViews()
         initFragmentPlus()
     }

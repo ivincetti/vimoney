@@ -3,14 +3,14 @@ package ru.vincetti.vimoney.ui.history.filter
 import android.util.Log
 import androidx.lifecycle.*
 import ru.vincetti.vimoney.data.models.TransactionModel
-import ru.vincetti.vimoney.data.sqlite.AccountDao
-import ru.vincetti.vimoney.data.sqlite.CategoryDao
+import ru.vincetti.vimoney.data.repository.AccountRepo
+import ru.vincetti.vimoney.data.repository.CategoryRepo
 import java.util.*
 
 @Suppress("TooManyFunctions")
 class FilterViewModel(
-    private val accDao: AccountDao,
-    private val catDao: CategoryDao
+    private val accountRepo: AccountRepo,
+    private val categoryRepo: CategoryRepo
 ) : ViewModel() {
 
     private val _needToNavigate = MutableLiveData<Boolean>()
@@ -24,14 +24,14 @@ class FilterViewModel(
     private val _categoryId = MutableLiveData<Int>()
     val category = _categoryId.switchMap {
         liveData {
-            emit(catDao.loadCategoryById(it))
+            emit(categoryRepo.loadById(it))
         }
     }
 
     private val _accountId = MutableLiveData<Int>()
     val account = _accountId.switchMap {
         liveData {
-            emit(accDao.loadAccountById(it))
+            emit(accountRepo.loadById(it))
         }
     }
 
@@ -141,12 +141,12 @@ class FilterViewModel(
 }
 
 class FilterViewModelFactory(
-    private val accDao: AccountDao,
-    private val catDao: CategoryDao
+    private val accountRepo: AccountRepo,
+    private val categoryRepo: CategoryRepo
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(FilterViewModel::class.java)) {
-            return FilterViewModel(accDao, catDao) as T
+            return FilterViewModel(accountRepo, categoryRepo) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

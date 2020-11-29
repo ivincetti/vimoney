@@ -11,27 +11,23 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_transaction_main.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.TabsFragmentPagerAdapter
 import ru.vincetti.vimoney.data.models.TransactionModel
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
 
+@AndroidEntryPoint
 class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
 
-    private val viewModel: TransactionMainViewModel by viewModels { viewModelFactory }
+    private val viewModel: TransactionMainViewModel by viewModels()
 
-    private lateinit var viewModelFactory: TransactionMainViewModelFactory
     private lateinit var fragmentBundle: Bundle
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val application = requireNotNull(activity).application
-        val db = AppDatabase.getInstance(application)
-        viewModelFactory = TransactionMainViewModelFactory(db)
 
         fragmentBundle = Bundle()
         arguments?.let { bundle ->
