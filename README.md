@@ -8,7 +8,7 @@ application uses:
 * MVVM architecture
 * SQLite, RoomDatabase for config and checks/accounts/transactionSave
 * Retrofit2 for sample JSON config download
-* IntentService for notification
+* Hilt as DI
 * RecycleView for accounts & transaction lists
 * Fragment for transaction list presentation in various Activities
 * MpGraph for charts
