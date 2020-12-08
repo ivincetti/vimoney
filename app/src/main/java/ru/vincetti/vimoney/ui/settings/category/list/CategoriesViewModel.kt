@@ -1,12 +1,9 @@
 package ru.vincetti.vimoney.ui.settings.category.list
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import ru.vincetti.vimoney.data.sqlite.CategoryDao
+import androidx.lifecycle.*
+import ru.vincetti.vimoney.data.repository.CategoryRepo
 
-class CategoriesViewModel(categoriesDao: CategoryDao) : ViewModel() {
+class CategoriesViewModel(categoryRepo: CategoryRepo) : ViewModel() {
 
     private var _need2Navigate2Home = MutableLiveData<Boolean>()
     val need2Navigate2Home: LiveData<Boolean>
@@ -16,7 +13,7 @@ class CategoriesViewModel(categoriesDao: CategoryDao) : ViewModel() {
     val need2Navigate2AddCategory: LiveData<Boolean>
         get() = _need2Navigate2AddCategory
 
-    val categories = categoriesDao.loadAllCategories()
+    val categories = categoryRepo.loadAllObservable()
 
     init {
         _need2Navigate2Home.value = false
@@ -40,10 +37,10 @@ class CategoriesViewModel(categoriesDao: CategoryDao) : ViewModel() {
     }
 }
 
-class CategoriesModelFactory(private val dao: CategoryDao) : ViewModelProvider.Factory {
+class CategoriesModelFactory(private val repo: CategoryRepo) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CategoriesViewModel::class.java)) {
-            return CategoriesViewModel(dao) as T
+            return CategoriesViewModel(repo) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -8,13 +8,14 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home_content.*
 import kotlinx.android.synthetic.main.fragment_home_content.view.*
 import kotlinx.android.synthetic.main.stat_income_expense.view.*
+import ru.vincetti.vimoney.BuildConfig
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
@@ -23,19 +24,15 @@ import ru.vincetti.vimoney.utils.DatesFormat
 import java.time.LocalDate
 import java.util.*
 
+@AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
-    private val viewModel: HomeViewModel by viewModels { viewModelFactory }
+    private val viewModel: HomeViewModel by viewModels()
 
-    private lateinit var viewModelFactory: HomeViewModelFactory
     private lateinit var mAdapter: CardsListRVAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val application = requireActivity().application
-        val db = AppDatabase.getInstance(application)
-        viewModelFactory = HomeViewModelFactory(db)
 
         mAdapter = CardsListRVAdapter {
             val bundle = Bundle()
@@ -52,10 +49,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun viewInit() {
+        if (BuildConfig.DEBUG) {
+            home_menu_notification.visibility = View.VISIBLE
+            home_menu_notification.setOnClickListener {
+                findNavController().navigate(R.id.action_homeFragment_to_notificationFragment)
+            }
+        }
         fragment_home_content.home_month.text = DatesFormat
             .getMonthName(LocalDate.now())
             .capitalize(Locale.getDefault())
-
         home_fab.setOnClickListener {
             findNavController().navigate(R.id.action_global_transactionMainFragment)
         }
@@ -67,9 +69,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         fragment_home_content.home_stat_link.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_dashboardFragment)
-        }
-        home_menu_notification.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_notificationFragment)
         }
         home_menu_settings.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)

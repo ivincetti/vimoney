@@ -8,7 +8,7 @@ import ru.vincetti.vimoney.data.models.CategoryModel
 interface CategoryDao {
 
     @Query("Select * from category ORDER BY id ASC")
-    fun loadAllCategories(): LiveData<List<CategoryModel>?>
+    fun loadCategoriesObservable(): LiveData<List<CategoryModel>>
 
     @Query("Select * from category ORDER BY id ASC")
     suspend fun loadCategories(): List<CategoryModel>?

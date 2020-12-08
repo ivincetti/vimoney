@@ -32,38 +32,27 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
 
-        @Volatile
-        private var INSTANCE: AppDatabase? = null
         private const val DB_NAME = "vimoney.db"
-        const val CONFIG_KEY_NAME_DATE_EDIT = "date_edit"
 
-        fun getInstance(context: Context): AppDatabase {
-            val tempInstance = INSTANCE
-            if (tempInstance != null) return tempInstance
-
-            synchronized(this) {
-                val instance =
-                    Room.databaseBuilder(
-                        context.applicationContext,
-                        AppDatabase::class.java,
-                        DB_NAME
-                    ).addMigrations(
-                        MIGRATION_1_2,
-                        MIGRATION_2_3,
-                        MIGRATION_3_4,
-                        MIGRATION_4_5,
-                        MIGRATION_5_6,
-                        MIGRATION_6_7,
-                        MIGRATION_7_8,
-                        MIGRATION_8_9,
-                        MIGRATION_9_10,
-                        MIGRATION_10_11,
-                        MIGRATION_11_12,
-                        MIGRATION_12_13
-                    ).build()
-                INSTANCE = instance
-                return instance
-            }
+        fun newInstance(applicationContext: Context): AppDatabase {
+            return Room.databaseBuilder(
+                applicationContext,
+                AppDatabase::class.java,
+                DB_NAME
+            ).addMigrations(
+                MIGRATION_1_2,
+                MIGRATION_2_3,
+                MIGRATION_3_4,
+                MIGRATION_4_5,
+                MIGRATION_5_6,
+                MIGRATION_6_7,
+                MIGRATION_7_8,
+                MIGRATION_8_9,
+                MIGRATION_9_10,
+                MIGRATION_10_11,
+                MIGRATION_11_12,
+                MIGRATION_12_13
+            ).build()
         }
 
         /** Check: delete acc_id. */

@@ -3,18 +3,15 @@ package ru.vincetti.vimoney.ui.check.view
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.AccountListModel
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
+import ru.vincetti.vimoney.data.repository.AccountRepo
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
-import ru.vincetti.vimoney.utils.BalanceMathUtils
 
 class CheckViewModel(
-    private val database: AppDatabase,
+    private val accountRepo: AccountRepo,
     private val accountId: Int
 ) : ViewModel() {
 
-    private val accountDao = database.accountDao()
-
-    val account: LiveData<AccountListModel> = accountDao.loadAccountByIdFull(accountId)
+    val account: LiveData<AccountListModel> = accountRepo.loadForListById(accountId)
 
     val isArchive: LiveData<Boolean> = account.map {
         it.isArchive
@@ -35,7 +32,7 @@ class CheckViewModel(
     fun restore() {
         if (accountId != DEFAULT_CHECK_ID) {
             viewModelScope.launch {
-                accountDao.fromArchiveAccountById(accountId)
+                accountRepo.unArchiveById(accountId)
             }
         }
     }
@@ -43,7 +40,7 @@ class CheckViewModel(
     fun delete() {
         if (accountId != DEFAULT_CHECK_ID) {
             viewModelScope.launch {
-                accountDao.archiveAccountById(accountId)
+                accountRepo.archiveById(accountId)
             }
         }
     }
@@ -51,19 +48,19 @@ class CheckViewModel(
     fun update() {
         _updateButtonEnable.value = false
         viewModelScope.launch {
-            BalanceMathUtils.accountBalanceUpdateById(database, accountId)
+            accountRepo.balanceUpdateById(accountId)
             _updateButtonEnable.value = true
         }
     }
 }
 
 class CheckViewModelFactory(
-    private val database: AppDatabase,
+    private val accountRepo: AccountRepo,
     private val id: Int
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CheckViewModel::class.java)) {
-            return CheckViewModel(database, id) as T
+            return CheckViewModel(accountRepo, id) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

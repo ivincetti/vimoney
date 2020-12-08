@@ -10,19 +10,25 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_check.*
 import kotlinx.android.synthetic.main.fragment_check_content.*
 import kotlinx.android.synthetic.main.fragment_check_content.view.*
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
+import ru.vincetti.vimoney.data.repository.AccountRepo
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
 import ru.vincetti.vimoney.ui.history.filter.Filter
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CheckFragment : Fragment(R.layout.fragment_check) {
+
+    @Inject
+    lateinit var accountRepo: AccountRepo
 
     private val viewModel: CheckViewModel by viewModels { viewModelFactory }
 
@@ -32,13 +38,11 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val application = requireNotNull(activity).application
-        val db = AppDatabase.getInstance(application)
         arguments?.let { bundle ->
             val extraCheck = bundle.getInt(EXTRA_CHECK_ID)
             if (extraCheck > 0) checkId = extraCheck
         }
-        viewModelFactory = CheckViewModelFactory(db, checkId)
+        viewModelFactory = CheckViewModelFactory(accountRepo, checkId)
         initViews()
         observersInit()
         insetsInit()

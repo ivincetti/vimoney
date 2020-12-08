@@ -1,5 +1,6 @@
 package ru.vincetti.vimoney.ui.notifications
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.ViewCompat
@@ -9,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_notifications.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.extensions.updateMargin
+import ru.vincetti.vimoney.service.NotificationService
 
 class NotificationFragment : Fragment(R.layout.fragment_notifications) {
 
@@ -24,7 +26,7 @@ class NotificationFragment : Fragment(R.layout.fragment_notifications) {
 
     private fun viewsInit() {
         setting_navigation_back_btn.setOnClickListener { viewModel.backButtonClicked() }
-        notification_notify_btn.setOnClickListener { viewModel.notifyButton() }
+        notification_notify_btn.setOnClickListener { viewModel.notifyButtonClicked() }
     }
 
     private fun observersInit() {
@@ -34,6 +36,12 @@ class NotificationFragment : Fragment(R.layout.fragment_notifications) {
                 viewModel.navigatedBack()
             }
         }
+        viewModel.need2Notify.observe(viewLifecycleOwner) {
+            if (it) {
+                startService()
+                viewModel.notifyChecked()
+            }
+        }
     }
 
     private fun insetsInit() {
@@ -41,5 +49,12 @@ class NotificationFragment : Fragment(R.layout.fragment_notifications) {
             notification_toolbar.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
+    }
+
+    private fun startService() {
+        requireContext().startService(
+            Intent(requireContext(), NotificationService::class.java)
+                .setAction(NotificationService.NOTIFICATION_ACTION)
+        )
     }
 }

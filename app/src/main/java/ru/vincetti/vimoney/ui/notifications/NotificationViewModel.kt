@@ -1,11 +1,8 @@
 package ru.vincetti.vimoney.ui.notifications
 
-import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.vincetti.vimoney.App
-import ru.vincetti.vimoney.service.NotificationService
 
 class NotificationViewModel : ViewModel() {
 
@@ -13,8 +10,13 @@ class NotificationViewModel : ViewModel() {
     val need2Navigate2Home: LiveData<Boolean>
         get() = _need2Navigate2Home
 
+    private var _need2Notify = MutableLiveData<Boolean>()
+    val need2Notify: LiveData<Boolean>
+        get() = _need2Notify
+
     init {
         _need2Navigate2Home.value = false
+        _need2Notify.value = false
     }
 
     fun backButtonClicked() {
@@ -25,12 +27,11 @@ class NotificationViewModel : ViewModel() {
         _need2Navigate2Home.value = false
     }
 
-    fun notifyButton() {
-        App.context?.let {
-            it.startService(
-                Intent(it, NotificationService::class.java)
-                    .setAction(NotificationService.NOTIFICATION_ACTION)
-            )
-        }
+    fun notifyButtonClicked() {
+        _need2Notify.value = true
+    }
+
+    fun notifyChecked() {
+        _need2Notify.value = false
     }
 }

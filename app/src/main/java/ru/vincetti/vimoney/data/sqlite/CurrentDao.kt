@@ -1,6 +1,5 @@
 package ru.vincetti.vimoney.data.sqlite
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import ru.vincetti.vimoney.data.models.CurrencyModel
 
@@ -8,7 +7,7 @@ import ru.vincetti.vimoney.data.models.CurrencyModel
 interface CurrentDao {
 
     @Query("Select * from currency ORDER BY id ASC")
-    fun loadAllCurrency(): LiveData<List<CurrencyModel>?>
+    suspend fun loadAllCurrency(): List<CurrencyModel>?
 
     @Query("Select * from currency WHERE code = :code LIMIT 1")
     suspend fun loadCurrencyByCode(code: Int): CurrencyModel?

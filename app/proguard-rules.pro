@@ -32,21 +32,6 @@
     @retrofit2.http.* <methods>;
 }
 
-# Support library
--dontwarn android.support.**
--dontwarn android.support.v4.**
--keep class android.support.v4.** { *; }
--keep interface android.support.v4.** { *; }
--dontwarn android.support.v7.**
--keep class android.support.v7.** { *; }
--keep interface android.support.v7.** { *; }
-
-# support design
--dontwarn android.support.design.**
--keep class android.support.design.** { *; }
--keep interface android.support.design.** { *; }
--keep public class android.support.design.R$* { *; }
-
 # retrofit
 -dontwarn okio.**
 -keepattributes Signature

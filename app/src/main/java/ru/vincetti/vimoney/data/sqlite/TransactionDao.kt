@@ -145,28 +145,6 @@ interface TransactionDao {
     )
     suspend fun loadSumByCheckId(accId: Int): Float
 
-    @Query(
-        """
-        SELECT SUM(sum) FROM transactions 
-        WHERE type=${TransactionModel.TRANSACTION_TYPE_INCOME} 
-        AND account_id = :accId
-        """
-    )
-    suspend fun loadSumIncomeByCheckId(accId: Int): Float
-
-    @Query(
-        """
-        SELECT SUM(sum) FROM transactions
-        WHERE (type=${TransactionModel.TRANSACTION_TYPE_SPENT}
-        OR type=${TransactionModel.TRANSACTION_TYPE_TRANSFER})
-        AND  account_id = :accId
-        """
-    )
-    suspend fun loadSumExpenseByCheckId(accId: Int): Float
-
-    @Query("SELECT account_id FROM transactions WHERE id = :id")
-    suspend fun getAccountTransactionById(id: Int): Int
-
     @Query("DELETE FROM transactions WHERE id = :transId")
     suspend fun deleteTransactionById(transId: Int)
 

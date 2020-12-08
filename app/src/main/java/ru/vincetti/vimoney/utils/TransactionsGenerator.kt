@@ -5,15 +5,20 @@ import kotlinx.coroutines.withContext
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.repository.TransactionRepo
 import java.util.*
+import javax.inject.Inject
 
-object TransactionsGenerator {
+class TransactionsGenerator @Inject constructor(
+    private val transactionRepo: TransactionRepo
+) {
 
-    private const val SAMPLE_COUNT = 5
-    private const val SAMPLE_ACC_COUNT = 3
-    private const val SAMPLE_DESC = "Sample"
-    private const val SAMPLE_SUM = 150F
+    companion object {
+        private const val SAMPLE_COUNT = 5
+        private const val SAMPLE_ACC_COUNT = 3
+        private const val SAMPLE_DESC = "Sample"
+        private const val SAMPLE_SUM = 150F
+    }
 
-    private suspend fun generate(transactionRepo: TransactionRepo, count: Int) {
+    private suspend fun generate(count: Int) {
         withContext(Dispatchers.IO) {
             for (i in 0..count) {
                 val tmp = TransactionModel(
@@ -23,12 +28,12 @@ object TransactionsGenerator {
                     (i % 2 + 1),
                     SAMPLE_SUM
                 )
-                transactionRepo.addTransaction(tmp)
+                transactionRepo.add(tmp)
             }
         }
     }
 
-    suspend fun generateSample(transactionRepo: TransactionRepo) {
-        generate(transactionRepo, SAMPLE_COUNT)
+    suspend fun generateSample() {
+        generate(SAMPLE_COUNT)
     }
 }

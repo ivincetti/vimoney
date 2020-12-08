@@ -8,26 +8,21 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.android.synthetic.main.fragment_dashboard_content.*
 import kotlinx.android.synthetic.main.fragment_dashboard_content.view.*
 import kotlinx.android.synthetic.main.stat_income_expense.view.*
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.extensions.updateMargin
 
+@AndroidEntryPoint
 class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
 
-    private val viewModel: DashboardViewModel by viewModels { viewModelFactory }
-
-    private lateinit var viewModelFactory: DashboardViewModelFactory
+    private val viewModel: DashboardViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val application = requireNotNull(activity).application
-        val db = AppDatabase.getInstance(application)
-        viewModelFactory = DashboardViewModelFactory(db)
 
         graphInit()
         viewsInit()

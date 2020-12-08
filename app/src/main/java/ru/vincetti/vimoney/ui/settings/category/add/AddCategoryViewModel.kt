@@ -4,11 +4,11 @@ import android.text.TextUtils
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.CategoryModel
-import ru.vincetti.vimoney.data.sqlite.CategoryDao
+import ru.vincetti.vimoney.data.repository.CategoryRepo
 import ru.vincetti.vimoney.ui.settings.category.symbol.Category
 
 class AddCategoryViewModel(
-    private val categoryDao: CategoryDao
+    private val categoryRepo: CategoryRepo
 ) : ViewModel() {
 
     companion object {
@@ -54,7 +54,7 @@ class AddCategoryViewModel(
 
     fun loadCategory(id: Int) {
         viewModelScope.launch {
-            categoryDao.loadCategoryById(id)?.let {
+            categoryRepo.loadById(id)?.let {
                 categoryID = id
                 _categoryName.value = it.name
                 _categorySymbol.value = it.symbol
@@ -72,9 +72,9 @@ class AddCategoryViewModel(
                 val tmpCategory = CategoryModel(name = name, symbol = symbol)
                 if (!isDefaultBool) {
                     tmpCategory.id = categoryID
-                    categoryDao.updateCategory(tmpCategory)
+                    categoryRepo.update(tmpCategory)
                 } else {
-                    categoryDao.insertCategory(tmpCategory)
+                    categoryRepo.add(tmpCategory)
                 }
                 _need2NavigateBack.value = true
             }
@@ -95,11 +95,11 @@ class AddCategoryViewModel(
 }
 
 class AddCategoryViewModelFactory(
-    private val categoryDao: CategoryDao
+    private val categoryRepo: CategoryRepo
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AddCategoryViewModel::class.java)) {
-            return AddCategoryViewModel(categoryDao) as T
+            return AddCategoryViewModel(categoryRepo) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

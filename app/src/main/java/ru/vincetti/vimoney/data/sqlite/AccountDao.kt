@@ -31,7 +31,7 @@ interface AccountDao {
         ORDER BY name ASC
         """
     )
-    fun loadNotArchiveAccounts(): LiveData<List<AccountListModel>?>
+    suspend fun loadNotArchiveAccounts(): List<AccountListModel>?
 
     @Query(
         """
@@ -43,7 +43,7 @@ interface AccountDao {
         ORDER BY accounts.name ASC
         """
     )
-    fun loadMainAccountsFull(): List<AccountListModel>
+    fun loadMainAccountsFull(): LiveData<List<AccountListModel>>
 
     @Query("SELECT * FROM accounts WHERE id = :accId")
     suspend fun loadAccountById(accId: Int): AccountModel?
