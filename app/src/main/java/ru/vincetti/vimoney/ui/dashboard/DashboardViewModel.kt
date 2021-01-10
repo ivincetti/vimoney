@@ -1,16 +1,17 @@
 package ru.vincetti.vimoney.ui.dashboard
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.repository.TransactionRepo
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.utils.DatesFormat
 import java.time.LocalDate
 import java.util.*
 
-class DashboardViewModel(db: AppDatabase) : ViewModel() {
+class DashboardViewModel @ViewModelInject constructor(
+    private val transRepo: TransactionRepo
+) : ViewModel() {
 
-    private val transRepo = TransactionRepo(db)
     private var localDate = LocalDate.now()
 
     val income = MutableLiveData<Int>()
@@ -99,16 +100,7 @@ class DashboardViewModel(db: AppDatabase) : ViewModel() {
         _need2Navigate2Home.value = true
     }
 
-    fun navigatedBack(){
+    fun navigatedBack() {
         _need2Navigate2Home.value = false
-    }
-}
-
-class DashboardViewModelFactory(private val db: AppDatabase) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(DashboardViewModel::class.java)) {
-            return DashboardViewModel(db) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

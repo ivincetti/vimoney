@@ -6,13 +6,15 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_settings.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.extensions.updateMargin
 
+@AndroidEntryPoint
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
-    val viewModel: SettingsViewModel by viewModels()
+    private val viewModel: SettingsViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,10 +44,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                 viewModel.navigated2Categories()
             }
         }
-        viewModel.exportButtonState.observe(viewLifecycleOwner) {
+        viewModel.buttonsState.observe(viewLifecycleOwner) {
             btn_save_transactions.isEnabled = it
-        }
-        viewModel.importButtonState.observe(viewLifecycleOwner) {
             btn_load_transactions.isEnabled = it
         }
     }

@@ -2,9 +2,7 @@ package ru.vincetti.vimoney.service
 
 import android.app.IntentService
 import android.content.Intent
-import ru.vincetti.vimoney.utils.showNotification
-import ru.vincetti.vimoney.utils.showSaveErrorNotification
-import ru.vincetti.vimoney.utils.showSaveNotification
+import ru.vincetti.vimoney.utils.NotificationsUtils
 
 class NotificationService : IntentService("NotificationService") {
 
@@ -17,9 +15,9 @@ class NotificationService : IntentService("NotificationService") {
     override fun onHandleIntent(intent: Intent?) {
         intent?.let {
             when (it.action) {
-                NOTIFICATION_ACTION -> showNotification(this)
-                NOTIFICATION_SAVE_ACTION -> showSaveNotification(this)
-                else -> showSaveErrorNotification(this)
+                NOTIFICATION_ACTION -> NotificationsUtils.showNotification(this)
+                NOTIFICATION_SAVE_ACTION -> NotificationsUtils.showSaveNotification(this)
+                else -> NotificationsUtils.showSaveErrorNotification(this)
             }
         }
     }

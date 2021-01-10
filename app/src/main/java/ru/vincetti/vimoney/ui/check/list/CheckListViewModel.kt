@@ -1,20 +1,12 @@
 package ru.vincetti.vimoney.ui.check.list
 
-import androidx.lifecycle.LiveData
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import ru.vincetti.vimoney.data.models.AccountListModel
-import ru.vincetti.vimoney.data.sqlite.AccountDao
+import ru.vincetti.vimoney.data.repository.AccountRepo
 
-class CheckListViewModel(dao: AccountDao) : ViewModel() {
-    val accList: LiveData<List<AccountListModel>> = dao.loadAllAccountsFull()
-}
+class CheckListViewModel @ViewModelInject constructor(
+    accountRepo: AccountRepo
+) : ViewModel() {
 
-class CheckListModelFactory(private val dao: AccountDao) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(CheckListViewModel::class.java)) {
-            return CheckListViewModel(dao) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
+    val accList = accountRepo.loadAllFull()
 }

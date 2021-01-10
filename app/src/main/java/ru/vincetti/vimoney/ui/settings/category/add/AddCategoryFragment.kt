@@ -10,15 +10,21 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_add_category.*
 import kotlinx.android.synthetic.main.fragment_add_category_content.*
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
+import ru.vincetti.vimoney.data.repository.CategoryRepo
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.settings.category.add.AddCategoryViewModel.Companion.EXTRA_CATEGORY_ID
 import ru.vincetti.vimoney.ui.settings.category.symbol.CategorySymbolListDialog
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
+
+    @Inject
+    lateinit var categoryRepo: CategoryRepo
 
     private val viewModel: AddCategoryViewModel by viewModels { viewModelFactory }
 
@@ -27,9 +33,7 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val application = requireNotNull(activity).application
-        val db = AppDatabase.getInstance(application)
-        viewModelFactory = AddCategoryViewModelFactory(db.categoryDao())
+        viewModelFactory = AddCategoryViewModelFactory(categoryRepo)
 
         arguments?.let { bundle ->
             val extraCategory = bundle.getInt(EXTRA_CATEGORY_ID)

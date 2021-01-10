@@ -9,7 +9,6 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_history.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.history.filter.FilterDialog

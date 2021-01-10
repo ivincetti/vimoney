@@ -2,43 +2,20 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:100</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:101</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:108</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:114</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:115</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:116</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:56</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:57</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:58</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:59</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:65</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:66</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:67</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:86</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:87</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:88</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:89</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:98</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.data.sqlite.TransactionDao.kt:99</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.ui.check.add.AddCheckViewModel.kt:76</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.ui.check.add.AddCheckViewModel.kt:77</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.ui.check.add.AddCheckViewModel.kt:78</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModel.kt:134</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModel.kt:185</ID>
-    <ID>ChainWrapping:ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModel.kt:228</ID>
     <ID>ComplexCondition:AddCheckViewModel.kt$AddCheckViewModel$TextUtils.isEmpty(name) || TextUtils.isEmpty(type) || currency.value == null || color.value!! &gt; 0</ID>
     <ID>DataClassShouldBeImmutable:AccountListModel.kt$AccountListModel$@ColumnInfo(name = "extra_key") var extraKey: String = ""</ID>
     <ID>DataClassShouldBeImmutable:AccountListModel.kt$AccountListModel$@ColumnInfo(name = "extra_value") var extraValue: String = ""</ID>
     <ID>DataClassShouldBeImmutable:AccountListModel.kt$AccountListModel$@ColumnInfo(name = "need_all_balance") var needAllBalance: Boolean = true</ID>
-    <ID>DataClassShouldBeImmutable:AccountListModel.kt$AccountListModel$var currency: Int = 812</ID>
+    <ID>DataClassShouldBeImmutable:AccountListModel.kt$AccountListModel$@ColumnInfo(name = "need_on_main_screen") var needOnMain: Boolean = true</ID>
+    <ID>DataClassShouldBeImmutable:AccountListModel.kt$AccountListModel$var currency: Int = AccountModel.DEFAULT_CURRENCY</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$@ColumnInfo(name = "archive") var isArchive: Boolean = false</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$@ColumnInfo(name = "extra_key") var extraKey: String = ""</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$@ColumnInfo(name = "extra_value") var extraValue: String = ""</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$@ColumnInfo(name = "need_all_balance") var needAllBalance: Boolean = true</ID>
+    <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$@ColumnInfo(name = "need_on_main_screen") var needOnMain: Boolean = true</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$@PrimaryKey(autoGenerate = true) var id: Int = 0</ID>
-    <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$var color: String = "#164fc6"</ID>
-    <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$var currency: Int = 812</ID>
+    <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$var color: String = DEFAULT_COLOR</ID>
+    <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$var currency: Int = DEFAULT_CURRENCY</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$var name: String? = ""</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$var sum: Int = 0</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$var type: String? = ACCOUNT_TYPE_CASH</ID>
@@ -61,21 +38,12 @@
     <ID>DataClassShouldBeImmutable:TransactionStatDayModel.kt$TransactionStatDayModel$var sum: Int</ID>
     <ID>EmptyFunctionBlock:TransactionMainFragment.kt$TransactionMainFragment.&lt;no name provided&gt;${ }</ID>
     <ID>EmptyFunctionBlock:TransactionTransferFragment.kt$TransactionTransferFragment.&lt;no name provided&gt;${ }</ID>
-    <ID>ImportOrdering:ru.vincetti.vimoney.data.adapters.TabsFragmentPagerAdapter.kt:3</ID>
-    <ID>ImportOrdering:ru.vincetti.vimoney.data.adapters.TransactionsRVAdapter.kt:3</ID>
-    <ID>ImportOrdering:ru.vincetti.vimoney.data.repository.TransactionRepo.kt:3</ID>
-    <ID>ImportOrdering:ru.vincetti.vimoney.settings.json.JsonFile.kt:3</ID>
-    <ID>ImportOrdering:ru.vincetti.vimoney.ui.dashboard.DashboardViewModel.kt:3</ID>
-    <ID>ImportOrdering:ru.vincetti.vimoney.ui.home.HomeFragment.kt:3</ID>
-    <ID>ImportOrdering:ru.vincetti.vimoney.ui.splash.SplashViewModel.kt:3</ID>
-    <ID>ImportOrdering:ru.vincetti.vimoney.ui.transaction.main.TransactionFFFragment.kt:3</ID>
-    <ID>ImportOrdering:ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModel.kt:3</ID>
-    <ID>ImportOrdering:ru.vincetti.vimoney.utils.TransactionsGenerator.kt:3</ID>
     <ID>MagicNumber:AddCheckFragment.kt$AddCheckFragment$12</ID>
     <ID>MagicNumber:AddCheckViewModel.kt$AddCheckViewModel$0xffffff</ID>
     <ID>MagicNumber:AppDatabase.kt$AppDatabase.Companion.&lt;no name provided&gt;$10</ID>
     <ID>MagicNumber:AppDatabase.kt$AppDatabase.Companion.&lt;no name provided&gt;$11</ID>
     <ID>MagicNumber:AppDatabase.kt$AppDatabase.Companion.&lt;no name provided&gt;$12</ID>
+    <ID>MagicNumber:AppDatabase.kt$AppDatabase.Companion.&lt;no name provided&gt;$13</ID>
     <ID>MagicNumber:AppDatabase.kt$AppDatabase.Companion.&lt;no name provided&gt;$3</ID>
     <ID>MagicNumber:AppDatabase.kt$AppDatabase.Companion.&lt;no name provided&gt;$4</ID>
     <ID>MagicNumber:AppDatabase.kt$AppDatabase.Companion.&lt;no name provided&gt;$5</ID>
@@ -85,8 +53,6 @@
     <ID>MagicNumber:AppDatabase.kt$AppDatabase.Companion.&lt;no name provided&gt;$9</ID>
     <ID>MagicNumber:DashboardFragment.kt$DashboardFragment$400L</ID>
     <ID>MagicNumber:SplashViewModel.kt$SplashViewModel$810</ID>
-    <ID>ReturnCount:NetworkUtils.kt$fun isNetworkAvailable(context: Context): Boolean</ID>
-    <ID>TooManyFunctions:AccountDao.kt$AccountDao$AccountDao</ID>
-    <ID>TooManyFunctions:TransactionDao.kt$TransactionDao$TransactionDao</ID>
+    <ID>ReturnCount:NetworkUtils.kt$NetworkUtils$@JvmStatic fun isNetworkAvailable(context: Context): Boolean</ID>
   </CurrentIssues>
 </SmellBaseline>

@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.View
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.ViewCompat
@@ -14,29 +13,23 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_add_check.*
 import kotlinx.android.synthetic.main.fragment_add_check_content.*
 import kotlinx.android.synthetic.main.fragment_add_check_content.view.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.AccountModel
 import ru.vincetti.vimoney.data.models.CurrencyModel
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 
-
+@AndroidEntryPoint
 class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
 
-    private val viewModel: AddCheckViewModel by viewModels { viewModelFactory }
-
-    private lateinit var viewModelFactory: AddCheckModelFactory
+    private val viewModel: AddCheckViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val application = requireNotNull(activity).application
-        val db = AppDatabase.getInstance(application)
-        viewModelFactory = AddCheckModelFactory(db.accountDao(), db.currentDao(), application)
 
         arguments?.let { bundle ->
             val extraCheck = bundle.getInt(EXTRA_CHECK_ID)

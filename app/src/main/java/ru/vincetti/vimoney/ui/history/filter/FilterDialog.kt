@@ -7,13 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.dialog_transactions_filter.*
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
+import ru.vincetti.vimoney.data.repository.AccountRepo
+import ru.vincetti.vimoney.data.repository.CategoryRepo
 import java.text.DateFormat
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FilterDialog : BottomSheetDialogFragment() {
+
+    @Inject
+    lateinit var accountRepo: AccountRepo
+
+    @Inject
+    lateinit var categoryRepo: CategoryRepo
 
     private val viewModel: FilterViewModel by viewModels { viewModelFactory }
     private lateinit var viewModelFactory: FilterViewModelFactory
@@ -37,8 +47,7 @@ class FilterDialog : BottomSheetDialogFragment() {
     }
 
     private fun initViewModel() {
-        val db = AppDatabase.getInstance(requireNotNull(activity).application)
-        viewModelFactory = FilterViewModelFactory(db.accountDao(), db.categoryDao())
+        viewModelFactory = FilterViewModelFactory(accountRepo, categoryRepo)
 
         viewModel.account.observe(viewLifecycleOwner) {
             it?.let { fragment_filter_acc_name.text = it.name }
@@ -62,8 +71,7 @@ class FilterDialog : BottomSheetDialogFragment() {
             }
         }
         viewModel.dateFrom.observe(viewLifecycleOwner) {
-            fragment_filter_date_from_name.text = DateFormat
-                .getDateInstance(DateFormat.MEDIUM).format(it)
+            fragment_filter_date_from_name.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)
             dateFrom = it
         }
         viewModel.dateFromReset.observe(viewLifecycleOwner) {
@@ -73,8 +81,7 @@ class FilterDialog : BottomSheetDialogFragment() {
             }
         }
         viewModel.dateTo.observe(viewLifecycleOwner) {
-            fragment_filter_date_to_name.text = DateFormat
-                .getDateInstance(DateFormat.MEDIUM).format(it)
+            fragment_filter_date_to_name.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)
             dateTo = it
         }
         viewModel.dateToReset.observe(viewLifecycleOwner) {
@@ -110,7 +117,6 @@ class FilterDialog : BottomSheetDialogFragment() {
 
     private fun showDateDialog(save: (newDate: Date) -> Unit) {
         val calendar = GregorianCalendar()
-        calendar.time = Date()
 
         DatePickerDialog(
             requireContext(),
@@ -124,10 +130,10 @@ class FilterDialog : BottomSheetDialogFragment() {
     private fun createFilter(): Filter {
         val filter = Filter()
         fragment_filter_desc_name.text?.let {
-            if (!it.isBlank()) filter.comment = it.toString()
+            if (it.isNotBlank()) filter.comment = it.toString()
         }
         fragment_filter_sum_name.text?.let {
-            if (!it.isBlank()) filter.sumFrom = it.toString().toInt()
+            if (it.isNotBlank()) filter.sumFrom = it.toString().toInt()
         }
         dateFrom?.let { filter.dateFrom = it }
         dateTo?.let { filter.dateTo = it }

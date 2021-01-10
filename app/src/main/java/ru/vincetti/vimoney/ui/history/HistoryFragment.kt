@@ -8,14 +8,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_history_content.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.TransactionsRVAdapter
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
+import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.ui.history.filter.Filter
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class HistoryFragment : Fragment(R.layout.fragment_history_content) {
+
+    @Inject
+    lateinit var transactionRepo: TransactionRepo
 
     private val viewModel: HistoryViewModel by viewModels { viewModelFactory }
 
@@ -28,9 +34,8 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val db = AppDatabase.getInstance(requireNotNull(activity).application)
         val filter = arguments?.let { Filter.createFromBundle(it) } ?: Filter()
-        viewModelFactory = HistoryViewModelFactory(db, filter)
+        viewModelFactory = HistoryViewModelFactory(transactionRepo, filter)
 
         transactionsListInit()
     }

@@ -6,52 +6,59 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.vincetti.vimoney.data.models.AccountModel
 import ru.vincetti.vimoney.data.models.CategoryModel
 import ru.vincetti.vimoney.data.models.TransactionModel
+import ru.vincetti.vimoney.data.repository.AccountRepo
+import ru.vincetti.vimoney.data.repository.CategoryRepo
 import ru.vincetti.vimoney.data.repository.TransactionRepo
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.utils.accountBalanceUpdateAll
 import java.io.*
 import java.util.*
+import javax.inject.Inject
 
-object JsonFile {
+class JsonFile @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val categoryRepo: CategoryRepo,
+    private val transactionRepo: TransactionRepo,
+    private val accountRepo: AccountRepo
+) {
 
-    private const val FILE_NAME_TRANSACTIONS = "transactions.json"
-    private const val FILE_NAME_ACCOUNTS = "accounts.json"
-    private const val FILE_NAME_CATEGORIES = "categories.json"
+    companion object {
+        private const val FILE_NAME_TRANSACTIONS = "transactions.json"
+        private const val FILE_NAME_ACCOUNTS = "accounts.json"
+        private const val FILE_NAME_CATEGORIES = "categories.json"
+    }
 
-    suspend fun save(context: Context) {
+    suspend fun save() {
         withContext(Dispatchers.IO) {
             val gson = GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()
-            val db = AppDatabase.getInstance(context)
-            db.accountDao().loadAllAccounts()?.let {
+            accountRepo.loadAll()?.let {
                 val accountJson: String = gson.toJson(it)
-                json2FileSave(context, accountJson, FILE_NAME_ACCOUNTS)
+                json2FileSave(accountJson, FILE_NAME_ACCOUNTS)
             }
-            TransactionRepo(db).loadAllTransactions().let {
+            transactionRepo.loadAll().let {
                 val transactionsJson = gson.toJson(it)
-                json2FileSave(context, transactionsJson, FILE_NAME_TRANSACTIONS)
+                json2FileSave(transactionsJson, FILE_NAME_TRANSACTIONS)
             }
-            db.categoryDao().loadCategories()?.let {
+            categoryRepo.loadAll()?.let {
                 val catJson = gson.toJson(it)
-                json2FileSave(context, catJson, FILE_NAME_CATEGORIES)
+                json2FileSave(catJson, FILE_NAME_CATEGORIES)
             }
         }
     }
 
-    private fun json2FileSave(context: Context, stringJson: String, filename: String) {
+    private fun json2FileSave(stringJson: String, filename: String) {
         val file = File(context.getExternalFilesDir(null), filename)
         val fos = FileOutputStream(file)
         fos.write(stringJson.toByteArray())
         fos.close()
     }
 
-    suspend fun load(context: Context) {
+    suspend fun load() {
         val gson = GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()
-        val db = AppDatabase.getInstance(context)
 
         withContext(Dispatchers.IO) {
             var transactionsJsonBuilder = StringBuilder()
@@ -59,63 +66,60 @@ object JsonFile {
             var categoriesJsonBuilder = StringBuilder()
 
             try {
-                transactionsJsonBuilder = readFromFile(context, FILE_NAME_TRANSACTIONS)
-                accountsJsonBuilder = readFromFile(context, FILE_NAME_ACCOUNTS)
-                categoriesJsonBuilder = readFromFile(context, FILE_NAME_CATEGORIES)
+                transactionsJsonBuilder = readFromFile(FILE_NAME_TRANSACTIONS)
+                accountsJsonBuilder = readFromFile(FILE_NAME_ACCOUNTS)
+                categoriesJsonBuilder = readFromFile(FILE_NAME_CATEGORIES)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
 
             if (!TextUtils.isEmpty(transactionsJsonBuilder.toString())) {
-                importTransactions(db, gson, transactionsJsonBuilder)
-                importAccounts(db, gson, accountsJsonBuilder)
-                importCategories(db, gson, categoriesJsonBuilder)
+                importTransactions(gson, transactionsJsonBuilder)
+                importAccounts(gson, accountsJsonBuilder)
+                importCategories(gson, categoriesJsonBuilder)
             }
-            accountBalanceUpdateAll(db)
+            accountRepo.balanceUpdateAll()
         }
     }
 
     private suspend fun importCategories(
-        db: AppDatabase,
         gson: Gson,
         categoriesJsonBuilder: StringBuilder
     ) {
-        db.categoryDao().deleteAllCategories()
+        categoryRepo.deleteAll()
         val listType2 = object : TypeToken<ArrayList<CategoryModel>>() {}.type
         val categories: List<CategoryModel> =
             gson.fromJson(categoriesJsonBuilder.toString(), listType2)
-        for (category in categories) {
-            db.categoryDao().insertCategory(category)
+        categories.forEach {
+            categoryRepo.add(it)
         }
     }
 
     private suspend fun importAccounts(
-        db: AppDatabase,
         gson: Gson,
         accountsJsonBuilder: StringBuilder
     ) {
-        db.accountDao().deleteAllAccounts()
+        accountRepo.deleteAll()
         val listType1 = object : TypeToken<ArrayList<AccountModel>>() {}.type
         val accounts: List<AccountModel> =
             gson.fromJson(accountsJsonBuilder.toString(), listType1)
-        for (account in accounts) {
-            db.accountDao().insertAccount(account)
+        accounts.forEach {
+            accountRepo.add(it)
         }
     }
 
     private suspend fun importTransactions(
-        db: AppDatabase,
         gson: Gson,
         transactionsJsonBuilder: StringBuilder
     ) {
-        TransactionRepo(db).deleteAllTransactions()
+        transactionRepo.deleteAll()
         val listType = object : TypeToken<ArrayList<TransactionModel>>() {}.type
         val transactions: List<TransactionModel> =
             gson.fromJson(transactionsJsonBuilder.toString(), listType)
-        TransactionRepo(db).addTransaction(transactions)
+        transactionRepo.add(transactions)
     }
 
-    private fun readFromFile(context: Context, filename: String): StringBuilder {
+    private fun readFromFile(filename: String): StringBuilder {
         val stringBuilder = StringBuilder()
         val file = File(context.getExternalFilesDir(null), filename)
         val fis = FileInputStream(file)

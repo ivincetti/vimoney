@@ -4,31 +4,32 @@ import androidx.paging.DataSource
 import ru.vincetti.vimoney.data.models.TransactionListModel
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.models.TransactionStatDayModel
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
 import ru.vincetti.vimoney.data.sqlite.TransactionDao
 import ru.vincetti.vimoney.ui.history.filter.Filter
 import ru.vincetti.vimoney.utils.DatesFormat
 import java.time.LocalDate
+import javax.inject.Inject
 
-class TransactionRepo(db: AppDatabase) {
+@Suppress("TooManyFunctions")
+class TransactionRepo @Inject constructor(
+    private val transactionDao: TransactionDao
+) {
 
-    private val transactionDao: TransactionDao = db.transactionDao()
-
-    suspend fun addTransaction(transaction: TransactionModel): Long {
+    suspend fun add(transaction: TransactionModel): Long {
         return transactionDao.insertTransaction(transaction)
     }
 
-    suspend fun addTransaction(transactions: List<TransactionModel>) {
+    suspend fun add(transactions: List<TransactionModel>) {
         transactionDao.insertTransaction(transactions)
     }
 
-    suspend fun loadTransaction(id: Int) = transactionDao.loadTransactionById(id)
+    suspend fun loadById(id: Int) = transactionDao.loadTransactionById(id)
 
-    suspend fun updateTransaction(transactionModel: TransactionModel) {
+    suspend fun update(transactionModel: TransactionModel) {
         transactionDao.updateTransaction(transactionModel)
     }
 
-    suspend fun deleteTransaction(id: Int) {
+    suspend fun delete(id: Int) {
         transactionDao.deleteTransactionById(id)
     }
 
@@ -77,9 +78,9 @@ class TransactionRepo(db: AppDatabase) {
         }
     }
 
-    suspend fun loadAllTransactions() = transactionDao.loadAllTransactions()
+    suspend fun loadAll() = transactionDao.loadAllTransactions()
 
-    suspend fun deleteAllTransactions() {
+    suspend fun deleteAll() {
         transactionDao.deleteAllTransactions()
     }
 }

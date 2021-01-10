@@ -1,21 +1,22 @@
 package ru.vincetti.vimoney.ui.transaction.main
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.TransactionModel
+import ru.vincetti.vimoney.data.repository.AccountRepo
+import ru.vincetti.vimoney.data.repository.CategoryRepo
+import ru.vincetti.vimoney.data.repository.CurrencyRepo
 import ru.vincetti.vimoney.data.repository.TransactionRepo
-import ru.vincetti.vimoney.data.sqlite.AppDatabase
-import ru.vincetti.vimoney.utils.accountBalanceUpdateById
 import java.util.*
 
-class TransactionMainViewModel(
-    private val database: AppDatabase
+@Suppress("TooManyFunctions")
+class TransactionMainViewModel @ViewModelInject constructor(
+    private val transactionRepo: TransactionRepo,
+    private val accountRepo: AccountRepo,
+    private val categoryRepo: CategoryRepo,
+    private val currencyRepo: CurrencyRepo
 ) : ViewModel() {
-
-    private val transactionRepo = TransactionRepo(database)
-    private val accountDao = database.accountDao()
-    private val currentDao = database.currentDao()
-    private val categoryDao = database.categoryDao()
 
     private var _transaction = MutableLiveData<TransactionModel>()
     val transaction
@@ -48,13 +49,13 @@ class TransactionMainViewModel(
     private val _accountId = MutableLiveData<Int>()
     val account = _accountId.switchMap {
         liveData {
-            emit(accountDao.loadAccountById(it))
+            emit(accountRepo.loadById(it))
         }
     }
     val currency = account.switchMap {
         liveData {
             it?.let {
-                emit(currentDao.loadCurrencyByCode(it.currency))
+                emit(currencyRepo.loadByCode(it.currency))
             } ?: run {
                 emit(null)
             }
@@ -64,13 +65,13 @@ class TransactionMainViewModel(
     private val _accountIdTo = MutableLiveData<Int>()
     val accountTo = _accountIdTo.switchMap {
         liveData {
-            emit(accountDao.loadAccountById(it))
+            emit(accountRepo.loadById(it))
         }
     }
     val currencyTo = accountTo.switchMap {
         liveData {
             it?.let {
-                emit(currentDao.loadCurrencyByCode(it.currency))
+                emit(currencyRepo.loadByCode(it.currency))
             } ?: run {
                 emit(null)
             }
@@ -84,12 +85,16 @@ class TransactionMainViewModel(
     private val _categoryId = MutableLiveData<Int>()
     val category = _categoryId.switchMap {
         liveData {
-            emit(categoryDao.loadCategoryById(it))
+            emit(categoryRepo.loadById(it))
         }
     }
 
-    val categoriesList = categoryDao.loadAllCategories()
-    val accountNotArchiveNames = accountDao.loadNotArchiveAccounts()
+    val categoriesList = liveData {
+        emit(categoryRepo.loadAll())
+    }
+    val accountNotArchiveNames = liveData {
+        emit(accountRepo.loadNotArchive())
+    }
 
     private val _description = MutableLiveData<String>()
     val description
@@ -116,7 +121,7 @@ class TransactionMainViewModel(
 
     fun loadTransaction(id: Int) {
         viewModelScope.launch {
-            val tmpTransaction = transactionRepo.loadTransaction(id)
+            val tmpTransaction = transactionRepo.loadById(id)
             tmpTransaction?.let {
                 _transaction.value = tmpTransaction
                 if (tmpTransaction.id != TransactionModel.DEFAULT_ID) {
@@ -130,8 +135,8 @@ class TransactionMainViewModel(
                     oldTransactionAccountID = tmpTransaction.id
                 }
                 if (
-                    tmpTransaction.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
-                    && tmpTransaction.extraValue.toInt() > 0
+                    tmpTransaction.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY &&
+                    tmpTransaction.extraValue.toInt() > 0
                 ) {
                     nestedId = tmpTransaction.extraValue.toInt()
                     loadNestedTransaction(nestedId)?.let {
@@ -144,7 +149,7 @@ class TransactionMainViewModel(
         }
     }
 
-    private suspend fun loadNestedTransaction(id: Int) = transactionRepo.loadTransaction(id)
+    private suspend fun loadNestedTransaction(id: Int) = transactionRepo.loadById(id)
 
     fun setAccount(id: Int) {
         _accountId.value = id
@@ -181,14 +186,14 @@ class TransactionMainViewModel(
             _transaction.value?.let {
                 if (it.id != TransactionModel.DEFAULT_ID) {
                     if (
-                        it.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
-                        && nestedId > 0
+                        it.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY &&
+                        nestedId > 0
                     ) {
-                        transactionRepo.deleteTransaction(nestedId)
-                        accountBalanceUpdateById(database, _accountIdTo.value!!)
+                        transactionRepo.delete(nestedId)
+                        accountRepo.balanceUpdateById(_accountIdTo.value!!)
                     }
-                    transactionRepo.deleteTransaction(mTransId)
-                    accountBalanceUpdateById(database, _accountId.value!!)
+                    transactionRepo.delete(mTransId)
+                    accountRepo.balanceUpdateById(_accountId.value!!)
                     _needToNavigate.value = true
                 }
             }
@@ -223,8 +228,8 @@ class TransactionMainViewModel(
         _transaction.value?.let { tmpTransaction ->
             _nestedTransaction.value?.let { tmpToTransaction ->
                 if (
-                    _accountId.value != TransactionModel.DEFAULT_ID
-                    && _accountIdTo.value != TransactionModel.DEFAULT_ID
+                    _accountId.value != TransactionModel.DEFAULT_ID &&
+                    _accountIdTo.value != TransactionModel.DEFAULT_ID
                 ) {
                     if (txtSumTo == "" || txtSum == "") {
                         _needSum.value = true
@@ -258,14 +263,14 @@ class TransactionMainViewModel(
         }
     }
 
-    fun navigatedBack(){
+    fun navigatedBack() {
         _needToNavigate.value = false
     }
 
     private fun updateBalance(vararg trans: TransactionModel) {
         viewModelScope.launch {
             for (transaction in trans) {
-                accountBalanceUpdateById(database, transaction.accountId)
+                accountRepo.balanceUpdateById(transaction.accountId)
             }
         }
     }
@@ -273,10 +278,10 @@ class TransactionMainViewModel(
     private fun trInsert(transaction: TransactionModel, toTransaction: TransactionModel? = null) {
         viewModelScope.launch {
             toTransaction?.let {
-                val idTo: Long = transactionRepo.addTransaction(it)
+                val idTo: Long = transactionRepo.add(it)
                 transaction.extraValue = idTo.toString()
             }
-            transactionRepo.addTransaction(transaction)
+            transactionRepo.add(transaction)
             _needToNavigate.value = true
         }
     }
@@ -285,21 +290,10 @@ class TransactionMainViewModel(
         viewModelScope.launch {
             toTransaction?.let {
                 it.id = transaction.extraValue.toInt()
-                transactionRepo.updateTransaction(it)
+                transactionRepo.update(it)
             }
-            transactionRepo.updateTransaction(transaction)
+            transactionRepo.update(transaction)
             _needToNavigate.value = true
         }
-    }
-}
-
-class TransactionMainViewModelFactory(
-    private val database: AppDatabase
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(TransactionMainViewModel::class.java)) {
-            return TransactionMainViewModel(database) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
