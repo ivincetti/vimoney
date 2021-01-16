@@ -1,12 +1,16 @@
 package ru.vincetti.vimoney.ui.dashboard
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.utils.DatesFormat
+import ru.vincetti.vimoney.utils.SingleLiveEvent
 import java.time.LocalDate
 import java.util.*
+import kotlin.collections.set
 
 class DashboardViewModel @ViewModelInject constructor(
     private val transRepo: TransactionRepo
@@ -33,15 +37,12 @@ class DashboardViewModel @ViewModelInject constructor(
     val isShowProgress
         get() = _isShowProgress
 
-    private var _need2Navigate2Home = MutableLiveData<Boolean>()
-    val need2Navigate2Home: LiveData<Boolean>
-        get() = _need2Navigate2Home
+    val need2Navigate2Home = SingleLiveEvent<Boolean>()
 
     init {
         income.value = 0
         expense.value = 0
         _isShowProgress.value = true
-        _need2Navigate2Home.value = false
         getGraphData()
     }
 
@@ -97,10 +98,6 @@ class DashboardViewModel @ViewModelInject constructor(
     }
 
     fun backButtonClicked() {
-        _need2Navigate2Home.value = true
-    }
-
-    fun navigatedBack() {
-        _need2Navigate2Home.value = false
+        need2Navigate2Home.value = true
     }
 }

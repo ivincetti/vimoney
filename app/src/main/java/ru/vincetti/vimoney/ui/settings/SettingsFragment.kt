@@ -33,16 +33,10 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private fun observersInit() {
         viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
-            if (it) {
-                findNavController().navigateUp()
-                viewModel.navigated2Home()
-            }
+            if (it) findNavController().navigateUp()
         }
         viewModel.need2Navigate2Categories.observe(viewLifecycleOwner) {
-            if (it) {
-                findNavController().navigate(R.id.action_settingsFragment_to_categoriesFragment)
-                viewModel.navigated2Categories()
-            }
+            if (it) findNavController().navigate(R.id.action_settingsFragment_to_categoriesFragment)
         }
         viewModel.buttonsState.observe(viewLifecycleOwner) {
             btn_save_transactions.isEnabled = it

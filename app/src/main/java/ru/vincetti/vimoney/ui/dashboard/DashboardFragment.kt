@@ -52,10 +52,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
             showProgress(it)
         }
         viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
-            if (it) {
-                findNavController().navigateUp()
-                viewModel.navigatedBack()
-            }
+            if (it) findNavController().navigateUp()
         }
         viewModel.income.observe(viewLifecycleOwner) {
             dash_content.home_stat_income_txt.text = it.toString()
