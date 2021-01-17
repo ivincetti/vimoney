@@ -1,11 +1,11 @@
 package ru.vincetti.vimoney.ui.splash
 
 import android.util.Log
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -20,8 +20,10 @@ import ru.vincetti.vimoney.utils.NetworkUtils
 import ru.vincetti.vimoney.utils.SampleDescription
 import ru.vincetti.vimoney.utils.SingleLiveEvent
 import java.util.*
+import javax.inject.Inject
 
-class SplashViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SplashViewModel @Inject constructor(
     private val transactionRepo: TransactionRepo,
     private val accountRepo: AccountRepo,
     private val configRepo: ConfigRepo,

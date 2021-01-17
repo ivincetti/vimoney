@@ -2,8 +2,8 @@ package ru.vincetti.vimoney.ui.check.add
 
 import android.graphics.Color
 import android.text.TextUtils
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.AccountModel
 import ru.vincetti.vimoney.data.models.CurrencyModel
@@ -11,9 +11,11 @@ import ru.vincetti.vimoney.data.repository.AccountRepo
 import ru.vincetti.vimoney.data.repository.CurrencyRepo
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 import ru.vincetti.vimoney.utils.SingleLiveEvent
+import javax.inject.Inject
 
+@HiltViewModel
 @Suppress("TooManyFunctions")
-class AddCheckViewModel @ViewModelInject constructor(
+class AddCheckViewModel @Inject constructor(
     private val accountRepo: AccountRepo,
     private val currencyRepo: CurrencyRepo
 ) : ViewModel() {

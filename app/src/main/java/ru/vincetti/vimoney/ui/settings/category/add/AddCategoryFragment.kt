@@ -26,14 +26,10 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
     @Inject
     lateinit var categoryRepo: CategoryRepo
 
-    private val viewModel: AddCategoryViewModel by viewModels { viewModelFactory }
-
-    private lateinit var viewModelFactory: AddCategoryViewModelFactory
+    private val viewModel: AddCategoryViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModelFactory = AddCategoryViewModelFactory(categoryRepo)
 
         arguments?.let { bundle ->
             val extraCategory = bundle.getInt(EXTRA_CATEGORY_ID)

@@ -1,14 +1,20 @@
 package ru.vincetti.vimoney.ui.settings.category.add
 
 import android.text.TextUtils
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.CategoryModel
 import ru.vincetti.vimoney.data.repository.CategoryRepo
 import ru.vincetti.vimoney.ui.settings.category.symbol.Category
 import ru.vincetti.vimoney.utils.SingleLiveEvent
+import javax.inject.Inject
 
-class AddCategoryViewModel(
+@HiltViewModel
+class AddCategoryViewModel @Inject constructor(
     private val categoryRepo: CategoryRepo
 ) : ViewModel() {
 
@@ -85,16 +91,5 @@ class AddCategoryViewModel(
 
     fun noDataDialogClosed() {
         _need2AllData.value = false
-    }
-}
-
-class AddCategoryViewModelFactory(
-    private val categoryRepo: CategoryRepo
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AddCategoryViewModel::class.java)) {
-            return AddCategoryViewModel(categoryRepo) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
