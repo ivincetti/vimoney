@@ -1,39 +1,25 @@
 package ru.vincetti.vimoney.ui.settings.category.list
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import ru.vincetti.vimoney.data.repository.CategoryRepo
+import ru.vincetti.vimoney.utils.SingleLiveEvent
 
-class CategoriesViewModel(categoryRepo: CategoryRepo) : ViewModel() {
+class CategoriesViewModel(
+    categoryRepo: CategoryRepo
+) : ViewModel() {
 
-    private var _need2Navigate2Home = MutableLiveData<Boolean>()
-    val need2Navigate2Home: LiveData<Boolean>
-        get() = _need2Navigate2Home
-
-    private var _need2Navigate2AddCategory = MutableLiveData<Boolean>()
-    val need2Navigate2AddCategory: LiveData<Boolean>
-        get() = _need2Navigate2AddCategory
+    val need2Navigate2Home = SingleLiveEvent<Boolean>()
+    val need2Navigate2AddCategory = SingleLiveEvent<Boolean>()
 
     val categories = categoryRepo.loadAllObservable()
 
-    init {
-        _need2Navigate2Home.value = false
-        _need2Navigate2AddCategory.value = false
-    }
-
     fun backButtonClicked() {
-        _need2Navigate2Home.value = true
-    }
-
-    fun navigated2Home() {
-        _need2Navigate2Home.value = false
+        need2Navigate2Home.value = true
     }
 
     fun addCategoryClicked() {
-        _need2Navigate2AddCategory.value = true
-    }
-
-    fun navigated2AddCategory() {
-        _need2Navigate2AddCategory.value = false
+        need2Navigate2AddCategory.value = true
     }
 }
 

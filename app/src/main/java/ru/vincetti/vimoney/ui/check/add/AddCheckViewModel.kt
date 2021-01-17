@@ -10,6 +10,7 @@ import ru.vincetti.vimoney.data.models.CurrencyModel
 import ru.vincetti.vimoney.data.repository.AccountRepo
 import ru.vincetti.vimoney.data.repository.CurrencyRepo
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
+import ru.vincetti.vimoney.utils.SingleLiveEvent
 
 @Suppress("TooManyFunctions")
 class AddCheckViewModel @ViewModelInject constructor(
@@ -22,9 +23,7 @@ class AddCheckViewModel @ViewModelInject constructor(
     val isDefault = MutableLiveData<Boolean>()
     private var isDefaultBool = true
 
-    private var _need2NavigateBack = MutableLiveData<Boolean>()
-    val need2NavigateBack: LiveData<Boolean>
-        get() = _need2NavigateBack
+    val need2NavigateBack = SingleLiveEvent<Boolean>()
 
     private var _needAllBalance = MutableLiveData<Boolean>()
     val needAllBalance: LiveData<Boolean>
@@ -56,7 +55,6 @@ class AddCheckViewModel @ViewModelInject constructor(
         isDefault.value = true
         need2AllData.value = false
         _needOnMain.value = true
-        _need2NavigateBack.value = false
         _needAllBalance.value = true
         _check.value = AccountModel()
         _color.value = Color.parseColor(_check.value!!.color)
@@ -103,7 +101,7 @@ class AddCheckViewModel @ViewModelInject constructor(
                         accountRepo.add(it)
                     }
                 }
-                _need2NavigateBack.value = true
+                need2NavigateBack()
             }
         }
     }
@@ -112,7 +110,7 @@ class AddCheckViewModel @ViewModelInject constructor(
         if (!isDefaultBool) {
             viewModelScope.launch {
                 accountRepo.unArchiveById(checkID)
-                _need2NavigateBack.value = true
+                need2NavigateBack()
             }
         }
     }
@@ -121,7 +119,7 @@ class AddCheckViewModel @ViewModelInject constructor(
         if (!isDefaultBool) {
             viewModelScope.launch {
                 accountRepo.archiveById(checkID)
-                _need2NavigateBack.value = true
+                need2NavigateBack()
             }
         }
     }
@@ -139,11 +137,7 @@ class AddCheckViewModel @ViewModelInject constructor(
     }
 
     fun need2NavigateBack() {
-        _need2NavigateBack.value = true
-    }
-
-    fun navigatedBack() {
-        _need2NavigateBack.value = false
+        need2NavigateBack.value = true
     }
 
     fun setCurrency(checkCurrency: Int) {

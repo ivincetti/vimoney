@@ -18,6 +18,7 @@ import ru.vincetti.vimoney.data.models.json.*
 import ru.vincetti.vimoney.data.repository.*
 import ru.vincetti.vimoney.utils.NetworkUtils
 import ru.vincetti.vimoney.utils.SampleDescription
+import ru.vincetti.vimoney.utils.SingleLiveEvent
 import java.util.*
 
 class SplashViewModel @ViewModelInject constructor(
@@ -34,13 +35,9 @@ class SplashViewModel @ViewModelInject constructor(
     val networkError: LiveData<Boolean>
         get() = _networkError
 
-    private var _need2Navigate2Home = MutableLiveData<Boolean>()
-    val need2Navigate2Home: LiveData<Boolean>
-        get() = _need2Navigate2Home
+    val need2Navigate2Home = SingleLiveEvent<Boolean>()
 
-    private var _need2Navigate2Self = MutableLiveData<Boolean>()
-    val need2Navigate2Self: LiveData<Boolean>
-        get() = _need2Navigate2Self
+    val need2Navigate2Self = SingleLiveEvent<Boolean>()
 
     private val jsonDownloader by lazy {
         Retrofit.Builder()
@@ -52,8 +49,6 @@ class SplashViewModel @ViewModelInject constructor(
 
     init {
         _networkError.value = false
-        _need2Navigate2Home.value = false
-        _need2Navigate2Self.value = false
         checkDb()
     }
 
@@ -67,18 +62,14 @@ class SplashViewModel @ViewModelInject constructor(
                     _networkError.value = true
                 }
             } else {
-                _need2Navigate2Home.value = true
+                need2Navigate2Home.value = true
             }
         }
     }
 
     fun resetNetworkStatus() {
         _networkError.value = false
-        _need2Navigate2Self.value = true
-    }
-
-    fun navigated2Home() {
-        _need2Navigate2Home.value = false
+        need2Navigate2Self.value = true
     }
 
     private fun loadJsonFromServer() {
@@ -86,7 +77,7 @@ class SplashViewModel @ViewModelInject constructor(
             try {
                 val configModel = jsonDownloader.loadPreferences("Ru")
                 configDbUpdate(configModel)
-                _need2Navigate2Home.value = true
+                need2Navigate2Home.value = true
             } catch (e: Exception) {
                 Log.d("TAG", " load from json error ${e.message}")
                 _networkError.value = true

@@ -6,43 +6,30 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.vincetti.vimoney.settings.json.JsonFile
+import ru.vincetti.vimoney.utils.SingleLiveEvent
 
 class SettingsViewModel @ViewModelInject constructor(
     private val jsonFile: JsonFile
 ) : ViewModel() {
 
-    private var _need2Navigate2Home = MutableLiveData<Boolean>()
-    val need2Navigate2Home: LiveData<Boolean>
-        get() = _need2Navigate2Home
+    val need2Navigate2Home = SingleLiveEvent<Boolean>()
 
-    private var _need2Navigate2Categories = MutableLiveData<Boolean>()
-    val need2Navigate2Categories: LiveData<Boolean>
-        get() = _need2Navigate2Categories
+    val need2Navigate2Categories = SingleLiveEvent<Boolean>()
 
     private var _buttonsState = MutableLiveData<Boolean>()
     val buttonsState: LiveData<Boolean>
         get() = _buttonsState
 
     init {
-        _need2Navigate2Home.value = false
-        _need2Navigate2Categories.value = false
         _buttonsState.value = true
     }
 
     fun backButtonClicked() {
-        _need2Navigate2Home.value = true
-    }
-
-    fun navigated2Home() {
-        _need2Navigate2Home.value = false
+        need2Navigate2Home.value = true
     }
 
     fun categoriesButtonClicked() {
-        _need2Navigate2Categories.value = true
-    }
-
-    fun navigated2Categories() {
-        _need2Navigate2Categories.value = false
+        need2Navigate2Categories.value = true
     }
 
     fun saveJson() {

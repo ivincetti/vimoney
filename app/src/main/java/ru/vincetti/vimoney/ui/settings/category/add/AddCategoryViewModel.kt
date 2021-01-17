@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.CategoryModel
 import ru.vincetti.vimoney.data.repository.CategoryRepo
 import ru.vincetti.vimoney.ui.settings.category.symbol.Category
+import ru.vincetti.vimoney.utils.SingleLiveEvent
 
 class AddCategoryViewModel(
     private val categoryRepo: CategoryRepo
@@ -25,9 +26,7 @@ class AddCategoryViewModel(
     val isDefault = MutableLiveData<Boolean>()
     private var isDefaultBool = true
 
-    private var _need2NavigateBack = MutableLiveData<Boolean>()
-    val need2NavigateBack: LiveData<Boolean>
-        get() = _need2NavigateBack
+    val need2NavigateBack = SingleLiveEvent<Boolean>()
 
     private var _categoryName = MutableLiveData<String>()
     val categoryName: LiveData<String>
@@ -44,7 +43,6 @@ class AddCategoryViewModel(
     init {
         isDefault.value = isDefaultBool
         _need2AllData.value = false
-        _need2NavigateBack.value = false
         _categorySymbol.value = "\uf544"
     }
 
@@ -76,17 +74,13 @@ class AddCategoryViewModel(
                 } else {
                     categoryRepo.add(tmpCategory)
                 }
-                _need2NavigateBack.value = true
+                need2navigateBack()
             }
         }
     }
 
     fun need2navigateBack() {
-        _need2NavigateBack.value = true
-    }
-
-    fun navigatedBack() {
-        _need2NavigateBack.value = false
+        need2NavigateBack.value = true
     }
 
     fun noDataDialogClosed() {

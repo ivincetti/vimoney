@@ -61,10 +61,7 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
             if (!it) add_category_save_btn.text = getString(R.string.add_btn_update)
         }
         viewModel.need2NavigateBack.observe(viewLifecycleOwner) {
-            if (it) {
-                findNavController().navigateUp()
-                viewModel.navigatedBack()
-            }
+            if (it) findNavController().navigateUp()
         }
         viewModel.need2AllData.observe(viewLifecycleOwner) {
             if (it) showNoDataDialog()
