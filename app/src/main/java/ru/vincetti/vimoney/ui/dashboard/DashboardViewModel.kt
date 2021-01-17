@@ -1,18 +1,20 @@
 package ru.vincetti.vimoney.ui.dashboard
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.utils.DatesFormat
 import ru.vincetti.vimoney.utils.SingleLiveEvent
 import java.time.LocalDate
 import java.util.*
+import javax.inject.Inject
 import kotlin.collections.set
 
-class DashboardViewModel @ViewModelInject constructor(
+@HiltViewModel
+class DashboardViewModel @Inject constructor(
     private val transRepo: TransactionRepo
 ) : ViewModel() {
 

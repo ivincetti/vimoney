@@ -25,15 +25,12 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
     @Inject
     lateinit var categoryRepo: CategoryRepo
 
-    val viewModel: CategoriesViewModel by viewModels { viewModelFactory }
+    val viewModel: CategoriesViewModel by viewModels()
 
-    private lateinit var viewModelFactory: CategoriesModelFactory
     private lateinit var recyclerAdapter: AllCategoriesListRVAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModelFactory = CategoriesModelFactory(categoryRepo)
 
         viewsInit()
         observersInit()
