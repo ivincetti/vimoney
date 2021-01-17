@@ -12,7 +12,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_history_content.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.adapters.TransactionsRVAdapter
-import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.ui.history.filter.Filter
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
 import javax.inject.Inject
@@ -21,11 +20,13 @@ import javax.inject.Inject
 class HistoryFragment : Fragment(R.layout.fragment_history_content) {
 
     @Inject
-    lateinit var transactionRepo: TransactionRepo
+    lateinit var viewModelFactory: HistoryViewModel.AssistedFactory
 
-    private val viewModel: HistoryViewModel by viewModels { viewModelFactory }
+    private var filter = Filter()
 
-    private lateinit var viewModelFactory: HistoryViewModelFactory
+    private val viewModel: HistoryViewModel by viewModels {
+        HistoryViewModel.provideFactory(viewModelFactory, filter)
+    }
 
     companion object {
         const val DEFAULT_CHECK_COUNT = 20
@@ -34,8 +35,7 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val filter = arguments?.let { Filter.createFromBundle(it) } ?: Filter()
-        viewModelFactory = HistoryViewModelFactory(transactionRepo, filter)
+        filter = arguments?.let { Filter.createFromBundle(it) } ?: Filter()
 
         transactionsListInit()
     }

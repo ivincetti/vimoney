@@ -5,12 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.switchMap
 import androidx.paging.toLiveData
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.ui.history.filter.Filter
 
-class HistoryViewModel(
+class HistoryViewModel @AssistedInject constructor(
     private val repo: TransactionRepo,
-    initFilter: Filter
+    @Assisted initFilter: Filter
 ) : ViewModel() {
 
     private var filter = MutableLiveData(initFilter)
@@ -22,16 +24,22 @@ class HistoryViewModel(
     fun filter(newFilter: Filter) {
         filter.value = newFilter
     }
-}
 
-class HistoryViewModelFactory(
-    private val repo: TransactionRepo,
-    private val filter: Filter
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(HistoryViewModel::class.java)) {
-            return HistoryViewModel(repo, filter) as T
+    @dagger.assisted.AssistedFactory
+    interface AssistedFactory {
+        fun create(initFilter: Filter): HistoryViewModel
+    }
+
+    companion object {
+
+        fun provideFactory(
+            assistedFactory: AssistedFactory,
+            initFilter: Filter
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return assistedFactory.create(initFilter) as T
+            }
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
