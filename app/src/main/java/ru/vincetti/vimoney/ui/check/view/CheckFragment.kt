@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.fragment_check.*
 import kotlinx.android.synthetic.main.fragment_check_content.*
 import kotlinx.android.synthetic.main.fragment_check_content.view.*
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.repository.AccountRepo
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
@@ -28,12 +27,13 @@ import javax.inject.Inject
 class CheckFragment : Fragment(R.layout.fragment_check) {
 
     @Inject
-    lateinit var accountRepo: AccountRepo
-
-    private val viewModel: CheckViewModel by viewModels { viewModelFactory }
+    lateinit var viewModelFactory: CheckViewModel.AssistedFactory
 
     private var checkId: Int = DEFAULT_CHECK_ID
-    private lateinit var viewModelFactory: CheckViewModelFactory
+
+    private val viewModel: CheckViewModel by viewModels {
+        CheckViewModel.provideFactory(viewModelFactory, checkId)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,7 +42,7 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
             val extraCheck = bundle.getInt(EXTRA_CHECK_ID)
             if (extraCheck > 0) checkId = extraCheck
         }
-        viewModelFactory = CheckViewModelFactory(accountRepo, checkId)
+
         initViews()
         observersInit()
         insetsInit()

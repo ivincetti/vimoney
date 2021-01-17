@@ -25,10 +25,7 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
             if (it) alertNetworkDialogShow()
         }
         viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
-            if (it) {
-                findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
-                viewModel.navigated2Home()
-            }
+            if (it) findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
         }
         viewModel.need2Navigate2Self.observe(viewLifecycleOwner) {
             if (it) {

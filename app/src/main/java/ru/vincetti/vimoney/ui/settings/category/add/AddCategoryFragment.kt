@@ -26,14 +26,10 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
     @Inject
     lateinit var categoryRepo: CategoryRepo
 
-    private val viewModel: AddCategoryViewModel by viewModels { viewModelFactory }
-
-    private lateinit var viewModelFactory: AddCategoryViewModelFactory
+    private val viewModel: AddCategoryViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModelFactory = AddCategoryViewModelFactory(categoryRepo)
 
         arguments?.let { bundle ->
             val extraCategory = bundle.getInt(EXTRA_CATEGORY_ID)
@@ -61,10 +57,7 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
             if (!it) add_category_save_btn.text = getString(R.string.add_btn_update)
         }
         viewModel.need2NavigateBack.observe(viewLifecycleOwner) {
-            if (it) {
-                findNavController().navigateUp()
-                viewModel.navigatedBack()
-            }
+            if (it) findNavController().navigateUp()
         }
         viewModel.need2AllData.observe(viewLifecycleOwner) {
             if (it) showNoDataDialog()

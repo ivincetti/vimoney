@@ -31,10 +31,7 @@ class NotificationFragment : Fragment(R.layout.fragment_notifications) {
 
     private fun observersInit() {
         viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
-            if (it) {
-                findNavController().navigateUp()
-                viewModel.navigatedBack()
-            }
+            if (it) findNavController().navigateUp()
         }
         viewModel.need2Notify.observe(viewLifecycleOwner) {
             if (it) {

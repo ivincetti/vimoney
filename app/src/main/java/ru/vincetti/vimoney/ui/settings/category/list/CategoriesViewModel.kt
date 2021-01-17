@@ -1,47 +1,26 @@
 package ru.vincetti.vimoney.ui.settings.category.list
 
+import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.*
 import ru.vincetti.vimoney.data.repository.CategoryRepo
+import ru.vincetti.vimoney.utils.SingleLiveEvent
+import javax.inject.Inject
 
-class CategoriesViewModel(categoryRepo: CategoryRepo) : ViewModel() {
+@HiltViewModel
+class CategoriesViewModel @Inject constructor(
+    categoryRepo: CategoryRepo
+) : ViewModel() {
 
-    private var _need2Navigate2Home = MutableLiveData<Boolean>()
-    val need2Navigate2Home: LiveData<Boolean>
-        get() = _need2Navigate2Home
-
-    private var _need2Navigate2AddCategory = MutableLiveData<Boolean>()
-    val need2Navigate2AddCategory: LiveData<Boolean>
-        get() = _need2Navigate2AddCategory
+    val need2Navigate2Home = SingleLiveEvent<Boolean>()
+    val need2Navigate2AddCategory = SingleLiveEvent<Boolean>()
 
     val categories = categoryRepo.loadAllObservable()
 
-    init {
-        _need2Navigate2Home.value = false
-        _need2Navigate2AddCategory.value = false
-    }
-
     fun backButtonClicked() {
-        _need2Navigate2Home.value = true
-    }
-
-    fun navigated2Home() {
-        _need2Navigate2Home.value = false
+        need2Navigate2Home.value = true
     }
 
     fun addCategoryClicked() {
-        _need2Navigate2AddCategory.value = true
-    }
-
-    fun navigated2AddCategory() {
-        _need2Navigate2AddCategory.value = false
-    }
-}
-
-class CategoriesModelFactory(private val repo: CategoryRepo) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(CategoriesViewModel::class.java)) {
-            return CategoriesViewModel(repo) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        need2Navigate2AddCategory.value = true
     }
 }

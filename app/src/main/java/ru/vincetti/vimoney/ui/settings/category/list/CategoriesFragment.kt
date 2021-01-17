@@ -25,15 +25,12 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
     @Inject
     lateinit var categoryRepo: CategoryRepo
 
-    val viewModel: CategoriesViewModel by viewModels { viewModelFactory }
+    val viewModel: CategoriesViewModel by viewModels()
 
-    private lateinit var viewModelFactory: CategoriesModelFactory
     private lateinit var recyclerAdapter: AllCategoriesListRVAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModelFactory = CategoriesModelFactory(categoryRepo)
 
         viewsInit()
         observersInit()
@@ -48,16 +45,10 @@ class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
 
     private fun observersInit() {
         viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
-            if (it) {
-                findNavController().navigateUp()
-                viewModel.navigated2Home()
-            }
+            if (it) findNavController().navigateUp()
         }
         viewModel.need2Navigate2AddCategory.observe(viewLifecycleOwner) {
-            if (it) {
-                findNavController().navigate(R.id.action_categoriesFragment_to_addCategoryFragment)
-                viewModel.navigated2AddCategory()
-            }
+            if (it) findNavController().navigate(R.id.action_categoriesFragment_to_addCategoryFragment)
         }
         viewModel.categories.observe(viewLifecycleOwner) {
             it?.let { recyclerAdapter.setList(it) }

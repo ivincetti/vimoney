@@ -1,21 +1,23 @@
 package ru.vincetti.vimoney.ui.history.filter
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.switchMap
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.data.repository.AccountRepo
 import ru.vincetti.vimoney.data.repository.CategoryRepo
 import java.util.*
+import javax.inject.Inject
 
+@HiltViewModel
 @Suppress("TooManyFunctions")
-class FilterViewModel(
+class FilterViewModel @Inject constructor(
     private val accountRepo: AccountRepo,
     private val categoryRepo: CategoryRepo
 ) : ViewModel() {
-
-    private val _needToNavigate = MutableLiveData<Boolean>()
-    val needToNavigate
-        get() = _needToNavigate
 
     private val _sum = MutableLiveData<Float>()
     val sum
@@ -62,7 +64,6 @@ class FilterViewModel(
     init {
         _accountId.value = TransactionModel.DEFAULT_ID
         _categoryId.value = TransactionModel.DEFAULT_CATEGORY
-        _needToNavigate.value = false
         _descriptionReset.value = false
     }
 
@@ -137,17 +138,5 @@ class FilterViewModel(
 
     fun dateToDeleted() {
         _dateToReset.value = false
-    }
-}
-
-class FilterViewModelFactory(
-    private val accountRepo: AccountRepo,
-    private val categoryRepo: CategoryRepo
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(FilterViewModel::class.java)) {
-            return FilterViewModel(accountRepo, categoryRepo) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

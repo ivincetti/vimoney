@@ -10,23 +10,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.dialog_transactions_filter.*
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.repository.AccountRepo
-import ru.vincetti.vimoney.data.repository.CategoryRepo
 import java.text.DateFormat
 import java.util.*
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class FilterDialog : BottomSheetDialogFragment() {
 
-    @Inject
-    lateinit var accountRepo: AccountRepo
-
-    @Inject
-    lateinit var categoryRepo: CategoryRepo
-
-    private val viewModel: FilterViewModel by viewModels { viewModelFactory }
-    private lateinit var viewModelFactory: FilterViewModelFactory
+    private val viewModel: FilterViewModel by viewModels()
 
     private var dateFrom: Date? = null
     private var dateTo: Date? = null
@@ -47,8 +37,6 @@ class FilterDialog : BottomSheetDialogFragment() {
     }
 
     private fun initViewModel() {
-        viewModelFactory = FilterViewModelFactory(accountRepo, categoryRepo)
-
         viewModel.account.observe(viewLifecycleOwner) {
             it?.let { fragment_filter_acc_name.text = it.name }
         }

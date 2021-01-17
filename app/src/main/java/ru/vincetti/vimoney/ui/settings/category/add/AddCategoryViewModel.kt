@@ -1,13 +1,20 @@
 package ru.vincetti.vimoney.ui.settings.category.add
 
 import android.text.TextUtils
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.CategoryModel
 import ru.vincetti.vimoney.data.repository.CategoryRepo
 import ru.vincetti.vimoney.ui.settings.category.symbol.Category
+import ru.vincetti.vimoney.utils.SingleLiveEvent
+import javax.inject.Inject
 
-class AddCategoryViewModel(
+@HiltViewModel
+class AddCategoryViewModel @Inject constructor(
     private val categoryRepo: CategoryRepo
 ) : ViewModel() {
 
@@ -25,9 +32,7 @@ class AddCategoryViewModel(
     val isDefault = MutableLiveData<Boolean>()
     private var isDefaultBool = true
 
-    private var _need2NavigateBack = MutableLiveData<Boolean>()
-    val need2NavigateBack: LiveData<Boolean>
-        get() = _need2NavigateBack
+    val need2NavigateBack = SingleLiveEvent<Boolean>()
 
     private var _categoryName = MutableLiveData<String>()
     val categoryName: LiveData<String>
@@ -44,7 +49,6 @@ class AddCategoryViewModel(
     init {
         isDefault.value = isDefaultBool
         _need2AllData.value = false
-        _need2NavigateBack.value = false
         _categorySymbol.value = "\uf544"
     }
 
@@ -76,31 +80,16 @@ class AddCategoryViewModel(
                 } else {
                     categoryRepo.add(tmpCategory)
                 }
-                _need2NavigateBack.value = true
+                need2navigateBack()
             }
         }
     }
 
     fun need2navigateBack() {
-        _need2NavigateBack.value = true
-    }
-
-    fun navigatedBack() {
-        _need2NavigateBack.value = false
+        need2NavigateBack.value = true
     }
 
     fun noDataDialogClosed() {
         _need2AllData.value = false
-    }
-}
-
-class AddCategoryViewModelFactory(
-    private val categoryRepo: CategoryRepo
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AddCategoryViewModel::class.java)) {
-            return AddCategoryViewModel(categoryRepo) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

@@ -3,28 +3,22 @@ package ru.vincetti.vimoney.ui.notifications
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ru.vincetti.vimoney.utils.SingleLiveEvent
 
 class NotificationViewModel : ViewModel() {
 
-    private var _need2Navigate2Home = MutableLiveData<Boolean>()
-    val need2Navigate2Home: LiveData<Boolean>
-        get() = _need2Navigate2Home
+    val need2Navigate2Home = SingleLiveEvent<Boolean>()
 
     private var _need2Notify = MutableLiveData<Boolean>()
     val need2Notify: LiveData<Boolean>
         get() = _need2Notify
 
     init {
-        _need2Navigate2Home.value = false
         _need2Notify.value = false
     }
 
     fun backButtonClicked() {
-        _need2Navigate2Home.value = true
-    }
-
-    fun navigatedBack() {
-        _need2Navigate2Home.value = false
+        need2Navigate2Home.value = true
     }
 
     fun notifyButtonClicked() {

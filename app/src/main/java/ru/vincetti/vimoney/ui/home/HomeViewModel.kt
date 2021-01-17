@@ -1,12 +1,14 @@
 package ru.vincetti.vimoney.ui.home
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.repository.AccountRepo
 import ru.vincetti.vimoney.data.repository.TransactionRepo
+import javax.inject.Inject
 
-class HomeViewModel @ViewModelInject constructor(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val accountRepo: AccountRepo,
     private val transRepo: TransactionRepo
 ) : ViewModel() {

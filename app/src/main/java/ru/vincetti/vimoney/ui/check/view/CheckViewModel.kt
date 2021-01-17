@@ -1,14 +1,16 @@
 package ru.vincetti.vimoney.ui.check.view
 
 import androidx.lifecycle.*
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.models.AccountListModel
 import ru.vincetti.vimoney.data.repository.AccountRepo
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 
-class CheckViewModel(
+class CheckViewModel @AssistedInject constructor(
     private val accountRepo: AccountRepo,
-    private val accountId: Int
+    @Assisted private val accountId: Int
 ) : ViewModel() {
 
     val account: LiveData<AccountListModel> = accountRepo.loadForListById(accountId)
@@ -52,16 +54,22 @@ class CheckViewModel(
             _updateButtonEnable.value = true
         }
     }
-}
 
-class CheckViewModelFactory(
-    private val accountRepo: AccountRepo,
-    private val id: Int
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(CheckViewModel::class.java)) {
-            return CheckViewModel(accountRepo, id) as T
+    @dagger.assisted.AssistedFactory
+    interface AssistedFactory {
+        fun create(accountId: Int): CheckViewModel
+    }
+
+    companion object {
+
+        fun provideFactory(
+            assistedFactory: AssistedFactory,
+            accountId: Int
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return assistedFactory.create(accountId) as T
+            }
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
