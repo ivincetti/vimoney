@@ -31,7 +31,17 @@ class TransactionsAdapter(
                 override fun areContentsTheSame(
                     old: TransactionListModel,
                     new: TransactionListModel
-                ) = old.id == new.id
+                ): Boolean {
+                    return (
+                        old.accountName == new.accountName &&
+                        old.type == new.type &&
+                        old.date == new.date &&
+                        old.description == new.description &&
+                        old.sum == new.sum &&
+                        old.symbol == new.symbol &&
+                        old.curSymbol == new.curSymbol
+                        )
+                }
             }
     }
 }
