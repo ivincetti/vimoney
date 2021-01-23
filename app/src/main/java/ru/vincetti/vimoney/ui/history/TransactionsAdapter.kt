@@ -1,23 +1,19 @@
-package ru.vincetti.vimoney.data.adapters
+package ru.vincetti.vimoney.ui.history
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.TransactionListModel
 
-class TransactionsRVAdapter(
-    private val mListener: (Int) -> Unit
-) : PagedListAdapter<TransactionListModel, TransactionsViewHolder>(DIFF_CALLBACK) {
+class TransactionsAdapter(
+    private val actions: TransactionViewHolder.Actions
+) : PagedListAdapter<TransactionListModel, TransactionViewHolder>(DIFF_CALLBACK) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionsViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_transactions_list, parent, false)
-        return TransactionsViewHolder(view, mListener)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
+        return TransactionViewHolder.create(parent, actions)
     }
 
-    override fun onBindViewHolder(holder: TransactionsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         getItem(position)?.let {
             holder.bind(it)
         }

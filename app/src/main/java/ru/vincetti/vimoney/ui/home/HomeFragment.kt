@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.fragment_home_content.view.*
 import kotlinx.android.synthetic.main.stat_income_expense.view.*
 import ru.vincetti.vimoney.BuildConfig
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.adapters.CardsListRVAdapter
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
@@ -29,18 +28,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val viewModel: HomeViewModel by viewModels()
 
-    private lateinit var mAdapter: CardsListRVAdapter
+    private lateinit var adapter: HomeCardsAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mAdapter = CardsListRVAdapter {
-            val bundle = Bundle()
-            bundle.putInt(EXTRA_CHECK_ID, it)
-            findNavController().navigate(R.id.action_homeFragment_to_checkFragment, bundle)
-        }
+        adapter = HomeCardsAdapter(
+            object : HomeCardViewHolder.Actions {
+                override fun onCardClicked(id: Int) {
+                    viewModel.clickOnCheck(id)
+                }
+            }
+        )
 
-        fragment_home_content.home_cards_recycle_view.adapter = mAdapter
+        fragment_home_content.home_cards_recycle_view.adapter = adapter
 
         viewInit()
         observersInit()
@@ -81,7 +82,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             home_user_balance.text = it.toString()
         }
         viewModel.accounts.observe(viewLifecycleOwner) {
-            mAdapter.setList(it)
+            adapter.setList(it)
         }
         viewModel.homeButtonEnabled.observe(viewLifecycleOwner) {
             home_menu_update.isEnabled = it
@@ -91,6 +92,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         viewModel.expenseSum.observe(viewLifecycleOwner) {
             it?.let { fragment_home_content.home_stat_expense_txt.text = it.toString() }
+        }
+        viewModel.needNavigate2Check.observe(viewLifecycleOwner) {
+            go2Check(it)
         }
     }
 
@@ -121,5 +125,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         childFragmentManager.beginTransaction()
             .replace(R.id.main_history_container, historyFragment)
             .commit()
+    }
+
+    private fun go2Check(id: Int) {
+        val bundle = Bundle()
+        bundle.putInt(EXTRA_CHECK_ID, id)
+        findNavController().navigate(R.id.action_homeFragment_to_checkFragment, bundle)
     }
 }

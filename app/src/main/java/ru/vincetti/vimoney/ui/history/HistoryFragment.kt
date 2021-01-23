@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_history_content.*
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.adapters.TransactionsRVAdapter
 import ru.vincetti.vimoney.ui.history.filter.Filter
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
 import javax.inject.Inject
@@ -45,14 +44,13 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
     }
 
     private fun transactionsListInit() {
-        val transactionsRVAdapter = TransactionsRVAdapter { itemId ->
-            val bundle = Bundle()
-            bundle.putInt(TransactionConst.EXTRA_TRANS_ID, itemId)
-            findNavController().navigate(
-                R.id.action_global_transactionMainFragment,
-                bundle
-            )
-        }
+        val transactionsRVAdapter = TransactionsAdapter(
+            object : TransactionViewHolder.Actions {
+                override fun onTransactionClicked(id: Int) {
+                    viewModel.clickOnElement(id)
+                }
+            }
+        )
 
         home_transactions_recycle_view.apply {
             addItemDecoration(createDivider())
@@ -61,6 +59,9 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
 
         viewModel.transList.observe(viewLifecycleOwner) { list ->
             transactionsRVAdapter.submitList(list)
+        }
+        viewModel.needNavigate2Transaction.observe(viewLifecycleOwner) {
+            go2Transaction(it)
         }
     }
 
@@ -76,5 +77,14 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
             )!!
         )
         return lineDivider
+    }
+
+    private fun go2Transaction(id: Int) {
+        val bundle = Bundle()
+        bundle.putInt(TransactionConst.EXTRA_TRANS_ID, id)
+        findNavController().navigate(
+            R.id.action_global_transactionMainFragment,
+            bundle
+        )
     }
 }

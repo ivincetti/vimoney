@@ -13,16 +13,17 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_checks_list.*
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.adapters.AllCardsListRVAdapter
 import ru.vincetti.vimoney.extensions.updateMargin
+import ru.vincetti.vimoney.ui.check.AllCardsAdapter
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
+import ru.vincetti.vimoney.ui.check.view.CardViewHolder
 
 @AndroidEntryPoint
 class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
 
     private val viewModel: CheckListViewModel by viewModels()
 
-    private lateinit var recyclerAdapter: AllCardsListRVAdapter
+    private lateinit var recyclerAdapter: AllCardsAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,7 +32,10 @@ class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
         insetsInit()
 
         viewModel.accList.observe(viewLifecycleOwner) {
-            it?.let { recyclerAdapter.setList(it) }
+            recyclerAdapter.setList(it)
+        }
+        viewModel.needNavigate2Check.observe(viewLifecycleOwner) {
+            go2Check(it)
         }
     }
 
@@ -46,11 +50,13 @@ class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
     }
 
     private fun recyclerInit() {
-        recyclerAdapter = AllCardsListRVAdapter {
-            val bundle = Bundle()
-            bundle.putInt(EXTRA_CHECK_ID, it)
-            findNavController().navigate(R.id.action_checksListFragment_to_checkFragment, bundle)
-        }
+        recyclerAdapter = AllCardsAdapter(
+            object : CardViewHolder.Actions {
+                override fun onCardClicked(id: Int) {
+                    viewModel.clickOnElement(id)
+                }
+            }
+        )
         val lineDivider = DividerItemDecoration(
             requireContext(),
             DividerItemDecoration.VERTICAL
@@ -81,5 +87,11 @@ class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
             view.updatePadding(bottom = insets.systemWindowInsetBottom)
             insets
         }
+    }
+
+    private fun go2Check(id: Int) {
+        val bundle = Bundle()
+        bundle.putInt(EXTRA_CHECK_ID, id)
+        findNavController().navigate(R.id.action_checksListFragment_to_checkFragment, bundle)
     }
 }

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_transactions_root"
+    android:id="@+id/card_transaction_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/st_padding"
@@ -16,7 +16,7 @@
     >
 
     <TextView
-        android:id="@+id/card_transactions_image"
+        android:id="@+id/card_transaction_image"
         android:layout_width="@dimen/category_icon_background_size"
         android:layout_height="@dimen/category_icon_background_size"
         app:layout_constraintTop_toTopOf="parent"
@@ -30,22 +30,22 @@
         />
 
     <TextView
-        android:id="@+id/home_transactions_date"
+        android:id="@+id/card_transaction_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/home_transactions_account"
-        app:layout_constraintStart_toStartOf="@id/home_transactions_account"
+        app:layout_constraintBottom_toTopOf="@id/card_transaction_account"
+        app:layout_constraintStart_toStartOf="@id/card_transaction_account"
         style="@style/textSub"
         tools:text="@string/add_date_sample_txt"
         />
 
     <TextView
-        android:id="@+id/home_transactions_account"
+        android:id="@+id/card_transaction_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/card_transactions_image"
+        app:layout_constraintStart_toEndOf="@id/card_transaction_image"
         android:layout_marginStart="@dimen/st_padding"
         android:layout_marginEnd="@dimen/st_padding"
         style="@style/textBold"
@@ -53,31 +53,31 @@
         />
 
     <TextView
-        android:id="@+id/home_transactions_name"
+        android:id="@+id/card_transaction_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/home_transactions_account"
-        app:layout_constraintStart_toStartOf="@id/home_transactions_account"
+        app:layout_constraintTop_toBottomOf="@id/card_transaction_account"
+        app:layout_constraintStart_toStartOf="@id/card_transaction_account"
         style="@style/textSub"
         tools:text="@string/add_desc_sample"
         />
 
     <TextView
-        android:id="@+id/home_transactions_balance"
+        android:id="@+id/card_transaction_sum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/home_transactions_currency"
+        app:layout_constraintEnd_toStartOf="@+id/card_transaction_currency"
         style="@style/textHeader2"
         tools:text="@string/home_fragment_income_sample"
         />
 
     <TextView
-        android:id="@+id/home_transactions_currency"
+        android:id="@+id/card_transaction_currency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBaseline_toBaselineOf="@id/home_transactions_balance"
+        app:layout_constraintBaseline_toBaselineOf="@id/card_transaction_sum"
         app:layout_constraintEnd_toEndOf="parent"
         android:paddingStart="@dimen/st_padding"
         style="@style/textHeader2"
