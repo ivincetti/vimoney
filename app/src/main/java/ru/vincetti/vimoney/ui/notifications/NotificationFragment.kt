@@ -2,19 +2,29 @@ package ru.vincetti.vimoney.ui.notifications
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import kotlinx.android.synthetic.main.fragment_notifications.*
-import ru.vincetti.vimoney.R
+import ru.vincetti.vimoney.databinding.FragmentNotificationsBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.service.NotificationService
 
-class NotificationFragment : Fragment(R.layout.fragment_notifications) {
+class NotificationFragment : Fragment() {
 
     val viewModel: NotificationViewModel by viewModels()
+
+    private var _binding: FragmentNotificationsBinding? = null
+    private val binding
+        get() = requireNotNull(_binding)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentNotificationsBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -24,9 +34,14 @@ class NotificationFragment : Fragment(R.layout.fragment_notifications) {
         insetsInit()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun viewsInit() {
-        setting_navigation_back_btn.setOnClickListener { viewModel.backButtonClicked() }
-        notification_notify_btn.setOnClickListener { viewModel.notifyButtonClicked() }
+        binding.settingNavigationBackBtn.setOnClickListener { viewModel.backButtonClicked() }
+        binding.notificationNotifyBtn.setOnClickListener { viewModel.notifyButtonClicked() }
     }
 
     private fun observersInit() {
@@ -42,8 +57,8 @@ class NotificationFragment : Fragment(R.layout.fragment_notifications) {
     }
 
     private fun insetsInit() {
-        ViewCompat.setOnApplyWindowInsetsListener(notification_toolbar) { _, insets ->
-            notification_toolbar.updateMargin(top = insets.systemWindowInsetTop)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.notificationToolbar) { view, insets ->
+            view.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
     }

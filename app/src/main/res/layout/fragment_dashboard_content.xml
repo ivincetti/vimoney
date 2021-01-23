@@ -28,7 +28,10 @@
         android:orientation="vertical"
         >
 
-        <include layout="@layout/stat_income_expense" />
+        <include
+            android:id="@+id/stat_content"
+            layout="@layout/stat_income_expense"
+            />
 
         <View
             android:layout_width="match_parent"

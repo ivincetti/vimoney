@@ -66,7 +66,7 @@
             >
 
             <Button
-                android:id="@+id/btn_settings_categories"
+                android:id="@+id/settings_categories_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -75,7 +75,7 @@
                 />
 
             <Button
-                android:id="@+id/btn_save_transactions"
+                android:id="@+id/save_transactions_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -84,7 +84,7 @@
                 />
 
             <Button
-                android:id="@+id/btn_load_transactions"
+                android:id="@+id/load_transactions_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

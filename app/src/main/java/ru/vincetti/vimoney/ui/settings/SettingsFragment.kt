@@ -1,20 +1,31 @@
 package ru.vincetti.vimoney.ui.settings
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_settings.*
 import ru.vincetti.vimoney.R
+import ru.vincetti.vimoney.databinding.FragmentSettingsBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 
 @AndroidEntryPoint
-class SettingsFragment : Fragment(R.layout.fragment_settings) {
+class SettingsFragment : Fragment() {
 
     private val viewModel: SettingsViewModel by viewModels()
+
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding
+        get() = requireNotNull(_binding)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentSettingsBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -24,11 +35,16 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         insetsInit()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun viewsInit() {
-        setting_navigation_back_btn.setOnClickListener { viewModel.backButtonClicked() }
-        btn_settings_categories.setOnClickListener { viewModel.categoriesButtonClicked() }
-        btn_save_transactions.setOnClickListener { viewModel.saveJson() }
-        btn_load_transactions.setOnClickListener { viewModel.loadJson() }
+        binding.settingNavigationBackBtn.setOnClickListener { viewModel.backButtonClicked() }
+        binding.settingsCategoriesBtn.setOnClickListener { viewModel.categoriesButtonClicked() }
+        binding.saveTransactionsBtn.setOnClickListener { viewModel.saveJson() }
+        binding.loadTransactionsBtn.setOnClickListener { viewModel.loadJson() }
     }
 
     private fun observersInit() {
@@ -39,14 +55,14 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             if (it) findNavController().navigate(R.id.action_settingsFragment_to_categoriesFragment)
         }
         viewModel.buttonsState.observe(viewLifecycleOwner) {
-            btn_save_transactions.isEnabled = it
-            btn_load_transactions.isEnabled = it
+            binding.saveTransactionsBtn.isEnabled = it
+            binding.loadTransactionsBtn.isEnabled = it
         }
     }
 
     private fun insetsInit() {
-        ViewCompat.setOnApplyWindowInsetsListener(settings_toolbar) { _, insets ->
-            settings_toolbar.updateMargin(top = insets.systemWindowInsetTop)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.settingsToolbar) { view, insets ->
+            view.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
     }

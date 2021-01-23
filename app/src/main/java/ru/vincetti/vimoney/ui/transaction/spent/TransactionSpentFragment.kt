@@ -1,21 +1,94 @@
 package ru.vincetti.vimoney.ui.transaction.spent
 
-import kotlinx.android.synthetic.main.fragment_add_all.*
-import kotlinx.android.synthetic.main.fragment_add_spent.*
+import android.content.Intent
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.TransactionModel
-import ru.vincetti.vimoney.ui.transaction.main.TransactionFFFragment
+import ru.vincetti.vimoney.databinding.FragmentAddSpentBinding
+import ru.vincetti.vimoney.ui.transaction.main.CategoryListDialog
+import ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModel
+import ru.vincetti.vimoney.ui.transaction.main.TransactionFragmentUtils
+import java.text.DateFormat
+import java.util.*
 
-class TransactionSpentFragment : TransactionFFFragment(R.layout.fragment_add_spent) {
+class TransactionSpentFragment : Fragment() {
 
-    override fun initFragmentPlus() {
-        add_acc_category_block.setOnClickListener { showCategoryDialog() }
-        add_btn.setOnClickListener { save(TransactionModel.TRANSACTION_TYPE_SPENT) }
+    val viewModel: TransactionMainViewModel by viewModels({ requireParentFragment() })
+
+    private lateinit var date: Date
+
+    private var _binding: FragmentAddSpentBinding? = null
+    private val binding
+        get() = requireNotNull(_binding)
+
+    private val dialogFrag = CategoryListDialog()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentAddSpentBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        initViews()
+        initObservers()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.addSum.apply {
+            isFocusableInTouchMode = true
+            requestFocus()
+        }
+        TransactionFragmentUtils.showKeyboard(requireActivity())
+    }
+
+    override fun onPause() {
+        viewModel.setSum(binding.addSum.text.toString())
+        viewModel.setDescription(binding.fragmentAddAllContent.addDesc.text.toString())
+
+        super.onPause()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) setCategoryID(resultCode)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun save() {
+        viewModel.saveTransaction(
+            TransactionModel.TRANSACTION_TYPE_SPENT,
+            binding.fragmentAddAllContent.addDesc.text.toString(),
+            binding.addSum.text.toString()
+        )
+    }
+
+    private fun initViews() {
+        binding.fragmentAddAllContent.addDateBlock.setOnClickListener {
+            TransactionFragmentUtils.showDateDialog(
+                requireContext(),
+                date,
+                viewModel::setDate
+            )
+        }
+        binding.addAccCategoryBlock.setOnClickListener { showCategoryDialog() }
+        binding.fragmentAddAllContent.addBtn.setOnClickListener { save() }
 
         viewModel.category.observe(viewLifecycleOwner) {
             it?.let {
-                add_acc_category_icon.text = it.symbol
-                add_acc_category_name.text = it.name
+                binding.addAccCategoryIcon.text = it.symbol
+                binding.addAccCategoryName.text = it.name
             }
         }
         viewModel.categoriesList.observe(viewLifecycleOwner) {
@@ -24,5 +97,61 @@ class TransactionSpentFragment : TransactionFFFragment(R.layout.fragment_add_spe
                 dialogFrag.setList(it)
             }
         }
+    }
+
+    private fun initObservers() {
+        viewModel.needSum.observe(viewLifecycleOwner) {
+            if (it) TransactionFragmentUtils.showNoSumToast(requireContext())
+        }
+        viewModel.needAccount.observe(viewLifecycleOwner) {
+            if (it) TransactionFragmentUtils.showNoAccountToast(requireContext())
+        }
+        viewModel.needToUpdate.observe(viewLifecycleOwner) {
+            if (it) binding.fragmentAddAllContent.addBtn.text = getString(R.string.add_btn_update)
+        }
+        viewModel.account.observe(viewLifecycleOwner) {
+            it?.let { binding.addAccName.text = it.name }
+        }
+        viewModel.currency.observe(viewLifecycleOwner) {
+            it?.let { binding.addAccCur.text = it.symbol }
+        }
+        viewModel.sum.observe(viewLifecycleOwner) {
+            if (it > 0) binding.addSum.setText(it.toString())
+        }
+        viewModel.date.observe(viewLifecycleOwner) {
+            it?.let {
+                date = it
+                binding.fragmentAddAllContent.addDateTxt.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)
+            }
+        }
+        viewModel.description.observe(viewLifecycleOwner) {
+            binding.fragmentAddAllContent.addDesc.setText(it)
+        }
+        viewModel.accountNotArchiveNames.observe(viewLifecycleOwner) {
+            it?.let { list ->
+                binding.addAccName.setOnClickListener { view ->
+                    TransactionFragmentUtils.showListPopUp(
+                        requireContext(),
+                        view,
+                        list,
+                        viewModel::setAccount
+                    )
+                }
+            }
+        }
+        viewModel.needToNavigate.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigateUp()
+                viewModel.navigatedBack()
+            }
+        }
+    }
+
+    private fun showCategoryDialog() {
+        dialogFrag.show(parentFragmentManager, "Categories")
+    }
+
+    private fun setCategoryID(categoryID: Int) {
+        viewModel.setCategoryID(categoryID)
     }
 }

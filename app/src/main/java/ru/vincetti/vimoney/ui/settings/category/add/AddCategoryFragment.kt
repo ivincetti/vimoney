@@ -2,7 +2,9 @@ package ru.vincetti.vimoney.ui.settings.category.add
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
@@ -11,22 +13,30 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_add_category.*
-import kotlinx.android.synthetic.main.fragment_add_category_content.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.repository.CategoryRepo
+import ru.vincetti.vimoney.databinding.FragmentAddCategoryBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.settings.category.add.AddCategoryViewModel.Companion.EXTRA_CATEGORY_ID
 import ru.vincetti.vimoney.ui.settings.category.symbol.CategorySymbolListDialog
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
+class AddCategoryFragment : Fragment() {
 
     @Inject
     lateinit var categoryRepo: CategoryRepo
 
     private val viewModel: AddCategoryViewModel by viewModels()
+
+    private var _binding: FragmentAddCategoryBinding? = null
+    private val binding
+        get() = requireNotNull(_binding)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentAddCategoryBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,11 +51,16 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
         insetsInit()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun viewsInit() {
-        category_add_navigation_add_btn.setOnClickListener { save() }
-        category_add_navigation_back_btn.setOnClickListener { showUnsavedDialog() }
-        add_category_save_btn.setOnClickListener { save() }
-        add_category_symbol.setOnClickListener {
+        binding.categoryAddNavigationAddBtn.setOnClickListener { save() }
+        binding.categoryAddNavigationBackBtn.setOnClickListener { showUnsavedDialog() }
+        binding.categoryAddContent.addCategorySaveBtn.setOnClickListener { save() }
+        binding.categoryAddContent.addCategorySymbol.setOnClickListener {
             val dialogFrag = CategorySymbolListDialog()
             dialogFrag.setTargetFragment(this, 1)
             dialogFrag.show(parentFragmentManager, "Icons")
@@ -54,7 +69,7 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
 
     private fun observersInit() {
         viewModel.isDefault.observe(viewLifecycleOwner) {
-            if (!it) add_category_save_btn.text = getString(R.string.add_btn_update)
+            if (!it) binding.categoryAddContent.addCategorySaveBtn.text = getString(R.string.add_btn_update)
         }
         viewModel.need2NavigateBack.observe(viewLifecycleOwner) {
             if (it) findNavController().navigateUp()
@@ -63,10 +78,10 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
             if (it) showNoDataDialog()
         }
         viewModel.categoryName.observe(viewLifecycleOwner) {
-            add_category_name.setText(it)
+            binding.categoryAddContent.addCategoryName.setText(it)
         }
         viewModel.categorySymbol.observe(viewLifecycleOwner) {
-            add_category_symbol.text = it
+            binding.categoryAddContent.addCategorySymbol.text = it
         }
     }
 
@@ -110,13 +125,13 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
 
     private fun save() {
         viewModel.save(
-            add_category_name.text.toString(),
-            add_category_symbol.text.toString()
+            binding.categoryAddContent.addCategoryName.text.toString(),
+            binding.categoryAddContent.addCategorySymbol.text.toString()
         )
     }
 
     private fun insetsInit() {
-        ViewCompat.setOnApplyWindowInsetsListener(add_category_toolbar) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.addCategoryToolbar) { view, insets ->
             view.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
