@@ -9,6 +9,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import ru.vincetti.vimoney.data.repository.TransactionRepo
 import ru.vincetti.vimoney.ui.history.filter.Filter
+import ru.vincetti.vimoney.utils.SingleLiveEvent
 
 class HistoryViewModel @AssistedInject constructor(
     private val repo: TransactionRepo,
@@ -17,12 +18,18 @@ class HistoryViewModel @AssistedInject constructor(
 
     private var filter = MutableLiveData(initFilter)
 
+    val needNavigate2Transaction = SingleLiveEvent<Int>()
+
     val transList = filter.switchMap {
         repo.loadFilterTransactions(it).toLiveData(pageSize = 20)
     }
 
     fun filter(newFilter: Filter) {
         filter.value = newFilter
+    }
+
+    fun clickOnElement(id: Int) {
+        needNavigate2Transaction.value = id
     }
 
     @dagger.assisted.AssistedFactory

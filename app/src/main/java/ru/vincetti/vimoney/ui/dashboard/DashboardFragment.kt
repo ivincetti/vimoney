@@ -3,23 +3,30 @@ package ru.vincetti.vimoney.ui.dashboard
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_dashboard.*
-import kotlinx.android.synthetic.main.fragment_dashboard_content.*
-import kotlinx.android.synthetic.main.fragment_dashboard_content.view.*
-import kotlinx.android.synthetic.main.stat_income_expense.view.*
-import ru.vincetti.vimoney.R
+import ru.vincetti.vimoney.databinding.FragmentDashboardBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 
 @AndroidEntryPoint
-class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
+class DashboardFragment : Fragment() {
 
     private val viewModel: DashboardViewModel by viewModels()
+
+    private var _binding: FragmentDashboardBinding? = null
+    private val binding
+        get() = requireNotNull(_binding)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentDashboardBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,23 +37,28 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         insetsInit()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun viewsInit() {
-        setting_navigation_back_btn.setOnClickListener { viewModel.backButtonClicked() }
-        dash_content.dashboard_month_next.setOnClickListener { viewModel.setMonthNext() }
-        dash_content.dashboard_month_previous.setOnClickListener { viewModel.setMonthPrev() }
-        dash_content.dashboard_year_next.setOnClickListener { viewModel.setYearNext() }
-        dash_content.dashboard_year_previous.setOnClickListener { viewModel.setYearPrev() }
+        binding.settingNavigationBackBtn.setOnClickListener { viewModel.backButtonClicked() }
+        binding.dashContent.dashboardMonthNext.setOnClickListener { viewModel.setMonthNext() }
+        binding.dashContent.dashboardMonthPrevious.setOnClickListener { viewModel.setMonthPrev() }
+        binding.dashContent.dashboardYearNext.setOnClickListener { viewModel.setYearNext() }
+        binding.dashContent.dashboardYearPrevious.setOnClickListener { viewModel.setYearPrev() }
     }
 
     private fun observersInit() {
         viewModel.monthString.observe(viewLifecycleOwner) {
-            dash_content.dashboard_month.text = it
+            binding.dashContent.dashboardMonth.text = it
         }
         viewModel.yearString.observe(viewLifecycleOwner) {
-            dash_content.dashboard_year.text = it
+            binding.dashContent.dashboardYear.text = it
         }
         viewModel.dataSet.observe(viewLifecycleOwner) {
-            dashboard_lineChart.animate(it)
+            binding.dashContent.dashboardLineChart.animate(it)
         }
         viewModel.isShowProgress.observe(viewLifecycleOwner) {
             showProgress(it)
@@ -55,35 +67,37 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
             if (it) findNavController().navigateUp()
         }
         viewModel.income.observe(viewLifecycleOwner) {
-            dash_content.home_stat_income_txt.text = it.toString()
+            binding.dashContent.statContent.homeStatIncomeTxt.text = it.toString()
         }
         viewModel.expense.observe(viewLifecycleOwner) {
-            dash_content.home_stat_expense_txt.text = it.toString()
+            binding.dashContent.statContent.homeStatExpenseTxt.text = it.toString()
         }
     }
 
     @SuppressLint("Range")
     private fun graphInit() {
-        dashboard_lineChart.gradientFillColors = intArrayOf(
-            Color.parseColor("#81FFFFFF"),
-            Color.TRANSPARENT
-        )
-        dashboard_lineChart.animation.duration = 400L
+        binding.dashContent.dashboardLineChart.apply {
+            gradientFillColors = intArrayOf(
+                Color.parseColor("#81FFFFFF"),
+                Color.TRANSPARENT
+            )
+            animation.duration = 400L
+        }
     }
 
     private fun showProgress(need2Show: Boolean) {
         if (need2Show) {
-            dash_content.dashboard_progress.visibility = View.VISIBLE
-            dash_content.dashboard_container.visibility = View.GONE
+            binding.dashContent.dashboardProgress.visibility = View.VISIBLE
+            binding.dashContent.dashboardContainer.visibility = View.GONE
         } else {
-            dash_content.dashboard_progress.visibility = View.GONE
-            dash_content.dashboard_container.visibility = View.VISIBLE
+            binding.dashContent.dashboardProgress.visibility = View.GONE
+            binding.dashContent.dashboardContainer.visibility = View.VISIBLE
         }
     }
 
     private fun insetsInit() {
-        ViewCompat.setOnApplyWindowInsetsListener(dashboard_toolbar) { _, insets ->
-            dashboard_toolbar.updateMargin(top = insets.systemWindowInsetTop)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.dashboardToolbar) { view, insets ->
+            view.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
     }

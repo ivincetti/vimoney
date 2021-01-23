@@ -2,7 +2,9 @@ package ru.vincetti.vimoney.ui.check.view
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.core.view.marginBottom
@@ -11,10 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_check.*
-import kotlinx.android.synthetic.main.fragment_check_content.*
-import kotlinx.android.synthetic.main.fragment_check_content.view.*
 import ru.vincetti.vimoney.R
+import ru.vincetti.vimoney.databinding.FragmentCheckBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
@@ -24,7 +24,7 @@ import ru.vincetti.vimoney.ui.transaction.TransactionConst
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CheckFragment : Fragment(R.layout.fragment_check) {
+class CheckFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: CheckViewModel.AssistedFactory
@@ -33,6 +33,15 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
 
     private val viewModel: CheckViewModel by viewModels {
         CheckViewModel.provideFactory(viewModelFactory, checkId)
+    }
+
+    private var _binding: FragmentCheckBinding? = null
+    private val binding
+        get() = requireNotNull(_binding)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentCheckBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,17 +57,22 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
         insetsInit()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun initViews() {
-        check_navigation_delete_btn.setOnClickListener { showDeleteDialog() }
-        check_navigation_from_archive_btn.setOnClickListener { viewModel.restore() }
-        check_navigation_update_btn.setOnClickListener { viewModel.update() }
-        setting_navigation_back_btn.setOnClickListener { findNavController().navigateUp() }
-        check_navigation_edit_btn.setOnClickListener {
+        binding.checkNavigationDeleteBtn.setOnClickListener { showDeleteDialog() }
+        binding.checkNavigationFromArchiveBtn.setOnClickListener { viewModel.restore() }
+        binding.checkNavigationUpdateBtn.setOnClickListener { viewModel.update() }
+        binding.settingNavigationBackBtn.setOnClickListener { findNavController().navigateUp() }
+        binding.checkNavigationEditBtn.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt(EXTRA_CHECK_ID, checkId)
             findNavController().navigate(R.id.action_checkFragment_to_addCheckFragment, bundle)
         }
-        check_fab.setOnClickListener {
+        binding.checkFab.setOnClickListener {
             val bundle = Bundle()
             bundle.putInt(TransactionConst.EXTRA_ACCOUNT_ID, checkId)
             findNavController().navigate(R.id.action_global_transactionMainFragment, bundle)
@@ -68,32 +82,32 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
     private fun observersInit() {
         viewModel.account.observe(viewLifecycleOwner) {
             it?.let {
-                fragment_check_content.check_acc_name.text = it.name
-                fragment_check_content.check_acc_type.text = it.type
-                fragment_check_content.check_acc_balance.text = it.sum.toString()
-                fragment_check_content.check_acc_label
+                binding.fragmentCheckContent.checkAccName.text = it.name
+                binding.fragmentCheckContent.checkAccType.text = it.type
+                binding.fragmentCheckContent.checkAccBalance.text = it.sum.toString()
+                binding.fragmentCheckContent.checkAccLabel
                     .setBackgroundColor(Color.parseColor(it.color))
-                fragment_check_content.check_acc_symbol.text = it.curSymbol
+                binding.fragmentCheckContent.checkAccSymbol.text = it.curSymbol
                 showTransactionsHistory(it.id)
             }
         }
         viewModel.isArchive.observe(viewLifecycleOwner) {
             if (it) {
-                fragment_check_content.check_acc_archive.visibility = View.VISIBLE
-                fragment_check_content.check_acc_archive.text = getString(R.string.check_arсhive_txt)
-                check_navigation_from_archive_btn.visibility = View.VISIBLE
-                check_navigation_delete_btn.visibility = View.GONE
+                binding.fragmentCheckContent.checkAccArchive.visibility = View.VISIBLE
+                binding.fragmentCheckContent.checkAccArchive.text = getString(R.string.check_arсhive_txt)
+                binding.checkNavigationFromArchiveBtn.visibility = View.VISIBLE
+                binding.checkNavigationDeleteBtn.visibility = View.GONE
             } else {
-                fragment_check_content.check_acc_archive.visibility = View.INVISIBLE
-                check_navigation_from_archive_btn.visibility = View.GONE
-                check_navigation_delete_btn.visibility = View.VISIBLE
+                binding.fragmentCheckContent.checkAccArchive.visibility = View.INVISIBLE
+                binding.checkNavigationFromArchiveBtn.visibility = View.GONE
+                binding.checkNavigationDeleteBtn.visibility = View.VISIBLE
             }
         }
         viewModel.isNeedOnMain.observe(viewLifecycleOwner) {
-            if (!it) fragment_check_content.check_acc_visible.visibility = View.VISIBLE
+            if (!it) binding.fragmentCheckContent.checkAccVisible.visibility = View.VISIBLE
         }
         viewModel.updateButtonEnable.observe(viewLifecycleOwner) {
-            check_navigation_update_btn.isEnabled = it
+            binding.checkNavigationUpdateBtn.isEnabled = it
         }
     }
 
@@ -124,17 +138,17 @@ class CheckFragment : Fragment(R.layout.fragment_check) {
     }
 
     private fun insetsInit() {
-        val fabMargin = check_fab.marginBottom
-        ViewCompat.setOnApplyWindowInsetsListener(check_fab) { _, insets ->
-            check_fab.updateMargin(bottom = (insets.systemWindowInsetBottom + fabMargin))
+        val fabMargin = binding.checkFab.marginBottom
+        ViewCompat.setOnApplyWindowInsetsListener(binding.checkFab) { view, insets ->
+            view.updateMargin(bottom = (insets.systemWindowInsetBottom + fabMargin))
             insets
         }
-        ViewCompat.setOnApplyWindowInsetsListener(check_toolbar) { _, insets ->
-            check_toolbar.updateMargin(top = insets.systemWindowInsetTop)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.checkToolbar) { view, insets ->
+            view.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
-        ViewCompat.setOnApplyWindowInsetsListener(check_history_container_root) { _, insets ->
-            check_history_container_root.updatePadding(bottom = insets.systemWindowInsetBottom)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.fragmentCheckContent.checkHistoryContainerRoot) { view, insets ->
+            view.updatePadding(bottom = insets.systemWindowInsetBottom)
             insets
         }
     }

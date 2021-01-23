@@ -2,21 +2,32 @@ package ru.vincetti.vimoney.ui.history
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.marginBottom
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import kotlinx.android.synthetic.main.fragment_history.*
 import ru.vincetti.vimoney.R
+import ru.vincetti.vimoney.databinding.FragmentHistoryBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.history.filter.FilterDialog
 
-class AllHistoryFragment : Fragment(R.layout.fragment_history) {
+class AllHistoryFragment : Fragment() {
 
     private val dialogFrag = FilterDialog()
     private val historyFragment = HistoryFragment()
+
+    private var _binding: FragmentHistoryBinding? = null
+    private val binding
+        get() = requireNotNull(_binding)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentHistoryBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,16 +46,19 @@ class AllHistoryFragment : Fragment(R.layout.fragment_history) {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun viewsInit() {
-        records_navigation_back_btn.setOnClickListener {
+        binding.recordsNavigationBackBtn.setOnClickListener {
             findNavController().navigateUp()
         }
-
-        all_history_fab.setOnClickListener {
+        binding.allHistoryFab.setOnClickListener {
             findNavController().navigate(R.id.action_global_transactionMainFragment)
         }
-
-        records_filter_btn.setOnClickListener {
+        binding.recordsFilterBtn.setOnClickListener {
             dialogFrag.setTargetFragment(this, 1)
             dialogFrag.show(parentFragmentManager, "Filter")
         }
@@ -57,16 +71,16 @@ class AllHistoryFragment : Fragment(R.layout.fragment_history) {
     }
 
     private fun insetsInit() {
-        val fabMargin = all_history_fab.marginBottom
-        ViewCompat.setOnApplyWindowInsetsListener(all_history_fab) { view, insets ->
+        val fabMargin = binding.allHistoryFab.marginBottom
+        ViewCompat.setOnApplyWindowInsetsListener(binding.allHistoryFab) { view, insets ->
             view.updateMargin(bottom = (insets.systemWindowInsetBottom + fabMargin))
             insets
         }
-        ViewCompat.setOnApplyWindowInsetsListener(history_top_toolbar) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.historyTopToolbar) { view, insets ->
             view.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
-        ViewCompat.setOnApplyWindowInsetsListener(history_container) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.historyContainer) { view, insets ->
             view.updatePadding(bottom = insets.systemWindowInsetBottom)
             insets
         }

@@ -1,33 +1,37 @@
 package ru.vincetti.vimoney.ui.settings.category.symbol
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import ru.vincetti.vimoney.databinding.ItemCategoryIconBinding
 
 class CategoryListViewHolder(
-    private val viewWrapper: CategoryListViewWrapper,
+    private val binding: ItemCategoryIconBinding,
     action: (Int) -> Unit
-) : RecyclerView.ViewHolder(viewWrapper.itemView) {
+) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        viewWrapper.actions = object : CategoryListViewWrapper.Actions {
-            override fun iconChosen() {
-                val adapterPosition = adapterPosition
-                if (adapterPosition != RecyclerView.NO_POSITION) {
-                    action(adapterPosition)
-                }
+        binding.itemCategoryContainer.setOnClickListener {
+            val adapterPosition = adapterPosition
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                action(adapterPosition)
             }
         }
     }
 
     fun bind(symbol: String) {
-        viewWrapper.bind(symbol)
+        binding.itemCategorySymbol.text = symbol
     }
 
     companion object {
 
         fun create(parent: ViewGroup, action: (Int) -> Unit): CategoryListViewHolder {
             return CategoryListViewHolder(
-                CategoryListViewWrapper.create(parent),
+                ItemCategoryIconBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                ),
                 action
             )
         }

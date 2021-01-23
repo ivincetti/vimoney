@@ -1,8 +1,10 @@
 package ru.vincetti.vimoney.ui.check.add
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
@@ -14,19 +16,26 @@ import androidx.navigation.fragment.findNavController
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_add_check.*
-import kotlinx.android.synthetic.main.fragment_add_check_content.*
-import kotlinx.android.synthetic.main.fragment_add_check_content.view.*
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.data.models.AccountModel
 import ru.vincetti.vimoney.data.models.CurrencyModel
+import ru.vincetti.vimoney.databinding.FragmentAddCheckBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 
 @AndroidEntryPoint
-class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
+class AddCheckFragment : Fragment() {
 
     private val viewModel: AddCheckViewModel by viewModels()
+
+    private var _binding: FragmentAddCheckBinding? = null
+    private val binding
+        get() = requireNotNull(_binding)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentAddCheckBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,6 +50,11 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
         insetsInit()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onResume() {
         super.onResume()
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -49,31 +63,30 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
     }
 
     private fun viewInit() {
-        add_check_navigation_delete_btn.setOnClickListener { showDeleteDialog() }
-        add_check_navigation_from_archive_btn.setOnClickListener { viewModel.restore() }
-        add_check_navigation_add_btn.setOnClickListener { save() }
-        add_check_save_btn.setOnClickListener { save() }
-        add_check_content.add_check_color_view.setOnClickListener { pickColor() }
-        setting_navigation_back_btn.setOnClickListener { showUnsavedDialog() }
+        binding.addCheckNavigationDeleteBtn.setOnClickListener { showDeleteDialog() }
+        binding.addCheckNavigationFromArchiveBtn.setOnClickListener { viewModel.restore() }
+        binding.addCheckNavigationAddBtn.setOnClickListener { save() }
+        binding.settingNavigationBackBtn.setOnClickListener { showUnsavedDialog() }
 
-        add_check_all_balance_switch.setOnCheckedChangeListener { _, isChecked ->
+        binding.addCheckContent.addCheckSaveBtn.setOnClickListener { save() }
+        binding.addCheckContent.addCheckColorView.setOnClickListener { pickColor() }
+        binding.addCheckContent.addCheckAllBalanceSwitch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setNeedAllBalance(isChecked)
         }
-
-        add_check_show_main_switch.setOnCheckedChangeListener { _, isChecked ->
+        binding.addCheckContent.addCheckShowMainSwitch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setNeedOnMain(isChecked)
         }
     }
 
     private fun observersInit() {
         viewModel.isDefault.observe(viewLifecycleOwner) {
-            if (!it) add_check_save_btn.text = getString(R.string.add_btn_update)
+            if (!it) binding.addCheckContent.addCheckSaveBtn.text = getString(R.string.add_btn_update)
         }
         viewModel.needAllBalance.observe(viewLifecycleOwner) {
-            add_check_all_balance_switch.isChecked = it
+            binding.addCheckContent.addCheckAllBalanceSwitch.isChecked = it
         }
         viewModel.needOnMain.observe(viewLifecycleOwner) {
-            add_check_show_main_switch.isChecked = it
+            binding.addCheckContent.addCheckShowMainSwitch.isChecked = it
         }
         viewModel.need2NavigateBack.observe(viewLifecycleOwner) {
             if (it) findNavController().navigateUp()
@@ -82,29 +95,29 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
             if (it) showNoDataDialog()
         }
         viewModel.color.observe(viewLifecycleOwner) {
-            it?.let { add_check_content.add_check_color_view.setBackgroundColor(it) }
+            it?.let { binding.addCheckContent.addCheckColorView.setBackgroundColor(it) }
         }
         viewModel.check.observe(viewLifecycleOwner) {
             it.type?.let { type ->
-                add_check_content.add_check_name.setText(it.name)
+                binding.addCheckContent.addCheckName.setText(it.name)
                 typeLoad(type)
 
                 if (it.isArchive) {
-                    add_check_navigation_from_archive_btn.visibility = View.VISIBLE
-                    add_check_navigation_delete_btn.visibility = View.GONE
+                    binding.addCheckNavigationFromArchiveBtn.visibility = View.VISIBLE
+                    binding.addCheckNavigationDeleteBtn.visibility = View.GONE
                 } else {
-                    add_check_navigation_from_archive_btn.visibility = View.GONE
-                    add_check_navigation_delete_btn.visibility = View.VISIBLE
+                    binding.addCheckNavigationFromArchiveBtn.visibility = View.GONE
+                    binding.addCheckNavigationDeleteBtn.visibility = View.VISIBLE
                 }
             }
         }
         viewModel.currency.observe(viewLifecycleOwner) {
-            it?.let { add_check_currency.text = it.symbol }
+            it?.let { binding.addCheckContent.addCheckCurrency.text = it.symbol }
         }
         viewModel.currencyList.observe(viewLifecycleOwner) {
             it?.let { list ->
-                add_check_currency_container.setOnClickListener {
-                    popUpCurrencyShow(list, add_check_currency)
+                binding.addCheckContent.addCheckCurrencyContainer.setOnClickListener {
+                    popUpCurrencyShow(list, binding.addCheckContent.addCheckCurrency)
                 }
             }
         }
@@ -128,7 +141,7 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
     }
 
     private fun typeEntered(): String {
-        return when (add_check_content.radioGroup.checkedRadioButtonId) {
+        return when (binding.addCheckContent.radioGroup.checkedRadioButtonId) {
             R.id.add_check_type_debit -> AccountModel.ACCOUNT_TYPE_DEBIT
             R.id.add_check_type_credit -> AccountModel.ACCOUNT_TYPE_CREDIT
             else -> AccountModel.ACCOUNT_TYPE_CASH
@@ -136,7 +149,7 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
     }
 
     private fun typeLoad(type: String) {
-        add_check_content.radioGroup.check(
+        binding.addCheckContent.radioGroup.check(
             when (type) {
                 AccountModel.ACCOUNT_TYPE_DEBIT -> R.id.add_check_type_debit
                 AccountModel.ACCOUNT_TYPE_CREDIT -> R.id.add_check_type_credit
@@ -196,14 +209,14 @@ class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
 
     private fun save() {
         viewModel.save(
-            add_check_content.add_check_name.text.toString(),
+            binding.addCheckContent.addCheckName.text.toString(),
             typeEntered()
         )
     }
 
     private fun insetsInit() {
-        ViewCompat.setOnApplyWindowInsetsListener(check_add_toolbar) { _, insets ->
-            check_add_toolbar.updateMargin(top = insets.systemWindowInsetTop)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.checkAddToolbar) { view, insets ->
+            view.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
     }

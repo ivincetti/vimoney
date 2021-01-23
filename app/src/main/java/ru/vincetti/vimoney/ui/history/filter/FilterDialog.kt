@@ -8,8 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.dialog_transactions_filter.*
-import ru.vincetti.vimoney.R
+import ru.vincetti.vimoney.databinding.DialogTransactionsFilterBinding
 import java.text.DateFormat
 import java.util.*
 
@@ -21,12 +20,13 @@ class FilterDialog : BottomSheetDialogFragment() {
     private var dateFrom: Date? = null
     private var dateTo: Date? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.dialog_transactions_filter, container, false)
+    private var _binding: DialogTransactionsFilterBinding? = null
+    private val binding
+        get() = requireNotNull(_binding)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = DialogTransactionsFilterBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,68 +36,73 @@ class FilterDialog : BottomSheetDialogFragment() {
         initViews()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun initViewModel() {
         viewModel.account.observe(viewLifecycleOwner) {
-            it?.let { fragment_filter_acc_name.text = it.name }
+            it?.let { binding.fragmentFilterAccName.text = it.name }
         }
         viewModel.category.observe(viewLifecycleOwner) {
             it?.let {
-                fragment_filter_category_icon.text = it.symbol
-                fragment_filter_category_name.text = it.name
+                binding.fragmentFilterCategoryIcon.text = it.symbol
+                binding.fragmentFilterCategoryName.text = it.name
             }
         }
         viewModel.sumReset.observe(viewLifecycleOwner) {
             if (it) {
-                fragment_filter_sum_name.setText("")
+                binding.fragmentFilterSumName.setText("")
                 viewModel.sumDeleted()
             }
         }
         viewModel.descriptionReset.observe(viewLifecycleOwner) {
             if (it) {
-                fragment_filter_desc_name.setText("")
+                binding.fragmentFilterDescName.setText("")
                 viewModel.descriptionDeleted()
             }
         }
         viewModel.dateFrom.observe(viewLifecycleOwner) {
-            fragment_filter_date_from_name.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)
+            binding.fragmentFilterDateFromName.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)
             dateFrom = it
         }
         viewModel.dateFromReset.observe(viewLifecycleOwner) {
             if (it) {
-                fragment_filter_date_from_name.text = ""
+                binding.fragmentFilterDateFromName.text = ""
                 viewModel.dateFromDeleted()
             }
         }
         viewModel.dateTo.observe(viewLifecycleOwner) {
-            fragment_filter_date_to_name.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)
+            binding.fragmentFilterDateToName.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)
             dateTo = it
         }
         viewModel.dateToReset.observe(viewLifecycleOwner) {
             if (it) {
-                fragment_filter_date_to_name.text = ""
+                binding.fragmentFilterDateToName.text = ""
                 viewModel.dateToDeleted()
             }
         }
     }
 
     private fun initViews() {
-        fragment_filter_acc_container.setOnClickListener { viewModel.showAccounts() }
-        fragment_filter_acc_reset.setOnClickListener { viewModel.resetAccount() }
+        binding.fragmentFilterAccContainer.setOnClickListener { viewModel.showAccounts() }
+        binding.fragmentFilterAccReset.setOnClickListener { viewModel.resetAccount() }
 
-        fragment_filter_category_container.setOnClickListener { viewModel.showCategories() }
-        fragment_filter_category_reset.setOnClickListener { viewModel.resetCategory() }
+        binding.fragmentFilterCategoryContainer.setOnClickListener { viewModel.showCategories() }
+        binding.fragmentFilterCategoryReset.setOnClickListener { viewModel.resetCategory() }
 
-        fragment_filter_sum_reset.setOnClickListener { viewModel.resetSum() }
-        fragment_filter_desc_reset.setOnClickListener { viewModel.resetDescription() }
+        binding.fragmentFilterSumReset.setOnClickListener { viewModel.resetSum() }
+        binding.fragmentFilterDescReset.setOnClickListener { viewModel.resetDescription() }
 
-        fragment_filter_date_from_container.setOnClickListener { showDateDialog(viewModel::setDateFrom) }
-        fragment_filter_date_from_reset.setOnClickListener { viewModel.resetDateFrom() }
+        binding.fragmentFilterDateFromContainer.setOnClickListener { showDateDialog(viewModel::setDateFrom) }
+        binding.fragmentFilterDateFromReset.setOnClickListener { viewModel.resetDateFrom() }
 
-        fragment_filter_date_to_reset.setOnClickListener { viewModel.resetDateTo() }
-        fragment_filter_date_to_container.setOnClickListener { showDateDialog(viewModel::setDateTo) }
+        binding.fragmentFilterDateToContainer.setOnClickListener { showDateDialog(viewModel::setDateTo) }
+        binding.fragmentFilterDateToReset.setOnClickListener { viewModel.resetDateTo() }
 
-        fragment_filter_btn.setOnClickListener { closeDialog(createFilter()) }
-        fragment_reset_btn.setOnClickListener {
+        binding.fragmentFilterBtn.setOnClickListener { closeDialog(createFilter()) }
+        binding.fragmentResetBtn.setOnClickListener {
             resetAllFields()
             closeDialog(Filter())
         }
@@ -117,10 +122,10 @@ class FilterDialog : BottomSheetDialogFragment() {
 
     private fun createFilter(): Filter {
         val filter = Filter()
-        fragment_filter_desc_name.text?.let {
+        binding.fragmentFilterDescName.text?.let {
             if (it.isNotBlank()) filter.comment = it.toString()
         }
-        fragment_filter_sum_name.text?.let {
+        binding.fragmentFilterSumName.text?.let {
             if (it.isNotBlank()) filter.sumFrom = it.toString().toInt()
         }
         dateFrom?.let { filter.dateFrom = it }
@@ -129,10 +134,10 @@ class FilterDialog : BottomSheetDialogFragment() {
     }
 
     private fun resetAllFields() {
-        fragment_filter_sum_name.setText("")
-        fragment_filter_desc_name.setText("")
-        fragment_filter_date_from_name.text = ""
-        fragment_filter_date_to_name.text = ""
+        binding.fragmentFilterSumName.setText("")
+        binding.fragmentFilterDescName.setText("")
+        binding.fragmentFilterDateFromName.text = ""
+        binding.fragmentFilterDateToName.text = ""
     }
 
     private fun closeDialog(filter: Filter) {
