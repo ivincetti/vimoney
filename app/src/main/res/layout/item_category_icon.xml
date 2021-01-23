@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_category_container"
     android:layout_width="96dp"
     android:layout_height="96dp"
     android:layout_margin="@dimen/sm_padding"
@@ -17,9 +18,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:fontFamily="@font/font_awesome_solid"
         android:textColor="@color/colorPrimaryTextDark"
         android:textSize="32dp"
+        android:fontFamily="@font/font_awesome_solid"
         tools:text="@string/sample_category_android"
         />
 

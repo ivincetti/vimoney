@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import kotlinx.android.synthetic.main.dialog_category_list.*
 import ru.vincetti.vimoney.R
+import ru.vincetti.vimoney.databinding.DialogCategoryListBinding
 
 class CategorySymbolListDialog : DialogFragment() {
 
@@ -14,17 +14,18 @@ class CategorySymbolListDialog : DialogFragment() {
         it.symbol
     }
 
+    private var _binding: DialogCategoryListBinding? = null
+    private val binding
+        get() = requireNotNull(_binding)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, R.style.AlertDialog)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.dialog_category_list, null)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = DialogCategoryListBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,6 +39,11 @@ class CategorySymbolListDialog : DialogFragment() {
             )
             dismiss()
         }
-        categories_symbols_list_recycle_view.adapter = categoriesAdapter
+        binding.categoriesSymbolsListRecycleView.adapter = categoriesAdapter
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -1,7 +1,9 @@
 package ru.vincetti.vimoney.ui.check.list
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.marginBottom
@@ -11,18 +13,28 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_checks_list.*
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.adapters.AllCardsListRVAdapter
+import ru.vincetti.vimoney.databinding.FragmentChecksListBinding
 import ru.vincetti.vimoney.extensions.updateMargin
+import ru.vincetti.vimoney.ui.check.AllCardsAdapter
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
+import ru.vincetti.vimoney.ui.check.view.CardViewHolder
 
 @AndroidEntryPoint
-class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
+class ChecksListFragment : Fragment() {
 
     private val viewModel: CheckListViewModel by viewModels()
 
-    private lateinit var recyclerAdapter: AllCardsListRVAdapter
+    private var _binding: FragmentChecksListBinding? = null
+    private val binding
+        get() = requireNotNull(_binding)
+
+    private lateinit var recyclerAdapter: AllCardsAdapter
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentChecksListBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,26 +43,36 @@ class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
         insetsInit()
 
         viewModel.accList.observe(viewLifecycleOwner) {
-            it?.let { recyclerAdapter.setList(it) }
+            recyclerAdapter.setList(it)
+        }
+        viewModel.needNavigate2Check.observe(viewLifecycleOwner) {
+            go2Check(it)
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun viewsInit() {
-        setting_navigation_back_btn.setOnClickListener {
+        binding.settingNavigationBackBtn.setOnClickListener {
             findNavController().navigateUp()
         }
-        check_list_fab.setOnClickListener {
+        binding.checkListFab.setOnClickListener {
             findNavController().navigate(R.id.action_checksListFragment_to_addCheckFragment)
         }
         recyclerInit()
     }
 
     private fun recyclerInit() {
-        recyclerAdapter = AllCardsListRVAdapter {
-            val bundle = Bundle()
-            bundle.putInt(EXTRA_CHECK_ID, it)
-            findNavController().navigate(R.id.action_checksListFragment_to_checkFragment, bundle)
-        }
+        recyclerAdapter = AllCardsAdapter(
+            object : CardViewHolder.Actions {
+                override fun onCardClicked(id: Int) {
+                    viewModel.clickOnElement(id)
+                }
+            }
+        )
         val lineDivider = DividerItemDecoration(
             requireContext(),
             DividerItemDecoration.VERTICAL
@@ -61,25 +83,31 @@ class ChecksListFragment : Fragment(R.layout.fragment_checks_list) {
                 R.drawable.light_divider
             )!!
         )
-        check_list_recycle_view.apply {
+        binding.checkListRecycleView.apply {
             addItemDecoration(lineDivider)
             adapter = recyclerAdapter
         }
     }
 
     private fun insetsInit() {
-        val fabMargin = check_list_fab.marginBottom
-        ViewCompat.setOnApplyWindowInsetsListener(check_list_fab) { view, insets ->
+        val fabMargin = binding.checkListFab.marginBottom
+        ViewCompat.setOnApplyWindowInsetsListener(binding.checkListFab) { view, insets ->
             view.updateMargin(bottom = (insets.systemWindowInsetBottom + fabMargin))
             insets
         }
-        ViewCompat.setOnApplyWindowInsetsListener(check_list_toolbar) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.checkListToolbar) { view, insets ->
             view.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
-        ViewCompat.setOnApplyWindowInsetsListener(check_list_recycle_view) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.checkListRecycleView) { view, insets ->
             view.updatePadding(bottom = insets.systemWindowInsetBottom)
             insets
         }
+    }
+
+    private fun go2Check(id: Int) {
+        val bundle = Bundle()
+        bundle.putInt(EXTRA_CHECK_ID, id)
+        findNavController().navigate(R.id.action_checksListFragment_to_checkFragment, bundle)
     }
 }

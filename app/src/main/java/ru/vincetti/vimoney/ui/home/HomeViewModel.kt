@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.vincetti.vimoney.data.repository.AccountRepo
 import ru.vincetti.vimoney.data.repository.TransactionRepo
+import ru.vincetti.vimoney.utils.SingleLiveEvent
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,6 +18,8 @@ class HomeViewModel @Inject constructor(
     val incomeSum = MutableLiveData<Int>()
 
     val accounts = accountRepo.loadMain()
+
+    val needNavigate2Check = SingleLiveEvent<Int>()
 
     private var _homeButtonEnabled = MutableLiveData<Boolean>()
     val homeButtonEnabled: LiveData<Boolean>
@@ -43,5 +46,9 @@ class HomeViewModel @Inject constructor(
             accountRepo.balanceUpdateAll()
             _homeButtonEnabled.value = true
         }
+    }
+
+    fun clickOnCheck(id: Int) {
+        needNavigate2Check.value = id
     }
 }

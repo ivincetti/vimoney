@@ -1,68 +1,154 @@
 package ru.vincetti.vimoney.ui.transaction.transfer
 
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Menu
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.widget.PopupMenu
-import kotlinx.android.synthetic.main.fragment_add_all.*
-import kotlinx.android.synthetic.main.fragment_add_all.view.*
-import kotlinx.android.synthetic.main.fragment_add_transfer.*
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.models.AccountListModel
 import ru.vincetti.vimoney.data.models.TransactionModel
-import ru.vincetti.vimoney.ui.transaction.main.TransactionFFFragment
+import ru.vincetti.vimoney.databinding.FragmentAddTransferBinding
+import ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModel
+import ru.vincetti.vimoney.ui.transaction.main.TransactionFragmentUtils
+import java.text.DateFormat
+import java.util.*
 
-class TransactionTransferFragment : TransactionFFFragment(R.layout.fragment_add_transfer) {
+class TransactionTransferFragment : Fragment() {
 
-    override fun initFragmentPlus() {
-        viewModel.nestedTransaction.observe(viewLifecycleOwner) {
-            it?.let { if (it.sum > 0) add_sum_to.setText(it.sum.toString()) }
+    val viewModel: TransactionMainViewModel by viewModels({ requireParentFragment() })
+
+    private lateinit var date: Date
+
+    private var _binding: FragmentAddTransferBinding? = null
+    private val binding
+        get() = requireNotNull(_binding)
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentAddTransferBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        initViews()
+        initObservers()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.addSum.apply {
+            isFocusableInTouchMode = true
+            requestFocus()
         }
-        viewModel.accountTo.observe(viewLifecycleOwner) {
-            it?.let { add_acc_name_to.text = it.name }
-        }
-        viewModel.currencyTo.observe(viewLifecycleOwner) {
-            it?.let { add_acc_cur_to.text = it.symbol }
-        }
+        TransactionFragmentUtils.showKeyboard(requireActivity())
+    }
 
-        add_sum.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
+    override fun onPause() {
+        viewModel.setSum(binding.addSum.text.toString())
+        viewModel.setDescription(binding.fragmentAddAllContent.addDesc.text.toString())
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+        super.onPause()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun save() {
+        viewModel.saveTransactionTo(
+            TransactionModel.TRANSACTION_TYPE_TRANSFER,
+            binding.fragmentAddAllContent.addDesc.text.toString(),
+            binding.addSum.text.toString(),
+            binding.addSumTo.text.toString()
+        )
+    }
+
+    private fun initViews() {
+        binding.fragmentAddAllContent.addDateBlock.setOnClickListener {
+            TransactionFragmentUtils.showDateDialog(
+                requireContext(),
+                date,
+                viewModel::setDate
+            )
+        }
+        binding.fragmentAddAllContent.addBtn.setOnClickListener { save() }
+        binding.addSum.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) = Unit
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                add_sum_to.setText(s)
+                binding.addSumTo.setText(s)
             }
         })
-        add_btn.setOnClickListener { save(TransactionModel.TRANSACTION_TYPE_TRANSFER) }
     }
 
-    override fun loadAccounts(list: List<AccountListModel>) {
-        add_acc_name.setOnClickListener { popUpShow(list, it) }
-        add_acc_name_to.setOnClickListener { popUpShowTo(list, it) }
-    }
-
-    private fun popUpShowTo(list: List<AccountListModel>, view: View) {
-        val popUp = PopupMenu(requireContext(), view)
-        for (acc in list) {
-            popUp.menu.add(Menu.NONE, acc.id, acc.id, acc.name)
+    private fun initObservers() {
+        viewModel.needSum.observe(viewLifecycleOwner) {
+            if (it) TransactionFragmentUtils.showNoSumToast(requireContext())
         }
-        popUp.setOnMenuItemClickListener {
-            viewModel.setAccountTo(it.itemId)
-            true
+        viewModel.needAccount.observe(viewLifecycleOwner) {
+            if (it) TransactionFragmentUtils.showNoAccountToast(requireContext())
         }
-        popUp.show()
-    }
-
-    override fun save(actionType: Int) {
-        viewModel.saveTransactionTo(
-            actionType,
-            fragment_add_content.add_desc.text.toString(),
-            add_sum.text.toString(),
-            add_sum_to.text.toString()
-        )
+        viewModel.needToUpdate.observe(viewLifecycleOwner) {
+            if (it) binding.fragmentAddAllContent.addBtn.text = getString(R.string.add_btn_update)
+        }
+        viewModel.account.observe(viewLifecycleOwner) {
+            it?.let { binding.addAccName.text = it.name }
+        }
+        viewModel.currency.observe(viewLifecycleOwner) {
+            it?.let { binding.addAccCur.text = it.symbol }
+        }
+        viewModel.sum.observe(viewLifecycleOwner) {
+            if (it > 0) binding.addSum.setText(it.toString())
+        }
+        viewModel.date.observe(viewLifecycleOwner) {
+            it?.let {
+                date = it
+                binding.fragmentAddAllContent.addDateTxt.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)
+            }
+        }
+        viewModel.description.observe(viewLifecycleOwner) {
+            binding.fragmentAddAllContent.addDesc.setText(it)
+        }
+        viewModel.nestedTransaction.observe(viewLifecycleOwner) {
+            it?.let { if (it.sum > 0) binding.addSumTo.setText(it.sum.toString()) }
+        }
+        viewModel.accountTo.observe(viewLifecycleOwner) {
+            it?.let { binding.addAccNameTo.text = it.name }
+        }
+        viewModel.currencyTo.observe(viewLifecycleOwner) {
+            it?.let { binding.addAccCurTo.text = it.symbol }
+        }
+        viewModel.accountNotArchiveNames.observe(viewLifecycleOwner) {
+            it?.let { list ->
+                binding.addAccName.setOnClickListener { view ->
+                    TransactionFragmentUtils.showListPopUp(
+                        requireContext(),
+                        view,
+                        list,
+                        viewModel::setAccount
+                    )
+                }
+                binding.addAccNameTo.setOnClickListener { view ->
+                    TransactionFragmentUtils.showListPopUp(
+                        requireContext(),
+                        view,
+                        list,
+                        viewModel::setAccountTo
+                    )
+                }
+            }
+        }
+        viewModel.needToNavigate.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigateUp()
+                viewModel.navigatedBack()
+            }
+        }
     }
 }

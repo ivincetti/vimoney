@@ -218,7 +218,7 @@
         </LinearLayout>
 
         <include
-            android:id="@+id/fragment_add_content"
+            android:id="@+id/fragment_add_all_content"
             layout="@layout/fragment_add_all"
             />
 
