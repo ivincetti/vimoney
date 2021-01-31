@@ -45,7 +45,13 @@ dependencies {
 
     implementation project(':Core')
 
+    //Test
     testImplementation "junit:junit:${versions.junit}"
     testImplementation "androidx.test.ext:junit-ktx:${versions.androidx_test_junit}"
+    testImplementation "androidx.test:core:${versions.androidx_test_core}"
+    testImplementation "io.mockk:mockk:${versions.mockk}"
+    testImplementation "org.robolectric:robolectric:${versions.robolectric}"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.kotlinx_coroutines}"
+    androidTestImplementation "androidx.test.ext:junit-ktx:${versions.androidx_test_junit}"
     androidTestImplementation "androidx.test.ext:junit-ktx:${versions.androidx_test_junit}"
 }

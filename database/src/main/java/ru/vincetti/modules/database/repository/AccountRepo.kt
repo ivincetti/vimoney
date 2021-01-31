@@ -13,11 +13,9 @@ import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
 class AccountRepo @Inject constructor(
-    private val accountDao: AccountDao
+    private val accountDao: AccountDao,
+    private val transactionRepo: TransactionRepo
 ) {
-
-    @Inject
-    lateinit var transactionRepo: TransactionRepo
 
     suspend fun loadById(id: Int): Account? {
         return accountDao.loadAccountById(id)?.toAccount()

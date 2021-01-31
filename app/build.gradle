@@ -48,11 +48,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
     }
-
     buildFeatures {
         viewBinding true
     }
@@ -104,9 +105,12 @@ dependencies {
     implementation project(':Network')
 
     //Test
-    implementation "androidx.test:core:${versions.androidx_test_core}"
     testImplementation "junit:junit:${versions.junit}"
+    testImplementation "androidx.test.ext:junit-ktx:${versions.androidx_test_junit}"
+    testImplementation "androidx.test:core:${versions.androidx_test_core}"
     testImplementation "io.mockk:mockk:${versions.mockk}"
-    androidTestImplementation "androidx.test.ext:junit:${versions.androidx_test_junit}"
+    testImplementation "org.robolectric:robolectric:${versions.robolectric}"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.kotlinx_coroutines}"
+    androidTestImplementation "androidx.test.ext:junit-ktx:${versions.androidx_test_junit}"
     androidTestImplementation "com.kaspersky.android-components:kaspresso:${versions.kaspresso}"
 }
