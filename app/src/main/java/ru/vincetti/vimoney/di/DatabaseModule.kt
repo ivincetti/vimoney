@@ -6,7 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import ru.vincetti.vimoney.data.sqlite.*
+import ru.vincetti.modules.database.sqlite.*
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)

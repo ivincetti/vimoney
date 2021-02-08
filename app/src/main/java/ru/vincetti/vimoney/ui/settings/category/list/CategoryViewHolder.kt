@@ -3,7 +3,7 @@ package ru.vincetti.vimoney.ui.settings.category.list
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ru.vincetti.vimoney.data.models.CategoryModel
+import ru.vincetti.modules.core.models.Category
 import ru.vincetti.vimoney.databinding.ItemCategoriesListBinding
 
 class CategoryViewHolder private constructor(
@@ -11,7 +11,7 @@ class CategoryViewHolder private constructor(
     private val actions: Actions
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(category: CategoryModel) {
+    fun bind(category: Category) {
         binding.itemCategoryText.text = category.name
         binding.itemCategoryIcon.text = category.symbol
 

@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ru.vincetti.vimoney.data.models.TransactionModel
-import ru.vincetti.vimoney.data.repository.AccountRepo
-import ru.vincetti.vimoney.data.repository.CategoryRepo
+import ru.vincetti.modules.core.models.Transaction
+import ru.vincetti.modules.database.repository.AccountRepo
+import ru.vincetti.modules.database.repository.CategoryRepo
 import java.util.*
 import javax.inject.Inject
 
@@ -62,8 +62,8 @@ class FilterViewModel @Inject constructor(
         get() = _dateToReset
 
     init {
-        _accountId.value = TransactionModel.DEFAULT_ID
-        _categoryId.value = TransactionModel.DEFAULT_CATEGORY
+        _accountId.value = Transaction.DEFAULT_ID
+        _categoryId.value = Transaction.DEFAULT_CATEGORY
         _descriptionReset.value = false
     }
 

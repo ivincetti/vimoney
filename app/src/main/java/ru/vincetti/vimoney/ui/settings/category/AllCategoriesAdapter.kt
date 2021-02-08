@@ -2,14 +2,14 @@ package ru.vincetti.vimoney.ui.settings.category
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ru.vincetti.vimoney.data.models.CategoryModel
+import ru.vincetti.modules.core.models.Category
 import ru.vincetti.vimoney.ui.settings.category.list.CategoryViewHolder
 
 class AllCategoriesAdapter(
     private val actions: CategoryViewHolder.Actions
 ) : RecyclerView.Adapter<CategoryViewHolder>() {
 
-    private var data: List<CategoryModel>? = null
+    private var data: List<Category>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         return CategoryViewHolder.create(parent, actions)
@@ -23,7 +23,7 @@ class AllCategoriesAdapter(
 
     override fun getItemCount() = data?.size ?: 0
 
-    fun setList(categories: List<CategoryModel>?) {
+    fun setList(categories: List<Category>?) {
         categories?.let {
             data = it
             notifyDataSetChanged()

@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import ru.vincetti.modules.core.models.Category
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.models.CategoryModel
 
 class CategoryListViewWrapper private constructor(val itemView: View) {
 
@@ -17,7 +17,7 @@ class CategoryListViewWrapper private constructor(val itemView: View) {
         itemView.setOnClickListener { actions?.categoryChosen() }
     }
 
-    fun bind(category: CategoryModel) {
+    fun bind(category: Category) {
         icon.text = category.symbol
         name.text = category.name
     }

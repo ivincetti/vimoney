@@ -1,0 +1,43 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+    implementation "androidx.core:core-ktx:${versions.androidx_core_ktx}"
+
+    implementation "androidx.lifecycle:lifecycle-extensions:${versions.androidx_lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.androidx_lifecycle}"
+
+    implementation "com.squareup.retrofit2:retrofit:${versions.retrofit2}"
+    implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit2_gson}"
+
+    kapt "com.google.dagger:hilt-android-compiler:${versions.gradle_hilt}"
+    implementation "com.google.dagger:hilt-android:${versions.gradle_hilt}"
+
+    testImplementation "junit:junit:${versions.junit}"
+    testImplementation "androidx.test.ext:junit-ktx:${versions.androidx_test_junit}"
+    androidTestImplementation "androidx.test.ext:junit-ktx:${versions.androidx_test_junit}"
+}

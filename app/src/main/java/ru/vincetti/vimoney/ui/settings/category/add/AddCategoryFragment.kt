@@ -14,7 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.repository.CategoryRepo
+import ru.vincetti.modules.database.repository.CategoryRepo
 import ru.vincetti.vimoney.databinding.FragmentAddCategoryBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.settings.category.add.AddCategoryViewModel.Companion.EXTRA_CATEGORY_ID

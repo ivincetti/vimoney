@@ -17,8 +17,8 @@ import ru.vincetti.vimoney.databinding.FragmentHomeBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
-import ru.vincetti.vimoney.ui.history.filter.Filter
-import ru.vincetti.vimoney.utils.DatesFormat
+import ru.vincetti.modules.core.models.Filter
+import ru.vincetti.modules.core.utils.DatesFormat
 import java.time.LocalDate
 import java.util.*
 

@@ -3,7 +3,7 @@ package ru.vincetti.vimoney.ui.history
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import ru.vincetti.vimoney.data.models.TransactionListModel
+import ru.vincetti.modules.database.sqlite.models.TransactionListModel
 
 class TransactionsAdapter(
     private val actions: TransactionViewHolder.Actions
@@ -34,12 +34,12 @@ class TransactionsAdapter(
                 ): Boolean {
                     return (
                         old.accountName == new.accountName &&
-                        old.type == new.type &&
-                        old.date == new.date &&
-                        old.description == new.description &&
-                        old.sum == new.sum &&
-                        old.symbol == new.symbol &&
-                        old.curSymbol == new.curSymbol
+                            old.type == new.type &&
+                            old.date == new.date &&
+                            old.description == new.description &&
+                            old.sum == new.sum &&
+                            old.symbol == new.symbol &&
+                            old.curSymbol == new.curSymbol
                         )
                 }
             }

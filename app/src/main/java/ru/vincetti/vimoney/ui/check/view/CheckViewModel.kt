@@ -4,8 +4,8 @@ import androidx.lifecycle.*
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
-import ru.vincetti.vimoney.data.models.AccountListModel
-import ru.vincetti.vimoney.data.repository.AccountRepo
+import ru.vincetti.modules.core.models.AccountList
+import ru.vincetti.modules.database.repository.AccountRepo
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 
 class CheckViewModel @AssistedInject constructor(
@@ -13,7 +13,7 @@ class CheckViewModel @AssistedInject constructor(
     @Assisted private val accountId: Int
 ) : ViewModel() {
 
-    val account: LiveData<AccountListModel> = accountRepo.loadForListById(accountId)
+    val account: LiveData<AccountList> = accountRepo.loadForListById(accountId)
 
     val isArchive: LiveData<Boolean> = account.map {
         it.isArchive

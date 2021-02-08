@@ -9,11 +9,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import ru.vincetti.modules.core.models.Transaction
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.databinding.FragmentAddTransferBinding
-import ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModel
 import ru.vincetti.vimoney.ui.transaction.main.TransactionFragmentUtils
+import ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModel
 import java.text.DateFormat
 import java.util.*
 
@@ -61,7 +61,7 @@ class TransactionTransferFragment : Fragment() {
 
     private fun save() {
         viewModel.saveTransactionTo(
-            TransactionModel.TRANSACTION_TYPE_TRANSFER,
+            Transaction.TRANSACTION_TYPE_TRANSFER,
             binding.fragmentAddAllContent.addDesc.text.toString(),
             binding.addSum.text.toString(),
             binding.addSumTo.text.toString()
