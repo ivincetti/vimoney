@@ -1,1 +1,5 @@
-include ':app'
+include ':app',
+        ':Core',
+        ':Database',
+        ':Network',
+        ':Files'

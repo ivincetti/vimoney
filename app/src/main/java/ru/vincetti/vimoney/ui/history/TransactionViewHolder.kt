@@ -3,7 +3,7 @@ package ru.vincetti.vimoney.ui.history
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ru.vincetti.vimoney.data.models.TransactionListModel
+import ru.vincetti.modules.database.sqlite.models.TransactionListModel
 import ru.vincetti.vimoney.databinding.ItemTransactionsListBinding
 import java.text.DateFormat
 

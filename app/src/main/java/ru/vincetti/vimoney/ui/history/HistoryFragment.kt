@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentHistoryContentBinding
-import ru.vincetti.vimoney.ui.history.filter.Filter
+import ru.vincetti.modules.core.models.Filter
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
 import javax.inject.Inject
 

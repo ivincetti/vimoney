@@ -2,10 +2,10 @@ package ru.vincetti.vimoney.ui.transaction.main.categorylist
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ru.vincetti.vimoney.data.models.CategoryModel
+import ru.vincetti.modules.core.models.Category
 
 class CategoryListAdapter(
-    private val data: List<CategoryModel>,
+    private val data: List<Category>,
     private val action: (Int) -> Unit
 ) : RecyclerView.Adapter<CategoryListViewHolder>() {
 

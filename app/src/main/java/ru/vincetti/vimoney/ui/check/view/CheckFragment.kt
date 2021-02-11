@@ -19,7 +19,7 @@ import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
-import ru.vincetti.vimoney.ui.history.filter.Filter
+import ru.vincetti.modules.core.models.Filter
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
 import javax.inject.Inject
 
@@ -147,7 +147,9 @@ class CheckFragment : Fragment() {
             view.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
-        ViewCompat.setOnApplyWindowInsetsListener(binding.fragmentCheckContent.checkHistoryContainerRoot) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding.fragmentCheckContent.checkHistoryContainerRoot
+        ) { view, insets ->
             view.updatePadding(bottom = insets.systemWindowInsetBottom)
             insets
         }

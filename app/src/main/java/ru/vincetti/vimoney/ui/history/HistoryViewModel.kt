@@ -7,9 +7,9 @@ import androidx.lifecycle.switchMap
 import androidx.paging.toLiveData
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import ru.vincetti.vimoney.data.repository.TransactionRepo
-import ru.vincetti.vimoney.ui.history.filter.Filter
-import ru.vincetti.vimoney.utils.SingleLiveEvent
+import ru.vincetti.modules.database.repository.TransactionRepo
+import ru.vincetti.modules.core.models.Filter
+import ru.vincetti.modules.core.utils.SingleLiveEvent
 
 class HistoryViewModel @AssistedInject constructor(
     private val repo: TransactionRepo,

@@ -9,8 +9,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
+import ru.vincetti.modules.core.models.AccountList
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.models.AccountListModel
 import java.util.*
 
 object TransactionFragmentUtils {
@@ -18,7 +18,7 @@ object TransactionFragmentUtils {
     fun showListPopUp(
         context: Context,
         view: View,
-        list: List<AccountListModel>,
+        list: List<AccountList>,
         onSuccess: (Int) -> Unit
     ) {
         val popUp = PopupMenu(context, view)

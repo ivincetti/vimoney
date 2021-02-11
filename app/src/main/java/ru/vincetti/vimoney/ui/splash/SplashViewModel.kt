@@ -7,18 +7,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import ru.vincetti.vimoney.data.JsonDownloader
-import ru.vincetti.vimoney.data.models.AccountModel
-import ru.vincetti.vimoney.data.models.CategoryModel
-import ru.vincetti.vimoney.data.models.CurrencyModel
-import ru.vincetti.vimoney.data.models.TransactionModel
-import ru.vincetti.vimoney.data.models.json.*
-import ru.vincetti.vimoney.data.repository.*
+import ru.vincetti.modules.core.models.Account
+import ru.vincetti.modules.core.models.Category
+import ru.vincetti.modules.core.models.Currency
+import ru.vincetti.modules.core.models.Transaction
+import ru.vincetti.modules.core.utils.SingleLiveEvent
+import ru.vincetti.modules.database.repository.*
+import ru.vincetti.modules.network.ConfigLoader
+import ru.vincetti.modules.network.models.*
 import ru.vincetti.vimoney.utils.NetworkUtils
 import ru.vincetti.vimoney.utils.SampleDescription
-import ru.vincetti.vimoney.utils.SingleLiveEvent
 import java.util.*
 import javax.inject.Inject
 
@@ -29,6 +27,7 @@ class SplashViewModel @Inject constructor(
     private val configRepo: ConfigRepo,
     private val categoryRepo: CategoryRepo,
     private val currencyRepo: CurrencyRepo,
+    private val configLoader: ConfigLoader,
     private val networkUtils: NetworkUtils,
     private val sampleDescription: SampleDescription
 ) : ViewModel() {
@@ -40,14 +39,6 @@ class SplashViewModel @Inject constructor(
     val need2Navigate2Home = SingleLiveEvent<Boolean>()
 
     val need2Navigate2Self = SingleLiveEvent<Boolean>()
-
-    private val jsonDownloader by lazy {
-        Retrofit.Builder()
-            .baseUrl("https://vincetti.ru/vimoney/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(JsonDownloader::class.java)
-    }
 
     init {
         _networkError.value = false
@@ -77,7 +68,7 @@ class SplashViewModel @Inject constructor(
     private fun loadJsonFromServer() {
         viewModelScope.launch {
             try {
-                val configModel = jsonDownloader.loadPreferences("Ru")
+                val configModel = configLoader.loadPreferences()
                 configDbUpdate(configModel)
                 need2Navigate2Home.value = true
             } catch (e: Exception) {
@@ -100,10 +91,10 @@ class SplashViewModel @Inject constructor(
     }
 
     private suspend fun transactionsImport(transactionItems: List<TransactionsItem>) {
-        val transactions = mutableListOf<TransactionModel>()
+        val transactions = mutableListOf<Transaction>()
         transactionItems.map {
             transactions.add(
-                TransactionModel(
+                Transaction(
                     Date(it.date),
                     it.accountId,
                     sampleDescription.get(),
@@ -119,7 +110,7 @@ class SplashViewModel @Inject constructor(
     private suspend fun currencyImport(currencyItems: List<CurrencyItem>) {
         currencyItems.forEach {
             currencyRepo.add(
-                CurrencyModel(it.code, it.name, it.symbol)
+                Currency(it.code, it.name, it.symbol)
             )
         }
     }
@@ -136,7 +127,7 @@ class SplashViewModel @Inject constructor(
     }
 
     private suspend fun accountUpdate(accId: Int, type: String, title: String, balance: Int) {
-        val newAcc = AccountModel(accId, title, type, balance, 810)
+        val newAcc = Account(accId, title, type, balance, 810)
         accountRepo.add(newAcc)
         accountRepo.balanceUpdateById(accId)
     }
@@ -152,7 +143,7 @@ class SplashViewModel @Inject constructor(
     }
 
     private suspend fun categoryUpdate(catId: Int, name: String, symbol: String) {
-        val newCat = CategoryModel(catId, name, symbol)
+        val newCat = Category(catId, name, symbol)
         categoryRepo.add(newCat)
     }
 }

@@ -16,9 +16,9 @@ import androidx.navigation.fragment.findNavController
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import ru.vincetti.modules.core.models.Account
+import ru.vincetti.modules.core.models.Currency
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.models.AccountModel
-import ru.vincetti.vimoney.data.models.CurrencyModel
 import ru.vincetti.vimoney.databinding.FragmentAddCheckBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
@@ -142,23 +142,23 @@ class AddCheckFragment : Fragment() {
 
     private fun typeEntered(): String {
         return when (binding.addCheckContent.radioGroup.checkedRadioButtonId) {
-            R.id.add_check_type_debit -> AccountModel.ACCOUNT_TYPE_DEBIT
-            R.id.add_check_type_credit -> AccountModel.ACCOUNT_TYPE_CREDIT
-            else -> AccountModel.ACCOUNT_TYPE_CASH
+            R.id.add_check_type_debit -> Account.ACCOUNT_TYPE_DEBIT
+            R.id.add_check_type_credit -> Account.ACCOUNT_TYPE_CREDIT
+            else -> Account.ACCOUNT_TYPE_CASH
         }
     }
 
     private fun typeLoad(type: String) {
         binding.addCheckContent.radioGroup.check(
             when (type) {
-                AccountModel.ACCOUNT_TYPE_DEBIT -> R.id.add_check_type_debit
-                AccountModel.ACCOUNT_TYPE_CREDIT -> R.id.add_check_type_credit
+                Account.ACCOUNT_TYPE_DEBIT -> R.id.add_check_type_debit
+                Account.ACCOUNT_TYPE_CREDIT -> R.id.add_check_type_credit
                 else -> R.id.add_check_type_cash
             }
         )
     }
 
-    private fun popUpCurrencyShow(list: List<CurrencyModel>, view: View) {
+    private fun popUpCurrencyShow(list: List<Currency>, view: View) {
         val popUp = PopupMenu(requireContext(), view)
         for (i in list.indices) {
             popUp.menu.add(Menu.NONE, list[i].code, i, list[i].symbol)

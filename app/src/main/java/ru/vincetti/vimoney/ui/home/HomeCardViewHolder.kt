@@ -4,7 +4,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ru.vincetti.vimoney.data.models.AccountListModel
+import ru.vincetti.modules.core.models.AccountList
 import ru.vincetti.vimoney.databinding.ItemCardsListBinding
 
 class HomeCardViewHolder private constructor(
@@ -12,7 +12,7 @@ class HomeCardViewHolder private constructor(
     private val actions: Actions
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(account: AccountListModel) {
+    fun bind(account: AccountList) {
         binding.homeAccName.text = account.name
         binding.homeAccType.text = account.type
         binding.homeAccBalance.text = account.sum.toString()
