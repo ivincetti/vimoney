@@ -2,7 +2,7 @@ package ru.vincetti.vimoney.ui.transaction.main.categorylist
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ru.vincetti.vimoney.data.models.CategoryModel
+import ru.vincetti.modules.core.models.Category
 
 class CategoryListViewHolder private constructor(
     private val viewWrapper: CategoryListViewWrapper,
@@ -20,7 +20,7 @@ class CategoryListViewHolder private constructor(
         }
     }
 
-    fun bind(category: CategoryModel) {
+    fun bind(category: Category) {
         viewWrapper.bind(category)
     }
 

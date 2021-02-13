@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.repository.CategoryRepo
+import ru.vincetti.modules.database.repository.CategoryRepo
 import ru.vincetti.vimoney.databinding.FragmentCategoriesListBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.settings.category.AllCategoriesAdapter

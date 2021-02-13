@@ -3,7 +3,7 @@ package ru.vincetti.vimoney.ui.notifications
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ru.vincetti.vimoney.utils.SingleLiveEvent
+import ru.vincetti.modules.core.utils.SingleLiveEvent
 
 class NotificationViewModel : ViewModel() {
 

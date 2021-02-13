@@ -2,14 +2,14 @@ package ru.vincetti.vimoney.ui.check
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ru.vincetti.vimoney.data.models.AccountListModel
+import ru.vincetti.modules.core.models.AccountList
 import ru.vincetti.vimoney.ui.check.view.CardViewHolder
 
 class AllCardsAdapter(
     private val actions: CardViewHolder.Actions
 ) : RecyclerView.Adapter<CardViewHolder>() {
 
-    private var data: List<AccountListModel>? = null
+    private var data: List<AccountList>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         return CardViewHolder.create(parent, actions)
@@ -23,7 +23,7 @@ class AllCardsAdapter(
 
     override fun getItemCount() = data?.size ?: 0
 
-    fun setList(accList: List<AccountListModel>?) {
+    fun setList(accList: List<AccountList>?) {
         accList?.let {
             data = accList
             notifyDataSetChanged()

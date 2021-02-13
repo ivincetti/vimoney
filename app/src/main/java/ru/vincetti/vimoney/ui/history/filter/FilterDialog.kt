@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import ru.vincetti.modules.core.models.Filter
 import ru.vincetti.vimoney.databinding.DialogTransactionsFilterBinding
 import java.text.DateFormat
 import java.util.*

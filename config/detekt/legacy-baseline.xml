@@ -2,44 +2,37 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
-    <ID>ComplexCondition:AddCheckViewModel.kt$AddCheckViewModel$TextUtils.isEmpty(name) || TextUtils.isEmpty(type) || currency.value == null || color.value!! &gt; 0</ID>
     <ID>DataClassShouldBeImmutable:AccountListModel.kt$AccountListModel$@ColumnInfo(name = "extra_key") var extraKey: String = ""</ID>
     <ID>DataClassShouldBeImmutable:AccountListModel.kt$AccountListModel$@ColumnInfo(name = "extra_value") var extraValue: String = ""</ID>
     <ID>DataClassShouldBeImmutable:AccountListModel.kt$AccountListModel$@ColumnInfo(name = "need_all_balance") var needAllBalance: Boolean = true</ID>
     <ID>DataClassShouldBeImmutable:AccountListModel.kt$AccountListModel$@ColumnInfo(name = "need_on_main_screen") var needOnMain: Boolean = true</ID>
-    <ID>DataClassShouldBeImmutable:AccountListModel.kt$AccountListModel$var currency: Int = AccountModel.DEFAULT_CURRENCY</ID>
+    <ID>DataClassShouldBeImmutable:AccountListModel.kt$AccountListModel$var currency: Int = Account.DEFAULT_CURRENCY</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$@ColumnInfo(name = "archive") var isArchive: Boolean = false</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$@ColumnInfo(name = "extra_key") var extraKey: String = ""</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$@ColumnInfo(name = "extra_value") var extraValue: String = ""</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$@ColumnInfo(name = "need_all_balance") var needAllBalance: Boolean = true</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$@ColumnInfo(name = "need_on_main_screen") var needOnMain: Boolean = true</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$@PrimaryKey(autoGenerate = true) var id: Int = 0</ID>
-    <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$var color: String = DEFAULT_COLOR</ID>
-    <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$var currency: Int = DEFAULT_CURRENCY</ID>
+    <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$var color: String = Account.DEFAULT_COLOR</ID>
+    <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$var currency: Int = Account.DEFAULT_CURRENCY</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$var name: String? = ""</ID>
     <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$var sum: Int = 0</ID>
-    <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$var type: String? = ACCOUNT_TYPE_CASH</ID>
+    <ID>DataClassShouldBeImmutable:AccountModel.kt$AccountModel$var type: String? = Account.ACCOUNT_TYPE_CASH</ID>
     <ID>DataClassShouldBeImmutable:CategoryModel.kt$CategoryModel$@PrimaryKey(autoGenerate = true) var id: Int = 0</ID>
     <ID>DataClassShouldBeImmutable:ConfigModel.kt$ConfigModel$@PrimaryKey(autoGenerate = true) var id: Int = 0</ID>
     <ID>DataClassShouldBeImmutable:CurrencyModel.kt$CurrencyModel$@PrimaryKey(autoGenerate = true) var id: Int = 0</ID>
-    <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$@ColumnInfo(name = "account_id") var accountId: Int = DEFAULT_ID</ID>
-    <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$@ColumnInfo(name = "category_id") var categoryId: Int = DEFAULT_CATEGORY</ID>
+    <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$@ColumnInfo(name = "account_id") var accountId: Int = Transaction.DEFAULT_ID</ID>
+    <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$@ColumnInfo(name = "category_id") var categoryId: Int = Transaction.DEFAULT_CATEGORY</ID>
     <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$@ColumnInfo(name = "extra_key") var extraKey: String = ""</ID>
     <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$@ColumnInfo(name = "extra_value") var extraValue: String = ""</ID>
     <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$@ColumnInfo(name = "updated_at") var updatedAt: Date? = Date()</ID>
-    <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$@PrimaryKey(autoGenerate = true) var id: Int = DEFAULT_ID</ID>
+    <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$@PrimaryKey(autoGenerate = true) var id: Int = Transaction.DEFAULT_ID</ID>
     <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$var date: Date? = Date()</ID>
     <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$var deleted: Boolean = false</ID>
     <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$var description: String? = ""</ID>
     <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$var sum: Float = 0f</ID>
     <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$var system: Boolean = false</ID>
-    <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$var type: Int = TRANSACTION_TYPE_SPENT</ID>
-    <ID>DataClassShouldBeImmutable:TransactionStatDayModel.kt$TransactionStatDayModel$var day: String</ID>
-    <ID>DataClassShouldBeImmutable:TransactionStatDayModel.kt$TransactionStatDayModel$var sum: Int</ID>
-    <ID>EmptyFunctionBlock:TransactionMainFragment.kt$TransactionMainFragment.&lt;no name provided&gt;${ }</ID>
-    <ID>EmptyFunctionBlock:TransactionTransferFragment.kt$TransactionTransferFragment.&lt;no name provided&gt;${ }</ID>
-    <ID>MagicNumber:AddCheckFragment.kt$AddCheckFragment$12</ID>
-    <ID>MagicNumber:AddCheckViewModel.kt$AddCheckViewModel$0xffffff</ID>
+    <ID>DataClassShouldBeImmutable:TransactionModel.kt$TransactionModel$var type: Int = Transaction.TRANSACTION_TYPE_SPENT</ID>
     <ID>MagicNumber:AppDatabase.kt$AppDatabase.Companion.&lt;no name provided&gt;$10</ID>
     <ID>MagicNumber:AppDatabase.kt$AppDatabase.Companion.&lt;no name provided&gt;$11</ID>
     <ID>MagicNumber:AppDatabase.kt$AppDatabase.Companion.&lt;no name provided&gt;$12</ID>
@@ -51,8 +44,41 @@
     <ID>MagicNumber:AppDatabase.kt$AppDatabase.Companion.&lt;no name provided&gt;$7</ID>
     <ID>MagicNumber:AppDatabase.kt$AppDatabase.Companion.&lt;no name provided&gt;$8</ID>
     <ID>MagicNumber:AppDatabase.kt$AppDatabase.Companion.&lt;no name provided&gt;$9</ID>
+    <ID>DataClassShouldBeImmutable:Account.kt$Account$var color: String = DEFAULT_COLOR</ID>
+    <ID>DataClassShouldBeImmutable:Account.kt$Account$var currency: Int = DEFAULT_CURRENCY</ID>
+    <ID>DataClassShouldBeImmutable:Account.kt$Account$var extraKey: String = ""</ID>
+    <ID>DataClassShouldBeImmutable:Account.kt$Account$var extraValue: String = ""</ID>
+    <ID>DataClassShouldBeImmutable:Account.kt$Account$var id: Int = 0</ID>
+    <ID>DataClassShouldBeImmutable:Account.kt$Account$var isArchive: Boolean = false</ID>
+    <ID>DataClassShouldBeImmutable:Account.kt$Account$var name: String? = ""</ID>
+    <ID>DataClassShouldBeImmutable:Account.kt$Account$var needAllBalance: Boolean = true</ID>
+    <ID>DataClassShouldBeImmutable:Account.kt$Account$var needOnMain: Boolean = true</ID>
+    <ID>DataClassShouldBeImmutable:Account.kt$Account$var sum: Int = 0</ID>
+    <ID>DataClassShouldBeImmutable:Account.kt$Account$var type: String? = ACCOUNT_TYPE_CASH</ID>
+    <ID>DataClassShouldBeImmutable:AccountList.kt$AccountList$var currency: Int = Account.DEFAULT_CURRENCY</ID>
+    <ID>DataClassShouldBeImmutable:AccountList.kt$AccountList$var extraKey: String = ""</ID>
+    <ID>DataClassShouldBeImmutable:AccountList.kt$AccountList$var extraValue: String = ""</ID>
+    <ID>DataClassShouldBeImmutable:AccountList.kt$AccountList$var needAllBalance: Boolean = true</ID>
+    <ID>DataClassShouldBeImmutable:AccountList.kt$AccountList$var needOnMain: Boolean = true</ID>
+    <ID>DataClassShouldBeImmutable:Category.kt$Category$var id: Int = 0</ID>
+    <ID>DataClassShouldBeImmutable:Config.kt$Config$var id: Int = 0</ID>
+    <ID>DataClassShouldBeImmutable:Currency.kt$Currency$var id: Int = 0</ID>
+    <ID>DataClassShouldBeImmutable:Transaction.kt$Transaction$var accountId: Int = DEFAULT_ID</ID>
+    <ID>DataClassShouldBeImmutable:Transaction.kt$Transaction$var categoryId: Int = DEFAULT_CATEGORY</ID>
+    <ID>DataClassShouldBeImmutable:Transaction.kt$Transaction$var date: Date? = Date()</ID>
+    <ID>DataClassShouldBeImmutable:Transaction.kt$Transaction$var deleted: Boolean = false</ID>
+    <ID>DataClassShouldBeImmutable:Transaction.kt$Transaction$var description: String? = ""</ID>
+    <ID>DataClassShouldBeImmutable:Transaction.kt$Transaction$var extraKey: String = ""</ID>
+    <ID>DataClassShouldBeImmutable:Transaction.kt$Transaction$var extraValue: String = ""</ID>
+    <ID>DataClassShouldBeImmutable:Transaction.kt$Transaction$var id: Int = DEFAULT_ID</ID>
+    <ID>DataClassShouldBeImmutable:Transaction.kt$Transaction$var sum: Float = 0f</ID>
+    <ID>DataClassShouldBeImmutable:Transaction.kt$Transaction$var system: Boolean = false</ID>
+    <ID>DataClassShouldBeImmutable:Transaction.kt$Transaction$var type: Int = TRANSACTION_TYPE_SPENT</ID>
+    <ID>DataClassShouldBeImmutable:Transaction.kt$Transaction$var updatedAt: Date? = Date()</ID>
+    <ID>ComplexCondition:AddCheckViewModel.kt$AddCheckViewModel$TextUtils.isEmpty(name) || TextUtils.isEmpty(type) || currency.value == null || color.value!! &gt; 0</ID>
+    <ID>MagicNumber:AddCheckFragment.kt$AddCheckFragment$12</ID>
+    <ID>MagicNumber:AddCheckViewModel.kt$AddCheckViewModel$0xffffff</ID>
     <ID>MagicNumber:DashboardFragment.kt$DashboardFragment$400L</ID>
     <ID>MagicNumber:SplashViewModel.kt$SplashViewModel$810</ID>
-    <ID>ReturnCount:NetworkUtils.kt$NetworkUtils$@JvmStatic fun isNetworkAvailable(context: Context): Boolean</ID>
   </CurrentIssues>
 </SmellBaseline>

@@ -5,14 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import ru.vincetti.modules.core.models.Category
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.models.CategoryModel
 import ru.vincetti.vimoney.databinding.DialogCategoryGridBinding
 import ru.vincetti.vimoney.ui.transaction.main.categorylist.CategoryListAdapter
 
 class CategoryListDialog : DialogFragment() {
 
-    private var categories: List<CategoryModel>? = null
+    private var categories: List<Category>? = null
 
     private var _binding: DialogCategoryGridBinding? = null
     private val binding
@@ -49,7 +49,7 @@ class CategoryListDialog : DialogFragment() {
         _binding = null
     }
 
-    fun setList(categories: List<CategoryModel>) {
+    fun setList(categories: List<Category>) {
         this.categories = categories
     }
 }

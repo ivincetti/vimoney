@@ -5,12 +5,12 @@ import android.text.TextUtils
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import ru.vincetti.vimoney.data.models.AccountModel
-import ru.vincetti.vimoney.data.models.CurrencyModel
-import ru.vincetti.vimoney.data.repository.AccountRepo
-import ru.vincetti.vimoney.data.repository.CurrencyRepo
+import ru.vincetti.modules.core.models.Account
+import ru.vincetti.modules.core.models.Currency
+import ru.vincetti.modules.core.utils.SingleLiveEvent
+import ru.vincetti.modules.database.repository.AccountRepo
+import ru.vincetti.modules.database.repository.CurrencyRepo
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
-import ru.vincetti.vimoney.utils.SingleLiveEvent
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,7 +37,7 @@ class AddCheckViewModel @Inject constructor(
 
     var need2AllData = MutableLiveData<Boolean>()
 
-    private var _currency = MutableLiveData<CurrencyModel>()
+    private var _currency = MutableLiveData<Currency>()
     val currency
         get() = _currency
 
@@ -49,8 +49,8 @@ class AddCheckViewModel @Inject constructor(
         emit(currencyRepo.loadAll())
     }
 
-    private var _check = MutableLiveData<AccountModel>()
-    val check: LiveData<AccountModel>
+    private var _check = MutableLiveData<Account>()
+    val check: LiveData<Account>
         get() = _check
 
     init {
@@ -58,7 +58,7 @@ class AddCheckViewModel @Inject constructor(
         need2AllData.value = false
         _needOnMain.value = true
         _needAllBalance.value = true
-        _check.value = AccountModel()
+        _check.value = Account()
         _color.value = Color.parseColor(_check.value!!.color)
     }
 

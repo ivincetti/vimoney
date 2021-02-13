@@ -14,9 +14,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import dagger.hilt.android.AndroidEntryPoint
+import ru.vincetti.modules.core.models.Transaction
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.data.adapters.TabsFragmentPagerAdapter
-import ru.vincetti.vimoney.data.models.TransactionModel
 import ru.vincetti.vimoney.databinding.FragmentTransactionMainBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
@@ -101,8 +100,8 @@ class TransactionMainFragment : Fragment() {
 
     fun setActivityTitle(position: Int) {
         binding.transactionNavigationTxt.text = when (position) {
-            TransactionModel.TRANSACTION_TYPE_SPENT_TAB -> getString(R.string.add_title_home_spent)
-            TransactionModel.TRANSACTION_TYPE_TRANSFER_TAB -> getString(R.string.add_title_home_transfer)
+            Transaction.TRANSACTION_TYPE_SPENT_TAB -> getString(R.string.add_title_home_spent)
+            Transaction.TRANSACTION_TYPE_TRANSFER_TAB -> getString(R.string.add_title_home_transfer)
             else -> getString(R.string.add_title_home_income)
 //            TransactionModel.TRANSACTION_TYPE_DEBT_TAB ->
 //                transaction_navigation_txt.text = getString(R.string.add_title_home_debt)
@@ -111,17 +110,17 @@ class TransactionMainFragment : Fragment() {
 
     private fun typeLoad(type: Int) {
         when (type) {
-            TransactionModel.TRANSACTION_TYPE_INCOME -> {
-                binding.viewPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_INCOME_TAB, true)
-                setActivityTitle(TransactionModel.TRANSACTION_TYPE_INCOME_TAB)
+            Transaction.TRANSACTION_TYPE_INCOME -> {
+                binding.viewPager.setCurrentItem(Transaction.TRANSACTION_TYPE_INCOME_TAB, true)
+                setActivityTitle(Transaction.TRANSACTION_TYPE_INCOME_TAB)
             }
-            TransactionModel.TRANSACTION_TYPE_TRANSFER -> {
-                binding.viewPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_TRANSFER_TAB, true)
-                setActivityTitle(TransactionModel.TRANSACTION_TYPE_TRANSFER_TAB)
+            Transaction.TRANSACTION_TYPE_TRANSFER -> {
+                binding.viewPager.setCurrentItem(Transaction.TRANSACTION_TYPE_TRANSFER_TAB, true)
+                setActivityTitle(Transaction.TRANSACTION_TYPE_TRANSFER_TAB)
             }
             else -> {
-                binding.viewPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_SPENT_TAB, true)
-                setActivityTitle(TransactionModel.TRANSACTION_TYPE_SPENT_TAB)
+                binding.viewPager.setCurrentItem(Transaction.TRANSACTION_TYPE_SPENT_TAB, true)
+                setActivityTitle(Transaction.TRANSACTION_TYPE_SPENT_TAB)
             }
 //            TransactionModel.TRANSACTION_TYPE_DEBT ->{
 //                vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_DEBT_TAB, true)

@@ -3,11 +3,11 @@ package ru.vincetti.vimoney.ui.transaction.main
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import ru.vincetti.vimoney.data.models.TransactionModel
-import ru.vincetti.vimoney.data.repository.AccountRepo
-import ru.vincetti.vimoney.data.repository.CategoryRepo
-import ru.vincetti.vimoney.data.repository.CurrencyRepo
-import ru.vincetti.vimoney.data.repository.TransactionRepo
+import ru.vincetti.modules.core.models.Transaction
+import ru.vincetti.modules.database.repository.AccountRepo
+import ru.vincetti.modules.database.repository.CategoryRepo
+import ru.vincetti.modules.database.repository.CurrencyRepo
+import ru.vincetti.modules.database.repository.TransactionRepo
 import java.util.*
 import javax.inject.Inject
 
@@ -20,11 +20,11 @@ class TransactionMainViewModel @Inject constructor(
     private val currencyRepo: CurrencyRepo
 ) : ViewModel() {
 
-    private var _transaction = MutableLiveData<TransactionModel>()
+    private var _transaction = MutableLiveData<Transaction>()
     val transaction
         get() = _transaction
 
-    private val _nestedTransaction = MutableLiveData<TransactionModel>()
+    private val _nestedTransaction = MutableLiveData<Transaction>()
     val nestedTransaction
         get() = _nestedTransaction
 
@@ -102,18 +102,18 @@ class TransactionMainViewModel @Inject constructor(
     val description
         get() = _description
 
-    private var oldTransactionAccountID = TransactionModel.DEFAULT_ID
-    private var oldTransactionAccountToID = TransactionModel.DEFAULT_ID
+    private var oldTransactionAccountID = Transaction.DEFAULT_ID
+    private var oldTransactionAccountToID = Transaction.DEFAULT_ID
 
-    private var nestedId = TransactionModel.DEFAULT_ID
-    private var mTransId = TransactionModel.DEFAULT_ID
+    private var nestedId = Transaction.DEFAULT_ID
+    private var mTransId = Transaction.DEFAULT_ID
 
     init {
-        _transaction.value = TransactionModel()
-        _nestedTransaction.value = TransactionModel()
-        _accountId.value = TransactionModel.DEFAULT_ID
-        _accountIdTo.value = TransactionModel.DEFAULT_ID
-        _categoryId.value = TransactionModel.DEFAULT_CATEGORY
+        _transaction.value = Transaction()
+        _nestedTransaction.value = Transaction()
+        _accountId.value = Transaction.DEFAULT_ID
+        _accountIdTo.value = Transaction.DEFAULT_ID
+        _categoryId.value = Transaction.DEFAULT_CATEGORY
         _needAccount.value = false
         _needToUpdate.value = false
         _needSum.value = false
@@ -126,7 +126,7 @@ class TransactionMainViewModel @Inject constructor(
             val tmpTransaction = transactionRepo.loadById(id)
             tmpTransaction?.let {
                 _transaction.value = tmpTransaction
-                if (tmpTransaction.id != TransactionModel.DEFAULT_ID) {
+                if (tmpTransaction.id != Transaction.DEFAULT_ID) {
                     _needToUpdate.value = true
                     _accountId.value = tmpTransaction.accountId
                     _categoryId.value = tmpTransaction.categoryId
@@ -137,7 +137,7 @@ class TransactionMainViewModel @Inject constructor(
                     oldTransactionAccountID = tmpTransaction.id
                 }
                 if (
-                    tmpTransaction.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY &&
+                    tmpTransaction.extraKey == Transaction.TRANSACTION_TYPE_TRANSFER_KEY &&
                     tmpTransaction.extraValue.toInt() > 0
                 ) {
                     nestedId = tmpTransaction.extraValue.toInt()
@@ -186,16 +186,13 @@ class TransactionMainViewModel @Inject constructor(
     fun delete() {
         viewModelScope.launch {
             _transaction.value?.let {
-                if (it.id != TransactionModel.DEFAULT_ID) {
-                    if (
-                        it.extraKey == TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY &&
-                        nestedId > 0
-                    ) {
-                        transactionRepo.delete(nestedId)
-                        accountRepo.balanceUpdateById(_accountIdTo.value!!)
+                if (it.id != Transaction.DEFAULT_ID) {
+                    if (it.extraKey == Transaction.TRANSACTION_TYPE_TRANSFER_KEY) {
+                        _nestedTransaction.value?.let { nested ->
+                            transactionRepo.delete(nested)
+                        }
                     }
-                    transactionRepo.delete(mTransId)
-                    accountRepo.balanceUpdateById(_accountId.value!!)
+                    transactionRepo.delete(it)
                     _needToNavigate.value = true
                 }
             }
@@ -215,12 +212,11 @@ class TransactionMainViewModel @Inject constructor(
                     tmpTransaction.accountId = _accountId.value!!
                     tmpTransaction.sum = txtSum.toFloat()
                     tmpTransaction.categoryId = _categoryId.value!!
-                    if (tmpTransaction.id != TransactionModel.DEFAULT_ID) {
+                    if (tmpTransaction.id != Transaction.DEFAULT_ID) {
                         trUpdate(tmpTransaction)
                     } else {
                         trInsert(tmpTransaction)
                     }
-                    updateBalance(tmpTransaction)
                 }
             }
         }
@@ -230,8 +226,8 @@ class TransactionMainViewModel @Inject constructor(
         _transaction.value?.let { tmpTransaction ->
             _nestedTransaction.value?.let { tmpToTransaction ->
                 if (
-                    _accountId.value != TransactionModel.DEFAULT_ID &&
-                    _accountIdTo.value != TransactionModel.DEFAULT_ID
+                    _accountId.value != Transaction.DEFAULT_ID &&
+                    _accountIdTo.value != Transaction.DEFAULT_ID
                 ) {
                     if (txtSumTo == "" || txtSum == "") {
                         _needSum.value = true
@@ -241,22 +237,21 @@ class TransactionMainViewModel @Inject constructor(
                         tmpTransaction.accountId = _accountId.value!!
                         tmpTransaction.type = actionType
                         tmpTransaction.sum = txtSum.toFloat()
-                        tmpTransaction.extraKey = TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
+                        tmpTransaction.extraKey = Transaction.TRANSACTION_TYPE_TRANSFER_KEY
 
                         tmpToTransaction.sum = txtSumTo.toFloat()
                         tmpToTransaction.accountId = _accountIdTo.value!!
-                        tmpToTransaction.extraKey = TransactionModel.TRANSACTION_TYPE_TRANSFER_KEY
+                        tmpToTransaction.extraKey = Transaction.TRANSACTION_TYPE_TRANSFER_KEY
                         tmpToTransaction.extraValue = tmpTransaction.id.toString()
                         tmpToTransaction.date = date.value!!
-                        tmpToTransaction.type = TransactionModel.TRANSACTION_TYPE_INCOME
+                        tmpToTransaction.type = Transaction.TRANSACTION_TYPE_INCOME
                         tmpToTransaction.system = true
 
-                        if (tmpTransaction.id != TransactionModel.DEFAULT_ID) {
+                        if (tmpTransaction.id != Transaction.DEFAULT_ID) {
                             trUpdate(tmpTransaction, tmpToTransaction)
                         } else {
                             trInsert(tmpTransaction, tmpToTransaction)
                         }
-                        updateBalance(tmpTransaction, tmpToTransaction)
                     }
                 } else {
                     _needAccount.value = true
@@ -269,15 +264,7 @@ class TransactionMainViewModel @Inject constructor(
         _needToNavigate.value = false
     }
 
-    private fun updateBalance(vararg trans: TransactionModel) {
-        viewModelScope.launch {
-            for (transaction in trans) {
-                accountRepo.balanceUpdateById(transaction.accountId)
-            }
-        }
-    }
-
-    private fun trInsert(transaction: TransactionModel, toTransaction: TransactionModel? = null) {
+    private fun trInsert(transaction: Transaction, toTransaction: Transaction? = null) {
         viewModelScope.launch {
             toTransaction?.let {
                 val idTo: Long = transactionRepo.add(it)
@@ -288,7 +275,7 @@ class TransactionMainViewModel @Inject constructor(
         }
     }
 
-    private fun trUpdate(transaction: TransactionModel, toTransaction: TransactionModel? = null) {
+    private fun trUpdate(transaction: Transaction, toTransaction: Transaction? = null) {
         viewModelScope.launch {
             toTransaction?.let {
                 it.id = transaction.extraValue.toInt()

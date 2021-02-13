@@ -7,10 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import ru.vincetti.vimoney.data.models.CategoryModel
-import ru.vincetti.vimoney.data.repository.CategoryRepo
+import ru.vincetti.modules.core.utils.SingleLiveEvent
+import ru.vincetti.modules.database.repository.CategoryRepo
 import ru.vincetti.vimoney.ui.settings.category.symbol.Category
-import ru.vincetti.vimoney.utils.SingleLiveEvent
 import javax.inject.Inject
 
 @HiltViewModel
@@ -73,7 +72,7 @@ class AddCategoryViewModel @Inject constructor(
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(symbol)) {
                 _need2AllData.value = true
             } else {
-                val tmpCategory = CategoryModel(name = name, symbol = symbol)
+                val tmpCategory = ru.vincetti.modules.core.models.Category(name = name, symbol = symbol)
                 if (!isDefaultBool) {
                     tmpCategory.id = categoryID
                     categoryRepo.update(tmpCategory)
