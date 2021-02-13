@@ -45,9 +45,7 @@ class SplashFragment : Fragment() {
             if (it) findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
         }
         viewModel.need2Navigate2Self.observe(viewLifecycleOwner) {
-            if (it) {
-                findNavController().navigate(R.id.action_splashFragment_self)
-            }
+            if (it) findNavController().navigate(R.id.action_splashFragment_self)
         }
     }
 

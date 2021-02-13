@@ -1,8 +1,6 @@
 package ru.vincetti.vimoney.ui.splash
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,16 +30,13 @@ class SplashViewModel @Inject constructor(
     private val sampleDescription: SampleDescription
 ) : ViewModel() {
 
-    private var _networkError = MutableLiveData<Boolean>()
-    val networkError: LiveData<Boolean>
-        get() = _networkError
+    val networkError = SingleLiveEvent<Boolean>()
 
     val need2Navigate2Home = SingleLiveEvent<Boolean>()
 
     val need2Navigate2Self = SingleLiveEvent<Boolean>()
 
     init {
-        _networkError.value = false
         checkDb()
     }
 
@@ -52,7 +47,7 @@ class SplashViewModel @Inject constructor(
                 if (networkUtils.isAvailable()) {
                     loadJsonFromServer()
                 } else {
-                    _networkError.value = true
+                    networkError.value = true
                 }
             } else {
                 need2Navigate2Home.value = true
@@ -61,7 +56,6 @@ class SplashViewModel @Inject constructor(
     }
 
     fun resetNetworkStatus() {
-        _networkError.value = false
         need2Navigate2Self.value = true
     }
 
@@ -73,7 +67,7 @@ class SplashViewModel @Inject constructor(
                 need2Navigate2Home.value = true
             } catch (e: Exception) {
                 Log.d("TAG", " load from json error ${e.message}")
-                _networkError.value = true
+                networkError.value = true
             }
         }
     }
