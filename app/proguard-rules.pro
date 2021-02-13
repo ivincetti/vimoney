@@ -40,7 +40,6 @@
 -keep interface com.squareup.okhttp.** { *; }
 -dontwarn com.squareup.okhttp.**
 
--dontwarn rx.**
 -dontwarn retrofit.**
 -keep class retrofit.** { *; }
 -keepclasseswithmembers class * {
@@ -48,7 +47,7 @@
 }
 
 -keep class sun.misc.Unsafe { *; }
--keep class ru.vincetti.vimoney.data.models.** { *; }
+-keep class ru.vincetti.modules.network.models.** { *; }
 
 # Keep these for GSON and Jackson
 -keepattributes Signature
