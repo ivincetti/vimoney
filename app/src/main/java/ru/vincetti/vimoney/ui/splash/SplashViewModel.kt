@@ -80,10 +80,10 @@ class SplashViewModel @Inject constructor(
 
     private suspend fun configDbUpdate(response: ConfigFile) {
         configDbDateInsert(response.dateEdit)
-        transactionsImport(response.transactions)
         currencyImport(response.currency)
         accountsUpdate(response.accounts)
         categoriesUpdate(response.categories)
+        transactionsImport(response.transactions)
     }
 
     private suspend fun configDbDateInsert(timeMillisLong: Long) {
@@ -103,7 +103,6 @@ class SplashViewModel @Inject constructor(
                 )
             )
         }
-
         transactionRepo.add(transactions)
     }
 
@@ -129,7 +128,6 @@ class SplashViewModel @Inject constructor(
     private suspend fun accountUpdate(accId: Int, type: String, title: String, balance: Int) {
         val newAcc = Account(accId, title, type, balance, 810)
         accountRepo.add(newAcc)
-        accountRepo.balanceUpdateById(accId)
     }
 
     private suspend fun categoriesUpdate(categoriesItems: List<CategoriesItem>) {

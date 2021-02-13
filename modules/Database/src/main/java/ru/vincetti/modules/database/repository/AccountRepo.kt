@@ -8,16 +8,15 @@ import kotlinx.coroutines.withContext
 import ru.vincetti.modules.core.models.Account
 import ru.vincetti.modules.core.models.AccountList
 import ru.vincetti.modules.database.sqlite.AccountDao
+import ru.vincetti.modules.database.sqlite.TransactionDao
 import ru.vincetti.modules.database.sqlite.models.AccountModel
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
 class AccountRepo @Inject constructor(
-    private val accountDao: AccountDao
+    private val accountDao: AccountDao,
+    private val transactionDao: TransactionDao
 ) {
-
-    @Inject
-    lateinit var transactionRepo: TransactionRepo
 
     suspend fun loadById(id: Int): Account? {
         return accountDao.loadAccountById(id)?.toAccount()
@@ -36,8 +35,8 @@ class AccountRepo @Inject constructor(
     }
 
     fun loadMain(): LiveData<List<AccountList>> {
-        return Transformations.map(accountDao.loadMainAccountsFull()) {
-            it.map { it.toAccountList() }
+        return Transformations.map(accountDao.loadMainAccountsFull()) { list ->
+            list.map { it.toAccountList() }
         }
     }
 
@@ -50,12 +49,12 @@ class AccountRepo @Inject constructor(
     }
 
     fun loadAllFull(): LiveData<List<AccountList>> {
-        return Transformations.map(accountDao.loadAllAccountsFull()) {
-            it.map { it.toAccountList() }
+        return Transformations.map(accountDao.loadAllAccountsFull()) { list ->
+            list.map { it.toAccountList() }
         }
     }
 
-    suspend fun balanceUpdate(): Int {
+    suspend fun getMainBalance(): Int {
         var balance = 0
         loadAll()?.let { list ->
             list.filter { it.needAllBalance && !it.isArchive }.forEach { balance += it.sum }
@@ -64,14 +63,14 @@ class AccountRepo @Inject constructor(
     }
 
     suspend fun balanceUpdateById(accId: Int) {
-        val sum = transactionRepo.loadCheckSum(accId)
+        val sum = transactionDao.loadSumByCheckId(accId)
         updateSumById(accId, sum)
     }
 
     suspend fun balanceUpdateAll() {
         withContext(Dispatchers.IO) {
             loadAll()?.forEach {
-                val sum = transactionRepo.loadCheckSum(it.id)
+                val sum = transactionDao.loadSumByCheckId(it.id)
                 updateSumById(it.id, sum)
             }
         }
