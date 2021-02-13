@@ -98,10 +98,10 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:${versions.gradle_hilt}"
     implementation "com.google.dagger:hilt-android:${versions.gradle_hilt}"
 
-    implementation project(':Core')
-    implementation project(':Files')
-    implementation project(':Database')
-    implementation project(':Network')
+    implementation project(':core')
+    implementation project(':modules:database')
+    implementation project(':modules:files')
+    implementation project(':modules:network')
 
     //Test
     implementation "androidx.test:core:${versions.androidx_test_core}"

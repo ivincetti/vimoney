@@ -36,7 +36,7 @@ dependencies {
     implementation "com.google.dagger:hilt-android:${versions.gradle_hilt}"
     kapt "com.google.dagger:hilt-android-compiler:${versions.gradle_hilt}"
 
-    implementation project(':Core')
+    implementation project(':core')
 
     testImplementation "junit:junit:${versions.junit}"
     testImplementation "androidx.test.ext:junit-ktx:${versions.androidx_test_junit}"
