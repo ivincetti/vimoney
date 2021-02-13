@@ -187,15 +187,12 @@ class TransactionMainViewModel @Inject constructor(
         viewModelScope.launch {
             _transaction.value?.let {
                 if (it.id != Transaction.DEFAULT_ID) {
-                    if (
-                        it.extraKey == Transaction.TRANSACTION_TYPE_TRANSFER_KEY &&
-                        nestedId > 0
-                    ) {
-                        transactionRepo.delete(nestedId)
-                        accountRepo.balanceUpdateById(_accountIdTo.value!!)
+                    if (it.extraKey == Transaction.TRANSACTION_TYPE_TRANSFER_KEY) {
+                        _nestedTransaction.value?.let { nested ->
+                            transactionRepo.delete(nested)
+                        }
                     }
-                    transactionRepo.delete(mTransId)
-                    accountRepo.balanceUpdateById(_accountId.value!!)
+                    transactionRepo.delete(it)
                     _needToNavigate.value = true
                 }
             }
@@ -220,7 +217,6 @@ class TransactionMainViewModel @Inject constructor(
                     } else {
                         trInsert(tmpTransaction)
                     }
-                    updateBalance(tmpTransaction)
                 }
             }
         }
@@ -256,7 +252,6 @@ class TransactionMainViewModel @Inject constructor(
                         } else {
                             trInsert(tmpTransaction, tmpToTransaction)
                         }
-                        updateBalance(tmpTransaction, tmpToTransaction)
                     }
                 } else {
                     _needAccount.value = true
@@ -267,14 +262,6 @@ class TransactionMainViewModel @Inject constructor(
 
     fun navigatedBack() {
         _needToNavigate.value = false
-    }
-
-    private fun updateBalance(vararg trans: Transaction) {
-        viewModelScope.launch {
-            for (transaction in trans) {
-                accountRepo.balanceUpdateById(transaction.accountId)
-            }
-        }
     }
 
     private fun trInsert(transaction: Transaction, toTransaction: Transaction? = null) {

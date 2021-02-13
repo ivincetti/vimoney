@@ -27,7 +27,7 @@ class HomeViewModel @Inject constructor(
 
     val userBalance: LiveData<Int> = accounts.switchMap {
         liveData {
-            emit(accountRepo.balanceUpdate())
+            emit(accountRepo.getMainBalance())
         }
     }
 

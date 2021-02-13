@@ -3,26 +3,30 @@ package ru.vincetti.modules.database.repository
 import androidx.paging.DataSource
 import ru.vincetti.modules.core.models.Filter
 import ru.vincetti.modules.core.models.Transaction
-import ru.vincetti.modules.database.sqlite.models.TransactionListModel
 import ru.vincetti.modules.core.models.TransactionStatDay
 import ru.vincetti.modules.core.utils.DatesFormat
 import ru.vincetti.modules.database.sqlite.TransactionDao
+import ru.vincetti.modules.database.sqlite.models.TransactionListModel
 import ru.vincetti.modules.database.sqlite.models.TransactionModel
 import java.time.LocalDate
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
 class TransactionRepo @Inject constructor(
-    private val transactionDao: TransactionDao
+    private val transactionDao: TransactionDao,
+    private val accountRepo: AccountRepo
 ) {
 
     suspend fun add(transaction: Transaction): Long {
-        return transactionDao.insertTransaction(TransactionModel.from(transaction))
+        val id = transactionDao.insertTransaction(TransactionModel.from(transaction))
+        accountRepo.balanceUpdateById(transaction.accountId)
+        return id
     }
 
     suspend fun add(transactions: List<Transaction>) {
         val transactionModels = transactions.map { TransactionModel.from(it) }
         transactionDao.insertTransaction(transactionModels)
+        accountRepo.balanceUpdateAll()
     }
 
     suspend fun loadById(id: Int): Transaction? {
@@ -31,10 +35,7 @@ class TransactionRepo @Inject constructor(
 
     suspend fun update(transaction: Transaction) {
         transactionDao.updateTransaction(TransactionModel.from(transaction))
-    }
-
-    suspend fun delete(id: Int) {
-        transactionDao.deleteTransactionById(id)
+        accountRepo.balanceUpdateById(transaction.accountId)
     }
 
     suspend fun loadIncomeExpenseMonth(localDate: LocalDate): Pair<Int, Int> {
@@ -56,8 +57,6 @@ class TransactionRepo @Inject constructor(
 
         return transactionDao.loadTransactionStatByMonth(month, year).map { it.toTransactionStatDay() }
     }
-
-    suspend fun loadCheckSum(checkID: Int) = transactionDao.loadSumByCheckId(checkID)
 
     fun loadFilterTransactions(filter: Filter): DataSource.Factory<Int, TransactionListModel> {
         return if (filter.count > 0) {
@@ -84,6 +83,11 @@ class TransactionRepo @Inject constructor(
 
     suspend fun loadAll(): List<Transaction> {
         return transactionDao.loadAllTransactions().map { it.toTransaction() }
+    }
+
+    suspend fun delete(transaction: Transaction) {
+        transactionDao.deleteTransaction(TransactionModel.from(transaction))
+        accountRepo.balanceUpdateById(transaction.accountId)
     }
 
     suspend fun deleteAll() {

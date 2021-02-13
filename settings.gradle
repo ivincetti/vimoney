@@ -1,5 +1,5 @@
 include ':app',
-        ':Core',
-        ':Database',
-        ':Network',
-        ':Files'
+        ':core',
+        ':modules:database',
+        ':modules:network',
+        ':modules:files'

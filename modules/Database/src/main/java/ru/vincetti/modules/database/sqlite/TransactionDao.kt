@@ -146,12 +146,6 @@ interface TransactionDao {
     )
     suspend fun loadSumByCheckId(accId: Int): Float
 
-    @Query("DELETE FROM transactions WHERE id = :transId")
-    suspend fun deleteTransactionById(transId: Int)
-
-    @Query("DELETE FROM transactions")
-    suspend fun deleteAllTransactions()
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(t: TransactionModel): Long
 
@@ -160,4 +154,10 @@ interface TransactionDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateTransaction(t: TransactionModel)
+
+    @Query("DELETE FROM transactions")
+    suspend fun deleteAllTransactions()
+
+    @Delete
+    suspend fun deleteTransaction(t: TransactionModel)
 }
