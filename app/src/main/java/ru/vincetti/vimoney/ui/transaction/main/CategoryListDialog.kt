@@ -12,7 +12,9 @@ import ru.vincetti.vimoney.ui.transaction.main.categorylist.CategoryListAdapter
 
 class CategoryListDialog : DialogFragment() {
 
-    private var categories: List<Category>? = null
+    private var categories: List<Category> = listOf()
+
+    private var categoriesAdapter: CategoryListAdapter? = null
 
     private var _binding: DialogCategoryGridBinding? = null
     private val binding
@@ -31,17 +33,15 @@ class CategoryListDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        categories?.let { list ->
-            val categoriesAdapter = CategoryListAdapter(list) {
-                targetFragment?.onActivityResult(
-                    targetRequestCode,
-                    list[it].id,
-                    requireActivity().intent
-                )
-                dismiss()
-            }
-            binding.categoriesSymbolsListRecycleView.adapter = categoriesAdapter
+        categoriesAdapter = CategoryListAdapter(categories) {
+            targetFragment?.onActivityResult(
+                targetRequestCode,
+                categories[it].id,
+                requireActivity().intent
+            )
+            dismiss()
         }
+        binding.categoriesSymbolsListRecycleView.adapter = categoriesAdapter
     }
 
     override fun onDestroyView() {
@@ -49,7 +49,8 @@ class CategoryListDialog : DialogFragment() {
         _binding = null
     }
 
-    fun setList(categories: List<Category>) {
-        this.categories = categories
+    fun setList(newCategories: List<Category>) {
+        categories = newCategories
+        categoriesAdapter?.setItems(newCategories)
     }
 }

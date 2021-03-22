@@ -1,30 +1,19 @@
 package ru.vincetti.vimoney.ui.splash
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vincetti.vimoney.R
-import ru.vincetti.vimoney.databinding.FragmentSplashBinding
+import ru.vincetti.vimoney.ui.splash.SplashViewModel.Action
 
 @AndroidEntryPoint
-class SplashFragment : Fragment() {
+class SplashFragment : Fragment(R.layout.fragment_splash) {
 
     private val viewModel: SplashViewModel by viewModels()
-
-    private var _binding: FragmentSplashBinding? = null
-    private val binding
-        get() = requireNotNull(_binding)
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentSplashBinding.inflate(layoutInflater)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,20 +21,15 @@ class SplashFragment : Fragment() {
         observersInit()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun observersInit() {
+        viewModel.action.observe(viewLifecycleOwner, ::handleAction)
     }
 
-    private fun observersInit() {
-        viewModel.networkError.observe(viewLifecycleOwner) {
-            if (it) alertNetworkDialogShow()
-        }
-        viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
-        }
-        viewModel.need2Navigate2Self.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigate(R.id.action_splashFragment_self)
+    private fun handleAction(action: Action) {
+        when (action) {
+            Action.Error -> alertNetworkDialogShow()
+            Action.NavigateMain -> findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+            Action.NavigateSelf -> findNavController().navigate(R.id.action_splashFragment_self)
         }
     }
 
@@ -53,12 +37,8 @@ class SplashFragment : Fragment() {
         AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             .setMessage(resources.getString(R.string.splash_nonetwork_string))
             .setCancelable(false)
-            .setPositiveButton(resources.getString(R.string.splash_nonetwork_positive)) { _, _ ->
-                viewModel.resetNetworkStatus()
-            }
-            .setNegativeButton(resources.getString(R.string.splash_nonetwork_negative)) { _, _ ->
-                requireActivity().finish()
-            }
+            .setPositiveButton(resources.getString(R.string.splash_nonetwork_positive)) { _, _ -> viewModel.resetNetworkStatus() }
+            .setNegativeButton(resources.getString(R.string.splash_nonetwork_negative)) { _, _ -> requireActivity().finish() }
             .create()
             .show()
     }

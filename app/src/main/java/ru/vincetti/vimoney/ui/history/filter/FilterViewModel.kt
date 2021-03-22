@@ -1,64 +1,59 @@
 package ru.vincetti.vimoney.ui.history.filter
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import androidx.lifecycle.switchMap
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ru.vincetti.modules.core.models.Transaction
-import ru.vincetti.modules.database.repository.AccountRepo
-import ru.vincetti.modules.database.repository.CategoryRepo
+import ru.vincetti.vimoney.models.FilterModel
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 @Suppress("TooManyFunctions")
 class FilterViewModel @Inject constructor(
-    private val accountRepo: AccountRepo,
-    private val categoryRepo: CategoryRepo
+    private val filterModel: FilterModel
 ) : ViewModel() {
 
     private val _sum = MutableLiveData<Float>()
-    val sum
+    val sum: LiveData<Float>
         get() = _sum
 
     private val _categoryId = MutableLiveData<Int>()
     val category = _categoryId.switchMap {
         liveData {
-            emit(categoryRepo.loadById(it))
+            emit(filterModel.loadCategoryById(it))
         }
     }
 
     private val _accountId = MutableLiveData<Int>()
     val account = _accountId.switchMap {
         liveData {
-            emit(accountRepo.loadById(it))
+            emit(filterModel.loadAccountById(it))
         }
     }
 
     private val _dateTo = MutableLiveData<Date>()
-    val dateTo
+    val dateTo: LiveData<Date>
         get() = _dateTo
 
     private val _dateFrom = MutableLiveData<Date>()
-    val dateFrom
+    val dateFrom: LiveData<Date>
         get() = _dateFrom
 
     private val _sumReset = MutableLiveData<Boolean>()
-    val sumReset
+    val sumReset: LiveData<Boolean>
         get() = _sumReset
 
     private val _descriptionReset = MutableLiveData<Boolean>()
-    val descriptionReset
+    val descriptionReset: LiveData<Boolean>
         get() = _descriptionReset
 
     private val _dateFromReset = MutableLiveData<Boolean>()
-    val dateFromReset
+    val dateFromReset: LiveData<Boolean>
         get() = _dateFromReset
 
     private val _dateToReset = MutableLiveData<Boolean>()
-    val dateToReset
+    val dateToReset: LiveData<Boolean>
         get() = _dateToReset
 
     init {

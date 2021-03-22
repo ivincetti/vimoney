@@ -1,0 +1,46 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion versions.build_compile_sdk
+
+    defaultConfig {
+        minSdkVersion versions.build_min_sdk
+        targetSdkVersion versions.build_target_sdk
+
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:${versions.desugar_jdk_libs}"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+    implementation "androidx.core:core-ktx:${versions.androidx_core_ktx}"
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.androidx_lifecycle}"
+    implementation "androidx.paging:paging-runtime-ktx:${versions.androidx_paging}"
+
+    implementation "androidx.room:room-runtime:${versions.room}"
+    implementation "androidx.room:room-ktx:${versions.room}"
+    kapt "androidx.room:room-compiler:${versions.room}"
+
+    kapt "com.google.dagger:hilt-android-compiler:${versions.gradle_hilt}"
+    implementation "com.google.dagger:hilt-android:${versions.gradle_hilt}"
+
+    implementation project(':core')
+    implementation project(':modules:database')
+
+    testImplementation "junit:junit:${versions.junit}"
+    testImplementation "androidx.test.ext:junit-ktx:${versions.androidx_test_junit}"
+    androidTestImplementation "androidx.test.ext:junit-ktx:${versions.androidx_test_junit}"
+}

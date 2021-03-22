@@ -8,8 +8,8 @@ import ru.vincetti.vimoney.ui.dashboard.DashboardFragment
 
 object DashboardScreen : KScreen<DashboardScreen>() {
 
-    override val layoutId: Int? = R.layout.fragment_dashboard
-    override val viewClass: Class<*>? = DashboardFragment::class.java
+    override val layoutId: Int = R.layout.fragment_dashboard
+    override val viewClass: Class<*> = DashboardFragment::class.java
 
     val toolbarBackButton = KButton {
         withId(R.id.setting_navigation_back_btn)

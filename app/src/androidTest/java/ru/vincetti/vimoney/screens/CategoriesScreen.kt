@@ -12,8 +12,8 @@ import ru.vincetti.vimoney.ui.settings.category.list.CategoriesFragment
 
 object CategoriesScreen : KScreen<CategoriesScreen>() {
 
-    override val layoutId: Int? = R.layout.fragment_categories_list
-    override val viewClass: Class<*>? = CategoriesFragment::class.java
+    override val layoutId: Int = R.layout.fragment_categories_list
+    override val viewClass: Class<*> = CategoriesFragment::class.java
 
     val toolbarBackButton = KButton {
         withId(R.id.categories_navigation_back_btn)

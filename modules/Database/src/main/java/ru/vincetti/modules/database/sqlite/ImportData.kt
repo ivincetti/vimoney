@@ -19,6 +19,7 @@ object ImportData {
             importTransactions(transactionRepo, data.first)
             importAccounts(accountRepo, data.second)
             importCategories(categoryRepo, data.third)
+            updateAccounts(accountRepo, transactionRepo)
         }
     }
 
@@ -44,5 +45,15 @@ object ImportData {
     ) {
         categoryRepo.deleteAll()
         categoryRepo.add(categories)
+    }
+
+    private suspend fun updateAccounts(
+        accountRepo: AccountRepo,
+        transactionRepo: TransactionRepo
+    ) {
+        accountRepo.loadAll()?.forEach {
+            val sum = transactionRepo.loadBalanceByCheckId(it.id)
+            accountRepo.updateAccountBalanceById(it.id, sum)
+        }
     }
 }

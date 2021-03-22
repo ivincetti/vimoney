@@ -27,6 +27,7 @@
     <!--History Activity-->
     <string name="history_title_home">Records</string>
     <string name="history_category_image_desc">history_category_image</string>
+    <string name="history_simple_2_string" translatable="false">%1$s %2$s</string>
 
     <!--Dashboard Activity-->
     <string name="dashboard_title_home">Statistics</string>

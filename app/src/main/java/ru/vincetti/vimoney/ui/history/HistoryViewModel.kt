@@ -1,27 +1,29 @@
 package ru.vincetti.vimoney.ui.history
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.switchMap
+import androidx.lifecycle.*
+import androidx.paging.PagedList
 import androidx.paging.toLiveData
 import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import ru.vincetti.modules.database.repository.TransactionRepo
 import ru.vincetti.modules.core.models.Filter
 import ru.vincetti.modules.core.utils.SingleLiveEvent
+import ru.vincetti.modules.database.sqlite.models.TransactionListModel
+import ru.vincetti.vimoney.models.HistoryModel
 
 class HistoryViewModel @AssistedInject constructor(
-    private val repo: TransactionRepo,
+    private val historyModel: HistoryModel,
     @Assisted initFilter: Filter
 ) : ViewModel() {
 
     private var filter = MutableLiveData(initFilter)
 
-    val needNavigate2Transaction = SingleLiveEvent<Int>()
+    private val _needNavigate2Transaction = SingleLiveEvent<Int>()
+    val needNavigate2Transaction: LiveData<Int>
+        get() = _needNavigate2Transaction
 
-    val transList = filter.switchMap {
-        repo.loadFilterTransactions(it).toLiveData(pageSize = 20)
+    val transactions: LiveData<PagedList<TransactionListModel>> = filter.switchMap {
+        historyModel.loadFilterTransactions(it).toLiveData(pageSize = 20)
     }
 
     fun filter(newFilter: Filter) {
@@ -29,22 +31,23 @@ class HistoryViewModel @AssistedInject constructor(
     }
 
     fun clickOnElement(id: Int) {
-        needNavigate2Transaction.value = id
+        _needNavigate2Transaction.value = id
     }
 
-    @dagger.assisted.AssistedFactory
-    interface AssistedFactory {
+    @AssistedFactory
+    interface HistoryViewModelFactory {
         fun create(initFilter: Filter): HistoryViewModel
     }
 
     companion object {
 
         fun provideFactory(
-            assistedFactory: AssistedFactory,
+            assistedFactory: HistoryViewModelFactory,
             initFilter: Filter
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(initFilter) as T
             }
         }

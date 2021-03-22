@@ -1,5 +1,6 @@
 package ru.vincetti.vimoney.ui.check
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.vincetti.modules.core.models.AccountList
@@ -23,6 +24,7 @@ class AllCardsAdapter(
 
     override fun getItemCount() = data?.size ?: 0
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setList(accList: List<AccountList>?) {
         accList?.let {
             data = accList

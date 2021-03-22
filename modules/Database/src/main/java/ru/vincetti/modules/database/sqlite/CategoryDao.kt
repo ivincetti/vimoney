@@ -8,13 +8,16 @@ import ru.vincetti.modules.database.sqlite.models.CategoryModel
 interface CategoryDao {
 
     @Query("Select * from category ORDER BY id ASC")
-    fun loadCategoriesObservable(): LiveData<List<CategoryModel>>
-
-    @Query("Select * from category ORDER BY id ASC")
-    suspend fun loadCategories(): List<CategoryModel>?
+    fun loadAllLive(): LiveData<List<CategoryModel>>
 
     @Query("Select * from category WHERE id = :id LIMIT 1")
-    suspend fun loadCategoryById(id: Int): CategoryModel?
+    fun loadByIdLive(id: Int): LiveData<CategoryModel?>
+
+    @Query("Select * from category ORDER BY id ASC")
+    suspend fun loadAll(): List<CategoryModel>
+
+    @Query("Select * from category WHERE id = :id LIMIT 1")
+    suspend fun loadById(id: Int): CategoryModel?
 
     @Insert
     suspend fun insertCategory(cat: CategoryModel)

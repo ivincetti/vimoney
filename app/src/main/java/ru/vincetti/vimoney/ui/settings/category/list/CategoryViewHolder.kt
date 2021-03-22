@@ -22,20 +22,16 @@ class CategoryViewHolder private constructor(
 
     companion object {
 
-        fun create(
-            parent: ViewGroup,
-            actions: Actions
-        ) = CategoryViewHolder(
-            ItemCategoriesListBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            ),
-            actions
-        )
+        fun create(parent: ViewGroup, actions: Actions): CategoryViewHolder {
+            val layoutInflater = LayoutInflater.from(parent.context)
+            return CategoryViewHolder(
+                ItemCategoriesListBinding.inflate(layoutInflater, parent, false),
+                actions,
+            )
+        }
     }
 
-    interface Actions {
+    fun interface Actions {
 
         fun onCategoryClicked(id: Int)
     }

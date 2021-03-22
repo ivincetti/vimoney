@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.vincetti.modules.core.models.Account
@@ -15,9 +16,13 @@ import java.io.*
 import java.util.*
 import javax.inject.Inject
 
-class JsonFile @Inject constructor(
-    @ApplicationContext private val context: Context,
+class JsonFile private constructor(
+    private val context: Context,
+    private val dispatcher: CoroutineDispatcher
 ) {
+
+    @Inject
+    constructor(@ApplicationContext context: Context) : this(context, Dispatchers.IO)
 
     companion object {
         private const val FILE_NAME_TRANSACTIONS = "transactions.json"
@@ -26,9 +31,9 @@ class JsonFile @Inject constructor(
     }
 
     suspend fun save(
-        data: Triple<List<Transaction>, List<Account>, List<Category>>
+        data: Triple<List<Transaction>, List<Account>, List<Category>>,
     ) {
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             val gson = GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()
 
             val transactionsJson = gson.toJson(data.first)
@@ -56,7 +61,7 @@ class JsonFile @Inject constructor(
         var accountsJsonBuilder = StringBuilder()
         var categoriesJsonBuilder = StringBuilder()
 
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             try {
                 transactionsJsonBuilder = readFromFile(FILE_NAME_TRANSACTIONS)
                 accountsJsonBuilder = readFromFile(FILE_NAME_ACCOUNTS)
@@ -75,7 +80,7 @@ class JsonFile @Inject constructor(
 
     private fun importCategories(
         gson: Gson,
-        categoriesJsonBuilder: StringBuilder
+        categoriesJsonBuilder: StringBuilder,
     ): List<Category> {
         val listType2 = object : TypeToken<ArrayList<Category>>() {}.type
         return gson.fromJson(categoriesJsonBuilder.toString(), listType2)
@@ -83,7 +88,7 @@ class JsonFile @Inject constructor(
 
     private fun importAccounts(
         gson: Gson,
-        accountsJsonBuilder: StringBuilder
+        accountsJsonBuilder: StringBuilder,
     ): List<Account> {
         val listType1 = object : TypeToken<ArrayList<Account>>() {}.type
         return gson.fromJson(accountsJsonBuilder.toString(), listType1)
@@ -91,7 +96,7 @@ class JsonFile @Inject constructor(
 
     private fun importTransactions(
         gson: Gson,
-        transactionsJsonBuilder: StringBuilder
+        transactionsJsonBuilder: StringBuilder,
     ): List<Transaction> {
         val listType = object : TypeToken<ArrayList<Transaction>>() {}.type
         return gson.fromJson(transactionsJsonBuilder.toString(), listType)

@@ -2,8 +2,8 @@ package ru.vincetti.vimoney.ui.check.view
 
 import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import ru.vincetti.modules.core.models.AccountList
 import ru.vincetti.vimoney.databinding.ItemAllCardsListBinding
@@ -19,11 +19,7 @@ class CardViewHolder private constructor(
         binding.accBalance.text = account.sum.toString()
         binding.accSymbol.text = account.curSymbol
         binding.accLabel.setBackgroundColor(Color.parseColor(account.color))
-        if (!account.isArchive) {
-            binding.accArchive.visibility = View.INVISIBLE
-        } else {
-            binding.accArchive.visibility = View.VISIBLE
-        }
+        binding.accArchive.isInvisible = !account.isArchive
 
         binding.accListContainer.setOnClickListener {
             actions.onCardClicked(account.id)
@@ -32,20 +28,16 @@ class CardViewHolder private constructor(
 
     companion object {
 
-        fun create(
-            parent: ViewGroup,
-            actions: Actions
-        ) = CardViewHolder(
-            ItemAllCardsListBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            ),
-            actions
-        )
+        fun create(parent: ViewGroup, actions: Actions): CardViewHolder {
+            val layoutInflater = LayoutInflater.from(parent.context)
+            return CardViewHolder(
+                ItemAllCardsListBinding.inflate(layoutInflater, parent, false),
+                actions,
+            )
+        }
     }
 
-    interface Actions {
+    fun interface Actions {
 
         fun onCardClicked(id: Int)
     }

@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import ru.vincetti.modules.core.models.Account
 
 @Entity(tableName = "accounts")
+@Suppress("DataClassShouldBeImmutable")
 data class AccountModel(
 
     @PrimaryKey(autoGenerate = true)
@@ -13,7 +14,7 @@ data class AccountModel(
 
     var name: String? = "",
 
-    var type: String? = Account.ACCOUNT_TYPE_CASH,
+    var type: String = Account.ACCOUNT_TYPE_CASH,
 
     var sum: Int = 0,
 

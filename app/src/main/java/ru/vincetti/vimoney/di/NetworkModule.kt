@@ -14,5 +14,5 @@ abstract class NetworkModule {
 
     @Binds
     @Singleton
-    abstract fun bindsConfigLoader(configLoaderImpl: ConfigLoaderImpl): ConfigLoader
+    abstract fun bindsConfigLoader(impl: ConfigLoaderImpl): ConfigLoader
 }

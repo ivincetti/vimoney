@@ -25,7 +25,7 @@ class FilterDialog : BottomSheetDialogFragment() {
     private val binding
         get() = requireNotNull(_binding)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = DialogTransactionsFilterBinding.inflate(layoutInflater)
         return binding.root
     }

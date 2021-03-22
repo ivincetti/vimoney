@@ -7,8 +7,8 @@ import ru.vincetti.vimoney.ui.history.AllHistoryFragment
 
 object AllHistoryScreen : KScreen<AllHistoryScreen>() {
 
-    override val layoutId: Int? = R.layout.fragment_history
-    override val viewClass: Class<*>? = AllHistoryFragment::class.java
+    override val layoutId: Int = R.layout.fragment_history
+    override val viewClass: Class<*> = AllHistoryFragment::class.java
 
     val toolbarBackButton = KButton {
         withId(R.id.records_navigation_back_btn)

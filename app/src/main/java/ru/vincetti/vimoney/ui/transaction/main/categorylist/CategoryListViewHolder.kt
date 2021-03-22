@@ -25,10 +25,7 @@ class CategoryListViewHolder private constructor(
     }
 
     companion object {
-        fun create(
-            parent: ViewGroup,
-            action: (Int) -> Unit
-        ): CategoryListViewHolder {
+        fun create(parent: ViewGroup, action: (Int) -> Unit): CategoryListViewHolder {
             return CategoryListViewHolder(
                 CategoryListViewWrapper.create(parent),
                 action

@@ -1,54 +1,45 @@
 package ru.vincetti.vimoney.ui.home
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import ru.vincetti.modules.database.repository.AccountRepo
-import ru.vincetti.modules.database.repository.TransactionRepo
+import ru.vincetti.modules.core.models.AccountList
 import ru.vincetti.modules.core.utils.SingleLiveEvent
+import ru.vincetti.vimoney.models.HomeModel
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val accountRepo: AccountRepo,
-    private val transRepo: TransactionRepo
+    private val model: HomeModel
 ) : ViewModel() {
 
-    val expenseSum = MutableLiveData<Int>()
-    val incomeSum = MutableLiveData<Int>()
+    val incomeSum: LiveData<Int> = model.loadIncomeActual()
+    val expenseSum: LiveData<Int> = model.loadExpenseActual()
 
-    val accounts = accountRepo.loadMain()
+    val accounts: LiveData<List<AccountList>> = model.mainAccounts()
 
-    val needNavigate2Check = SingleLiveEvent<Int>()
+    val userBalance: LiveData<Int> = model.userBalance()
+
+    private var _needNavigate2Check = SingleLiveEvent<Int>()
+    val needNavigate2Check: LiveData<Int>
+        get() = _needNavigate2Check
 
     private var _homeButtonEnabled = MutableLiveData<Boolean>()
     val homeButtonEnabled: LiveData<Boolean>
         get() = _homeButtonEnabled
 
-    val userBalance: LiveData<Int> = accounts.switchMap {
-        liveData {
-            emit(accountRepo.getMainBalance())
-        }
-    }
-
-    init {
-        _homeButtonEnabled.value = true
-        viewModelScope.launch {
-            val incomeExpense = transRepo.loadIncomeExpenseActual()
-            incomeSum.value = incomeExpense.first
-            expenseSum.value = incomeExpense.second
-        }
-    }
-
     fun updateAllAccounts() {
         _homeButtonEnabled.value = false
         viewModelScope.launch {
-            accountRepo.balanceUpdateAll()
+            model.balancesUpdate()
             _homeButtonEnabled.value = true
         }
     }
 
     fun clickOnCheck(id: Int) {
-        needNavigate2Check.value = id
+        _needNavigate2Check.value = id
     }
 }

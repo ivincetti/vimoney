@@ -9,9 +9,6 @@ import ru.vincetti.modules.database.sqlite.models.AccountModel
 @Dao
 interface AccountDao {
 
-    @Query("SELECT * FROM accounts ORDER BY id ASC")
-    suspend fun loadAllAccounts(): List<AccountModel>?
-
     @Query(
         """
         SELECT accounts.*, c.symbol
@@ -20,33 +17,7 @@ interface AccountDao {
         ORDER BY accounts.archive ASC, accounts.need_on_main_screen DESC, accounts.name ASC
         """
     )
-    fun loadAllAccountsFull(): LiveData<List<AccountListModel>>
-
-    @Query(
-        """
-        SELECT accounts.*, c.symbol 
-        FROM accounts
-        JOIN currency c ON c.code = accounts.currency
-        WHERE archive = 0 
-        ORDER BY name ASC
-        """
-    )
-    suspend fun loadNotArchiveAccounts(): List<AccountListModel>?
-
-    @Query(
-        """
-        SELECT accounts.*, c.symbol 
-        FROM accounts
-        JOIN currency c ON c.code = accounts.currency
-        WHERE accounts.archive = 0
-        AND accounts.need_on_main_screen = 1
-        ORDER BY accounts.name ASC
-        """
-    )
-    fun loadMainAccountsFull(): LiveData<List<AccountListModel>>
-
-    @Query("SELECT * FROM accounts WHERE id = :accId")
-    suspend fun loadAccountById(accId: Int): AccountModel?
+    fun loadAllFullLive(): LiveData<List<AccountListModel>>
 
     @Query(
         """
@@ -57,26 +28,43 @@ interface AccountDao {
         ORDER BY accounts.name ASC
         """
     )
-    fun loadAccountByIdFull(accId: Int): LiveData<AccountListModel>
+    fun loadListByIdLive(accId: Int): LiveData<AccountListModel?>
+
+    @Query(
+        """
+        SELECT accounts.*, c.symbol 
+        FROM accounts
+        JOIN currency c ON c.code = accounts.currency
+        AND  accounts.id = :accId
+        ORDER BY accounts.name ASC
+        """
+    )
+    suspend fun loadListById(accId: Int): AccountListModel?
+
+    @Query("SELECT * FROM accounts WHERE id = :accId")
+    suspend fun loadById(accId: Int): AccountModel?
+
+    @Query("SELECT * FROM accounts ORDER BY id ASC")
+    suspend fun loadAll(): List<AccountModel>
 
     @Query("UPDATE accounts SET sum = :sum WHERE id = :accId")
     suspend fun updateSumByAccId(accId: Int, sum: Float)
 
     @Query("UPDATE accounts SET archive = 1 WHERE id = :accId")
-    suspend fun archiveAccountById(accId: Int)
+    suspend fun archiveById(accId: Int)
 
     @Query("UPDATE accounts SET archive = 0 WHERE id = :accId")
-    suspend fun fromArchiveAccountById(accId: Int)
+    suspend fun fromArchiveById(accId: Int)
 
     @Insert
-    suspend fun insertAccount(acc: AccountModel)
+    suspend fun insert(acc: AccountModel)
 
     @Insert
-    suspend fun insertAccount(acc: List<AccountModel>)
+    suspend fun insert(acc: List<AccountModel>)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateAccount(acc: AccountModel)
+    suspend fun update(acc: AccountModel)
 
     @Query("Delete FROM accounts")
-    suspend fun deleteAllAccounts()
+    suspend fun deleteAll()
 }

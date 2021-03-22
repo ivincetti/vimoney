@@ -1,288 +1,249 @@
 package ru.vincetti.vimoney.ui.transaction.main
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import ru.vincetti.modules.core.models.AccountList
+import ru.vincetti.modules.core.models.Category
 import ru.vincetti.modules.core.models.Transaction
-import ru.vincetti.modules.database.repository.AccountRepo
-import ru.vincetti.modules.database.repository.CategoryRepo
-import ru.vincetti.modules.database.repository.CurrencyRepo
-import ru.vincetti.modules.database.repository.TransactionRepo
+import ru.vincetti.modules.core.utils.SingleLiveEvent
+import ru.vincetti.vimoney.models.TransactionsModel
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 @Suppress("TooManyFunctions")
 class TransactionMainViewModel @Inject constructor(
-    private val transactionRepo: TransactionRepo,
-    private val accountRepo: AccountRepo,
-    private val categoryRepo: CategoryRepo,
-    private val currencyRepo: CurrencyRepo
+    private val transactionsModel: TransactionsModel,
 ) : ViewModel() {
 
-    private var _transaction = MutableLiveData<Transaction>()
-    val transaction
-        get() = _transaction
+//    private var _transaction = MutableLiveData<Transaction>()
+//    val transaction: LiveData<Transaction>
+//        get() = _transaction
+//
+//    private val _nestedTransaction = MutableLiveData<Transaction>()
+//    val nestedTransaction: LiveData<Transaction>
+//        get() = _nestedTransaction
 
-    private val _nestedTransaction = MutableLiveData<Transaction>()
-    val nestedTransaction
-        get() = _nestedTransaction
+    private val _contentState = SingleLiveEvent<TransactionMainContentState>()
+    val contentState: LiveData<TransactionMainContentState>
+        get() = _contentState
 
-    private val _needAccount = MutableLiveData<Boolean>()
-    val needAccount
-        get() = _needAccount
+    private val _action = SingleLiveEvent<TransactionMainContentAction>()
+    val action: LiveData<TransactionMainContentAction>
+        get() = _action
 
-    private val _needSum = MutableLiveData<Boolean>()
-    val needSum
-        get() = _needSum
+//    private val _needToUpdate = MutableLiveData<Boolean>()
+//    val needToUpdate: LiveData<Boolean>
+//        get() = _needToUpdate
+//
+//    private val _date = MutableLiveData<Date>()
+//    val date: LiveData<Date>
+//        get() = _date
 
-    private val _needToUpdate = MutableLiveData<Boolean>()
-    val needToUpdate
-        get() = _needToUpdate
+//    private val _accountId = MutableLiveData<Int>()
+//    private val account: LiveData<AccountList> = _accountId.switchMap {
+//        transactionsModel.loadAccountById(it)
+//    }.filterOutNull()
+//
+//    val accountName: LiveData<String> = account.map { it.name }
+//    val currency: LiveData<String> = account.map { it.curSymbol }
+//
+//    private val _accountIdTo = MutableLiveData<Int>()
+//    private val accountTo: LiveData<AccountList> = _accountIdTo.switchMap {
+//        transactionsModel.loadAccountById(it)
+//    }.filterOutNull()
 
-    private val _needToNavigate = MutableLiveData<Boolean>()
-    val needToNavigate
-        get() = _needToNavigate
+//    val accountToName: LiveData<String> = accountTo.map { it.name }
+//    val currencyTo: LiveData<String> = accountTo.map { it.curSymbol }
+//
+//    private val _sum = MutableLiveData<Float>()
+//    val sum: LiveData<Float>
+//        get() = _sum
+//
+//    private val _categoryId = MutableLiveData<Int>()
+//    val category: LiveData<Category?> = _categoryId.switchMap {
+//        transactionsModel.loadCategoryById(it)
+//    }
 
-    private val _date = MutableLiveData<Date>()
-    val date
-        get() = _date
+    val categoriesList: LiveData<List<Category>> = transactionsModel.loadAllCategories()
 
-    private val _accountId = MutableLiveData<Int>()
-    val account = _accountId.switchMap {
-        liveData {
-            emit(accountRepo.loadById(it))
-        }
-    }
-    val currency = account.switchMap {
-        liveData {
-            it?.let {
-                emit(currencyRepo.loadByCode(it.currency))
-            } ?: run {
-                emit(null)
-            }
-        }
-    }
+    val accountNotArchiveNames: LiveData<List<AccountList>> = transactionsModel.loadNotArchiveAccounts()
 
-    private val _accountIdTo = MutableLiveData<Int>()
-    val accountTo = _accountIdTo.switchMap {
-        liveData {
-            emit(accountRepo.loadById(it))
-        }
-    }
-    val currencyTo = accountTo.switchMap {
-        liveData {
-            it?.let {
-                emit(currencyRepo.loadByCode(it.currency))
-            } ?: run {
-                emit(null)
-            }
-        }
-    }
+//    private val _description = MutableLiveData<String>()
+//    val description: LiveData<String>
+//        get() = _description
 
-    private val _sum = MutableLiveData<Float>()
-    val sum
-        get() = _sum
-
-    private val _categoryId = MutableLiveData<Int>()
-    val category = _categoryId.switchMap {
-        liveData {
-            emit(categoryRepo.loadById(it))
-        }
-    }
-
-    val categoriesList = liveData {
-        emit(categoryRepo.loadAll())
-    }
-    val accountNotArchiveNames = liveData {
-        emit(accountRepo.loadNotArchive())
-    }
-
-    private val _description = MutableLiveData<String>()
-    val description
-        get() = _description
-
-    private var oldTransactionAccountID = Transaction.DEFAULT_ID
-    private var oldTransactionAccountToID = Transaction.DEFAULT_ID
-
-    private var nestedId = Transaction.DEFAULT_ID
-    private var mTransId = Transaction.DEFAULT_ID
+//    private var oldTransactionAccountID = Transaction.DEFAULT_ID
+//    private var oldTransactionAccountToID = Transaction.DEFAULT_ID
+//
+//    private var nestedId = Transaction.DEFAULT_ID
+//    private var mTransId = Transaction.DEFAULT_ID
 
     init {
-        _transaction.value = Transaction()
-        _nestedTransaction.value = Transaction()
-        _accountId.value = Transaction.DEFAULT_ID
-        _accountIdTo.value = Transaction.DEFAULT_ID
-        _categoryId.value = Transaction.DEFAULT_CATEGORY
-        _needAccount.value = false
-        _needToUpdate.value = false
-        _needSum.value = false
-        _needToNavigate.value = false
-        _date.value = Date()
+        _contentState.value = TransactionMainContentState.Empty
+//        _transaction.value = Transaction()
+//        _nestedTransaction.value = Transaction()
+//        _accountId.value = Transaction.DEFAULT_ID
+//        _accountIdTo.value = Transaction.DEFAULT_ID
+//        _categoryId.value = Transaction.DEFAULT_CATEGORY
+//        _needToUpdate.value = false
+//        _date.value = Date()
     }
 
     fun loadTransaction(id: Int) {
         viewModelScope.launch {
-            val tmpTransaction = transactionRepo.loadById(id)
-            tmpTransaction?.let {
-                _transaction.value = tmpTransaction
-                if (tmpTransaction.id != Transaction.DEFAULT_ID) {
-                    _needToUpdate.value = true
-                    _accountId.value = tmpTransaction.accountId
-                    _categoryId.value = tmpTransaction.categoryId
-                    _sum.value = tmpTransaction.sum
-                    _description.value = tmpTransaction.description
-                    _date.value = tmpTransaction.date
-                    mTransId = tmpTransaction.id
-                    oldTransactionAccountID = tmpTransaction.id
-                }
-                if (
-                    tmpTransaction.extraKey == Transaction.TRANSACTION_TYPE_TRANSFER_KEY &&
-                    tmpTransaction.extraValue.toInt() > 0
-                ) {
-                    nestedId = tmpTransaction.extraValue.toInt()
-                    loadNestedTransaction(nestedId)?.let {
-                        _nestedTransaction.value = it
-                        _accountIdTo.value = it.accountId
-                        oldTransactionAccountToID = it.accountId
+            val tmpTransaction = transactionsModel.loadTransactionById(id)
+            tmpTransaction?.let { transition ->
+                when (transition.type) {
+                    Transaction.TRANSACTION_TYPE_INCOME -> {
+                        _contentState.value = TransactionMainContentState.Filled.Income(true, transition)
+                    }
+                    Transaction.TRANSACTION_TYPE_SPENT -> {
+                        _contentState.value = TransactionMainContentState.Filled.Spending(true, transition)
+                    }
+                    Transaction.TRANSACTION_TYPE_TRANSFER -> {
+                        check(tmpTransaction.extraValue.toInt() > 0)
+                        val nestedId = tmpTransaction.extraValue.toInt()
+                        transactionsModel.loadTransactionById(nestedId)?.let { nestedTransaction ->
+                            _contentState.value = TransactionMainContentState.Filled.Transfer(
+                                true,
+                                transition,
+                                nestedTransaction
+                            )
+//                            _accountIdTo.value = nestedTransaction.accountId
+//                            oldTransactionAccountToID = nestedTransaction.accountId
+                        }
                     }
                 }
+//                _transaction.value = it
+//                if (tmpTransaction.id != Transaction.DEFAULT_ID) {
+//                    _needToUpdate.value = true
+//                    _accountId.value = it.accountId
+//                    _categoryId.value = it.categoryId
+//                    _sum.value = tmpTransaction.sum
+//                    _description.value = it.description ?: ""
+//                    _date.value = it.date
+//                    mTransId = tmpTransaction.id
+//                    oldTransactionAccountID = tmpTransaction.id
+//                }
+//                if (
+//                    tmpTransaction.extraKey == Transaction.TRANSACTION_TYPE_TRANSFER_KEY &&
+//                    tmpTransaction.extraValue.toInt() > 0
+//                ) {
+//
+//                    transactionsModel.loadTransactionById(nestedId)?.let { nestedTransaction ->
+//                        _nestedTransaction.value = nestedTransaction
+//                        _accountIdTo.value = nestedTransaction.accountId
+//                        oldTransactionAccountToID = nestedTransaction.accountId
+//                    }
+//                }
             }
         }
     }
 
-    private suspend fun loadNestedTransaction(id: Int) = transactionRepo.loadById(id)
-
     fun setAccount(id: Int) {
-        _accountId.value = id
+//        _accountId.value = id
     }
 
     fun setAccountTo(id: Int) {
-        _accountIdTo.value = id
+//        _accountIdTo.value = id
     }
 
     fun setSum(newSum: String) {
         if (newSum.isNotEmpty()) {
             val sumF = newSum.toFloat()
             if (sumF > 0) {
-                _sum.value = sumF
-                _nestedTransaction.value?.sum = sumF
+//                _sum.value = sumF
+//                _nestedTransaction.value?.sum = sumF
             }
         }
     }
 
     fun setDescription(newDescription: String) {
-        _description.value = newDescription
+//        _description.value = newDescription
     }
 
     fun setDate(newDate: Date) {
-        _date.value = newDate
+//        _date.value = newDate
     }
 
     fun setCategoryID(categoryID: Int) {
-        _categoryId.value = categoryID
+//        _categoryId.value = categoryID
     }
 
     fun delete() {
         viewModelScope.launch {
-            _transaction.value?.let {
-                if (it.id != Transaction.DEFAULT_ID) {
-                    if (it.extraKey == Transaction.TRANSACTION_TYPE_TRANSFER_KEY) {
-                        _nestedTransaction.value?.let { nested ->
-                            transactionRepo.delete(nested)
-                        }
-                    }
-                    transactionRepo.delete(it)
-                    _needToNavigate.value = true
-                }
-            }
+//            _transaction.value?.let {
+//                if (it.id != Transaction.DEFAULT_ID) {
+//                    if (it.isTransfer) {
+//                        _nestedTransaction.value?.let { nested ->
+//                            transactionsModel.deleteTransaction(nested)
+//                        }
+//                    }
+//                    transactionsModel.deleteTransaction(it)
+//                    _action.value = TransactionMainContentAction.CloseSelf
+//                }
+//            }
         }
     }
 
     fun saveTransaction(actionType: Int, txtName: String, txtSum: String) {
-        val tmpTransaction = _transaction.value
-        tmpTransaction?.let {
-            when {
-                txtSum == "" -> _needSum.value = true
-                _accountId.value!! < 1 -> _needAccount.value = true
-                else -> {
-                    tmpTransaction.description = txtName
-                    tmpTransaction.date = date.value!!
-                    tmpTransaction.type = actionType
-                    tmpTransaction.accountId = _accountId.value!!
-                    tmpTransaction.sum = txtSum.toFloat()
-                    tmpTransaction.categoryId = _categoryId.value!!
-                    if (tmpTransaction.id != Transaction.DEFAULT_ID) {
-                        trUpdate(tmpTransaction)
-                    } else {
-                        trInsert(tmpTransaction)
-                    }
-                }
-            }
-        }
+//        val tmpTransaction = _transaction.value
+//        tmpTransaction?.let {
+//            when {
+//                txtSum == "" -> _action.value = TransactionMainContentAction.SumError
+//                _accountId.value!! < 1 -> _action.value = TransactionMainContentAction.AccountError
+//                else -> {
+//                    tmpTransaction.description = txtName
+//                    tmpTransaction.date = date.value!!
+//                    tmpTransaction.type = actionType
+//                    tmpTransaction.accountId = _accountId.value!!
+//                    tmpTransaction.sum = txtSum.toFloat()
+//                    tmpTransaction.categoryId = _categoryId.value!!
+//
+//                    saveTransaction(tmpTransaction)
+//                }
+//            }
+//        }
     }
 
-    fun saveTransactionTo(actionType: Int, txtName: String, txtSum: String, txtSumTo: String) {
-        _transaction.value?.let { tmpTransaction ->
-            _nestedTransaction.value?.let { tmpToTransaction ->
-                if (
-                    _accountId.value != Transaction.DEFAULT_ID &&
-                    _accountIdTo.value != Transaction.DEFAULT_ID
-                ) {
-                    if (txtSumTo == "" || txtSum == "") {
-                        _needSum.value = true
-                    } else {
-                        tmpTransaction.description = txtName
-                        tmpTransaction.date = date.value!!
-                        tmpTransaction.accountId = _accountId.value!!
-                        tmpTransaction.type = actionType
-                        tmpTransaction.sum = txtSum.toFloat()
-                        tmpTransaction.extraKey = Transaction.TRANSACTION_TYPE_TRANSFER_KEY
-
-                        tmpToTransaction.sum = txtSumTo.toFloat()
-                        tmpToTransaction.accountId = _accountIdTo.value!!
-                        tmpToTransaction.extraKey = Transaction.TRANSACTION_TYPE_TRANSFER_KEY
-                        tmpToTransaction.extraValue = tmpTransaction.id.toString()
-                        tmpToTransaction.date = date.value!!
-                        tmpToTransaction.type = Transaction.TRANSACTION_TYPE_INCOME
-                        tmpToTransaction.system = true
-
-                        if (tmpTransaction.id != Transaction.DEFAULT_ID) {
-                            trUpdate(tmpTransaction, tmpToTransaction)
-                        } else {
-                            trInsert(tmpTransaction, tmpToTransaction)
-                        }
-                    }
-                } else {
-                    _needAccount.value = true
-                }
-            }
-        }
+    fun saveTransactionTo(txtName: String, txtSum: String, txtSumTo: String) {
+//        _transaction.value?.let { tmpTransaction ->
+//            _nestedTransaction.value?.let { tmpToTransaction ->
+//                when {
+//                    _accountId.value == Transaction.DEFAULT_ID -> _action.value = TransactionMainContentAction.AccountError
+//                    _accountIdTo.value == Transaction.DEFAULT_ID -> _action.value = TransactionMainContentAction.AccountError
+//                    txtSumTo == "" || txtSum == "" -> TransactionMainContentAction.SumError
+//                    else -> {
+//                        tmpTransaction.description = txtName
+//                        tmpTransaction.date = date.value!!
+//                        tmpTransaction.accountId = _accountId.value!!
+//                        tmpTransaction.type = Transaction.TRANSACTION_TYPE_TRANSFER
+//                        tmpTransaction.sum = txtSum.toFloat()
+//                        tmpTransaction.extraKey = Transaction.TRANSACTION_TYPE_TRANSFER_KEY
+//
+//                        tmpToTransaction.sum = txtSumTo.toFloat()
+//                        tmpToTransaction.accountId = _accountIdTo.value!!
+//                        tmpToTransaction.extraKey = Transaction.TRANSACTION_TYPE_TRANSFER_KEY
+//                        tmpToTransaction.extraValue = tmpTransaction.id.toString()
+//                        tmpToTransaction.date = date.value!!
+//                        tmpToTransaction.type = Transaction.TRANSACTION_TYPE_INCOME
+//                        tmpToTransaction.system = true
+//
+//                        saveTransaction(tmpTransaction, tmpToTransaction)
+//                    }
+//                }
+//            }
+//        }
     }
 
-    fun navigatedBack() {
-        _needToNavigate.value = false
-    }
-
-    private fun trInsert(transaction: Transaction, toTransaction: Transaction? = null) {
+    private fun saveTransaction(transaction: Transaction, toTransaction: Transaction? = null) {
         viewModelScope.launch {
-            toTransaction?.let {
-                val idTo: Long = transactionRepo.add(it)
-                transaction.extraValue = idTo.toString()
-            }
-            transactionRepo.add(transaction)
-            _needToNavigate.value = true
-        }
-    }
-
-    private fun trUpdate(transaction: Transaction, toTransaction: Transaction? = null) {
-        viewModelScope.launch {
-            toTransaction?.let {
-                it.id = transaction.extraValue.toInt()
-                transactionRepo.update(it)
-            }
-            transactionRepo.update(transaction)
-            _needToNavigate.value = true
+            transactionsModel.addTransaction(transaction, toTransaction)
+            _action.value = TransactionMainContentAction.CloseSelf
         }
     }
 }

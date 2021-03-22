@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/home_accounts_title"
         android:layout_marginTop="@dimen/st_padding"
-        android:paddingStart="@dimen/big_padding"
+        android:paddingHorizontal="@dimen/big_padding"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:clipToPadding="false"
         android:orientation="horizontal"

@@ -3,8 +3,8 @@
 .externalNativeBuild
 .gradle
 .DS_Store
-/.idea
-/local.properties
-/build
-/captures
-/gradle
+.idea
+local.properties
+build
+captures
+gradle

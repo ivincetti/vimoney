@@ -2,72 +2,119 @@ package ru.vincetti.vimoney.ui.check.view
 
 import androidx.lifecycle.*
 import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 import ru.vincetti.modules.core.models.AccountList
-import ru.vincetti.modules.database.repository.AccountRepo
-import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
+import ru.vincetti.vimoney.models.CheckModel
 
 class CheckViewModel @AssistedInject constructor(
-    private val accountRepo: AccountRepo,
+    private val model: CheckModel,
     @Assisted private val accountId: Int
 ) : ViewModel() {
 
-    val account: LiveData<AccountList> = accountRepo.loadForListById(accountId)
+    private val _content = MutableLiveData<State>()
+    val content: LiveData<State>
+        get() = _content
 
-    val isArchive: LiveData<Boolean> = account.map {
-        it.isArchive
-    }
-
-    val isNeedOnMain: LiveData<Boolean> = account.map {
-        it.needOnMain
-    }
-
-    private var _updateButtonEnable = MutableLiveData<Boolean>()
-    val updateButtonEnable: LiveData<Boolean>
-        get() = _updateButtonEnable
+    private var state: State = State.Loading
+        set(value) {
+            field = value
+            _content.value = value
+        }
 
     init {
-        _updateButtonEnable.value = true
+        model.setAccountId(accountId)
+        load()
     }
 
     fun restore() {
-        if (accountId != DEFAULT_CHECK_ID) {
-            viewModelScope.launch {
-                accountRepo.unArchiveById(accountId)
-            }
+        viewModelScope.launch {
+            model.restore()
+            updateCheckData()
         }
     }
 
     fun delete() {
-        if (accountId != DEFAULT_CHECK_ID) {
-            viewModelScope.launch {
-                accountRepo.archiveById(accountId)
-            }
+        viewModelScope.launch {
+            model.delete()
+            updateCheckData()
         }
     }
 
     fun update() {
-        _updateButtonEnable.value = false
-        viewModelScope.launch {
-            accountRepo.balanceUpdateById(accountId)
-            _updateButtonEnable.value = true
+        (state as? State.Content)?.let {
+            state = it.copy(updating = true)
+
+            viewModelScope.launch {
+                model.update()
+                updateCheckData()
+            }
         }
     }
 
-    @dagger.assisted.AssistedFactory
-    interface AssistedFactory {
+    private fun load() {
+        viewModelScope.launch {
+            updateCheckData()
+        }
+    }
+
+    private suspend fun updateCheckData() {
+        state = getCheckState()
+    }
+
+    private suspend fun getCheckState(): State {
+        return model.loadLiveAccountById()?.toState() ?: State.Error
+    }
+
+    private fun AccountList.toState(): State {
+        return State.Content(
+            updating = false,
+            checkId = this.id,
+            checkName = this.name,
+            checkType = this.type,
+            checkBalance = this.sum.toString(),
+            checkSymbol = this.curSymbol,
+            checkLabelColor = this.color,
+            isArchive = this.isArchive,
+            isNeedOnMain = this.needOnMain,
+        )
+    }
+
+    @AssistedFactory
+    interface CheckViewModelFactory {
+
         fun create(accountId: Int): CheckViewModel
+    }
+
+    sealed class State {
+
+        data class Content(
+            val updating: Boolean,
+            val checkId: Int,
+            val checkName: String,
+            val checkType: String,
+            val checkBalance: String,
+            val checkSymbol: String,
+            val checkLabelColor: String,
+            val isArchive: Boolean,
+            val isNeedOnMain: Boolean,
+        ) : State()
+
+        object Loading : State()
+
+        object Error : State()
     }
 
     companion object {
 
         fun provideFactory(
-            assistedFactory: AssistedFactory,
+            assistedFactory: CheckViewModelFactory,
             accountId: Int
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(accountId) as T
             }
         }

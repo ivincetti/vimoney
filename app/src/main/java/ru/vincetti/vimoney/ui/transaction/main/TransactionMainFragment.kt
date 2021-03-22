@@ -1,11 +1,7 @@
 package ru.vincetti.vimoney.ui.transaction.main
 
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
@@ -15,26 +11,22 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vincetti.modules.core.models.Transaction
+import ru.vincetti.modules.core.ui.viewBinding
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentTransactionMainBinding
+import ru.vincetti.vimoney.extensions.top
 import ru.vincetti.vimoney.extensions.updateMargin
+import ru.vincetti.vimoney.ui.check.add.AddCheckFragment
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
 
 @AndroidEntryPoint
-class TransactionMainFragment : Fragment() {
+class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
 
     private val viewModel: TransactionMainViewModel by viewModels()
 
     private lateinit var fragmentBundle: Bundle
 
-    private var _binding: FragmentTransactionMainBinding? = null
-    private val binding
-        get() = requireNotNull(_binding)
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentTransactionMainBinding.inflate(layoutInflater)
-        return binding.root
-    }
+    private val binding: FragmentTransactionMainBinding by viewBinding(FragmentTransactionMainBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,60 +65,54 @@ class TransactionMainFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-
-        val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
-        requireActivity().currentFocus?.let {
-            imm?.hideSoftInputFromWindow(it.windowToken, 0)
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        TransactionFragmentUtils.hideKeyboard(requireActivity())
     }
 
     private fun initViews() {
         binding.transactionTabs.setupWithViewPager(binding.viewPager)
-        binding.transactionNavigationDeleteBtn.setOnClickListener {
-            showDeleteDialog()
-        }
-        binding.settingNavigationBackBtn.setOnClickListener {
-            showUnsavedDialog()
-        }
-        viewModel.transaction.observe(viewLifecycleOwner) {
-            it?.let { typeLoad(it.type) }
-        }
+        viewModel.contentState.observe(viewLifecycleOwner, ::handleContentType)
+
+        binding.transactionNavigationDeleteBtn.setOnClickListener { showDeleteDialog() }
+        binding.settingNavigationBackBtn.setOnClickListener { showUnsavedDialog() }
     }
 
     fun setActivityTitle(position: Int) {
         binding.transactionNavigationTxt.text = when (position) {
             Transaction.TRANSACTION_TYPE_SPENT_TAB -> getString(R.string.add_title_home_spent)
             Transaction.TRANSACTION_TYPE_TRANSFER_TAB -> getString(R.string.add_title_home_transfer)
+            Transaction.TRANSACTION_TYPE_DEBT_TAB -> getString(R.string.add_title_home_debt)
             else -> getString(R.string.add_title_home_income)
-//            TransactionModel.TRANSACTION_TYPE_DEBT_TAB ->
-//                transaction_navigation_txt.text = getString(R.string.add_title_home_debt)
         }
     }
 
-    private fun typeLoad(type: Int) {
-        when (type) {
-            Transaction.TRANSACTION_TYPE_INCOME -> {
-                binding.viewPager.setCurrentItem(Transaction.TRANSACTION_TYPE_INCOME_TAB, true)
-                setActivityTitle(Transaction.TRANSACTION_TYPE_INCOME_TAB)
-            }
-            Transaction.TRANSACTION_TYPE_TRANSFER -> {
-                binding.viewPager.setCurrentItem(Transaction.TRANSACTION_TYPE_TRANSFER_TAB, true)
-                setActivityTitle(Transaction.TRANSACTION_TYPE_TRANSFER_TAB)
-            }
-            else -> {
-                binding.viewPager.setCurrentItem(Transaction.TRANSACTION_TYPE_SPENT_TAB, true)
-                setActivityTitle(Transaction.TRANSACTION_TYPE_SPENT_TAB)
-            }
-//            TransactionModel.TRANSACTION_TYPE_DEBT ->{
-//                vPager.setCurrentItem(TransactionModel.TRANSACTION_TYPE_DEBT_TAB, true)
-//                setActivityTitle(TransactionModel.TRANSACTION_TYPE_DEBT_TAB)
-//                }
+    private fun handleContentType(contentState: TransactionMainContentState) {
+        when (contentState) {
+            is TransactionMainContentState.Filled.Spending -> loadSpending()
+            is TransactionMainContentState.Filled.Income -> loadIncome()
+            is TransactionMainContentState.Filled.Transfer -> loadTransfer()
+            is TransactionMainContentState.Empty -> loadSpending()
         }
+    }
+
+    private fun loadIncome() {
+        binding.viewPager.setCurrentItem(Transaction.TRANSACTION_TYPE_INCOME_TAB, true)
+        setActivityTitle(Transaction.TRANSACTION_TYPE_INCOME_TAB)
+    }
+
+    private fun loadSpending() {
+        binding.viewPager.setCurrentItem(Transaction.TRANSACTION_TYPE_SPENT_TAB, true)
+        setActivityTitle(Transaction.TRANSACTION_TYPE_SPENT_TAB)
+    }
+
+    private fun loadTransfer() {
+        binding.viewPager.setCurrentItem(Transaction.TRANSACTION_TYPE_DEBT_TAB, true)
+        setActivityTitle(Transaction.TRANSACTION_TYPE_DEBT_TAB)
+    }
+
+    // future
+    private fun loadDebt() {
+        binding.viewPager.setCurrentItem(Transaction.TRANSACTION_TYPE_DEBT_TAB, true)
+        setActivityTitle(Transaction.TRANSACTION_TYPE_DEBT_TAB)
     }
 
     private fun showDeleteDialog() {
@@ -157,8 +143,15 @@ class TransactionMainFragment : Fragment() {
 
     private fun insetsInit() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.transactionToolbar) { view, insets ->
-            view.updateMargin(top = insets.systemWindowInsetTop)
+            view.updateMargin(top = insets.top())
             insets
+        }
+    }
+
+    companion object {
+
+        fun createArgsWithCheckId(checkId: Int): Bundle = Bundle().apply {
+            putInt(TransactionConst.EXTRA_ACCOUNT_ID, checkId)
         }
     }
 }

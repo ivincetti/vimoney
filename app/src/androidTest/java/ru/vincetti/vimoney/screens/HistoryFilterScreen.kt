@@ -7,8 +7,8 @@ import ru.vincetti.vimoney.ui.history.filter.FilterDialog
 
 object HistoryFilterScreen : KScreen<HistoryFilterScreen>() {
 
-    override val layoutId: Int? = R.layout.dialog_transactions_filter
-    override val viewClass: Class<*>? = FilterDialog::class.java
+    override val layoutId: Int = R.layout.dialog_transactions_filter
+    override val viewClass: Class<*> = FilterDialog::class.java
 
     val filterButton = KButton {
         withId(R.id.fragment_filter_btn)
