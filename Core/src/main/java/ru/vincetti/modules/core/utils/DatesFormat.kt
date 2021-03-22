@@ -6,14 +6,14 @@ import java.time.format.DateTimeFormatter
 object DatesFormat {
 
     fun getMonthName(localDate: LocalDate): String {
-        return DateTimeFormatter.ofPattern("LLLL").format(localDate)
+        return localDate.format(DateTimeFormatter.ofPattern("LLLL"))
     }
 
     fun getMonth00(localDate: LocalDate): String {
-        return DateTimeFormatter.ofPattern("MM").format(localDate)
+        return localDate.format(DateTimeFormatter.ofPattern("MM"))
     }
 
     fun getYear0000(localDate: LocalDate): String {
-        return DateTimeFormatter.ofPattern("yyyy").format(localDate)
+        return localDate.format(DateTimeFormatter.ofPattern("yyyy"))
     }
 }

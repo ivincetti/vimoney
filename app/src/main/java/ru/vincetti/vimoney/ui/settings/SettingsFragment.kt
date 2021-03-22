@@ -48,15 +48,14 @@ class SettingsFragment : Fragment() {
     }
 
     private fun observersInit() {
-        viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigateUp()
-        }
-        viewModel.need2Navigate2Categories.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigate(R.id.action_settingsFragment_to_categoriesFragment)
-        }
         viewModel.buttonsState.observe(viewLifecycleOwner) {
             binding.saveTransactionsBtn.isEnabled = it
             binding.loadTransactionsBtn.isEnabled = it
+        }
+
+        viewModel.need2Navigate2Home.observe(viewLifecycleOwner) { findNavController().navigateUp() }
+        viewModel.need2Navigate2Categories.observe(viewLifecycleOwner) {
+            findNavController().navigate(R.id.action_settingsFragment_to_categoriesFragment)
         }
     }
 

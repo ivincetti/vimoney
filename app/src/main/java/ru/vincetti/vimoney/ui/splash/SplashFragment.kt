@@ -38,14 +38,12 @@ class SplashFragment : Fragment() {
     }
 
     private fun observersInit() {
-        viewModel.networkError.observe(viewLifecycleOwner) {
-            if (it) alertNetworkDialogShow()
-        }
+        viewModel.networkError.observe(viewLifecycleOwner) { alertNetworkDialogShow() }
         viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+            findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
         }
         viewModel.need2Navigate2Self.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigate(R.id.action_splashFragment_self)
+            findNavController().navigate(R.id.action_splashFragment_self)
         }
     }
 

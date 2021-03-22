@@ -14,18 +14,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vincetti.vimoney.R
-import ru.vincetti.modules.database.repository.CategoryRepo
 import ru.vincetti.vimoney.databinding.FragmentCategoriesListBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.settings.category.AllCategoriesAdapter
 import ru.vincetti.vimoney.ui.settings.category.add.AddCategoryViewModel.Companion.EXTRA_CATEGORY_ID
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CategoriesFragment : Fragment() {
-
-    @Inject
-    lateinit var categoryRepo: CategoryRepo
 
     val viewModel: CategoriesViewModel by viewModels()
 
@@ -60,42 +55,25 @@ class CategoriesFragment : Fragment() {
     }
 
     private fun observersInit() {
-        viewModel.needNavigate2Home.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigateUp()
-        }
+        viewModel.needNavigate2Check.observe(viewLifecycleOwner) { id -> go2Category(id) }
+        viewModel.needNavigate2Home.observe(viewLifecycleOwner) { findNavController().navigateUp() }
         viewModel.needNavigate2AddCategory.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigate(R.id.action_categoriesFragment_to_addCategoryFragment)
-        }
-        viewModel.categories.observe(viewLifecycleOwner) {
-            recyclerAdapter.setList(it)
-        }
-        viewModel.needNavigate2Check.observe(viewLifecycleOwner) {
-            go2Category(it)
+            findNavController().navigate(R.id.action_categoriesFragment_to_addCategoryFragment)
         }
     }
 
     private fun recyclerInit() {
-        recyclerAdapter = AllCategoriesAdapter(
-            object : CategoryViewHolder.Actions {
-                override fun onCategoryClicked(id: Int) {
-                    viewModel.clickOnElement(id)
-                }
-            }
-        )
-        val lineDivider = DividerItemDecoration(
-            requireContext(),
-            DividerItemDecoration.VERTICAL
-        )
+        recyclerAdapter = AllCategoriesAdapter { id -> viewModel.clickOnElement(id) }
+        val lineDivider = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         lineDivider.setDrawable(
-            ContextCompat.getDrawable(
-                requireContext(),
-                R.drawable.light_divider
-            )!!
+            ContextCompat.getDrawable(requireContext(), R.drawable.light_divider)!!
         )
         binding.categoriesListRecycleView.apply {
             addItemDecoration(lineDivider)
             adapter = recyclerAdapter
         }
+
+        viewModel.categories.observe(viewLifecycleOwner) { recyclerAdapter.setList(it) }
     }
 
     private fun insetsInit() {
@@ -115,8 +93,9 @@ class CategoriesFragment : Fragment() {
     }
 
     private fun go2Category(id: Int) {
-        val bundle = Bundle()
-        bundle.putInt(EXTRA_CATEGORY_ID, id)
+        val bundle = Bundle().apply {
+            putInt(EXTRA_CATEGORY_ID, id)
+        }
         findNavController().navigate(R.id.action_categoriesFragment_to_addCategoryFragment, bundle)
     }
 }

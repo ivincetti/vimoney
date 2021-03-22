@@ -45,15 +45,8 @@ class NotificationFragment : Fragment() {
     }
 
     private fun observersInit() {
-        viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigateUp()
-        }
-        viewModel.need2Notify.observe(viewLifecycleOwner) {
-            if (it) {
-                startService()
-                viewModel.notifyChecked()
-            }
-        }
+        viewModel.need2Navigate2Home.observe(viewLifecycleOwner) { findNavController().navigateUp() }
+        viewModel.need2Notify.observe(viewLifecycleOwner) { startService() }
     }
 
     private fun insetsInit() {

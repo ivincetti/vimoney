@@ -84,7 +84,33 @@ class TransactionIncomeFragment : Fragment() {
         }
         binding.addAccCategoryBlock.setOnClickListener { showCategoryDialog() }
         binding.fragmentAddAllContent.addBtn.setOnClickListener { save() }
+    }
 
+    private fun initObservers() {
+        viewModel.needToUpdate.observe(viewLifecycleOwner) {
+            if (it) binding.fragmentAddAllContent.addBtn.text = getString(R.string.add_btn_update)
+        }
+
+        viewModel.accountName.observe(viewLifecycleOwner) { binding.addAccName.text = it }
+        viewModel.currency.observe(viewLifecycleOwner) { binding.addAccCur.text = it }
+        viewModel.sum.observe(viewLifecycleOwner) {
+            if (it > 0) binding.addSum.setText(it.toString())
+        }
+        viewModel.date.observe(viewLifecycleOwner) {
+            date = it
+            binding.fragmentAddAllContent.addDateTxt.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)
+        }
+        viewModel.description.observe(viewLifecycleOwner) { binding.fragmentAddAllContent.addDesc.setText(it) }
+        viewModel.accountNotArchiveNames.observe(viewLifecycleOwner) {
+            binding.addAccName.setOnClickListener { view ->
+                TransactionFragmentUtils.showListPopUp(
+                    requireContext(),
+                    view,
+                    it,
+                    viewModel::setAccount
+                )
+            }
+        }
         viewModel.category.observe(viewLifecycleOwner) {
             it?.let {
                 binding.addAccCategoryIcon.text = it.symbol
@@ -92,62 +118,19 @@ class TransactionIncomeFragment : Fragment() {
             }
         }
         viewModel.categoriesList.observe(viewLifecycleOwner) {
-            it?.let {
-                dialogFrag.setTargetFragment(this, 1)
-                dialogFrag.setList(it)
-            }
+            dialogFrag.setTargetFragment(this, 1)
+            dialogFrag.setList(it)
         }
-    }
 
-    private fun initObservers() {
-        viewModel.needSum.observe(viewLifecycleOwner) {
-            if (it) TransactionFragmentUtils.showNoSumToast(requireContext())
-        }
-        viewModel.needAccount.observe(viewLifecycleOwner) {
-            if (it) TransactionFragmentUtils.showNoAccountToast(requireContext())
-        }
-        viewModel.needToUpdate.observe(viewLifecycleOwner) {
-            if (it) binding.fragmentAddAllContent.addBtn.text = getString(R.string.add_btn_update)
-        }
-        viewModel.account.observe(viewLifecycleOwner) {
-            it?.let { binding.addAccName.text = it.name }
-        }
-        viewModel.currency.observe(viewLifecycleOwner) {
-            it?.let { binding.addAccCur.text = it.symbol }
-        }
-        viewModel.sum.observe(viewLifecycleOwner) {
-            if (it > 0) binding.addSum.setText(it.toString())
-        }
-        viewModel.date.observe(viewLifecycleOwner) {
-            it?.let {
-                date = it
-                binding.fragmentAddAllContent.addDateTxt.text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(it)
-            }
-        }
-        viewModel.description.observe(viewLifecycleOwner) {
-            binding.fragmentAddAllContent.addDesc.setText(it)
-        }
-        viewModel.accountNotArchiveNames.observe(viewLifecycleOwner) {
-            it?.let { list ->
-                binding.addAccName.setOnClickListener { view ->
-                    TransactionFragmentUtils.showListPopUp(
-                        requireContext(),
-                        view,
-                        list,
-                        viewModel::setAccount
-                    )
-                }
-            }
-        }
-        viewModel.needToNavigate.observe(viewLifecycleOwner) {
-            if (it) {
-                findNavController().navigateUp()
-                viewModel.navigatedBack()
-            }
+        viewModel.needToNavigateBack.observe(viewLifecycleOwner) { findNavController().navigateUp() }
+        viewModel.showNeedSum.observe(viewLifecycleOwner) { TransactionFragmentUtils.showNoSumToast(requireContext()) }
+        viewModel.showNeedAccount.observe(viewLifecycleOwner) {
+            TransactionFragmentUtils.showNoAccountToast(requireContext())
         }
     }
 
     private fun showCategoryDialog() {
+        TransactionFragmentUtils.hideKeyboard(requireActivity())
         dialogFrag.show(parentFragmentManager, "Categories")
     }
 

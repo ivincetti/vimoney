@@ -17,9 +17,6 @@ android {
 
     compileOptions {
         coreLibraryDesugaringEnabled true
-
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -27,12 +24,11 @@ android {
 }
 
 dependencies {
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.1'
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:${versions.desugar_jdk_libs}"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
     implementation "androidx.core:core-ktx:${versions.androidx_core_ktx}"
 
-    implementation "androidx.lifecycle:lifecycle-extensions:${versions.androidx_lifecycle}"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.androidx_lifecycle}"
     implementation "androidx.paging:paging-runtime-ktx:${versions.androidx_paging}"
 

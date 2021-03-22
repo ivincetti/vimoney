@@ -10,9 +10,7 @@ import ru.vincetti.vimoney.databinding.DialogCategoryListBinding
 
 class CategorySymbolListDialog : DialogFragment() {
 
-    private val categories = Category.values().map {
-        it.symbol
-    }
+    private val categories = Category.values().map { it.symbol }
 
     private var _binding: DialogCategoryListBinding? = null
     private val binding

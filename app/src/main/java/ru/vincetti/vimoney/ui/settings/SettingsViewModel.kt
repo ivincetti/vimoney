@@ -8,26 +8,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.vincetti.modules.files.JsonFile
 import ru.vincetti.modules.core.utils.SingleLiveEvent
-import ru.vincetti.modules.database.repository.AccountRepo
-import ru.vincetti.modules.database.repository.CategoryRepo
-import ru.vincetti.modules.database.repository.TransactionRepo
-import ru.vincetti.modules.database.sqlite.ExportData
-import ru.vincetti.modules.database.sqlite.ImportData
+import ru.vincetti.vimoney.models.SettingsModel
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val jsonFile: JsonFile,
-    private val transactionRepo: TransactionRepo,
-    private val accountRepo: AccountRepo,
-    private val categoryRepo: CategoryRepo
+    private val settingsModel: SettingsModel
 ) : ViewModel() {
 
-    val need2Navigate2Home = SingleLiveEvent<Boolean>()
+    private val _need2Navigate2Home = SingleLiveEvent<Unit>()
+    val need2Navigate2Home: LiveData<Unit>
+        get() = _need2Navigate2Home
 
-    val need2Navigate2Categories = SingleLiveEvent<Boolean>()
+    private val _need2Navigate2Categories = SingleLiveEvent<Unit>()
+    val need2Navigate2Categories: LiveData<Unit>
+        get() = _need2Navigate2Categories
 
     private var _buttonsState = MutableLiveData<Boolean>()
     val buttonsState: LiveData<Boolean>
@@ -38,23 +34,17 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun backButtonClicked() {
-        need2Navigate2Home.value = true
+        _need2Navigate2Home.value = Unit
     }
 
     fun categoriesButtonClicked() {
-        need2Navigate2Categories.value = true
+        _need2Navigate2Categories.value = Unit
     }
 
     fun saveJson() {
         _buttonsState.value = false
         viewModelScope.launch {
-            jsonFile.save(
-                ExportData.export(
-                    transactionRepo,
-                    accountRepo,
-                    categoryRepo
-                )
-            )
+            settingsModel.export()
             withContext(Dispatchers.Main) {
                 _buttonsState.value = true
             }
@@ -64,12 +54,7 @@ class SettingsViewModel @Inject constructor(
     fun loadJson() {
         _buttonsState.value = false
         viewModelScope.launch {
-            ImportData.import(
-                transactionRepo,
-                accountRepo,
-                categoryRepo,
-                jsonFile.getData()
-            )
+            settingsModel.import()
             withContext(Dispatchers.Main) {
                 _buttonsState.value = true
             }

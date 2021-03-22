@@ -1,31 +1,46 @@
 package ru.vincetti.modules.database.repository
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import ru.vincetti.modules.core.models.Currency
 import ru.vincetti.modules.database.sqlite.CurrentDao
 import ru.vincetti.modules.database.sqlite.models.CurrencyModel
 import javax.inject.Inject
 
-class CurrencyRepo @Inject constructor(
-    private val currentDao: CurrentDao
+class CurrencyRepo private constructor(
+    private val currentDao: CurrentDao,
+    private val dispatcher: CoroutineDispatcher
 ) {
 
-    suspend fun loadByCode(code: Int): Currency? {
-        return currentDao.loadCurrencyByCode(code)?.toCurrency()
+    @Inject
+    constructor(
+        currentDao: CurrentDao
+    ) : this(currentDao, Dispatchers.IO)
+
+    suspend fun loadByCode(code: Int): Currency? = withContext(dispatcher) {
+        currentDao.loadCurrencyByCode(code)?.toCurrency()
     }
 
-    suspend fun loadAll(): List<Currency>? {
-        return currentDao.loadAllCurrency()?.map { it.toCurrency() }
+    suspend fun loadAll(): List<Currency> = withContext(dispatcher) {
+        currentDao.loadAllCurrency().map { it.toCurrency() }
     }
 
     suspend fun add(cur: Currency) {
-        currentDao.insertCurrency(CurrencyModel.from(cur))
+        withContext(dispatcher) {
+            currentDao.insertCurrency(CurrencyModel.from(cur))
+        }
     }
 
     suspend fun update(cur: Currency) {
-        currentDao.updateCurrency(CurrencyModel.from(cur))
+        withContext(dispatcher) {
+            currentDao.updateCurrency(CurrencyModel.from(cur))
+        }
     }
 
     suspend fun delete(cur: Currency) {
-        currentDao.deleteCurrency(CurrencyModel.from(cur))
+        withContext(dispatcher) {
+            currentDao.deleteCurrency(CurrencyModel.from(cur))
+        }
     }
 }

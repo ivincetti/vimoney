@@ -8,13 +8,13 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.vincetti.modules.core.utils.SingleLiveEvent
-import ru.vincetti.modules.database.repository.CategoryRepo
+import ru.vincetti.vimoney.models.CategoriesModel
 import ru.vincetti.vimoney.ui.settings.category.symbol.Category
 import javax.inject.Inject
 
 @HiltViewModel
 class AddCategoryViewModel @Inject constructor(
-    private val categoryRepo: CategoryRepo
+    private val categoriesModel: CategoriesModel
 ) : ViewModel() {
 
     companion object {
@@ -24,14 +24,17 @@ class AddCategoryViewModel @Inject constructor(
 
     private var categoryID = DEFAULT_CATEGORY_ID
 
-    private val categories = Category.values().map {
-        it.symbol
-    }
+    private val categories = Category.values().map { it.symbol }
 
-    val isDefault = MutableLiveData<Boolean>()
+    private val _isDefault = MutableLiveData<Boolean>()
+    val isDefault: LiveData<Boolean>
+        get() = _isDefault
+
     private var isDefaultBool = true
 
-    val need2NavigateBack = SingleLiveEvent<Boolean>()
+    private val _need2NavigateBack = SingleLiveEvent<Unit>()
+    val need2NavigateBack: LiveData<Unit>
+        get() = _need2NavigateBack
 
     private var _categoryName = MutableLiveData<String>()
     val categoryName: LiveData<String>
@@ -41,13 +44,12 @@ class AddCategoryViewModel @Inject constructor(
     val categorySymbol: LiveData<String>
         get() = _categorySymbol
 
-    private var _need2AllData = MutableLiveData<Boolean>()
-    val need2AllData: LiveData<Boolean>
+    private var _need2AllData = MutableLiveData<Unit>()
+    val need2AllData: LiveData<Unit>
         get() = _need2AllData
 
     init {
-        isDefault.value = isDefaultBool
-        _need2AllData.value = false
+        _isDefault.value = isDefaultBool
         _categorySymbol.value = "\uf544"
     }
 
@@ -56,13 +58,15 @@ class AddCategoryViewModel @Inject constructor(
     }
 
     fun loadCategory(id: Int) {
-        viewModelScope.launch {
-            categoryRepo.loadById(id)?.let {
-                categoryID = id
-                _categoryName.value = it.name
-                _categorySymbol.value = it.symbol
-                isDefault.value = false
-                isDefaultBool = false
+        if (id > 0) {
+            viewModelScope.launch {
+                categoriesModel.loadCategoryById(id)?.let {
+                    categoryID = id
+                    _categoryName.value = it.name
+                    _categorySymbol.value = it.symbol
+                    _isDefault.value = false
+                    isDefaultBool = false
+                }
             }
         }
     }
@@ -70,14 +74,14 @@ class AddCategoryViewModel @Inject constructor(
     fun save(name: String, symbol: String) {
         viewModelScope.launch {
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(symbol)) {
-                _need2AllData.value = true
+                _need2AllData.value = Unit
             } else {
                 val tmpCategory = ru.vincetti.modules.core.models.Category(name = name, symbol = symbol)
                 if (!isDefaultBool) {
                     tmpCategory.id = categoryID
-                    categoryRepo.update(tmpCategory)
+                    categoriesModel.updateCategory(tmpCategory)
                 } else {
-                    categoryRepo.add(tmpCategory)
+                    categoriesModel.addCategory(tmpCategory)
                 }
                 need2navigateBack()
             }
@@ -85,10 +89,6 @@ class AddCategoryViewModel @Inject constructor(
     }
 
     fun need2navigateBack() {
-        need2NavigateBack.value = true
-    }
-
-    fun noDataDialogClosed() {
-        _need2AllData.value = false
+        _need2NavigateBack.value = Unit
     }
 }

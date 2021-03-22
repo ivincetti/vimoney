@@ -14,18 +14,13 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vincetti.vimoney.R
-import ru.vincetti.modules.database.repository.CategoryRepo
 import ru.vincetti.vimoney.databinding.FragmentAddCategoryBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.settings.category.add.AddCategoryViewModel.Companion.EXTRA_CATEGORY_ID
 import ru.vincetti.vimoney.ui.settings.category.symbol.CategorySymbolListDialog
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddCategoryFragment : Fragment() {
-
-    @Inject
-    lateinit var categoryRepo: CategoryRepo
 
     private val viewModel: AddCategoryViewModel by viewModels()
 
@@ -42,8 +37,7 @@ class AddCategoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let { bundle ->
-            val extraCategory = bundle.getInt(EXTRA_CATEGORY_ID)
-            if (extraCategory > 0) viewModel.loadCategory(extraCategory)
+            viewModel.loadCategory(bundle.getInt(EXTRA_CATEGORY_ID))
         }
 
         viewsInit()
@@ -58,24 +52,18 @@ class AddCategoryFragment : Fragment() {
 
     private fun viewsInit() {
         binding.categoryAddNavigationAddBtn.setOnClickListener { save() }
-        binding.categoryAddNavigationBackBtn.setOnClickListener { showUnsavedDialog() }
         binding.categoryAddContent.addCategorySaveBtn.setOnClickListener { save() }
         binding.categoryAddContent.addCategorySymbol.setOnClickListener {
             val dialogFrag = CategorySymbolListDialog()
             dialogFrag.setTargetFragment(this, 1)
             dialogFrag.show(parentFragmentManager, "Icons")
         }
+        binding.categoryAddNavigationBackBtn.setOnClickListener { showUnsavedDialog() }
     }
 
     private fun observersInit() {
         viewModel.isDefault.observe(viewLifecycleOwner) {
             if (!it) binding.categoryAddContent.addCategorySaveBtn.text = getString(R.string.add_btn_update)
-        }
-        viewModel.need2NavigateBack.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigateUp()
-        }
-        viewModel.need2AllData.observe(viewLifecycleOwner) {
-            if (it) showNoDataDialog()
         }
         viewModel.categoryName.observe(viewLifecycleOwner) {
             binding.categoryAddContent.addCategoryName.setText(it)
@@ -83,6 +71,9 @@ class AddCategoryFragment : Fragment() {
         viewModel.categorySymbol.observe(viewLifecycleOwner) {
             binding.categoryAddContent.addCategorySymbol.text = it
         }
+
+        viewModel.need2AllData.observe(viewLifecycleOwner) { showNoDataDialog() }
+        viewModel.need2NavigateBack.observe(viewLifecycleOwner) { findNavController().navigateUp() }
     }
 
     override fun onResume() {
@@ -116,7 +107,6 @@ class AddCategoryFragment : Fragment() {
             R.string.check_add_alert_no_data,
             Toast.LENGTH_SHORT
         ).show()
-        viewModel.noDataDialogClosed()
     }
 
     private fun setCategorySymbol(position: Int) {

@@ -41,8 +41,7 @@ class AddCheckFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let { bundle ->
-            val extraCheck = bundle.getInt(EXTRA_CHECK_ID)
-            if (extraCheck > 0) viewModel.loadAccount(extraCheck)
+            viewModel.loadAccount(bundle.getInt(EXTRA_CHECK_ID))
         }
 
         viewInit()
@@ -64,18 +63,19 @@ class AddCheckFragment : Fragment() {
 
     private fun viewInit() {
         binding.addCheckNavigationDeleteBtn.setOnClickListener { showDeleteDialog() }
-        binding.addCheckNavigationFromArchiveBtn.setOnClickListener { viewModel.restore() }
-        binding.addCheckNavigationAddBtn.setOnClickListener { save() }
         binding.settingNavigationBackBtn.setOnClickListener { showUnsavedDialog() }
 
+        binding.addCheckNavigationAddBtn.setOnClickListener { save() }
         binding.addCheckContent.addCheckSaveBtn.setOnClickListener { save() }
         binding.addCheckContent.addCheckColorView.setOnClickListener { pickColor() }
+
         binding.addCheckContent.addCheckAllBalanceSwitch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setNeedAllBalance(isChecked)
         }
         binding.addCheckContent.addCheckShowMainSwitch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setNeedOnMain(isChecked)
         }
+        binding.addCheckNavigationFromArchiveBtn.setOnClickListener { viewModel.restore() }
     }
 
     private fun observersInit() {
@@ -88,39 +88,32 @@ class AddCheckFragment : Fragment() {
         viewModel.needOnMain.observe(viewLifecycleOwner) {
             binding.addCheckContent.addCheckShowMainSwitch.isChecked = it
         }
-        viewModel.need2NavigateBack.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigateUp()
-        }
-        viewModel.need2AllData.observe(viewLifecycleOwner) {
-            if (it) showNoDataDialog()
-        }
         viewModel.color.observe(viewLifecycleOwner) {
-            it?.let { binding.addCheckContent.addCheckColorView.setBackgroundColor(it) }
+            binding.addCheckContent.addCheckColorView.setBackgroundColor(it)
         }
         viewModel.check.observe(viewLifecycleOwner) {
-            it.type?.let { type ->
-                binding.addCheckContent.addCheckName.setText(it.name)
-                typeLoad(type)
+            binding.addCheckContent.addCheckName.setText(it.name)
+            typeLoad(it.type)
 
-                if (it.isArchive) {
-                    binding.addCheckNavigationFromArchiveBtn.visibility = View.VISIBLE
-                    binding.addCheckNavigationDeleteBtn.visibility = View.GONE
-                } else {
-                    binding.addCheckNavigationFromArchiveBtn.visibility = View.GONE
-                    binding.addCheckNavigationDeleteBtn.visibility = View.VISIBLE
-                }
+            if (it.isArchive) {
+                binding.addCheckNavigationFromArchiveBtn.visibility = View.VISIBLE
+                binding.addCheckNavigationDeleteBtn.visibility = View.GONE
+            } else {
+                binding.addCheckNavigationFromArchiveBtn.visibility = View.GONE
+                binding.addCheckNavigationDeleteBtn.visibility = View.VISIBLE
             }
         }
         viewModel.currency.observe(viewLifecycleOwner) {
-            it?.let { binding.addCheckContent.addCheckCurrency.text = it.symbol }
+            binding.addCheckContent.addCheckCurrency.text = it.symbol
         }
-        viewModel.currencyList.observe(viewLifecycleOwner) {
-            it?.let { list ->
-                binding.addCheckContent.addCheckCurrencyContainer.setOnClickListener {
-                    popUpCurrencyShow(list, binding.addCheckContent.addCheckCurrency)
-                }
+        viewModel.currencyList.observe(viewLifecycleOwner) { list ->
+            binding.addCheckContent.addCheckCurrencyContainer.setOnClickListener {
+                popUpCurrencyShow(list, binding.addCheckContent.addCheckCurrency)
             }
         }
+
+        viewModel.need2NavigateBack.observe(viewLifecycleOwner) { findNavController().navigateUp() }
+        viewModel.need2AllData.observe(viewLifecycleOwner) { showNoDataDialog() }
     }
 
     private fun pickColor() {
@@ -200,7 +193,6 @@ class AddCheckFragment : Fragment() {
         AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             .setMessage(R.string.check_add_alert_no_data)
             .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
-                viewModel.noDataDialogClosed()
                 dialogInterface?.dismiss()
             }
             .create()

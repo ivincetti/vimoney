@@ -2,12 +2,13 @@ package ru.vincetti.modules.core.models
 
 import java.util.*
 
+@Suppress("DataClassShouldBeImmutable")
 data class Transaction(
     var id: Int = DEFAULT_ID,
     var accountId: Int = DEFAULT_ID,
     var description: String? = "",
-    var date: Date? = Date(),
-    var updatedAt: Date? = Date(),
+    var date: Date = Date(),
+    var updatedAt: Date = Date(),
     var type: Int = TRANSACTION_TYPE_SPENT,
     var sum: Float = 0f,
     var categoryId: Int = DEFAULT_CATEGORY,

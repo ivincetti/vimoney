@@ -8,24 +8,35 @@ import kotlinx.coroutines.launch
 import ru.vincetti.modules.core.models.Account
 import ru.vincetti.modules.core.models.Currency
 import ru.vincetti.modules.core.utils.SingleLiveEvent
-import ru.vincetti.modules.database.repository.AccountRepo
-import ru.vincetti.modules.database.repository.CurrencyRepo
+import ru.vincetti.vimoney.models.AddCheckModel
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 import javax.inject.Inject
 
 @HiltViewModel
 @Suppress("TooManyFunctions")
 class AddCheckViewModel @Inject constructor(
-    private val accountRepo: AccountRepo,
-    private val currencyRepo: CurrencyRepo
+    private val addCheckModel: AddCheckModel
 ) : ViewModel() {
 
     private var checkID = DEFAULT_CHECK_ID
 
-    val isDefault = MutableLiveData<Boolean>()
+    private var _check = MutableLiveData<Account>()
+    val check: LiveData<Account>
+        get() = _check
+
+    private val _isDefault = MutableLiveData<Boolean>()
+    val isDefault: LiveData<Boolean>
+        get() = _isDefault
+
     private var isDefaultBool = true
 
-    val need2NavigateBack = SingleLiveEvent<Boolean>()
+    private val _need2NavigateBack = SingleLiveEvent<Unit>()
+    val need2NavigateBack: LiveData<Unit>
+        get() = _need2NavigateBack
+
+    private val _need2AllData = MutableLiveData<Unit>()
+    val need2AllData: LiveData<Unit>
+        get() = _need2AllData
 
     private var _needAllBalance = MutableLiveData<Boolean>()
     val needAllBalance: LiveData<Boolean>
@@ -35,44 +46,41 @@ class AddCheckViewModel @Inject constructor(
     val needOnMain: LiveData<Boolean>
         get() = _needOnMain
 
-    var need2AllData = MutableLiveData<Boolean>()
-
     private var _currency = MutableLiveData<Currency>()
-    val currency
+    val currency: LiveData<Currency>
         get() = _currency
 
     private var _color = MutableLiveData<Int>()
-    val color
+    val color: LiveData<Int>
         get() = _color
 
-    val currencyList = liveData {
-        emit(currencyRepo.loadAll())
+    val currencyList: LiveData<List<Currency>> = liveData {
+        emit(addCheckModel.getAllCurrency())
     }
 
-    private var _check = MutableLiveData<Account>()
-    val check: LiveData<Account>
-        get() = _check
-
     init {
-        isDefault.value = true
-        need2AllData.value = false
+        _isDefault.value = true
         _needOnMain.value = true
         _needAllBalance.value = true
-        _check.value = Account()
-        _color.value = Color.parseColor(_check.value!!.color)
+        _check.value = Account().also {
+            _color.value = Color.parseColor(it.color)
+        }
     }
 
     fun loadAccount(id: Int) {
-        viewModelScope.launch {
-            accountRepo.loadById(id)?.let {
-                checkID = id
-                _color.value = Color.parseColor(it.color)
-                _check.value = it
-                _currency.value = currencyRepo.loadByCode(it.currency)
-                _needAllBalance.value = it.needAllBalance
-                _needOnMain.value = it.needOnMain
-                isDefault.value = false
-                isDefaultBool = false
+        if (id > 0) {
+            viewModelScope.launch {
+                addCheckModel.loadAccountById(id)?.let {
+                    checkID = id
+                    _color.value = Color.parseColor(it.color)
+                    _check.value = it
+                    // TODO доделать
+                    _currency.value = addCheckModel.loadCurrencyByCode(it.currency)
+                    _needAllBalance.value = it.needAllBalance
+                    _needOnMain.value = it.needOnMain
+                    _isDefault.value = false
+                    isDefaultBool = false
+                }
             }
         }
     }
@@ -84,7 +92,7 @@ class AddCheckViewModel @Inject constructor(
             currency.value == null ||
             color.value!! > 0
         ) {
-            need2AllData.value = true
+            _need2AllData.value = Unit
         } else {
             val tmpAcc = check.value
             tmpAcc?.let {
@@ -94,13 +102,13 @@ class AddCheckViewModel @Inject constructor(
                 it.needOnMain = _needOnMain.value!!
                 if (!isDefaultBool) {
                     viewModelScope.launch {
-                        accountRepo.update(it)
+                        addCheckModel.updateAccount(it)
                     }
                 } else {
                     it.sum = 0
                     it.color = java.lang.String.format("#%06x", (_color.value!! and 0xffffff))
                     viewModelScope.launch {
-                        accountRepo.add(it)
+                        addCheckModel.addAccount(it)
                     }
                 }
                 need2NavigateBack()
@@ -111,7 +119,7 @@ class AddCheckViewModel @Inject constructor(
     fun restore() {
         if (!isDefaultBool) {
             viewModelScope.launch {
-                accountRepo.unArchiveById(checkID)
+                addCheckModel.unArchiveAccountById(checkID)
                 need2NavigateBack()
             }
         }
@@ -120,7 +128,7 @@ class AddCheckViewModel @Inject constructor(
     fun delete() {
         if (!isDefaultBool) {
             viewModelScope.launch {
-                accountRepo.archiveById(checkID)
+                addCheckModel.archiveAccountById(checkID)
                 need2NavigateBack()
             }
         }
@@ -134,18 +142,14 @@ class AddCheckViewModel @Inject constructor(
         _needOnMain.value = isChecked
     }
 
-    fun noDataDialogClosed() {
-        need2AllData.value = false
-    }
-
     fun need2NavigateBack() {
-        need2NavigateBack.value = true
+        _need2NavigateBack.value = Unit
     }
 
     fun setCurrency(checkCurrency: Int) {
         _check.value?.currency = checkCurrency
         viewModelScope.launch {
-            _currency.value = currencyRepo.loadByCode(checkCurrency)
+            _currency.value = addCheckModel.loadCurrencyByCode(checkCurrency)
         }
     }
 

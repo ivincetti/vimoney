@@ -7,6 +7,7 @@ import ru.vincetti.modules.core.models.Transaction
 import java.util.*
 
 @Entity(tableName = "transactions")
+@Suppress("DataClassShouldBeImmutable")
 data class TransactionModel(
 
     @PrimaryKey(autoGenerate = true)
@@ -17,10 +18,10 @@ data class TransactionModel(
 
     var description: String? = "",
 
-    var date: Date? = Date(),
+    var date: Date = Date(),
 
     @ColumnInfo(name = "updated_at")
-    var updatedAt: Date? = Date(),
+    var updatedAt: Date = Date(),
 
     var type: Int = Transaction.TRANSACTION_TYPE_SPENT,
 

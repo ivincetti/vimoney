@@ -1,13 +1,14 @@
 package ru.vincetti.vimoney.ui.dashboard
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import ru.vincetti.modules.database.repository.TransactionRepo
 import ru.vincetti.modules.core.utils.DatesFormat
 import ru.vincetti.modules.core.utils.SingleLiveEvent
+import ru.vincetti.vimoney.models.DashboardModel
 import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
@@ -15,35 +16,42 @@ import kotlin.collections.set
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val transRepo: TransactionRepo
+    private val dashboardModel: DashboardModel,
 ) : ViewModel() {
 
     private var localDate = LocalDate.now()
 
-    val income = MutableLiveData<Int>()
-    val expense = MutableLiveData<Int>()
+    private val _income = MutableLiveData<Int>()
+    val income: LiveData<Int>
+        get() = _income
+
+    private val _expense = MutableLiveData<Int>()
+    val expense: LiveData<Int>
+        get() = _expense
 
     private var _monthString = MutableLiveData<String>()
-    val monthString
+    val monthString: LiveData<String>
         get() = _monthString
 
     private var _yearString = MutableLiveData<String>()
-    val yearString
+    val yearString: LiveData<String>
         get() = _yearString
 
     private var _dataSet = MutableLiveData<LinkedHashMap<String, Float>>()
-    val dataSet
+    val dataSet: LiveData<LinkedHashMap<String, Float>>
         get() = _dataSet
 
     private var _isShowProgress = MutableLiveData<Boolean>()
-    val isShowProgress
+    val isShowProgress: LiveData<Boolean>
         get() = _isShowProgress
 
-    val need2Navigate2Home = SingleLiveEvent<Boolean>()
+    private val _need2Navigate2Home = SingleLiveEvent<Unit>()
+    val need2Navigate2Home: LiveData<Unit>
+        get() = _need2Navigate2Home
 
     init {
-        income.value = 0
-        expense.value = 0
+        _income.value = 0
+        _income.value = 0
         _isShowProgress.value = true
         getGraphData()
     }
@@ -57,15 +65,15 @@ class DashboardViewModel @Inject constructor(
 
     private fun getAmountData() {
         viewModelScope.launch {
-            val incomeExpense = transRepo.loadIncomeExpenseMonth(localDate)
-            income.value = incomeExpense.first
-            expense.value = incomeExpense.second
+            val incomeExpense: Pair<Int, Int> = dashboardModel.loadIncomeExpenseMonth(localDate)
+            incomeExpense.first.also { _income.value = it }
+            incomeExpense.second.also { _expense.value = it }
         }
     }
 
     private fun getGraphStat() {
         viewModelScope.launch {
-            val stat = transRepo.loadTransactionStatMonth(localDate)
+            val stat = dashboardModel.loadTransactionStatMonth(localDate)
 
             var sum = 0f
             val entries = LinkedHashMap<String, Float>()
@@ -100,6 +108,6 @@ class DashboardViewModel @Inject constructor(
     }
 
     fun backButtonClicked() {
-        need2Navigate2Home.value = true
+        _need2Navigate2Home.value = Unit
     }
 }

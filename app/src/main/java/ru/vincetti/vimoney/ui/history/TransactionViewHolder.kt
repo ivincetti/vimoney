@@ -40,7 +40,7 @@ class TransactionViewHolder private constructor(
         )
     }
 
-    interface Actions {
+    fun interface Actions {
 
         fun onTransactionClicked(id: Int)
     }

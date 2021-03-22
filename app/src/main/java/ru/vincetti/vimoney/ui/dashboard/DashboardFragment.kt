@@ -60,18 +60,15 @@ class DashboardFragment : Fragment() {
         viewModel.dataSet.observe(viewLifecycleOwner) {
             binding.dashContent.dashboardLineChart.animate(it)
         }
-        viewModel.isShowProgress.observe(viewLifecycleOwner) {
-            showProgress(it)
-        }
-        viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigateUp()
-        }
         viewModel.income.observe(viewLifecycleOwner) {
             binding.dashContent.statContent.homeStatIncomeTxt.text = it.toString()
         }
         viewModel.expense.observe(viewLifecycleOwner) {
             binding.dashContent.statContent.homeStatExpenseTxt.text = it.toString()
         }
+        viewModel.isShowProgress.observe(viewLifecycleOwner) { showProgress(it) }
+
+        viewModel.need2Navigate2Home.observe(viewLifecycleOwner) { findNavController().navigateUp() }
     }
 
     @SuppressLint("Range")

@@ -5,36 +5,28 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 import ru.vincetti.modules.core.models.AccountList
-import ru.vincetti.modules.database.repository.AccountRepo
+import ru.vincetti.vimoney.models.CheckModel
 import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
 
 class CheckViewModel @AssistedInject constructor(
-    private val accountRepo: AccountRepo,
+    private val model: CheckModel,
     @Assisted private val accountId: Int
 ) : ViewModel() {
 
-    val account: LiveData<AccountList> = accountRepo.loadForListById(accountId)
+    val account: LiveData<AccountList?> = model.loadLiveAccountById(accountId)
 
-    val isArchive: LiveData<Boolean> = account.map {
-        it.isArchive
-    }
+    val isArchive: LiveData<Boolean> = account.map { it?.isArchive ?: false }
 
-    val isNeedOnMain: LiveData<Boolean> = account.map {
-        it.needOnMain
-    }
+    val isNeedOnMain: LiveData<Boolean> = account.map { it?.needOnMain ?: false }
 
     private var _updateButtonEnable = MutableLiveData<Boolean>()
     val updateButtonEnable: LiveData<Boolean>
         get() = _updateButtonEnable
 
-    init {
-        _updateButtonEnable.value = true
-    }
-
     fun restore() {
         if (accountId != DEFAULT_CHECK_ID) {
             viewModelScope.launch {
-                accountRepo.unArchiveById(accountId)
+                model.unArchiveAccountById(accountId)
             }
         }
     }
@@ -42,7 +34,7 @@ class CheckViewModel @AssistedInject constructor(
     fun delete() {
         if (accountId != DEFAULT_CHECK_ID) {
             viewModelScope.launch {
-                accountRepo.archiveById(accountId)
+                model.archiveAccountById(accountId)
             }
         }
     }
@@ -50,7 +42,7 @@ class CheckViewModel @AssistedInject constructor(
     fun update() {
         _updateButtonEnable.value = false
         viewModelScope.launch {
-            accountRepo.balanceUpdateById(accountId)
+            model.accountBalanceUpdateById(accountId)
             _updateButtonEnable.value = true
         }
     }

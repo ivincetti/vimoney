@@ -1,6 +1,10 @@
 package ru.vincetti.modules.database.repository
 
+import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import ru.vincetti.modules.core.models.Filter
 import ru.vincetti.modules.core.models.Transaction
 import ru.vincetti.modules.core.models.TransactionStatDay
@@ -11,51 +15,85 @@ import ru.vincetti.modules.database.sqlite.models.TransactionModel
 import java.time.LocalDate
 import javax.inject.Inject
 
-@Suppress("TooManyFunctions")
-class TransactionRepo @Inject constructor(
+class TransactionRepo private constructor(
     private val transactionDao: TransactionDao,
-    private val accountRepo: AccountRepo
+    private val dispatcher: CoroutineDispatcher
 ) {
 
-    suspend fun add(transaction: Transaction): Long {
-        val id = transactionDao.insertTransaction(TransactionModel.from(transaction))
-        accountRepo.balanceUpdateById(transaction.accountId)
-        return id
+    @Inject
+    constructor(
+        transactionDao: TransactionDao
+    ) : this(transactionDao, Dispatchers.IO)
+
+    suspend fun add(transaction: Transaction): Long = withContext(dispatcher) {
+        transactionDao.insertTransaction(TransactionModel.from(transaction))
     }
 
     suspend fun add(transactions: List<Transaction>) {
-        val transactionModels = transactions.map { TransactionModel.from(it) }
-        transactionDao.insertTransaction(transactionModels)
-        accountRepo.balanceUpdateAll()
+        withContext(dispatcher) {
+            val transactionModels = transactions.map { TransactionModel.from(it) }
+            transactionDao.insertTransaction(transactionModels)
+        }
     }
 
-    suspend fun loadById(id: Int): Transaction? {
-        return transactionDao.loadTransactionById(id)?.toTransaction()
+    suspend fun loadById(id: Int): Transaction? = withContext(dispatcher) {
+        transactionDao.loadTransactionById(id)?.toTransaction()
+    }
+
+    suspend fun loadBalanceByCheckId(id: Int): Float = withContext(dispatcher) {
+        transactionDao.loadSumByCheckId(id)
     }
 
     suspend fun update(transaction: Transaction) {
-        transactionDao.updateTransaction(TransactionModel.from(transaction))
-        accountRepo.balanceUpdateById(transaction.accountId)
+        withContext(dispatcher) {
+            transactionDao.updateTransaction(TransactionModel.from(transaction))
+        }
     }
 
-    suspend fun loadIncomeExpenseMonth(localDate: LocalDate): Pair<Int, Int> {
+    suspend fun loadIncomeExpenseMonth(localDate: LocalDate): Pair<Int, Int> = withContext(dispatcher) {
         val month: String = DatesFormat.getMonth00(localDate)
         val year: String = DatesFormat.getYear0000(localDate)
 
         val income = transactionDao.loadSumTransactionIncomeMonth(month, year)
         val expense = transactionDao.loadSumTransactionExpenseMonth(month, year)
-        return income to expense
+        income to expense
     }
 
-    suspend fun loadIncomeExpenseActual(): Pair<Int, Int> {
-        return loadIncomeExpenseMonth(LocalDate.now())
+    fun loadIncomeMonthActualLive(): LiveData<Int> {
+        return loadIncomeMonthLive(LocalDate.now())
+    }
+
+    fun loadExpenseMonthActualLive(): LiveData<Int> {
+        return loadExpenseMonthLive(LocalDate.now())
+    }
+
+    suspend fun loadIncomeExpenseActual(): Pair<Int, Int> = withContext(dispatcher) {
+        loadIncomeExpenseMonth(LocalDate.now())
     }
 
     suspend fun loadTransactionStatMonth(localDate: LocalDate): List<TransactionStatDay> {
-        val month: String = DatesFormat.getMonth00(localDate)
-        val year: String = DatesFormat.getYear0000(localDate)
+        return withContext(dispatcher) {
+            val month: String = DatesFormat.getMonth00(localDate)
+            val year: String = DatesFormat.getYear0000(localDate)
 
-        return transactionDao.loadTransactionStatByMonth(month, year).map { it.toTransactionStatDay() }
+            transactionDao.loadTransactionStatByMonth(month, year).map { it.toTransactionStatDay() }
+        }
+    }
+
+    suspend fun loadAll(): List<Transaction> = withContext(dispatcher) {
+        transactionDao.loadAllTransactions().map { it.toTransaction() }
+    }
+
+    suspend fun delete(transaction: Transaction) {
+        withContext(dispatcher) {
+            transactionDao.deleteTransaction(TransactionModel.from(transaction))
+        }
+    }
+
+    suspend fun deleteAll() {
+        withContext(dispatcher) {
+            transactionDao.deleteAllTransactions()
+        }
     }
 
     fun loadFilterTransactions(filter: Filter): DataSource.Factory<Int, TransactionListModel> {
@@ -81,16 +119,17 @@ class TransactionRepo @Inject constructor(
         }
     }
 
-    suspend fun loadAll(): List<Transaction> {
-        return transactionDao.loadAllTransactions().map { it.toTransaction() }
+    private fun loadIncomeMonthLive(localDate: LocalDate): LiveData<Int> {
+        val month: String = DatesFormat.getMonth00(localDate)
+        val year: String = DatesFormat.getYear0000(localDate)
+
+        return transactionDao.loadSumTransactionIncomeMonthLive(month, year)
     }
 
-    suspend fun delete(transaction: Transaction) {
-        transactionDao.deleteTransaction(TransactionModel.from(transaction))
-        accountRepo.balanceUpdateById(transaction.accountId)
-    }
+    private fun loadExpenseMonthLive(localDate: LocalDate): LiveData<Int> {
+        val month: String = DatesFormat.getMonth00(localDate)
+        val year: String = DatesFormat.getYear0000(localDate)
 
-    suspend fun deleteAll() {
-        transactionDao.deleteAllTransactions()
+        return transactionDao.loadSumTransactionExpenseMonthLive(month, year)
     }
 }

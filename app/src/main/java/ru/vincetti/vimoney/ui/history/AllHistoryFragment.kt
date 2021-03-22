@@ -52,9 +52,8 @@ class AllHistoryFragment : Fragment() {
     }
 
     private fun viewsInit() {
-        binding.recordsNavigationBackBtn.setOnClickListener {
-            findNavController().navigateUp()
-        }
+        binding.recordsNavigationBackBtn.setOnClickListener { findNavController().navigateUp() }
+
         binding.allHistoryFab.setOnClickListener {
             findNavController().navigate(R.id.action_global_transactionMainFragment)
         }

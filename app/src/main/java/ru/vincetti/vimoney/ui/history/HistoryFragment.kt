@@ -11,9 +11,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
+import ru.vincetti.modules.core.models.Filter
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentHistoryContentBinding
-import ru.vincetti.modules.core.models.Filter
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
 import javax.inject.Inject
 
@@ -60,47 +60,29 @@ class HistoryFragment : Fragment() {
     }
 
     private fun transactionsListInit() {
-        val transactionsRVAdapter = TransactionsAdapter(
-            object : TransactionViewHolder.Actions {
-                override fun onTransactionClicked(id: Int) {
-                    viewModel.clickOnElement(id)
-                }
-            }
-        )
+        val transactionsRVAdapter = TransactionsAdapter { id -> viewModel.clickOnElement(id) }
 
         binding.homeTransactionsRecycleView.apply {
             addItemDecoration(createDivider())
             adapter = transactionsRVAdapter
         }
 
-        viewModel.transList.observe(viewLifecycleOwner) { list ->
-            transactionsRVAdapter.submitList(list)
-        }
-        viewModel.needNavigate2Transaction.observe(viewLifecycleOwner) {
-            go2Transaction(it)
-        }
+        viewModel.transList.observe(viewLifecycleOwner) { list -> transactionsRVAdapter.submitList(list) }
+        viewModel.needNavigate2Transaction.observe(viewLifecycleOwner) { id -> go2Transaction(id) }
     }
 
     private fun createDivider(): DividerItemDecoration {
-        val lineDivider = DividerItemDecoration(
-            requireContext(),
-            DividerItemDecoration.VERTICAL
-        )
+        val lineDivider = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         lineDivider.setDrawable(
-            ContextCompat.getDrawable(
-                requireContext(),
-                R.drawable.light_divider
-            )!!
+            ContextCompat.getDrawable(requireContext(), R.drawable.light_divider)!!
         )
         return lineDivider
     }
 
     private fun go2Transaction(id: Int) {
-        val bundle = Bundle()
-        bundle.putInt(TransactionConst.EXTRA_TRANS_ID, id)
-        findNavController().navigate(
-            R.id.action_global_transactionMainFragment,
-            bundle
-        )
+        val bundle = Bundle().apply {
+            putInt(TransactionConst.EXTRA_TRANS_ID, id)
+        }
+        findNavController().navigate(R.id.action_global_transactionMainFragment, bundle)
     }
 }

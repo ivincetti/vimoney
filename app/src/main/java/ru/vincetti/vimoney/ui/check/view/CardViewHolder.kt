@@ -19,11 +19,7 @@ class CardViewHolder private constructor(
         binding.accBalance.text = account.sum.toString()
         binding.accSymbol.text = account.curSymbol
         binding.accLabel.setBackgroundColor(Color.parseColor(account.color))
-        if (!account.isArchive) {
-            binding.accArchive.visibility = View.INVISIBLE
-        } else {
-            binding.accArchive.visibility = View.VISIBLE
-        }
+        binding.accArchive.visibility = if (!account.isArchive) View.INVISIBLE else View.VISIBLE
 
         binding.accListContainer.setOnClickListener {
             actions.onCardClicked(account.id)
@@ -32,10 +28,7 @@ class CardViewHolder private constructor(
 
     companion object {
 
-        fun create(
-            parent: ViewGroup,
-            actions: Actions
-        ) = CardViewHolder(
+        fun create(parent: ViewGroup, actions: Actions) = CardViewHolder(
             ItemAllCardsListBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
@@ -45,7 +38,7 @@ class CardViewHolder private constructor(
         )
     }
 
-    interface Actions {
+    fun interface Actions {
 
         fun onCardClicked(id: Int)
     }

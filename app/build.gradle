@@ -44,9 +44,6 @@ android {
     }
     compileOptions {
         coreLibraryDesugaringEnabled true
-
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
@@ -64,7 +61,7 @@ kapt {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.1'
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:${versions.desugar_jdk_libs}"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinx_coroutines}"
@@ -78,7 +75,6 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:${versions.androidx_paging}"
     implementation "androidx.navigation:navigation-fragment-ktx:${versions.androidx_navigation}"
     implementation "androidx.navigation:navigation-ui-ktx:${versions.androidx_navigation}"
-    implementation "androidx.lifecycle:lifecycle-extensions:${versions.androidx_lifecycle}"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.androidx_lifecycle}"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.androidx_lifecycle}"
     implementation "com.google.android.material:material:${versions.material}"

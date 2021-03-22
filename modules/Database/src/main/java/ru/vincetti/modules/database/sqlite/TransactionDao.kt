@@ -1,5 +1,6 @@
 package ru.vincetti.modules.database.sqlite
 
+import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.*
 import ru.vincetti.modules.core.models.Transaction
@@ -92,12 +93,33 @@ interface TransactionDao {
     @Query(
         """
         SELECT IFNULL(Sum(sum),0) FROM transactions
+        WHERE type = ${Transaction.TRANSACTION_TYPE_INCOME}
+        AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month
+        AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year
+        AND system=0
+        """
+    )
+    fun loadSumTransactionIncomeMonthLive(month: String, year: String): LiveData<Int>
+
+    @Query(
+        """
+        SELECT IFNULL(Sum(sum),0) FROM transactions
         WHERE type =${Transaction.TRANSACTION_TYPE_SPENT}
         AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month
         AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year
         """
     )
     suspend fun loadSumTransactionExpenseMonth(month: String, year: String): Int
+
+    @Query(
+        """
+        SELECT IFNULL(Sum(sum),0) FROM transactions
+        WHERE type =${Transaction.TRANSACTION_TYPE_SPENT}
+        AND strftime('%m', datetime(date/1000, 'unixepoch', 'localtime')) = :month
+        AND strftime('%Y', datetime(date/1000, 'unixepoch', 'localtime')) = :year
+        """
+    )
+    fun loadSumTransactionExpenseMonthLive(month: String, year: String): LiveData<Int>
 
     @Query(
         """

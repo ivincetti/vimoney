@@ -7,7 +7,7 @@ import ru.vincetti.modules.database.sqlite.models.CurrencyModel
 interface CurrentDao {
 
     @Query("Select * from currency ORDER BY id ASC")
-    suspend fun loadAllCurrency(): List<CurrencyModel>?
+    suspend fun loadAllCurrency(): List<CurrencyModel>
 
     @Query("Select * from currency WHERE code = :code LIMIT 1")
     suspend fun loadCurrencyByCode(code: Int): CurrencyModel?

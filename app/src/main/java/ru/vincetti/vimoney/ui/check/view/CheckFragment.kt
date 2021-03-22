@@ -64,17 +64,21 @@ class CheckFragment : Fragment() {
 
     private fun initViews() {
         binding.checkNavigationDeleteBtn.setOnClickListener { showDeleteDialog() }
+
         binding.checkNavigationFromArchiveBtn.setOnClickListener { viewModel.restore() }
         binding.checkNavigationUpdateBtn.setOnClickListener { viewModel.update() }
+
         binding.settingNavigationBackBtn.setOnClickListener { findNavController().navigateUp() }
         binding.checkNavigationEditBtn.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putInt(EXTRA_CHECK_ID, checkId)
+            val bundle = Bundle().apply {
+                putInt(EXTRA_CHECK_ID, checkId)
+            }
             findNavController().navigate(R.id.action_checkFragment_to_addCheckFragment, bundle)
         }
         binding.checkFab.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putInt(TransactionConst.EXTRA_ACCOUNT_ID, checkId)
+            val bundle = Bundle().apply {
+                putInt(TransactionConst.EXTRA_ACCOUNT_ID, checkId)
+            }
             findNavController().navigate(R.id.action_global_transactionMainFragment, bundle)
         }
     }

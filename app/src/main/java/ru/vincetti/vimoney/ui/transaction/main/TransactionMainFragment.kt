@@ -1,11 +1,9 @@
 package ru.vincetti.vimoney.ui.transaction.main
 
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
@@ -73,11 +71,7 @@ class TransactionMainFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-
-        val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
-        requireActivity().currentFocus?.let {
-            imm?.hideSoftInputFromWindow(it.windowToken, 0)
-        }
+        TransactionFragmentUtils.hideKeyboard(requireActivity())
     }
 
     override fun onDestroyView() {
@@ -87,15 +81,10 @@ class TransactionMainFragment : Fragment() {
 
     private fun initViews() {
         binding.transactionTabs.setupWithViewPager(binding.viewPager)
-        binding.transactionNavigationDeleteBtn.setOnClickListener {
-            showDeleteDialog()
-        }
-        binding.settingNavigationBackBtn.setOnClickListener {
-            showUnsavedDialog()
-        }
-        viewModel.transaction.observe(viewLifecycleOwner) {
-            it?.let { typeLoad(it.type) }
-        }
+        viewModel.transaction.observe(viewLifecycleOwner) { typeLoad(it.type) }
+
+        binding.transactionNavigationDeleteBtn.setOnClickListener { showDeleteDialog() }
+        binding.settingNavigationBackBtn.setOnClickListener { showUnsavedDialog() }
     }
 
     fun setActivityTitle(position: Int) {

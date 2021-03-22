@@ -18,7 +18,6 @@ import ru.vincetti.vimoney.databinding.FragmentChecksListBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.AllCardsAdapter
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
-import ru.vincetti.vimoney.ui.check.view.CardViewHolder
 
 @AndroidEntryPoint
 class ChecksListFragment : Fragment() {
@@ -42,12 +41,7 @@ class ChecksListFragment : Fragment() {
         viewsInit()
         insetsInit()
 
-        viewModel.accList.observe(viewLifecycleOwner) {
-            recyclerAdapter.setList(it)
-        }
-        viewModel.needNavigate2Check.observe(viewLifecycleOwner) {
-            go2Check(it)
-        }
+        viewModel.needNavigate2Check.observe(viewLifecycleOwner) { go2Check(it) }
     }
 
     override fun onDestroyView() {
@@ -66,27 +60,17 @@ class ChecksListFragment : Fragment() {
     }
 
     private fun recyclerInit() {
-        recyclerAdapter = AllCardsAdapter(
-            object : CardViewHolder.Actions {
-                override fun onCardClicked(id: Int) {
-                    viewModel.clickOnElement(id)
-                }
-            }
-        )
-        val lineDivider = DividerItemDecoration(
-            requireContext(),
-            DividerItemDecoration.VERTICAL
-        )
+        recyclerAdapter = AllCardsAdapter { id -> viewModel.clickOnElement(id) }
+        val lineDivider = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         lineDivider.setDrawable(
-            ContextCompat.getDrawable(
-                requireContext(),
-                R.drawable.light_divider
-            )!!
+            ContextCompat.getDrawable(requireContext(), R.drawable.light_divider)!!
         )
+
         binding.checkListRecycleView.apply {
             addItemDecoration(lineDivider)
             adapter = recyclerAdapter
         }
+        viewModel.accList.observe(viewLifecycleOwner) { recyclerAdapter.setList(it) }
     }
 
     private fun insetsInit() {
@@ -106,8 +90,9 @@ class ChecksListFragment : Fragment() {
     }
 
     private fun go2Check(id: Int) {
-        val bundle = Bundle()
-        bundle.putInt(EXTRA_CHECK_ID, id)
+        val bundle = Bundle().apply {
+            putInt(EXTRA_CHECK_ID, id)
+        }
         findNavController().navigate(R.id.action_checksListFragment_to_checkFragment, bundle)
     }
 }

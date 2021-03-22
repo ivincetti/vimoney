@@ -9,10 +9,7 @@ class CategorySymbolListAdapter(
 ) : RecyclerView.Adapter<CategoryListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryListViewHolder {
-        return CategoryListViewHolder.create(
-            parent,
-            action
-        )
+        return CategoryListViewHolder.create(parent, action)
     }
 
     override fun onBindViewHolder(holder: CategoryListViewHolder, position: Int) {

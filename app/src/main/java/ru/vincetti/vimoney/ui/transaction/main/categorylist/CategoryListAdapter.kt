@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.vincetti.modules.core.models.Category
 
 class CategoryListAdapter(
-    private val data: List<Category>,
+    private var data: List<Category>,
     private val action: (Int) -> Unit
 ) : RecyclerView.Adapter<CategoryListViewHolder>() {
 
@@ -14,7 +14,13 @@ class CategoryListAdapter(
     }
 
     override fun onBindViewHolder(holder: CategoryListViewHolder, position: Int) {
-        holder.bind(data[position])
+        val category = data[position]
+        holder.bind(category)
+    }
+
+    fun setItems(newList: List<Category>) {
+        data = newList
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = data.size

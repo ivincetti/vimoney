@@ -35,7 +35,7 @@ class CategoryViewHolder private constructor(
         )
     }
 
-    interface Actions {
+    fun interface Actions {
 
         fun onCategoryClicked(id: Int)
     }

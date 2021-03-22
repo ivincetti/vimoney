@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.marginBottom
 import androidx.core.view.updatePadding
@@ -11,14 +12,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ru.vincetti.modules.core.models.Filter
+import ru.vincetti.modules.core.utils.DatesFormat
 import ru.vincetti.vimoney.BuildConfig
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentHomeBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
-import ru.vincetti.modules.core.models.Filter
-import ru.vincetti.modules.core.utils.DatesFormat
 import java.time.LocalDate
 import java.util.*
 
@@ -33,7 +34,7 @@ class HomeFragment : Fragment() {
     private val binding
         get() = requireNotNull(_binding)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -41,16 +42,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = HomeCardsAdapter(
-            object : HomeCardViewHolder.Actions {
-                override fun onCardClicked(id: Int) {
-                    viewModel.clickOnCheck(id)
-                }
-            }
-        )
-
-        binding.fragmentHomeContent.homeCardsRecycleView.adapter = adapter
-
+        adapterInit()
         viewInit()
         observersInit()
         insetsInit()
@@ -71,6 +63,10 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+        binding.fragmentHomeContent.homeMonth.text = DatesFormat
+            .getMonthName(LocalDate.now())
+            .capitalize(Locale.getDefault())
+
         binding.homeFab.setOnClickListener {
             findNavController().navigate(R.id.action_global_transactionMainFragment)
         }
@@ -79,9 +75,6 @@ class HomeFragment : Fragment() {
         }
         binding.homeMenuUpdate.setOnClickListener { viewModel.updateAllAccounts() }
 
-        binding.fragmentHomeContent.homeMonth.text = DatesFormat
-            .getMonthName(LocalDate.now())
-            .capitalize(Locale.getDefault())
         binding.fragmentHomeContent.homeAccountsLink.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_checksListFragment)
         }
@@ -94,24 +87,18 @@ class HomeFragment : Fragment() {
     }
 
     private fun observersInit() {
-        viewModel.userBalance.observe(viewLifecycleOwner) {
-            binding.homeUserBalance.text = it.toString()
-        }
-        viewModel.accounts.observe(viewLifecycleOwner) {
-            adapter.setList(it)
-        }
+        viewModel.userBalance.observe(viewLifecycleOwner) { binding.homeUserBalance.text = it.toString() }
+        viewModel.accounts.observe(viewLifecycleOwner) { adapter.setList(it) }
         viewModel.homeButtonEnabled.observe(viewLifecycleOwner) {
             binding.homeMenuUpdate.isEnabled = it
         }
         viewModel.incomeSum.observe(viewLifecycleOwner) {
-            it?.let { binding.fragmentHomeContent.homeStatContainer.homeStatIncomeTxt.text = it.toString() }
+            binding.fragmentHomeContent.homeStatContainer.homeStatIncomeTxt.text = it.toString()
         }
         viewModel.expenseSum.observe(viewLifecycleOwner) {
-            it?.let { binding.fragmentHomeContent.homeStatContainer.homeStatExpenseTxt.text = it.toString() }
+            binding.fragmentHomeContent.homeStatContainer.homeStatExpenseTxt.text = it.toString()
         }
-        viewModel.needNavigate2Check.observe(viewLifecycleOwner) {
-            go2Check(it)
-        }
+        viewModel.needNavigate2Check.observe(viewLifecycleOwner) { go2Check(it) }
     }
 
     private fun insetsInit() {
@@ -130,22 +117,25 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun adapterInit() {
+        adapter = HomeCardsAdapter { id -> viewModel.clickOnCheck(id) }
+
+        binding.fragmentHomeContent.homeCardsRecycleView.adapter = adapter
+    }
+
     private fun showTransactionsHistory() {
-        val historyFragment = HistoryFragment()
+        val historyFragment = HistoryFragment().apply {
+            arguments = Filter().apply {
+                count = HistoryFragment.DEFAULT_CHECK_COUNT
+            }.createBundle()
+        }
 
-        val args = Filter().apply {
-            count = HistoryFragment.DEFAULT_CHECK_COUNT
-        }.createBundle()
-
-        historyFragment.arguments = args
         childFragmentManager.beginTransaction()
             .replace(R.id.main_history_container, historyFragment)
             .commit()
     }
 
     private fun go2Check(id: Int) {
-        val bundle = Bundle()
-        bundle.putInt(EXTRA_CHECK_ID, id)
-        findNavController().navigate(R.id.action_homeFragment_to_checkFragment, bundle)
+        findNavController().navigate(R.id.action_homeFragment_to_checkFragment, bundleOf(EXTRA_CHECK_ID to id))
     }
 }
