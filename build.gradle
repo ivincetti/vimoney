@@ -3,12 +3,11 @@
 buildscript {
     apply from: 'dependencies.gradle'
     ext {
-        versions.kotlin = '1.4.30'
+        versions.kotlin = '1.6.21'
     }
 
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
 

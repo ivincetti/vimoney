@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.marginBottom
 import androidx.core.view.updatePadding
@@ -13,8 +14,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
-import ru.vincetti.vimoney.R
 import ru.vincetti.modules.database.repository.CategoryRepo
+import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentCategoriesListBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.settings.category.AllCategoriesAdapter
@@ -115,8 +116,7 @@ class CategoriesFragment : Fragment() {
     }
 
     private fun go2Category(id: Int) {
-        val bundle = Bundle()
-        bundle.putInt(EXTRA_CATEGORY_ID, id)
+        val bundle = bundleOf(EXTRA_CATEGORY_ID to id)
         findNavController().navigate(R.id.action_categoriesFragment_to_addCategoryFragment, bundle)
     }
 }

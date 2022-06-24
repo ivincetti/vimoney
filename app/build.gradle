@@ -6,6 +6,8 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
+    compileSdkVersion versions.build_compile_sdk
+
     signingConfigs {
         release {
             def credsFilePath = file("../credentials.json").toString()
@@ -17,16 +19,19 @@ android {
             keyPassword = json.android.keyPassword
         }
     }
-    compileSdkVersion 29
+
     defaultConfig {
         applicationId "ru.vincetti.vimoney"
-        minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 36
-        versionName "5.1.1"
+        minSdkVersion versions.build_min_sdk
+        targetSdkVersion versions.build_target_sdk
+
+        versionCode versions.version_code
+        versionName "${versions.version_name}"
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.release
     }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -42,11 +47,9 @@ android {
             }
         }
     }
+
     compileOptions {
         coreLibraryDesugaringEnabled true
-
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
@@ -64,9 +67,9 @@ kapt {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.1'
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:${versions.desugar_jdk_libs}"
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlinx_coroutines}"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.kotlinx_coroutines}"
 
@@ -78,9 +81,9 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:${versions.androidx_paging}"
     implementation "androidx.navigation:navigation-fragment-ktx:${versions.androidx_navigation}"
     implementation "androidx.navigation:navigation-ui-ktx:${versions.androidx_navigation}"
-    implementation "androidx.lifecycle:lifecycle-extensions:${versions.androidx_lifecycle}"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.androidx_lifecycle}"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.androidx_lifecycle}"
+    implementation "androidx.work:work-runtime-ktx:${versions.androidx_work_manager}"
     implementation "com.google.android.material:material:${versions.material}"
 
     implementation "com.squareup.picasso:picasso:${versions.picasso}"
@@ -106,7 +109,7 @@ dependencies {
     //Test
     implementation "androidx.test:core:${versions.androidx_test_core}"
     testImplementation "junit:junit:${versions.junit}"
-    testImplementation "io.mockk:mockk:${versions.mockk}"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:${versions.mockito_kotlin}"
     androidTestImplementation "androidx.test.ext:junit:${versions.androidx_test_junit}"
     androidTestImplementation "com.kaspersky.android-components:kaspresso:${versions.kaspresso}"
 }

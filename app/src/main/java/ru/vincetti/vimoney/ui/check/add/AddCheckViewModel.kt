@@ -10,7 +10,7 @@ import ru.vincetti.modules.core.models.Currency
 import ru.vincetti.modules.core.utils.SingleLiveEvent
 import ru.vincetti.modules.database.repository.AccountRepo
 import ru.vincetti.modules.database.repository.CurrencyRepo
-import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
+import ru.vincetti.vimoney.ui.check.AccountConst
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,7 +20,7 @@ class AddCheckViewModel @Inject constructor(
     private val currencyRepo: CurrencyRepo
 ) : ViewModel() {
 
-    private var checkID = DEFAULT_CHECK_ID
+    private var checkID = AccountConst.DEFAULT_CHECK_ID
 
     val isDefault = MutableLiveData<Boolean>()
     private var isDefaultBool = true

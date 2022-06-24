@@ -21,7 +21,7 @@ import ru.vincetti.modules.core.models.Currency
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentAddCheckBinding
 import ru.vincetti.vimoney.extensions.updateMargin
-import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
+import ru.vincetti.vimoney.ui.check.AccountConst
 
 @AndroidEntryPoint
 class AddCheckFragment : Fragment() {
@@ -32,7 +32,11 @@ class AddCheckFragment : Fragment() {
     private val binding
         get() = requireNotNull(_binding)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentAddCheckBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -41,7 +45,7 @@ class AddCheckFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let { bundle ->
-            val extraCheck = bundle.getInt(EXTRA_CHECK_ID)
+            val extraCheck = bundle.getCheck()
             if (extraCheck > 0) viewModel.loadAccount(extraCheck)
         }
 
@@ -219,5 +223,9 @@ class AddCheckFragment : Fragment() {
             view.updateMargin(top = insets.systemWindowInsetTop)
             insets
         }
+    }
+
+    private fun Bundle.getCheck(): Int {
+        return this.getInt(AccountConst.EXTRA_ACCOUNT_ID)
     }
 }

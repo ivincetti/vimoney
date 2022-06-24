@@ -2,8 +2,8 @@ package ru.vincetti.vimoney.ui.check.list
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ru.vincetti.modules.database.repository.AccountRepo
 import ru.vincetti.modules.core.utils.SingleLiveEvent
+import ru.vincetti.modules.database.repository.AccountRepo
 import javax.inject.Inject
 
 @HiltViewModel

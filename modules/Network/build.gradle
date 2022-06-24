@@ -3,33 +3,24 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion versions.build_compile_sdk
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion versions.build_min_sdk
+        targetSdkVersion versions.build_target_sdk
 
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}"
     implementation "androidx.core:core-ktx:${versions.androidx_core_ktx}"
-
-    implementation "androidx.lifecycle:lifecycle-extensions:${versions.androidx_lifecycle}"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.androidx_lifecycle}"
 
     implementation "com.squareup.retrofit2:retrofit:${versions.retrofit2}"
     implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit2_gson}"

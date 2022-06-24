@@ -12,7 +12,6 @@ import ru.vincetti.modules.core.models.Account
 import ru.vincetti.modules.core.models.Category
 import ru.vincetti.modules.core.models.Transaction
 import java.io.*
-import java.util.*
 import javax.inject.Inject
 
 class JsonFile @Inject constructor(

@@ -7,9 +7,9 @@ import androidx.lifecycle.switchMap
 import androidx.paging.toLiveData
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import ru.vincetti.modules.database.repository.TransactionRepo
 import ru.vincetti.modules.core.models.Filter
 import ru.vincetti.modules.core.utils.SingleLiveEvent
+import ru.vincetti.modules.database.repository.TransactionRepo
 
 class HistoryViewModel @AssistedInject constructor(
     private val repo: TransactionRepo,
@@ -44,7 +44,7 @@ class HistoryViewModel @AssistedInject constructor(
             initFilter: Filter
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(initFilter) as T
             }
         }
