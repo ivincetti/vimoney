@@ -1,18 +1,21 @@
 package ru.vincetti.vimoney.ui.check.view
 
 import androidx.lifecycle.*
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.vincetti.modules.core.models.AccountList
 import ru.vincetti.modules.core.utils.SingleLiveEvent
 import ru.vincetti.modules.database.repository.AccountRepo
 import ru.vincetti.vimoney.ui.check.AccountConst
+import javax.inject.Inject
 
-class CheckViewModel @AssistedInject constructor(
+@HiltViewModel
+class CheckViewModel @Inject constructor(
+    state: SavedStateHandle,
     private val accountRepo: AccountRepo,
-    @Assisted private val accountId: Int
 ) : ViewModel() {
+
+    private val accountId = requireNotNull(state.get<Int>("checkID"))
 
     val account: LiveData<AccountList> = accountRepo.loadForListById(accountId)
 
@@ -65,23 +68,5 @@ class CheckViewModel @AssistedInject constructor(
 
     fun onAddClicked() {
         _navigate2Add.value = accountId
-    }
-
-    @dagger.assisted.AssistedFactory
-    interface AssistedFactory {
-        fun create(accountId: Int): CheckViewModel
-    }
-
-    companion object {
-
-        fun provideFactory(
-            assistedFactory: AssistedFactory,
-            accountId: Int
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(accountId) as T
-            }
-        }
     }
 }

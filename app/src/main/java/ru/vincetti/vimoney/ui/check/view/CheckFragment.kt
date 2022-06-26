@@ -20,17 +20,11 @@ import ru.vincetti.vimoney.databinding.FragmentCheckBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.history.HistoryFragment
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CheckFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModelFactory: CheckViewModel.AssistedFactory
-
-    private val viewModel: CheckViewModel by viewModels {
-        CheckViewModel.provideFactory(viewModelFactory, arguments.getCheck())
-    }
+    private val viewModel: CheckViewModel by viewModels()
 
     private var _binding: FragmentCheckBinding? = null
     private val binding
@@ -157,10 +151,5 @@ class CheckFragment : Fragment() {
     private fun navigate2Add(checkID: Int) {
         val bundle = bundleOf(TransactionConst.EXTRA_ACCOUNT_ID to checkID)
         findNavController().navigate(R.id.action_global_transactionMainFragment, bundle)
-    }
-
-    private fun Bundle?.getCheck(): Int {
-        val args = requireNotNull(this)
-        return args.getInt("checkID")
     }
 }
