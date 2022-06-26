@@ -45,11 +45,6 @@ class AddCategoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.let { bundle ->
-            val extraCategory = bundle.getInt(EXTRA_CATEGORY_ID)
-            if (extraCategory > 0) viewModel.loadCategory(extraCategory)
-        }
-
         viewsInit()
         observersInit()
         insetsInit()
