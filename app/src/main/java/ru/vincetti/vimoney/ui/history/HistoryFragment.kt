@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -77,8 +78,7 @@ class HistoryFragment : Fragment(R.layout.fragment_history_content) {
     }
 
     private fun go2Transaction(id: Int) {
-        val bundle = Bundle()
-        bundle.putInt(TransactionConst.EXTRA_TRANS_ID, id)
+        val bundle = bundleOf(TransactionConst.EXTRA_TRANS_ID to id)
         findNavController().navigate(
             R.id.action_global_transactionMainFragment,
             bundle
