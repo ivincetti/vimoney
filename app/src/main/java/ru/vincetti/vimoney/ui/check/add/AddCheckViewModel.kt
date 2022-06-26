@@ -10,17 +10,20 @@ import ru.vincetti.modules.core.models.Currency
 import ru.vincetti.modules.core.utils.SingleLiveEvent
 import ru.vincetti.modules.database.repository.AccountRepo
 import ru.vincetti.modules.database.repository.CurrencyRepo
-import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
+import ru.vincetti.vimoney.ui.check.AccountConst
 import javax.inject.Inject
 
 @HiltViewModel
 @Suppress("TooManyFunctions")
 class AddCheckViewModel @Inject constructor(
+    state: SavedStateHandle,
     private val accountRepo: AccountRepo,
-    private val currencyRepo: CurrencyRepo
+    private val currencyRepo: CurrencyRepo,
 ) : ViewModel() {
 
-    private var checkID = DEFAULT_CHECK_ID
+    private val checkIDFromArgs = state.get<Int>(AccountConst.EXTRA_ACCOUNT_ID)
+
+    private var checkID = checkIDFromArgs ?: AccountConst.DEFAULT_CHECK_ID
 
     val isDefault = MutableLiveData<Boolean>()
     private var isDefaultBool = true
@@ -60,21 +63,8 @@ class AddCheckViewModel @Inject constructor(
         _needAllBalance.value = true
         _check.value = Account()
         _color.value = Color.parseColor(_check.value!!.color)
-    }
 
-    fun loadAccount(id: Int) {
-        viewModelScope.launch {
-            accountRepo.loadById(id)?.let {
-                checkID = id
-                _color.value = Color.parseColor(it.color)
-                _check.value = it
-                _currency.value = currencyRepo.loadByCode(it.currency)
-                _needAllBalance.value = it.needAllBalance
-                _needOnMain.value = it.needOnMain
-                isDefault.value = false
-                isDefaultBool = false
-            }
-        }
+        if (checkID != AccountConst.DEFAULT_CHECK_ID) loadAccount(checkID)
     }
 
     fun save(name: String, type: String) {
@@ -153,5 +143,20 @@ class AddCheckViewModel @Inject constructor(
         _color.value = selectedColor
         val hexColor = java.lang.String.format("#%06x", (selectedColor and 0xffffff))
         _check.value?.color = hexColor
+    }
+
+    private fun loadAccount(id: Int) {
+        viewModelScope.launch {
+            accountRepo.loadById(id)?.let {
+                checkID = id
+                _color.value = Color.parseColor(it.color)
+                _check.value = it
+                _currency.value = currencyRepo.loadByCode(it.currency)
+                _needAllBalance.value = it.needAllBalance
+                _needOnMain.value = it.needOnMain
+                isDefault.value = false
+                isDefaultBool = false
+            }
+        }
     }
 }

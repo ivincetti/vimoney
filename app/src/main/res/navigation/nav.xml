@@ -111,7 +111,7 @@
         android:label="AddCheckFragment"
         tools:layout="@layout/fragment_add_check">
         <argument
-            android:name="Extra_check_id"
+            android:name="EXTRA_ACCOUNT_ID"
             app:argType="integer" />
     </fragment>
     <fragment

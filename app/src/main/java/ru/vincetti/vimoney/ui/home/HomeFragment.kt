@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.marginBottom
 import androidx.core.view.updatePadding
@@ -11,14 +12,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ru.vincetti.modules.core.models.Filter
+import ru.vincetti.modules.core.utils.DatesFormat
 import ru.vincetti.vimoney.BuildConfig
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentHomeBinding
 import ru.vincetti.vimoney.extensions.updateMargin
-import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
-import ru.vincetti.modules.core.models.Filter
-import ru.vincetti.modules.core.utils.DatesFormat
 import java.time.LocalDate
 import java.util.*
 
@@ -144,8 +144,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun go2Check(id: Int) {
-        val bundle = Bundle()
-        bundle.putInt(EXTRA_CHECK_ID, id)
+        val bundle = bundleOf("checkID" to id)
         findNavController().navigate(R.id.action_homeFragment_to_checkFragment, bundle)
     }
 }

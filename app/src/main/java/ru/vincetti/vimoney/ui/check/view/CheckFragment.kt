@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.marginBottom
 import androidx.core.view.updatePadding
@@ -13,44 +14,33 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ru.vincetti.modules.core.models.Filter
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentCheckBinding
 import ru.vincetti.vimoney.extensions.updateMargin
-import ru.vincetti.vimoney.ui.check.DEFAULT_CHECK_ID
-import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.history.HistoryFragment
-import ru.vincetti.modules.core.models.Filter
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CheckFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModelFactory: CheckViewModel.AssistedFactory
-
-    private var checkId: Int = DEFAULT_CHECK_ID
-
-    private val viewModel: CheckViewModel by viewModels {
-        CheckViewModel.provideFactory(viewModelFactory, checkId)
-    }
+    private val viewModel: CheckViewModel by viewModels()
 
     private var _binding: FragmentCheckBinding? = null
     private val binding
         get() = requireNotNull(_binding)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentCheckBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        arguments?.let { bundle ->
-            val extraCheck = bundle.getInt(EXTRA_CHECK_ID)
-            if (extraCheck > 0) checkId = extraCheck
-        }
 
         initViews()
         observersInit()
@@ -67,16 +57,8 @@ class CheckFragment : Fragment() {
         binding.checkNavigationFromArchiveBtn.setOnClickListener { viewModel.restore() }
         binding.checkNavigationUpdateBtn.setOnClickListener { viewModel.update() }
         binding.settingNavigationBackBtn.setOnClickListener { findNavController().navigateUp() }
-        binding.checkNavigationEditBtn.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putInt(EXTRA_CHECK_ID, checkId)
-            findNavController().navigate(R.id.action_checkFragment_to_addCheckFragment, bundle)
-        }
-        binding.checkFab.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putInt(TransactionConst.EXTRA_ACCOUNT_ID, checkId)
-            findNavController().navigate(R.id.action_global_transactionMainFragment, bundle)
-        }
+        binding.checkNavigationEditBtn.setOnClickListener { viewModel.onEditClicked() }
+        binding.checkFab.setOnClickListener { viewModel.onAddClicked() }
     }
 
     private fun observersInit() {
@@ -108,6 +90,12 @@ class CheckFragment : Fragment() {
         }
         viewModel.updateButtonEnable.observe(viewLifecycleOwner) {
             binding.checkNavigationUpdateBtn.isEnabled = it
+        }
+        viewModel.navigate2Edit.observe(viewLifecycleOwner) {
+            navigate2Edit(it)
+        }
+        viewModel.navigate2Add.observe(viewLifecycleOwner) {
+            navigate2Add(it)
         }
     }
 
@@ -153,5 +141,15 @@ class CheckFragment : Fragment() {
             view.updatePadding(bottom = insets.systemWindowInsetBottom)
             insets
         }
+    }
+
+    private fun navigate2Edit(checkID: Int) {
+        val bundle = bundleOf(TransactionConst.EXTRA_ACCOUNT_ID to checkID)
+        findNavController().navigate(R.id.action_checkFragment_to_addCheckFragment, bundle)
+    }
+
+    private fun navigate2Add(checkID: Int) {
+        val bundle = bundleOf(TransactionConst.EXTRA_ACCOUNT_ID to checkID)
+        findNavController().navigate(R.id.action_global_transactionMainFragment, bundle)
     }
 }

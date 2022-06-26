@@ -1,10 +1,7 @@
 package ru.vincetti.vimoney.ui.settings.category.add
 
 import android.text.TextUtils
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.vincetti.modules.core.utils.SingleLiveEvent
@@ -14,15 +11,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddCategoryViewModel @Inject constructor(
+    state: SavedStateHandle,
     private val categoryRepo: CategoryRepo
 ) : ViewModel() {
 
-    companion object {
-        const val EXTRA_CATEGORY_ID = "Extra_category_id"
-        private const val DEFAULT_CATEGORY_ID = -1
-    }
+    private val categoryIDFromArgs = state.get<Int>(EXTRA_CATEGORY_ID)
 
-    private var categoryID = DEFAULT_CATEGORY_ID
+    private var categoryID = categoryIDFromArgs ?: DEFAULT_CATEGORY_ID
 
     private val categories = Category.values().map {
         it.symbol
@@ -49,22 +44,12 @@ class AddCategoryViewModel @Inject constructor(
         isDefault.value = isDefaultBool
         _need2AllData.value = false
         _categorySymbol.value = "\uf544"
+
+        if (categoryID != DEFAULT_CATEGORY_ID) loadCategory(categoryID)
     }
 
     fun setCategorySymbol(position: Int) {
         _categorySymbol.value = categories[position]
-    }
-
-    fun loadCategory(id: Int) {
-        viewModelScope.launch {
-            categoryRepo.loadById(id)?.let {
-                categoryID = id
-                _categoryName.value = it.name
-                _categorySymbol.value = it.symbol
-                isDefault.value = false
-                isDefaultBool = false
-            }
-        }
     }
 
     fun save(name: String, symbol: String) {
@@ -90,5 +75,22 @@ class AddCategoryViewModel @Inject constructor(
 
     fun noDataDialogClosed() {
         _need2AllData.value = false
+    }
+
+    private fun loadCategory(id: Int) {
+        viewModelScope.launch {
+            categoryRepo.loadById(id)?.let {
+                categoryID = id
+                _categoryName.value = it.name
+                _categorySymbol.value = it.symbol
+                isDefault.value = false
+                isDefaultBool = false
+            }
+        }
+    }
+
+    companion object {
+        const val EXTRA_CATEGORY_ID = "Extra_category_id"
+        private const val DEFAULT_CATEGORY_ID = -1
     }
 }

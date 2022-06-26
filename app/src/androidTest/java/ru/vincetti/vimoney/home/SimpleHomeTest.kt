@@ -49,10 +49,7 @@ class SimpleHomeTest : TestCase() {
             }
             step("Click on save button") {
                 IncomeTransactionScreen {
-                    saveButton {
-                        isVisible()
-                        click()
-                    }
+                    saveButton.click()
                 }
             }
         }

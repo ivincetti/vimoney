@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.marginBottom
 import androidx.core.view.updatePadding
@@ -17,7 +18,6 @@ import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentChecksListBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.check.AllCardsAdapter
-import ru.vincetti.vimoney.ui.check.EXTRA_CHECK_ID
 import ru.vincetti.vimoney.ui.check.view.CardViewHolder
 
 @AndroidEntryPoint
@@ -31,7 +31,11 @@ class ChecksListFragment : Fragment() {
 
     private lateinit var recyclerAdapter: AllCardsAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentChecksListBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -106,8 +110,7 @@ class ChecksListFragment : Fragment() {
     }
 
     private fun go2Check(id: Int) {
-        val bundle = Bundle()
-        bundle.putInt(EXTRA_CHECK_ID, id)
+        val bundle = bundleOf("checkID" to id)
         findNavController().navigate(R.id.action_checksListFragment_to_checkFragment, bundle)
     }
 }

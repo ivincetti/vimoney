@@ -1,4 +1,9 @@
 package ru.vincetti.vimoney.ui.check
 
-const val EXTRA_CHECK_ID = "Extra_check_id"
-const val DEFAULT_CHECK_ID = -1
+class AccountConst private constructor() {
+
+    companion object {
+        const val EXTRA_ACCOUNT_ID = "EXTRA_ACCOUNT_ID"
+        const val DEFAULT_CHECK_ID = -1
+    }
+}

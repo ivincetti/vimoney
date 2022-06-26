@@ -13,8 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import ru.vincetti.vimoney.R
 import ru.vincetti.modules.database.repository.CategoryRepo
+import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentAddCategoryBinding
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.settings.category.add.AddCategoryViewModel.Companion.EXTRA_CATEGORY_ID
@@ -33,18 +33,17 @@ class AddCategoryFragment : Fragment() {
     private val binding
         get() = requireNotNull(_binding)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentAddCategoryBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        arguments?.let { bundle ->
-            val extraCategory = bundle.getInt(EXTRA_CATEGORY_ID)
-            if (extraCategory > 0) viewModel.loadCategory(extraCategory)
-        }
 
         viewsInit()
         observersInit()
