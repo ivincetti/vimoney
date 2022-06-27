@@ -57,6 +57,13 @@
         <item name="android:background">@null</item>
     </style>
 
+    <style name="textButton">
+        <item name="android:textSize">@dimen/text_sm_numbers</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@null</item>
+    </style>
+
     <style name="textSub">
         <item name="android:textColor">@color/colorPrimaryTextDark</item>
         <item name="android:background">@null</item>

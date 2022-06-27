@@ -15,9 +15,11 @@ import ru.vincetti.modules.core.ui.viewBinding
 import ru.vincetti.modules.database.repository.CategoryRepo
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentAddCategoryBinding
+import ru.vincetti.vimoney.extensions.bottom
 import ru.vincetti.vimoney.extensions.top
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.settings.category.symbol.CategorySymbolListDialog
+import ru.vincetti.vimoney.ui.transaction.main.TransactionFragmentUtils
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -38,14 +40,30 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
         insetsInit()
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            showUnsavedDialog()
+        }
+
+        binding.categoryAddContent.addCategoryName.apply {
+            isFocusableInTouchMode = true
+            requestFocus()
+            TransactionFragmentUtils.showKeyboard(requireActivity(), this)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) setCategorySymbol(resultCode)
+    }
+
     private fun viewsInit() {
-        binding.categoryAddNavigationAddBtn.setOnClickListener { save() }
         binding.categoryAddNavigationBackBtn.setOnClickListener { showUnsavedDialog() }
         binding.categoryAddContent.addCategorySaveBtn.setOnClickListener { save() }
         binding.categoryAddContent.addCategorySymbol.setOnClickListener {
-            val dialogFrag = CategorySymbolListDialog()
-            dialogFrag.setTargetFragment(this, 1)
-            dialogFrag.show(parentFragmentManager, "Icons")
+            TransactionFragmentUtils.hideKeyboard(requireActivity())
+            showIconsDialog()
         }
     }
 
@@ -67,16 +85,10 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            showUnsavedDialog()
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1) setCategorySymbol(resultCode)
+    private fun showIconsDialog() {
+        val dialogFrag = CategorySymbolListDialog()
+        dialogFrag.setTargetFragment(this, 1)
+        dialogFrag.show(parentFragmentManager, "Icons")
     }
 
     private fun showUnsavedDialog() {
@@ -114,6 +126,10 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
     private fun insetsInit() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.addCategoryToolbar) { view, insets ->
             view.updateMargin(top = insets.top())
+            insets
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(binding.categoryAddContent.addCategorySaveRoot) { view, insets ->
+            view.updateMargin(bottom = insets.bottom())
             insets
         }
     }

@@ -16,10 +16,8 @@ class CategoryRepo @Inject constructor(
     }
 
     fun loadAllObservable(): LiveData<List<Category>> {
-        return Transformations.map(categoryDao.loadCategoriesObservable()) {
-            it.map {
-                it.toCategory()
-            }
+        return Transformations.map(categoryDao.loadCategoriesObservable()) { categories ->
+            categories.map { it.toCategory() }
         }
     }
 

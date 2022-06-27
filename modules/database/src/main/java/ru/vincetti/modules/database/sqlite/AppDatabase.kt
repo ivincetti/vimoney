@@ -18,7 +18,7 @@ import ru.vincetti.modules.database.sqlite.models.*
         CurrencyModel::class,
         CategoryModel::class
     ],
-    version = 13,
+    version = 14,
     exportSchema = false
 )
 @TypeConverters(DateConverter::class)
@@ -51,7 +51,8 @@ abstract class AppDatabase : RoomDatabase() {
                 MIGRATION_9_10,
                 MIGRATION_10_11,
                 MIGRATION_11_12,
-                MIGRATION_12_13
+                MIGRATION_12_13,
+                MIGRATION_13_14,
             ).build()
         }
 
@@ -166,6 +167,15 @@ abstract class AppDatabase : RoomDatabase() {
         private val MIGRATION_12_13 = object : Migration(12, 13) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE accounts ADD COLUMN need_on_main_screen INTEGER DEFAULT 1 NOT NULL")
+            }
+        }
+
+        /** In-out categories. */
+        private val MIGRATION_13_14 = object : Migration(13, 14) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE category ADD COLUMN expense INTEGER DEFAULT 1 NOT NULL")
+                db.execSQL("ALTER TABLE category ADD COLUMN income INTEGER DEFAULT 0 NOT NULL")
+                db.execSQL("ALTER TABLE category ADD COLUMN archive INTEGER DEFAULT 0 NOT NULL")
             }
         }
     }

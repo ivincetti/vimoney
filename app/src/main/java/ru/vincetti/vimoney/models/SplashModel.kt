@@ -90,7 +90,14 @@ class SplashModel @Inject constructor(
     }
 
     private suspend fun categoryUpdate(catId: Int, name: String, symbol: String) {
-        val newCat = Category(catId, name, symbol)
+        val newCat = Category(
+            catId,
+            name,
+            symbol,
+            isForExpense = true,
+            isForIncome = true,
+            isArchive = false,
+        )
         categoryRepo.add(newCat)
     }
 

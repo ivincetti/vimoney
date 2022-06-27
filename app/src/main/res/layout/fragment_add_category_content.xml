@@ -1,56 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/add_category_save_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/st_padding"
-    android:layout_marginBottom="@dimen/st_padding"
-    android:layout_marginStart="@dimen/big_padding"
-    android:layout_marginEnd="@dimen/big_padding"
-    tools:background="@color/colorPrimaryBackground"
-    >
-
-    <TextView
-        android:id="@+id/add_category_symbol"
-        android:layout_width="@dimen/category_icon_background_size"
-        android:layout_height="@dimen/category_icon_background_size"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintTop_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="@dimen/st_padding"
-        android:gravity="center"
-        android:background="@drawable/bg_category"
-        style="@style/categoryTextStyle"
-        tools:text="@string/sample_category_android"
-        />
-
-    <EditText
-        android:id="@+id/add_category_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@+id/add_category_symbol"
-        app:layout_constraintBottom_toBottomOf="@+id/add_category_symbol"
-        app:layout_constraintStart_toEndOf="@+id/add_category_symbol"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:textColorHint="@color/colorPrimaryTextDark"
-        android:hint="@string/add_check_name_hint"
-        android:inputType="text"
-        style="@style/textHeader1"
-        />
+    tools:background="@color/colorPrimaryBackground">
 
     <Button
         android:id="@+id/add_category_save_btn"
-        android:layout_width="wrap_content"
+        style="@style/textButton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/add_category_symbol"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_gravity="center"
         android:layout_margin="@dimen/big_padding"
         android:text="@string/add_btn_save"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_category_symbol" />
+
+    <EditText
+        android:id="@+id/add_category_name"
+        style="@style/textHeader1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+        android:hint="@string/add_check_name_hint"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:paddingHorizontal="@dimen/st_padding"
+        android:textColorHint="@color/colorPrimaryTextDark"
+        app:layout_constraintBottom_toBottomOf="@+id/add_category_symbol"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/add_category_symbol"
+        app:layout_constraintTop_toTopOf="@+id/add_category_symbol" />
+
+    <TextView
+        android:id="@+id/add_category_symbol"
+        style="@style/categoryTextStyle"
+        android:layout_width="@dimen/category_icon_background_size"
+        android:layout_height="@dimen/category_icon_background_size"
+        android:layout_margin="@dimen/big_padding"
+        android:background="@drawable/bg_category"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/sample_category_android" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

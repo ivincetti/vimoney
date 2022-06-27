@@ -57,7 +57,13 @@ class AddCategoryViewModel @Inject constructor(
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(symbol)) {
                 _need2AllData.value = true
             } else {
-                val tmpCategory = ru.vincetti.modules.core.models.Category(name = name, symbol = symbol)
+                val tmpCategory = ru.vincetti.modules.core.models.Category(
+                    name = name,
+                    symbol = symbol,
+                    isForExpense = true,
+                    isForIncome = false,
+                    isArchive = false,
+                )
                 if (!isDefaultBool) {
                     tmpCategory.id = categoryID
                     categoryRepo.update(tmpCategory)

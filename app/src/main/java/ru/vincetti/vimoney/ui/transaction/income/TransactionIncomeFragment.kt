@@ -44,6 +44,7 @@ class TransactionIncomeFragment : Fragment(R.layout.fragment_add_spent) {
     override fun onPause() {
         viewModel.setSum(binding.addSum.text.toString())
         viewModel.setDescription(binding.fragmentAddAllContent.addDesc.text.toString())
+        TransactionFragmentUtils.hideKeyboard(requireActivity())
 
         super.onPause()
     }
