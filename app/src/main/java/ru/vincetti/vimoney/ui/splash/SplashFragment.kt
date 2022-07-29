@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vincetti.vimoney.R
+import ru.vincetti.vimoney.ui.splash.SplashViewModel.Action
 
 @AndroidEntryPoint
 class SplashFragment : Fragment(R.layout.fragment_splash) {
@@ -21,14 +22,14 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     }
 
     private fun observersInit() {
-        viewModel.networkError.observe(viewLifecycleOwner) {
-            if (it) alertNetworkDialogShow()
-        }
-        viewModel.need2Navigate2Home.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
-        }
-        viewModel.need2Navigate2Self.observe(viewLifecycleOwner) {
-            if (it) findNavController().navigate(R.id.action_splashFragment_self)
+        viewModel.action.observe(viewLifecycleOwner, ::handleAction)
+    }
+
+    private fun handleAction(action: Action) {
+        when (action) {
+            Action.Error -> alertNetworkDialogShow()
+            Action.NavigateMain -> findNavController().navigate(R.id.action_splashFragment_to_homeFragment)
+            Action.NavigateSelf -> findNavController().navigate(R.id.action_splashFragment_self)
         }
     }
 

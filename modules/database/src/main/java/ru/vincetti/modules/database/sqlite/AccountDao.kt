@@ -22,6 +22,9 @@ interface AccountDao {
     )
     fun loadAllAccountsFull(): LiveData<List<AccountListModel>>
 
+    @Query("SELECT * FROM accounts ORDER BY id ASC")
+    suspend fun loadAll(): List<AccountModel>
+
     @Query(
         """
         SELECT accounts.*, c.symbol 

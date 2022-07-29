@@ -3,6 +3,7 @@ package ru.vincetti.modules.database.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.map
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.vincetti.modules.core.models.Account
@@ -13,10 +14,17 @@ import ru.vincetti.modules.database.sqlite.models.AccountModel
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
-class AccountRepo @Inject constructor(
+class AccountRepo private constructor(
     private val accountDao: AccountDao,
-    private val transactionDao: TransactionDao
+    private val transactionDao: TransactionDao,
+    private val dispatcher: CoroutineDispatcher,
 ) {
+
+    @Inject
+    constructor(
+        accountDao: AccountDao,
+        transactionDao: TransactionDao,
+    ) : this(accountDao, transactionDao, Dispatchers.IO)
 
     suspend fun loadById(id: Int): Account? {
         return accountDao.loadAccountById(id)?.toAccount()
@@ -44,8 +52,8 @@ class AccountRepo @Inject constructor(
         return accountDao.loadNotArchiveAccounts()?.map { it.toAccountList() }
     }
 
-    suspend fun loadAll(): List<Account>? {
-        return accountDao.loadAllAccounts()?.map { it.toAccount() }
+    suspend fun loadAll(): List<Account> = withContext(dispatcher) {
+        accountDao.loadAll().map { it.toAccount() }
     }
 
     fun loadAllFull(): LiveData<List<AccountList>> {
@@ -97,6 +105,10 @@ class AccountRepo @Inject constructor(
     }
 
     private suspend fun updateSumById(accId: Int, sum: Float) {
+        accountDao.updateSumByAccId(accId, sum)
+    }
+
+    suspend fun updateAccountBalanceById(accId: Int, sum: Float) = withContext(dispatcher) {
         accountDao.updateSumByAccId(accId, sum)
     }
 }

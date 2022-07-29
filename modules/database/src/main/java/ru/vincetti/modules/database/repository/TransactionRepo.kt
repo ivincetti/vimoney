@@ -1,6 +1,9 @@
 package ru.vincetti.modules.database.repository
 
 import androidx.paging.DataSource
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import ru.vincetti.modules.core.models.Filter
 import ru.vincetti.modules.core.models.Transaction
 import ru.vincetti.modules.core.models.TransactionStatDay
@@ -12,10 +15,17 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
-class TransactionRepo @Inject constructor(
+class TransactionRepo private constructor(
     private val transactionDao: TransactionDao,
-    private val accountRepo: AccountRepo
+    private val accountRepo: AccountRepo,
+    private val dispatcher: CoroutineDispatcher,
 ) {
+
+    @Inject
+    constructor(
+        transactionDao: TransactionDao,
+        accountRepo: AccountRepo,
+    ) : this(transactionDao, accountRepo, Dispatchers.IO)
 
     suspend fun add(transaction: Transaction): Long {
         val id = transactionDao.insertTransaction(TransactionModel.from(transaction))
@@ -27,6 +37,10 @@ class TransactionRepo @Inject constructor(
         val transactionModels = transactions.map { TransactionModel.from(it) }
         transactionDao.insertTransaction(transactionModels)
         accountRepo.balanceUpdateAll()
+    }
+
+    suspend fun loadBalanceByCheckId(id: Int): Float = withContext(dispatcher) {
+        transactionDao.loadSumByCheckId(id)
     }
 
     suspend fun loadById(id: Int): Transaction? {
