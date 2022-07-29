@@ -33,9 +33,15 @@ object TransactionFragmentUtils {
     }
 
     fun showKeyboard(activity: Activity) {
-        val imm: InputMethodManager = activity
-            .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+    }
+
+    fun hideKeyboard(activity: Activity) {
+        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        activity.currentFocus?.let {
+            imm?.hideSoftInputFromWindow(it.windowToken, 0)
+        }
     }
 
     fun showNoSumToast(context: Context) {
