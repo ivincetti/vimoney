@@ -37,8 +37,8 @@ class TransactionSpentFragment : Fragment(R.layout.fragment_add_spent) {
         binding.addSum.apply {
             isFocusableInTouchMode = true
             requestFocus()
+            TransactionFragmentUtils.showKeyboard(requireActivity(), this)
         }
-        TransactionFragmentUtils.showKeyboard(requireActivity())
     }
 
     override fun onPause() {

@@ -32,9 +32,9 @@ object TransactionFragmentUtils {
         popUp.show()
     }
 
-    fun showKeyboard(activity: Activity) {
+    fun showKeyboard(activity: Activity, view: View) {
         val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-        imm?.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+        imm?.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
     }
 
     fun hideKeyboard(activity: Activity) {
