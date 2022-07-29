@@ -1,9 +1,7 @@
 package ru.vincetti.vimoney.ui.settings.category.list
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
@@ -14,16 +12,19 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
+import ru.vincetti.modules.core.ui.viewBinding
 import ru.vincetti.modules.database.repository.CategoryRepo
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentCategoriesListBinding
+import ru.vincetti.vimoney.extensions.bottom
+import ru.vincetti.vimoney.extensions.top
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.settings.category.AllCategoriesAdapter
 import ru.vincetti.vimoney.ui.settings.category.add.AddCategoryViewModel.Companion.EXTRA_CATEGORY_ID
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CategoriesFragment : Fragment() {
+class CategoriesFragment : Fragment(R.layout.fragment_categories_list) {
 
     @Inject
     lateinit var categoryRepo: CategoryRepo
@@ -32,14 +33,7 @@ class CategoriesFragment : Fragment() {
 
     private lateinit var recyclerAdapter: AllCategoriesAdapter
 
-    private var _binding: FragmentCategoriesListBinding? = null
-    private val binding
-        get() = requireNotNull(_binding)
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentCategoriesListBinding.inflate(layoutInflater)
-        return binding.root
-    }
+    private val binding: FragmentCategoriesListBinding by viewBinding(FragmentCategoriesListBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,11 +42,6 @@ class CategoriesFragment : Fragment() {
         observersInit()
         recyclerInit()
         insetsInit()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun viewsInit() {
@@ -102,15 +91,15 @@ class CategoriesFragment : Fragment() {
     private fun insetsInit() {
         val fabMargin = binding.categoriesListFab.marginBottom
         ViewCompat.setOnApplyWindowInsetsListener(binding.categoriesListFab) { view, insets ->
-            view.updateMargin(bottom = (insets.systemWindowInsetBottom + fabMargin))
+            view.updateMargin(bottom = (insets.bottom() + fabMargin))
             insets
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.categoriesToolbar) { view, insets ->
-            view.updateMargin(top = insets.systemWindowInsetTop)
+            view.updateMargin(top = insets.top())
             insets
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.categoriesListRecycleView) { view, insets ->
-            view.updatePadding(bottom = insets.systemWindowInsetBottom)
+            view.updatePadding(bottom = insets.bottom())
             insets
         }
     }

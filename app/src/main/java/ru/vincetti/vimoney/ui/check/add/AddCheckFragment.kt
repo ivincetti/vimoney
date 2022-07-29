@@ -1,10 +1,8 @@
 package ru.vincetti.vimoney.ui.check.add
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
@@ -18,27 +16,19 @@ import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vincetti.modules.core.models.Account
 import ru.vincetti.modules.core.models.Currency
+import ru.vincetti.modules.core.ui.viewBinding
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentAddCheckBinding
+import ru.vincetti.vimoney.extensions.top
 import ru.vincetti.vimoney.extensions.updateMargin
+import ru.vincetti.vimoney.ui.transaction.main.TransactionFragmentUtils
 
 @AndroidEntryPoint
-class AddCheckFragment : Fragment() {
+class AddCheckFragment : Fragment(R.layout.fragment_add_check) {
 
     private val viewModel: AddCheckViewModel by viewModels()
 
-    private var _binding: FragmentAddCheckBinding? = null
-    private val binding
-        get() = requireNotNull(_binding)
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAddCheckBinding.inflate(layoutInflater)
-        return binding.root
-    }
+    private val binding: FragmentAddCheckBinding by viewBinding(FragmentAddCheckBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,11 +36,6 @@ class AddCheckFragment : Fragment() {
         viewInit()
         observersInit()
         insetsInit()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     override fun onResume() {
@@ -174,22 +159,17 @@ class AddCheckFragment : Fragment() {
             .setNegativeButton(R.string.check_delete_alert_negative) { dialogInterface, _ ->
                 dialogInterface?.dismiss()
             }
-            .setPositiveButton(R.string.check_delete_alert_positive) { _, _ ->
-                viewModel.delete()
-            }
+            .setPositiveButton(R.string.check_delete_alert_positive) { _, _ -> viewModel.delete() }
             .create()
             .show()
     }
 
     private fun showUnsavedDialog() {
+        TransactionFragmentUtils.hideKeyboard(requireActivity())
         AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             .setMessage(R.string.check_add_alert_question)
-            .setNegativeButton(R.string.check_add_alert_negative) { _, _ ->
-                viewModel.need2NavigateBack()
-            }
-            .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
-                dialogInterface?.dismiss()
-            }
+            .setNegativeButton(R.string.check_add_alert_negative) { _, _ -> viewModel.need2NavigateBack() }
+            .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ -> dialogInterface?.dismiss() }
             .create()
             .show()
     }
@@ -197,10 +177,7 @@ class AddCheckFragment : Fragment() {
     private fun showNoDataDialog() {
         AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             .setMessage(R.string.check_add_alert_no_data)
-            .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ ->
-                viewModel.noDataDialogClosed()
-                dialogInterface?.dismiss()
-            }
+            .setPositiveButton(R.string.check_add_alert_positive) { dialogInterface, _ -> dialogInterface?.dismiss() }
             .create()
             .show()
     }
@@ -214,7 +191,7 @@ class AddCheckFragment : Fragment() {
 
     private fun insetsInit() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.checkAddToolbar) { view, insets ->
-            view.updateMargin(top = insets.systemWindowInsetTop)
+            view.updateMargin(top = insets.top())
             insets
         }
     }

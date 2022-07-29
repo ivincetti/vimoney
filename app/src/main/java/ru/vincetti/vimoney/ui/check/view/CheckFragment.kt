@@ -2,9 +2,7 @@ package ru.vincetti.vimoney.ui.check.view
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
@@ -15,29 +13,21 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vincetti.modules.core.models.Filter
+import ru.vincetti.modules.core.ui.viewBinding
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentCheckBinding
+import ru.vincetti.vimoney.extensions.bottom
+import ru.vincetti.vimoney.extensions.top
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.history.HistoryFragment
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
 
 @AndroidEntryPoint
-class CheckFragment : Fragment() {
+class CheckFragment : Fragment(R.layout.fragment_check) {
 
     private val viewModel: CheckViewModel by viewModels()
 
-    private var _binding: FragmentCheckBinding? = null
-    private val binding
-        get() = requireNotNull(_binding)
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentCheckBinding.inflate(layoutInflater)
-        return binding.root
-    }
+    private val binding: FragmentCheckBinding by viewBinding(FragmentCheckBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,11 +35,6 @@ class CheckFragment : Fragment() {
         initViews()
         observersInit()
         insetsInit()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun initViews() {
@@ -115,12 +100,8 @@ class CheckFragment : Fragment() {
     private fun showDeleteDialog() {
         AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             .setMessage(R.string.check_delete_alert_question)
-            .setNegativeButton(R.string.check_delete_alert_negative) { dialog, _ ->
-                dialog?.dismiss()
-            }
-            .setPositiveButton(R.string.check_delete_alert_positive) { _, _ ->
-                viewModel.delete()
-            }
+            .setNegativeButton(R.string.check_delete_alert_negative) { dialog, _ -> dialog?.dismiss() }
+            .setPositiveButton(R.string.check_delete_alert_positive) { _, _ -> viewModel.delete() }
             .create()
             .show()
     }
@@ -128,17 +109,17 @@ class CheckFragment : Fragment() {
     private fun insetsInit() {
         val fabMargin = binding.checkFab.marginBottom
         ViewCompat.setOnApplyWindowInsetsListener(binding.checkFab) { view, insets ->
-            view.updateMargin(bottom = (insets.systemWindowInsetBottom + fabMargin))
+            view.updateMargin(bottom = (insets.bottom() + fabMargin))
             insets
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.checkToolbar) { view, insets ->
-            view.updateMargin(top = insets.systemWindowInsetTop)
+            view.updateMargin(top = insets.top())
             insets
         }
         ViewCompat.setOnApplyWindowInsetsListener(
             binding.fragmentCheckContent.checkHistoryContainerRoot
         ) { view, insets ->
-            view.updatePadding(bottom = insets.systemWindowInsetBottom)
+            view.updatePadding(bottom = insets.bottom())
             insets
         }
     }

@@ -1,11 +1,7 @@
 package ru.vincetti.vimoney.ui.transaction.main
 
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
@@ -15,26 +11,21 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vincetti.modules.core.models.Transaction
+import ru.vincetti.modules.core.ui.viewBinding
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentTransactionMainBinding
+import ru.vincetti.vimoney.extensions.top
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
 
 @AndroidEntryPoint
-class TransactionMainFragment : Fragment() {
+class TransactionMainFragment : Fragment(R.layout.fragment_transaction_main) {
 
     private val viewModel: TransactionMainViewModel by viewModels()
 
     private lateinit var fragmentBundle: Bundle
 
-    private var _binding: FragmentTransactionMainBinding? = null
-    private val binding
-        get() = requireNotNull(_binding)
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentTransactionMainBinding.inflate(layoutInflater)
-        return binding.root
-    }
+    private val binding: FragmentTransactionMainBinding by viewBinding(FragmentTransactionMainBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,16 +64,7 @@ class TransactionMainFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-
-        val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
-        requireActivity().currentFocus?.let {
-            imm?.hideSoftInputFromWindow(it.windowToken, 0)
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        TransactionFragmentUtils.hideKeyboard(requireActivity())
     }
 
     private fun initViews() {
@@ -157,7 +139,7 @@ class TransactionMainFragment : Fragment() {
 
     private fun insetsInit() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.transactionToolbar) { view, insets ->
-            view.updateMargin(top = insets.systemWindowInsetTop)
+            view.updateMargin(top = insets.top())
             insets
         }
     }
