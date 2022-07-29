@@ -2,32 +2,26 @@ package ru.vincetti.vimoney.ui.history
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.marginBottom
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import ru.vincetti.modules.core.ui.viewBinding
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentHistoryBinding
+import ru.vincetti.vimoney.extensions.bottom
+import ru.vincetti.vimoney.extensions.top
 import ru.vincetti.vimoney.extensions.updateMargin
 import ru.vincetti.vimoney.ui.history.filter.FilterDialog
 
-class AllHistoryFragment : Fragment() {
+class AllHistoryFragment : Fragment(R.layout.fragment_history) {
 
-    private val dialogFrag = FilterDialog()
+    private val dialogFrag by lazy { FilterDialog() }
     private val historyFragment = HistoryFragment()
 
-    private var _binding: FragmentHistoryBinding? = null
-    private val binding
-        get() = requireNotNull(_binding)
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentHistoryBinding.inflate(layoutInflater)
-        return binding.root
-    }
+    private val binding: FragmentHistoryBinding by viewBinding(FragmentHistoryBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,11 +38,6 @@ class AllHistoryFragment : Fragment() {
                 historyFragment.setHistoryIntent(it)
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun viewsInit() {
@@ -73,15 +62,15 @@ class AllHistoryFragment : Fragment() {
     private fun insetsInit() {
         val fabMargin = binding.allHistoryFab.marginBottom
         ViewCompat.setOnApplyWindowInsetsListener(binding.allHistoryFab) { view, insets ->
-            view.updateMargin(bottom = (insets.systemWindowInsetBottom + fabMargin))
+            view.updateMargin(bottom = (insets.bottom() + fabMargin))
             insets
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.historyTopToolbar) { view, insets ->
-            view.updateMargin(top = insets.systemWindowInsetTop)
+            view.updateMargin(top = insets.top())
             insets
         }
         ViewCompat.setOnApplyWindowInsetsListener(binding.historyContainer) { view, insets ->
-            view.updatePadding(bottom = insets.systemWindowInsetBottom)
+            view.updatePadding(bottom = insets.bottom())
             insets
         }
     }

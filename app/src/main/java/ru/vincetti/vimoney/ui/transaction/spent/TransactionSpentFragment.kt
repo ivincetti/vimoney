@@ -2,13 +2,12 @@ package ru.vincetti.vimoney.ui.transaction.spent
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import ru.vincetti.modules.core.models.Transaction
+import ru.vincetti.modules.core.ui.viewBinding
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentAddSpentBinding
 import ru.vincetti.vimoney.ui.transaction.main.CategoryListDialog
@@ -17,22 +16,15 @@ import ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModel
 import java.text.DateFormat
 import java.util.*
 
-class TransactionSpentFragment : Fragment() {
+class TransactionSpentFragment : Fragment(R.layout.fragment_add_spent) {
 
     val viewModel: TransactionMainViewModel by viewModels({ requireParentFragment() })
 
     private lateinit var date: Date
 
-    private var _binding: FragmentAddSpentBinding? = null
-    private val binding
-        get() = requireNotNull(_binding)
+    private val binding: FragmentAddSpentBinding by viewBinding(FragmentAddSpentBinding::bind)
 
     private val dialogFrag = CategoryListDialog()
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentAddSpentBinding.inflate(layoutInflater)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initViews()
@@ -59,11 +51,6 @@ class TransactionSpentFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) setCategoryID(resultCode)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun save() {
@@ -148,6 +135,7 @@ class TransactionSpentFragment : Fragment() {
     }
 
     private fun showCategoryDialog() {
+        TransactionFragmentUtils.hideKeyboard(requireActivity())
         dialogFrag.show(parentFragmentManager, "Categories")
     }
 

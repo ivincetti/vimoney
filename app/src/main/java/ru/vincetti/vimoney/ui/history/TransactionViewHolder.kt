@@ -27,20 +27,16 @@ class TransactionViewHolder private constructor(
 
     companion object {
 
-        fun create(
-            parent: ViewGroup,
-            actions: Actions
-        ) = TransactionViewHolder(
-            ItemTransactionsListBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            ),
-            actions
-        )
+        fun create(parent: ViewGroup, actions: Actions): TransactionViewHolder {
+            val layoutInflater = LayoutInflater.from(parent.context)
+            return TransactionViewHolder(
+                ItemTransactionsListBinding.inflate(layoutInflater, parent, false),
+                actions,
+            )
+        }
     }
 
-    interface Actions {
+    fun interface Actions {
 
         fun onTransactionClicked(id: Int)
     }

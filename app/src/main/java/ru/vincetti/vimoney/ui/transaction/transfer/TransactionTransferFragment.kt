@@ -3,13 +3,12 @@ package ru.vincetti.vimoney.ui.transaction.transfer
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import ru.vincetti.modules.core.models.Transaction
+import ru.vincetti.modules.core.ui.viewBinding
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentAddTransferBinding
 import ru.vincetti.vimoney.ui.transaction.main.TransactionFragmentUtils
@@ -17,20 +16,13 @@ import ru.vincetti.vimoney.ui.transaction.main.TransactionMainViewModel
 import java.text.DateFormat
 import java.util.*
 
-class TransactionTransferFragment : Fragment() {
+class TransactionTransferFragment : Fragment(R.layout.fragment_add_transfer) {
 
     val viewModel: TransactionMainViewModel by viewModels({ requireParentFragment() })
 
     private lateinit var date: Date
 
-    private var _binding: FragmentAddTransferBinding? = null
-    private val binding
-        get() = requireNotNull(_binding)
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentAddTransferBinding.inflate(layoutInflater)
-        return binding.root
-    }
+    private val binding: FragmentAddTransferBinding by viewBinding(FragmentAddTransferBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initViews()
@@ -52,11 +44,6 @@ class TransactionTransferFragment : Fragment() {
         viewModel.setDescription(binding.fragmentAddAllContent.addDesc.text.toString())
 
         super.onPause()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun save() {

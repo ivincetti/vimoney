@@ -2,9 +2,7 @@ package ru.vincetti.vimoney.ui.history
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -12,13 +10,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import ru.vincetti.modules.core.models.Filter
+import ru.vincetti.modules.core.ui.viewBinding
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentHistoryContentBinding
 import ru.vincetti.vimoney.ui.transaction.TransactionConst
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HistoryFragment : Fragment() {
+class HistoryFragment : Fragment(R.layout.fragment_history_content) {
 
     @Inject
     lateinit var viewModelFactory: HistoryViewModel.AssistedFactory
@@ -33,14 +32,7 @@ class HistoryFragment : Fragment() {
         const val DEFAULT_CHECK_COUNT = 20
     }
 
-    private var _binding: FragmentHistoryContentBinding? = null
-    private val binding
-        get() = requireNotNull(_binding)
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentHistoryContentBinding.inflate(layoutInflater)
-        return binding.root
-    }
+    private val binding: FragmentHistoryContentBinding by viewBinding(FragmentHistoryContentBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,23 +42,12 @@ class HistoryFragment : Fragment() {
         transactionsListInit()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     fun setHistoryIntent(intent: Intent) {
         viewModel.filter(Filter.createFromIntent(intent))
     }
 
     private fun transactionsListInit() {
-        val transactionsRVAdapter = TransactionsAdapter(
-            object : TransactionViewHolder.Actions {
-                override fun onTransactionClicked(id: Int) {
-                    viewModel.clickOnElement(id)
-                }
-            }
-        )
+        val transactionsRVAdapter = TransactionsAdapter { id -> viewModel.clickOnElement(id) }
 
         binding.homeTransactionsRecycleView.apply {
             addItemDecoration(createDivider())

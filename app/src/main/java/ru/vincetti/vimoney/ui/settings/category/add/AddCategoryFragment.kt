@@ -2,9 +2,7 @@ package ru.vincetti.vimoney.ui.settings.category.add
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
@@ -13,34 +11,24 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ru.vincetti.modules.core.ui.viewBinding
 import ru.vincetti.modules.database.repository.CategoryRepo
 import ru.vincetti.vimoney.R
 import ru.vincetti.vimoney.databinding.FragmentAddCategoryBinding
+import ru.vincetti.vimoney.extensions.top
 import ru.vincetti.vimoney.extensions.updateMargin
-import ru.vincetti.vimoney.ui.settings.category.add.AddCategoryViewModel.Companion.EXTRA_CATEGORY_ID
 import ru.vincetti.vimoney.ui.settings.category.symbol.CategorySymbolListDialog
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddCategoryFragment : Fragment() {
+class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
 
     @Inject
     lateinit var categoryRepo: CategoryRepo
 
     private val viewModel: AddCategoryViewModel by viewModels()
 
-    private var _binding: FragmentAddCategoryBinding? = null
-    private val binding
-        get() = requireNotNull(_binding)
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAddCategoryBinding.inflate(layoutInflater)
-        return binding.root
-    }
+    private val binding: FragmentAddCategoryBinding by viewBinding(FragmentAddCategoryBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,11 +36,6 @@ class AddCategoryFragment : Fragment() {
         viewsInit()
         observersInit()
         insetsInit()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun viewsInit() {
@@ -115,7 +98,6 @@ class AddCategoryFragment : Fragment() {
             R.string.check_add_alert_no_data,
             Toast.LENGTH_SHORT
         ).show()
-        viewModel.noDataDialogClosed()
     }
 
     private fun setCategorySymbol(position: Int) {
@@ -131,7 +113,7 @@ class AddCategoryFragment : Fragment() {
 
     private fun insetsInit() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.addCategoryToolbar) { view, insets ->
-            view.updateMargin(top = insets.systemWindowInsetTop)
+            view.updateMargin(top = insets.top())
             insets
         }
     }
